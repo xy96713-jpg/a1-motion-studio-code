@@ -435,25 +435,18 @@ export function checkStoryboard(cfg, plan, brief, sb, { speechRate, spoken = nul
     }
   });
   // director grammar: triggers per line, presenter placement
-  const firstPerson = new Set();
+  const firstPerson = new Set(), triggers = loadDirectorTriggers(cfg);
   shots.forEach((s, i) => {
     const b = beats[i];
     if (!b || s.beat !== b.id) return;
     const cards = (s.scenes || []).length ? s.scenes.map((x) => x.card) : [s.card];
-    if (LIST_RE.test(b.text) && (s.scenes || []).length < 3 && !breathing.has(b.id)) warn(`${s.beat}: a list / exclusion line ("${b.text.match(LIST_RE)[0].slice(0, 16)}…"); cut each item (scenes, 0.4–0.8 s a cut)`);
-    if (TURN_RE.test(b.text) && !cards.some((c) => PRESENTER_PLAIN.has(c) || PRESENTER_OVERLAY.has(c))) warn(`${s.beat}: a question / turn line ("${b.text.match(TURN_RE)[0]}"); the presenter carries it`);
-    if (OPINION_RE.test(b.text) && !cards.some((c) => NEWS_CARDS.has(c)) && !(s.evidence || []).some((x) => x.kind === 'event')) warn(`${s.beat}: the line cites what others say ("${b.text.match(OPINION_RE)[0]}"); show the headlines (news card, a collage of real headlines)`);
+    // the trigger table (routing/director-triggers.json) decides this shot's missing-picture warnings
     const broll = brief.motif?.broll;
-    const usesBroll = broll && (s.evidence || []).some((x) => (x.queryEn || '').toLowerCase() === broll.queryEn.toLowerCase() || (x.what || '').includes(broll.what.slice(0, 6)));
-    if (EMOTION_RE.test(b.text) && !breathing.has(b.id) && !(cards.some((c) => c === 'footage-plate') && (!broll || usesBroll))) warn(`${s.beat}: an emotional / exaggerated line ("${b.text.match(EMOTION_RE)[0]}"); cut to the film's b-roll motif${broll ? ` (brief: ${broll.what}, evidence queryEn "${broll.queryEn}")` : ''} with footage-plate`);
-    if (ANNOUNCE_RE.test(b.text) && !cards.includes('chat-thread')) warn(`${s.beat}: an announcement / message ("${b.text.match(ANNOUNCE_RE)[0]}"); show it as a chat thread (chat-thread), bubble by bubble`);
-    if (PAIR_RE.test(b.text) && !cards.includes('poster-pair')) warn(`${s.beat}: the line sets out "${b.text.match(PAIR_RE)[0]}"; put them as two poster cards on either side of the presenter (poster-pair) and hold`);
-    if (CONCEPT_RE.test(b.text) && !cards.some((c) => c.startsWith('title-')) && !breathing.has(b.id)) warn(`${s.beat}: a concept / reversal word ("${b.text.match(CONCEPT_RE)[0]}"); give it a big title cut (title-word-broll / title-hero-over-photo)`);
+    for (const w of directorTriggerWarnings(triggers, b, s, { breathing: breathing.has(b.id), broll })) warn(w.warning);
     for (const n of namesIn(cfg, b.text).filter((x) => x.kind !== 'event')) {
       const shown = (s.evidence || []).some((x) => `${x.entity}${x.what}`.includes(n.name)) || cards.some((c) => PERSON_CARDS.has(c) || ['product-side-card', 'presenter-side-card'].includes(c));
       if (!shown && !breathing.has(b.id) && !String(s.noEvidence || '').trim()) warn(`${s.beat}: names ${n.name}${n.library ? ' (a verified picture is in the entity library)' : ''} but shows nothing of it; give a real picture or say why not (noEvidence)`);
     }
-    if (QUOTE_RE.test(b.text) && !cards.some((c) => QUOTE_CARDS.has(c))) warn(`${s.beat}: someone's own words; show the quote (quote card or big type)`);
     // a page right after a page on the same subject: the reference never re-opens a page it has just shown
     // (cuts-labelled.json: page -> page 8 of 18, every one the same reading moving on); after a page it goes
     // back to the presenter, with or without tags (7 of 18). Two beats on one fact land on one page.
@@ -569,6 +562,59 @@ const CONCEPT_RE = /叫做|所谓|称为|起了个名字|凭什么|错了|恰恰
 const NEWS_CARDS = new Set(['stamp-over-evidence', 'article-highlight-dark', 'article-highlight-light', 'screen-full']);
 const PERSON_CARDS = new Set(['person-nameplate', 'person-intro', 'quote-portrait-bw', 'quote-stack']);
 const QUOTE_CARDS = new Set(['quote-portrait-bw', 'quote-stack', 'title-word-broll', 'title-hero-over-photo', 'presenter-tags', 'stamp-over-evidence']);
+
+// The director grammar's trigger table (routing/director-triggers.json, A1DirectorTriggers/v1): "when the line says
+// this, give that picture". The cues used to be hardcoded here; the table is the machine-readable copy the storyboard
+// check runs (user 2026-10-16: 把导演语法写进简报和分镜的规则和检查（…触发表…）), so adding a trigger is a data edit.
+export function loadDirectorTriggers(cfg = {}) {
+  const table = readJson(path.join(cfg.dataDir || cfg.repoRoot || '.', 'routing', 'director-triggers.json'), null);
+  if (table?.contract === 'A1DirectorTriggers/v1' && Array.isArray(table.triggers) && table.triggers.length) return table;
+  // the file is the source; this fallback only keeps an old checkout's storyboard check working
+  return {
+    contract: 'A1DirectorTriggers/v1', fallback: true,
+    triggers: [
+      { id: 'list', cue: LIST_RE.source, say: 'a list / exclusion line ("{cue16}"); cut each item (scenes, 0.4–0.8 s a cut)', needs: { minScenes: 3 }, skipWhenBreathing: true },
+      { id: 'turn', cue: TURN_RE.source, say: 'a question / turn line ("{cue}"); the presenter carries it', needs: { cardsAnyOf: ['presenter'] } },
+      { id: 'opinion', cue: OPINION_RE.source, say: 'the line cites what others say ("{cue}"); show the headlines (news card, a collage of real headlines)', needs: { cardsAnyOf: ['news'], evidenceKindAnyOf: ['event'] } },
+      { id: 'emotion', cue: EMOTION_RE.source, say: 'an emotional / exaggerated line ("{cue}"); cut to the film\'s b-roll motif{broll} with footage-plate', needs: { broll: true }, skipWhenBreathing: true },
+      { id: 'announce', cue: ANNOUNCE_RE.source, say: 'an announcement / message ("{cue}"); show it as a chat thread (chat-thread), bubble by bubble', needs: { cardsAnyOf: ['chat-thread'] } },
+      { id: 'pair', cue: PAIR_RE.source, say: 'the line sets out "{cue}"; put them as two poster cards on either side of the presenter (poster-pair) and hold', needs: { cardsAnyOf: ['poster-pair'] } },
+      { id: 'concept', cue: CONCEPT_RE.source, say: 'a concept / reversal word ("{cue}"); give it a big title cut (title-word-broll / title-hero-over-photo)', needs: { cardsAnyOf: ['title'] }, skipWhenBreathing: true },
+      { id: 'quote', cue: QUOTE_RE.source, say: "someone's own words; show the quote (quote card or big type)", needs: { cardsAnyOf: ['quote'] } },
+    ],
+  };
+}
+// a trigger's required picture: a named category, the literal card id, or any title- card
+export function triggerCardMatches(name, card) {
+  if (name === 'presenter') return PRESENTER_PLAIN.has(card) || PRESENTER_OVERLAY.has(card);
+  if (name === 'news') return NEWS_CARDS.has(card);
+  if (name === 'quote') return QUOTE_CARDS.has(card);
+  if (name === 'title') return String(card).startsWith('title-');
+  return card === name;
+}
+// (pure, tested) the warnings one shot gets from the trigger table: a cue hit whose needed picture is missing.
+export function directorTriggerWarnings(table, beat = {}, shot = {}, { breathing = false, broll = null } = {}) {
+  const cards = (shot.scenes || []).length ? shot.scenes.map((x) => x.card) : [shot.card];
+  const out = [];
+  for (const t of table?.triggers || []) {
+    let re; try { re = new RegExp(t.cue, t.flags || ''); } catch { continue; }
+    const hit = String(beat.text || '').match(re); if (!hit) continue;
+    if (t.skipWhenBreathing && breathing) continue;
+    const needs = t.needs || {};
+    let ok = true;
+    if (needs.minScenes) ok = (shot.scenes || []).length >= needs.minScenes;
+    else if (needs.broll) ok = cards.includes('footage-plate') && (!broll || (shot.evidence || []).some((ev) => String(ev.queryEn || '').toLowerCase() === String(broll.queryEn || '').toLowerCase() || String(ev.what || '').includes(String(broll.what || '').slice(0, 6))));
+    else if (needs.cardsAnyOf || needs.evidenceKindAnyOf) {
+      ok = (needs.cardsAnyOf || []).some((name) => cards.some((c) => triggerCardMatches(name, c)))
+        || (needs.evidenceKindAnyOf || []).some((kind) => (shot.evidence || []).some((ev) => ev.kind === kind));
+    }
+    if (ok) continue;
+    const cue = hit[0], say = String(t.say || '{cue}');
+    const text = say.replace('{cue16}', `${cue.slice(0, 16)}…`).replace('{cue}', cue).replace('{broll}', broll ? ` (brief: ${broll.what}, evidence queryEn "${broll.queryEn}")` : '');
+    out.push({ id: t.id, warning: `${beat.id || '?'}: ${text}` });
+  }
+  return out;
+}
 
 // Cues for a designed shot on its card's preset: action impls + camera (CAMERA.md: locked = push 1).
 export function designCues(cfg, design, preset) {

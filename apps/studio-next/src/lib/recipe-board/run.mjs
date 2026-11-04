@@ -229,16 +229,30 @@ export async function runProject(cfg, id, { article = null, beats = null, title 
   assertRenderStorage(cfg, id);
 
   if (active('plan')) {
-    if (!readPlan(cfg, id) || article || beats) {
-      const director = await import('./director.mjs');
+    let pendingArticle = null;
+    let planAwaiting = false;
+    if (!article && !beats) {
+      const { pendingPlanArticle } = await import('./plan.mjs');
+      pendingArticle = pendingPlanArticle(cfg, id);
+      if (pendingArticle) { title = pendingArticle.title; presenter = pendingArticle.hasPresenter; }
+    }
+    if (!readPlan(cfg, id) || article || beats || pendingArticle) {
       ensureProject(cfg, id, title);
-      if (article) {
-        step('plan', `article ${article}`);
-        // (no Codex judges a manual project's beats: the session's agent writes them with --beats; this is a draft)
-        const { agentFor } = await import('./agenttask.mjs'), byCodex = agentFor(cfg, id, 'plan') === 'codex';
-        writePlan(cfg, id, await director.directArticle(cfg, { text: fs.readFileSync(article, 'utf8'), title, hasPresenter: presenter, mode: byCodex ? 'auto' : 'no-codex' }));
-        if (!byCodex) log('  a draft of the beats (no Codex: agents.default manual); the session\'s agent writes the beats and runs again with --beats <file>');
+      if (article || pendingArticle) {
+        step('plan', 'article direction task');
+        const { stepPlan } = await import('./plan.mjs');
+        const articleText = pendingArticle?.article ?? fs.readFileSync(article, 'utf8');
+        const r = await stepPlan(cfg, id, { article: articleText, title, hasPresenter: presenter, log: (l) => log('  ' + l) });
+        if (r.state === 'accepted') writePlan(cfg, id, r.plan);
+        else {
+          planAwaiting = true;
+          if (r.state === 'rejected') {
+            step('plan', `answer rejected: ${r.errors.length} errors`);
+            r.errors.slice(0, 8).forEach((e) => log('  ✗ ' + e));
+          } else step('plan', 'task written, waiting for an agent (no heuristic plan is published)');
+        }
       } else if (beats) {
+        const director = await import('./director.mjs');
         step('plan', `beats ${beats}`);
         const given = JSON.parse(fs.readFileSync(beats, 'utf8'));
         writePlan(cfg, id, director.planFromBeats(cfg, { ...given, beats: given.beats, title: title || given.title, source: beats, hasPresenter: presenter || given.hasPresenter }));
@@ -248,6 +262,9 @@ export async function runProject(cfg, id, { article = null, beats = null, title 
       const plan = readPlan(cfg, id);
       if (plan) log(`  ${plan.beats.length} beats · ${Object.entries(plan.summary.intents).map(([k, v]) => `${k} ${v}`).join(' · ')}${plan.summary.gaps.length ? `\n  gaps: ${plan.summary.gaps.map((g) => g.gap).join('; ')}` : ''}`);
     }
+    // A replaced article owns the downstream line. Never continue with the previous article's plan
+    // while its replacement task is waiting or rejected.
+    if (planAwaiting) return await report(cfg, id, only, log);
   }
 
   // Voice: with a recording, every beat is placed on the seconds where it is spoken (voice.mjs); the
@@ -663,9 +680,15 @@ export function reportComplete({ lines, proc, agentWork, gates, todo }) {
 async function report(cfg, id, only, log, { write = true } = {}) {
   const s = projectState(cfg, id, { only });
   const m = s.materials, six = sixStage(loadProject(cfg, id) || {});   // (six: the card line's motion and stills review are not this film's: gatestate.mjs SIX_CARD_STEPS)
+  const planTask = readJson(path.join(cfg.dataDir, 'projects', id, 'tasks', 'plan.task.json'));
+  const planCheck = readJson(path.join(cfg.dataDir, 'projects', id, 'tasks', 'plan.check.json'));
+  const planPending = !!planTask && s.plan?.input?.taskHash !== planTask.inputHash;
   const lines = [
     [s.voice.state === 'scope-restricted', `voice: ${s.voice.reason} (existing audio remains read-only)`],
-    [!s.plan && !s.shots, 'no plan yet: run --article <file>'],
+    [!s.plan && !s.shots && !planTask, 'no plan yet: run --article <file>'],
+    [planPending, planCheck && planCheck.ok === false && planCheck.inputHash === planTask.inputHash
+      ? 'plan answer rejected; downstream is held: see tasks/plan.check.json'
+      : `plan task ${s.plan ? 'replaced the current article; the old plan is held' : 'waiting'}: tasks/plan.task.json → tasks/plan.answer.json (rules: work/recipe-board-v1/prompts/plan.md)`],
     [s.unwritten.length, `beats without a shot: ${s.unwritten.join(',')}`],
     [s.redesign.length, `shots to rewrite on their storyboard card: ${s.redesign.join(',')}`],
     [s.screen.length, `pages to capture: ${s.screen.join(',')}`],
@@ -721,9 +744,15 @@ async function report(cfg, id, only, log, { write = true } = {}) {
     const later = /^(beats without a shot|needs not searched|approved, not fetched|fetched material|motion out of date|medium out of date|3D plates|shots to rewrite|pages to capture|write the chapter diagrams|refresh the chapter tasks|chapter answers|fix the chapter|review \d+ stills|confirm material)/;
     for (const arr of [lines, agentWork, gates]) arr.splice(0, arr.length, ...arr.filter((l) => !later.test(l)));
   }
-  log(`\n${id}: ${s.voice.state !== 'scope-restricted' && reportComplete({ lines, proc, agentWork, gates, todo: s.todo }) ? 'every step is done' : 'left to do'}`);
+  if (planPending) {
+    lines.splice(0, lines.length, ...lines.filter((l) => l.startsWith('plan ') || l.startsWith('process:')));
+    agentWork.splice(0);
+    gates.splice(0);
+  }
+  const visibleTodo = planPending ? [] : s.todo;
+  log(`\n${id}: ${s.voice.state !== 'scope-restricted' && reportComplete({ lines, proc, agentWork, gates, todo: visibleTodo }) ? 'every step is done' : 'left to do'}`);
   lines.forEach((l) => log('  · ' + l));
-  if (s.todo.length) log(`  · placeholders on screen: ${s.todo.length} shots (${s.todo.slice(0, 8).join(' ')}${s.todo.length > 8 ? ' …' : ''})`);
+  if (visibleTodo.length) log(`  · placeholders on screen: ${visibleTodo.length} shots (${visibleTodo.slice(0, 8).join(' ')}${visibleTodo.length > 8 ? ' …' : ''})`);
   if (agentWork.length) { log('waits on an agent'); agentWork.forEach((l) => log('  · ' + l)); }
   if (gates.length) { log('waits on you'); gates.forEach((l) => log('  · ' + l)); }
   // G4: surface executable engine-capabilities status every report

@@ -26,7 +26,7 @@ export const userLockedOf = (p, beats) => { const L = Object.fromEntries(Object.
 // the stages that run before the look is approved (run.mjs): stage 1 and the plans the key frames are drawn from
 // (the screens, the materials and their fetch too: the hero stills shown at the look are made with what is in hand —
 // the user 2026-10-27, materials before design)
-export const BEFORE_LOOK = ['plan', 'voice', 'brief', 'storyboard', 'write', 'facts', 'screen', 'materials', 'fetch', 'passages'];
+export const BEFORE_LOOK = ['plan', 'voice', 'brief', 'storyboard', 'write', 'facts', 'screen', 'typedesign', 'materials', 'fetch', 'passages'];
 const sha = (s) => crypto.createHash('sha256').update(s).digest('hex').slice(0, 16);
 export const pieceKey = (s) => sha(String(s));
 

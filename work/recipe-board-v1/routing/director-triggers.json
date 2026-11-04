@@ -1,0 +1,105 @@
+{
+ "contract": "A1DirectorTriggers/v1",
+ "about": "导演语法的『触发表』（用户 2026-10-16：「把导演语法写进简报和分镜的规则和检查（章节节奏目标、露脸位置、触发表、拍内快切）」）：旁白线索 → 这一拍该给什么画面。storyboard.mjs checkStoryboard 在分镜检查时读取本表并逐拍运行；改一条触发是改数据，不是改代码。章节节奏目标/露脸位置/拍内快切由 routing/rhythm-by-role.json + checkStoryboard 的 measureChapter 与短刀/蒙太奇检查执行。",
+ "source": [
+  "work/recipe-board-v1/prompts/storyboard.md",
+  "work/recipe-board-v1/prompts/visual-director.md"
+ ],
+ "placeholders": {
+  "{cue}": "正则命中的原文",
+  "{cue16}": "命中的原文前 16 字加省略号",
+  "{broll}": "有 b-roll 母题时给出它的描述与检索词，否则为空"
+ },
+ "categories": {
+  "presenter": "presenter-plain / presenter-tags / presenter-side-card / product-side-card / poster-pair",
+  "news": "stamp-over-evidence / article-highlight-dark / article-highlight-light / screen-full",
+  "quote": "quote-portrait-bw / quote-stack / title-word-broll / title-hero-over-photo / presenter-tags / stamp-over-evidence",
+  "title": "任何 title- 开头的卡",
+  "chat-thread": "聊天卡",
+  "poster-pair": "左右两版海报"
+ },
+ "triggers": [
+  {
+   "id": "list",
+   "cue": "不是.{1,14}?不是|(?:[^，。、\\s]{1,8}、){2,}[^，。、\\s]{1,8}",
+   "say": "a list / exclusion line (\"{cue16}\"); cut each item (scenes, 0.4–0.8 s a cut)",
+   "needs": {
+    "minScenes": 3
+   },
+   "skipWhenBreathing": true
+  },
+  {
+   "id": "turn",
+   "cue": "另外一个问题|另一个问题|第二个问题|第一个问题|两个问题|我们先来看|接下来|说到这儿|聊到这儿|问题就来了|更好奇|最反常识",
+   "say": "a question / turn line (\"{cue}\"); the presenter carries it",
+   "needs": {
+    "cardsAnyOf": [
+     "presenter"
+    ]
+   }
+  },
+  {
+   "id": "opinion",
+   "cue": "那套说法|这套说法|有人说|外界|媒体|普遍认为|大家都说|舆论|报道称|网上都",
+   "say": "the line cites what others say (\"{cue}\"); show the headlines (news card, a collage of real headlines)",
+   "needs": {
+    "cardsAnyOf": [
+     "news"
+    ],
+    "evidenceKindAnyOf": [
+     "event"
+    ]
+   }
+  },
+  {
+   "id": "emotion",
+   "cue": "钱多|没数花|疯了|离谱|吓人|慌成|难以置信|不敢相信|失眠|炸了",
+   "say": "an emotional / exaggerated line (\"{cue}\"); cut to the film's b-roll motif{broll} with footage-plate",
+   "needs": {
+    "broll": true
+   },
+   "skipWhenBreathing": true
+  },
+  {
+   "id": "announce",
+   "cue": "宣布|发消息|群里|朋友圈|发了一条|官宣",
+   "say": "an announcement / message (\"{cue}\"); show it as a chat thread (chat-thread), bubble by bubble",
+   "needs": {
+    "cardsAnyOf": [
+     "chat-thread"
+    ]
+   }
+  },
+  {
+   "id": "pair",
+   "cue": "两个问题|两种看法|两个信仰|两条路|两种可能|两个选择",
+   "say": "the line sets out \"{cue}\"; put them as two poster cards on either side of the presenter (poster-pair) and hold",
+   "needs": {
+    "cardsAnyOf": [
+     "poster-pair"
+    ]
+   }
+  },
+  {
+   "id": "concept",
+   "cue": "叫做|所谓|称为|起了个名字|凭什么|错了|恰恰相反|甚至不是|根本不是",
+   "say": "a concept / reversal word (\"{cue}\"); give it a big title cut (title-word-broll / title-hero-over-photo)",
+   "needs": {
+    "cardsAnyOf": [
+     "title"
+    ]
+   },
+   "skipWhenBreathing": true
+  },
+  {
+   "id": "quote",
+   "cue": "原话|说过|他说|她说|评价了一句",
+   "say": "someone's own words; show the quote (quote card or big type)",
+   "needs": {
+    "cardsAnyOf": [
+     "quote"
+    ]
+   }
+  }
+ ]
+}

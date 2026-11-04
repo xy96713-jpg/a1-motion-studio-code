@@ -310,15 +310,15 @@ export async function directArticle(cfg, { text, title = '', mode = 'auto', hasP
 // Beats written by hand (a director's own breakdown, or a reference film's shot list) skip the analyzer:
 // each beat has id, text, intent, onScreen, entities, and may name its card (`recipe`), what the frame
 // shows (`visual`) and its length in seconds (`duration`).
-export function planFromBeats(cfg, { beats, title = '', source = '', hasPresenter = false }) {
+export function planFromBeats(cfg, { beats, title = '', source = '', text = '', hasPresenter = false, agent = null }) {
   return routePlan(cfg, {
     contract: 'A1DirectorPlan/v1',
     createdAt: new Date().toISOString(),
     title,
-    input: { source, beats: beats.length },
-    analyzer: { mode: 'given', ms: 0, fallbacks: [] },
+    input: { source, beats: beats.length, ...(text ? { chars: text.length, sha256: sha(text), text } : {}) },
+    analyzer: { mode: agent ? 'agent' : 'given', ...(agent ? { agent } : {}), ms: 0, fallbacks: [] },
     options: { hasPresenter },
-    beats: beats.map((b) => ({ why: '', entities: [], ...b, onScreen: { headline: '', keywords: [], ...(b.onScreen || {}) } })),
+    beats: beats.map((b, i) => ({ why: '', entities: [], ...b, id: b.id || `B${String(i + 1).padStart(2, '0')}`, onScreen: { headline: '', keywords: [], ...(b.onScreen || {}) } })),
     generation: 'NOT_STARTED',
   });
 }

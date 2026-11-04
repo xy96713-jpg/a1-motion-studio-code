@@ -669,16 +669,23 @@ if (cmd === 'export-stills') {
   writePlan(cfg, project, plan);
   printPlan(project, plan);
 } else if (cmd === 'plan') {
-  const { directArticle, planFromBeats } = await import('../apps/studio-next/src/lib/recipe-board/director.mjs');
+  const { planFromBeats } = await import('../apps/studio-next/src/lib/recipe-board/director.mjs');
+  const { stepPlan } = await import('../apps/studio-next/src/lib/recipe-board/plan.mjs');
   const article = opt('article');
   if (!(article || opt('beats')) || !opt('project')) throw new Error('plan needs --project and --article (or --beats)');
+  if (flag('heuristic')) throw new Error('production plan no longer publishes heuristic fallbacks; use the plan agent task');
   ensureProject(cfg, opt('project'), opt('title'));
   const given = opt('beats') ? JSON.parse(fs.readFileSync(opt('beats'), 'utf8')) : null;
-  const plan = given
-    ? planFromBeats(cfg, { beats: given.beats, title: opt('title', given.title || ''), source: opt('beats'), hasPresenter: flag('presenter') || !!given.hasPresenter })
-    : await directArticle(cfg, { text: fs.readFileSync(article, 'utf8'), title: opt('title', ''), mode: flag('heuristic') ? 'heuristic' : 'auto', hasPresenter: flag('presenter') });
-  writePlan(cfg, opt('project'), plan);
-  printPlan(opt('project'), plan);
+  if (given) {
+    const plan = planFromBeats(cfg, { beats: given.beats, title: opt('title', given.title || ''), source: opt('beats'), hasPresenter: flag('presenter') || !!given.hasPresenter });
+    writePlan(cfg, opt('project'), plan);
+    printPlan(opt('project'), plan);
+  } else {
+    const r = await stepPlan(cfg, opt('project'), { article: fs.readFileSync(article, 'utf8'), title: opt('title', ''), hasPresenter: flag('presenter'), log: console.log });
+    if (r.state === 'accepted') { writePlan(cfg, opt('project'), r.plan); printPlan(opt('project'), r.plan); }
+    else if (r.state === 'rejected') throw new Error(`plan answer rejected: ${r.errors.join('; ')}`);
+    else console.log(`plan task waiting: ${r.task}`);
+  }
 } else if (cmd === 'status') {
   const { counts, rows } = boardRows(cfg, project);
   console.log(`${project}: ${counts.total} shots · pass ${counts.pass} · reject ${counts.reject} · pending ${counts.pending} · TODO ${counts.todo}`);

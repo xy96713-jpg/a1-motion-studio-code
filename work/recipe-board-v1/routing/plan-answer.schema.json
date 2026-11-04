@@ -1,0 +1,127 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "sourceTaskInputHash",
+    "beats"
+  ],
+  "properties": {
+    "beats": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "text",
+          "duration",
+          "intent",
+          "visual",
+          "recipe",
+          "why",
+          "onScreen",
+          "entities"
+        ],
+        "properties": {
+          "text": {
+            "type": "string"
+          },
+          "intent": {
+            "type": "string",
+            "enum": [
+              "title",
+              "evidence-article",
+              "data",
+              "table",
+              "person",
+              "quote",
+              "chat",
+              "concept",
+              "product",
+              "software-demo",
+              "presenter-overlay",
+              "atmosphere",
+              "summary",
+              "presenter-plain"
+            ]
+          },
+          "why": {
+            "type": "string"
+          },
+          "onScreen": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "headline",
+              "keywords"
+            ],
+            "properties": {
+              "headline": {
+                "type": "string"
+              },
+              "keywords": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "entities": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "name",
+                "needsSource"
+              ],
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "person",
+                    "org",
+                    "product",
+                    "number",
+                    "article",
+                    "quote",
+                    "software",
+                    "place",
+                    "event"
+                  ]
+                },
+                "name": {
+                  "type": "string"
+                },
+                "needsSource": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
+          "id": {
+            "type": "string",
+            "pattern": "^B[0-9]{2}$"
+          },
+          "duration": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "visual": {
+            "type": "string"
+          },
+          "recipe": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "sourceTaskInputHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    }
+  },
+  "title": "A1RecipeBoardPlanAnswer/v1"
+}

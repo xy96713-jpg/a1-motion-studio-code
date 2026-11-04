@@ -11,7 +11,7 @@ import { dispatchCapability, engineCapabilitiesSchemaErrors, capabilityRouteReso
 // ---- the request/output contracts ----
 const req = {
   contract: 'A1CameraRequest/v1', fps: 30, duration: 2, lensMM: 50, sourceArrival: 1.2, arrival: 1.8,
-  keys: [{ time: 0, position: [0, 1, 0], target: [0, 1, -2] }, { time: 1, position: [0.5, 1.2, 2], target: [0, 1, -2] }],
+  keys: [{ time: 0, position: [0, 1, 0], target: [0, 1, -2] }, { time: 0.5, position: [0.3, 1.1, 1], target: [0, 1, -2] }, { time: 1, position: [0.5, 1.2, 2], target: [0, 1, -2] }],
   focus: { fStop: 2.8, anchors: [[0, [0, 1, 0]]] },
 };
 assert.deepEqual(validateCameraRequest(req), undefined, 'a valid camera request passes');
@@ -23,9 +23,10 @@ for (const [patch, re] of [
   [{ lensMM: 4 }, /lensMM 8–300/],
   [{ arrival: 1.0 }, /arrival >= sourceArrival/],
   [{ keys: [] }, /keys\[\]/],
-  [{ keys: [{ time: 0, position: [0, 1, 0], target: [0, 1, -2] }, { time: 3, position: [0, 1, 0], target: [0, 1, -2] }] }, /in order|inside \[0,duration\]/],
-  [{ keys: [{ time: 1, position: [0, 1, 0], target: [0, 1, -2] }, { time: 0, position: [0, 1, 0], target: [0, 1, -2] }] }, /in order/],
-  [{ keys: [{ time: 0, position: [0, Infinity, 0], target: [0, 1, -2] }] }, /position and target/],
+  [{ keys: req.keys.slice(0, 2) }, /keys\[\] must hold 3–16 keys/, 'a 2-key path is refused: the pinned OptFlowCam adapter cannot export it'],
+  [{ keys: [{ time: 0, position: [0, 1, 0], target: [0, 1, -2] }, { time: 0.5, position: [0, 1, 0], target: [0, 1, -2] }, { time: 3, position: [0, 1, 0], target: [0, 1, -2] }] }, /in order|inside \[0,duration\]/],
+  [{ keys: [{ time: 0, position: [0, 1, 0], target: [0, 1, -2] }, { time: 0.5, position: [0, 1, 0], target: [0, 1, -2] }, { time: 0.4, position: [0, 1, 0], target: [0, 1, -2] }] }, /in order/],
+  [{ keys: [{ time: 0, position: [0, Infinity, 0], target: [0, 1, -2] }, req.keys[1], req.keys[2]] }, /position and target/],
   [{ focus: { fStop: 0, anchors: [] } }, /focus needs fStop/],
   [{ focus: { fStop: 2.8, anchors: [[0]] } }, /focus anchors/],
 ]) assert.throws(() => validateCameraRequest({ ...req, ...patch }), re, JSON.stringify(patch).slice(0, 60));
