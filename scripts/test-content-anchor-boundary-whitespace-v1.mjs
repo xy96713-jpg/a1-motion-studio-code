@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';
+import {assertFrameContentPlanV1} from '../apps/studio-next/src/lib/a1-production-content-plan-v1.mjs';
+const contentPlan={referenceKind:'EDITORIAL_INFOGRAPHIC',subject:'check',action:'check',viewerTakeaway:'check',sourceAnchor:' self check ',requiredVisibleAnchors:['self check\ufeff'],treatment:'REBUILD_EDITORIAL'};
+const shot={exactCopy:['self check']},brief='self check',before=JSON.stringify({contentPlan,shot});
+const result=assertFrameContentPlanV1({contentPlan,shot,brief});
+assert.equal(result.sourceAnchor,'self check');assert.equal(result.requiredVisibleAnchors[0],'self check');
+assert.equal(JSON.stringify({contentPlan,shot}),before);
+assert.throws(()=>assertFrameContentPlanV1({contentPlan:{...contentPlan,requiredVisibleAnchors:['self\ufeff check']},shot,brief}),/ANCHOR_UNBOUND/);
+assert.throws(()=>assertFrameContentPlanV1({contentPlan:{...contentPlan,sourceAnchor:'invented fact'},shot,brief}),/ANCHOR_UNBOUND/);
+console.log('PASS boundary-only anchor cleanup; display copy and raw input unchanged; embedded corruption and invented anchors rejected.');

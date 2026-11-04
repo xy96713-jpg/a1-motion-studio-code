@@ -1,0 +1,54 @@
+#!/usr/bin/env node
+import crypto from "node:crypto";
+import fs from "node:fs";
+import path from "node:path";
+import {assertEditorialAssetWorkbench,recalculateEditorialAssetWorkbench} from "../apps/studio-next/src/lib/a1-editorial-asset-workbench-v1.mjs";
+import {buildBoundedHistoryRetentionPlan,rehydrateBoundedHistoryWorkspace} from "../apps/studio-next/src/lib/a1-bounded-history-retention-v1.mjs";
+import {createProductionEvent} from "../apps/studio-next/src/lib/editorial-production/index.mjs";
+import {persistProjectState,readCheckpointJournal,readProjectWorkspace,withProjectLock} from "../apps/studio-next/src/lib/a1-editorial-project-store-v2.mjs";
+
+const root=path.resolve(import.meta.dirname,"..");
+const appRoot=path.join(root,"apps/studio-next");
+const expectedPlanSha256=process.env.A1_HISTORY_COMPACTION_PLAN_SHA256||null;
+const explicitApproval=process.env.A1_HISTORY_COMPACTION_APPLY_APPROVED==="1";
+const sha=(value)=>crypto.createHash("sha256").update(Buffer.isBuffer(value)||typeof value==="string"?value:JSON.stringify(value)).digest("hex");
+const persistedPlanFile=path.join(root,".codex-artifacts/system-progress-system-line/bounded-history-compaction-v1/retention-plan.json");
+if(!/^[a-f0-9]{64}$/u.test(String(expectedPlanSha256||""))||!explicitApproval)throw new Error("bounded-history-apply-explicit-plan-approval-required");
+
+const beforeFile=path.join(appRoot,"public/generated/system-line/editorial-asset-workbench-v1/workspace.json");
+const beforeBytes=fs.statSync(beforeFile).size;
+const preparedWorkspace=readProjectWorkspace(appRoot);
+const preparedRetention=buildBoundedHistoryRetentionPlan(preparedWorkspace,{keepRecentFingerprints:3,maxRecordsPerChunk:100});
+const preparedPlan=JSON.parse(fs.readFileSync(persistedPlanFile,"utf8"));
+if(preparedRetention.plan.planSha256!==expectedPlanSha256||preparedPlan.planSha256!==expectedPlanSha256||preparedPlan.sourceWorkspaceSha256!==preparedWorkspace.workspaceSha256)throw new Error(`bounded-history-apply-prepared-plan-drift:${JSON.stringify({computed:preparedRetention.plan.planSha256,expected:expectedPlanSha256,persisted:preparedPlan.planSha256,persistedSource:preparedPlan.sourceWorkspaceSha256,current:preparedWorkspace.workspaceSha256})}`);
+const result=withProjectLock(appRoot,()=>{
+  const current=readProjectWorkspace(appRoot);
+  if(current.workspaceSha256!==preparedWorkspace.workspaceSha256||JSON.stringify(current)!==JSON.stringify(preparedWorkspace))throw new Error(`bounded-history-apply-workspace-cas:${current.workspaceSha256}`);
+  if(current.production?.historyArchivePointer)throw new Error("bounded-history-apply-pointer-already-present");
+  if(current.production.generation.workerStatus!=="frozen"||current.production.generation.automaticDispatchAllowed!==false||current.production.generation.jobs.some((job)=>["queued","running"].includes(job.status)))throw new Error("bounded-history-apply-frozen-runtime-required");
+  if(readCheckpointJournal(appRoot)?.status==="PREPARING")throw new Error("bounded-history-apply-pending-checkpoint");
+  const retention=preparedRetention;
+  const rehydrated=rehydrateBoundedHistoryWorkspace(retention.compactedWorkspace,retention.plan,retention.chunks);
+  if(JSON.stringify(rehydrated)!==JSON.stringify(current))throw new Error("bounded-history-apply-round-trip-invalid");
+  const now=new Date().toISOString();
+  const sourceWorkspaceSha256=current.workspaceSha256;
+  const sourceWorkspaceContentSha256=retention.plan.sourceWorkspaceContentSha256;
+  const recoveryRelativePath=`bounded-history-v1/recovery/source-workspace-${sourceWorkspaceSha256}.json`;
+  let next=structuredClone(retention.compactedWorkspace);
+  next.production.historyArchivePointer={...next.production.historyArchivePointer,status:"CURRENT",referenceOnly:false,planSha256:retention.plan.planSha256,indexSha256:retention.archiveIndex.indexSha256,indexRelativePath:"bounded-history-v1/history-index.json",chunkRootRelativePath:"bounded-history-v1/chunks",recoveryRelativePath,sourceWorkspaceSha256,sourceWorkspaceContentSha256,appliedAt:now,exactJsonRoundTripVerified:true,filesDeleted:0,mediaMoved:0};
+  next.workspaceSha256=null;
+  if(next.reviewLedger)next.reviewLedger.workspaceSha256=null;
+  next=assertEditorialAssetWorkbench(recalculateEditorialAssetWorkbench(next,now));
+  const receiptBody={contract:"A1BoundedHistoryCompactionApplyReceipt/v1",status:"APPLIED_NO_DELETION",sourceWorkspaceSha256,sourceWorkspaceContentSha256,compactedWorkspaceSha256:next.workspaceSha256,planSha256:retention.plan.planSha256,indexSha256:retention.archiveIndex.indexSha256,collectionCount:retention.plan.collections.length,chunkCount:retention.chunks.length,sourceRecordCount:retention.plan.totals.sourceRecordCount,hotRecordCount:retention.plan.totals.hotRecordCount,coldRecordCount:retention.plan.totals.coldRecordCount,sourceWorkspacePersistedBytes:retention.plan.totals.sourceWorkspacePersistedBytes,projectedCompactedWorkspacePersistedBytes:retention.plan.totals.projectedCompactedWorkspacePersistedBytes,projectedWorkspaceReductionRatio:retention.plan.totals.projectedWorkspaceReductionRatio,recoveryRelativePath,exactJsonRoundTrip:true,filesDeleted:0,mediaMoved:0,userVisualApprovalChanged:false,animationFrozen:true,appliedAt:now};
+  const receipt={...receiptBody,receiptSha256:sha({...receiptBody,appliedAt:undefined})};
+  const event=createProductionEvent({workspace:current,action:"apply-bounded-history-compaction",targetId:retention.plan.planSha256,payload:{contract:receipt.contract,status:receipt.status,planSha256:receipt.planSha256,indexSha256:receipt.indexSha256,hotRecordCount:receipt.hotRecordCount,coldRecordCount:receipt.coldRecordCount,exactJsonRoundTrip:true,filesDeleted:0,mediaMoved:0},now});
+  next.production.eventLedger.eventCount+=1;next.production.eventLedger.lastEventId=event.eventId;next.production.eventLedger.lastEventAt=event.createdAt;
+  const files={"bounded-history-v1/history-index.json":retention.archiveIndex,"bounded-history-v1/retention-plan.json":retention.plan,"bounded-history-v1/apply-receipt.json":receipt,[recoveryRelativePath]:current};
+  for(const chunk of retention.chunks)files[`bounded-history-v1/chunks/${chunk.chunkSha256}.json`]=chunk;
+  const committed=persistProjectState(appRoot,next,{event,expectedWorkspaceSha256:current.workspaceSha256,commitId:`bounded-history-${now.replace(/[-:.TZ]/gu,"").slice(0,14)}`,files});
+  return{receipt,workspaceSha256After:committed.workspaceSha256,transitionSha256:committed.transitionSha256};
+});
+const afterWorkspace=readProjectWorkspace(appRoot);
+const afterBytes=fs.statSync(beforeFile).size;
+if(afterWorkspace.production.historyArchivePointer?.status!=="CURRENT"||afterWorkspace.production.historyArchivePointer.planSha256!==expectedPlanSha256)throw new Error("bounded-history-apply-post-pointer-invalid");
+console.log(JSON.stringify({status:result.receipt.status,workspaceSha256After:result.workspaceSha256After,transitionSha256:result.transitionSha256,planSha256:result.receipt.planSha256,indexSha256:result.receipt.indexSha256,beforeBytes,afterBytes,reductionBytes:beforeBytes-afterBytes,reductionRatio:Number(((beforeBytes-afterBytes)/beforeBytes).toFixed(6)),hotRecordCount:result.receipt.hotRecordCount,coldRecordCount:result.receipt.coldRecordCount,chunkCount:result.receipt.chunkCount,recoveryRelativePath:result.receipt.recoveryRelativePath,exactJsonRoundTrip:true,filesDeleted:0,mediaMoved:0},null,2));

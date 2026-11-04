@@ -1,0 +1,38 @@
+#!/usr/bin/env node
+import path from "node:path";
+import {fileURLToPath} from "node:url";
+import {assertEditorialAssetWorkbench, recalculateEditorialAssetWorkbench} from "../apps/studio-next/src/lib/a1-editorial-asset-workbench-v1.mjs";
+import {classifyCompositeCompatibilityPreview} from "../apps/studio-next/src/lib/a1-packaging-output-boundary-v1.mjs";
+import {createProductionEvent} from "../apps/studio-next/src/lib/editorial-production/index.mjs";
+import {persistProjectState, readProjectWorkspace, withProjectLock} from "../apps/studio-next/src/lib/a1-editorial-project-store-v2.mjs";
+import {assertMediaEntrypointAuthorizationAudit, auditMediaEntrypointAuthorization} from "../apps/studio-next/src/lib/a1-media-entrypoint-authorization-v1.mjs";
+const appRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../apps/studio-next");
+const result = withProjectLock(appRoot, () => {
+  const current = assertEditorialAssetWorkbench(readProjectWorkspace(appRoot));
+  const pilot = current.production.shotIntelligence.representativeApprovedMasterMotionPilot;
+  if (!String(pilot?.publicUrl || "").includes("approved-master-layer-motion-pilot-v4")) throw new Error("representative-v4-authority-required");
+  const now = new Date().toISOString();
+  const next = structuredClone(current);
+  const mediaEntrypointAudit = assertMediaEntrypointAuthorizationAudit(auditMediaEntrypointAuthorization({scriptsRoot:path.resolve(appRoot, "../../scripts")}));
+  const deliveryContract = classifyCompositeCompatibilityPreview({sourceWorkspaceSha256: current.workspaceSha256, reason:"CURRENT_V4_H264_CONTAINS_ED13_BASE_FRAME_AND_IS_REVIEW_ONLY", media:{format:"h264-yuv420p",containsPresenterPixels:true,containsMicrophonePixels:true,containsBoomPixels:true,containsAudio:false,containsCaptions:false,asset:pilot.video}});
+  const nextPilot = next.production.shotIntelligence.representativeApprovedMasterMotionPilot;
+  nextPilot.deliveryContract = deliveryContract;
+  nextPilot.productionArtifact = false;
+  nextPilot.packagingDeliverable = false;
+  delete nextPilot.resolveInsertAllowed;
+  nextPilot.resolveInsertEligible = false;
+  nextPilot.resolveInsertAuthorized = false;
+  nextPilot.productionAdmissionAllowed = false;
+  nextPilot.reviewOnly = true;
+  nextPilot.packageAuthority = "HISTORICAL_COMPATIBILITY_PREVIEW_NOT_PACKAGING_DELIVERY";
+  next.production.packagingDeliveryBoundary = deliveryContract;
+  next.production.formalPackagingTypographyAdmission = {contract:"A1FormalTypographyGlyphAdmission/v1",status:"BLOCKED_UNMIGRATED_ROUTES",productionAdmissionAllowed:false,method:"FONT_FILE_DIRECT_GLYPH_OUTLINE_AND_ACTUAL_PIXEL_PROOF",cssFontDeclarationAcceptedAsProof:false,admittedScope:"FORMAL_PACKAGING_TEXT",admittedRoutes:["PACKAGE_LOOK_MASTER","OVERLAY_ALPHA","FULLSCREEN_PACKAGE"],fontSha256:pilot.formalTypographyGlyphAdmission?.fontSha256 || null,proofSha256:pilot.formalTypographyGlyphAdmission?.proofSha256 || pilot.actualPixelFontProofSha256 || null,outlineSetSha256:pilot.formalTypographyGlyphAdmission?.outlineSetSha256 || null,unmigratedMediaEntryPoints:mediaEntrypointAudit.unmigratedMediaEntryPoints,mediaEntrypointAuthorization:mediaEntrypointAudit,unmigratedBlockingRoutes:["LEGACY_PACKAGE_LOOK_MASTER_ENTRYPOINTS","LEGACY_OVERLAY_EXPORT_ENTRYPOINTS",...mediaEntrypointAudit.unmigratedMediaEntryPoints.map((entry) => `MEDIA_ENTRYPOINT_UNGUARDED:${entry}`)],reason:"CENTRAL_ADMISSION_IS_GENERIC_BUT_LEGACY_FORMAL_AND_MEDIA_ENTRYPOINTS_ARE_NOT_YET_MIGRATED"};
+  next.production.packagingAuthorization = {contract:"A1PackagingAuthorization/v2", version:2, receipts:{STATIC_REVIEW:null, MOTION_PREVIEW:null, PACKAGE_EXPORT:null, RESOLVE_INSERT:null}};
+  next.production.resolveExportReady = false;
+  next.production.resolveInsertReady = false;
+  next.production.resolveProjectMutationPerformed = false;
+  const event = createProductionEvent({workspace:current, action:"classify-v4-composite-compatibility-preview", targetId:"REPRESENTATIVE_MOTION_V4", payload:{route:deliveryContract.route, productionArtifact:false, resolveInsertEligible:false, resolveInsertAuthorized:false}, now});
+  next.production.eventLedger.eventCount += 1; next.production.eventLedger.lastEventId = event.eventId; next.production.eventLedger.lastEventAt = event.createdAt;
+  return {...persistProjectState(appRoot, recalculateEditorialAssetWorkbench(next, now), {event, expectedWorkspaceSha256:current.workspaceSha256, commitId:`classify-v4-compat-${now.replace(/[-:.TZ]/gu, "").slice(0,14)}`}), mediaEntrypointAudit};
+});
+console.log(JSON.stringify({status:"PASS",route:"COMPOSITE_COMPATIBILITY_PREVIEW",workspaceSha256:result.workspaceSha256,transitionSha256:result.transitionSha256,activeRunBytes:result.activeRunBytes,unmigratedMediaEntryPoints:result.mediaEntrypointAudit.unmigratedMediaEntryPoints}, null, 2));

@@ -1,0 +1,402 @@
+{
+ "contract": "A1RecipeBoardStyles/v1",
+ "about": "The looks the shot modules take (user, 2026-10-22: 系统需要灵活变体 不能一种风格不同主题视频). The reference teaches the structure (cuts, camera, layers, what is shown, the size and place of the type); the style is chosen per film from its subject, and may vary by chapter within its family. Each style is a skin the modules read (modules.mjs styleTheme -> spec.theme): ground and ink colours, the accent and the mark, the rise and fall colours of a market picture, the house fonts for display / text / accent, the texture over everything, how painted plates are described to image generation, and the camera's temper. The world of each style is the card line's theme of the same family (themes/<theme>.json). Since 2026-10-26 (CONVERGE-20261026 conflict 1) a style is the film's whole look, chosen once in project.json style: the 3D's material (material3d: ground, body, unit, emissive, metal, roughness, light) and the medium laid over the packaging (medium: none, print riso, tube pvm) came over from worlds/*.json, which older projects (project.world) still read. Each style carries the user's verdict (verdict: approved, rejected or untested, with their words; 2026-10-26: the Vol.047 run took a style the user had rejected on 10-20 and showed it to them again). A new film takes an approved style; a rejected one never; an untested one only as a proposal the user judges at the look gate, and their approval there makes it approved.",
+ "styles": {
+  "editorial-grey": {
+   "title": "冷灰报刊",
+   "theme": "hupo-editorial",
+   "fits": [
+    "财经",
+    "时事",
+    "新闻解读",
+    "公司",
+    "市场"
+   ],
+   "tokens": {
+    "ground": "light",
+    "paper": "#e6e6e4",
+    "ink": "#0d0d0d",
+    "accent": "#e0281f",
+    "mark": "#f2d43a",
+    "brand": "#1d3fd6",
+    "block": "#f4d400",
+    "up": "#0b8a3a",
+    "down": "#d0202e",
+    "bar": "#1b2f8f",
+    "foot": "#b0124a"
+   },
+   "fonts": {
+    "display": "黒華明朝",
+    "text": "黒華明朝",
+    "accent": "黒華明朝"
+   },
+   "texture": {
+    "grain": 0.5,
+    "vignette": 0.45,
+    "fringe": 0.4
+   },
+   "art": "Cool grey editorial light, pale paper and screen surfaces, a slight blue cast, clean and factual.",
+   "camera": {
+    "temper": "brisk",
+    "scale": 1
+   },
+   "material3d": {
+    "ground": "#e6e6e4",
+    "body": "#383838",
+    "unit": "#9a9a99",
+    "emissive": null,
+    "metal": 0.0,
+    "roughness": 0.85,
+    "light": "overcast"
+   },
+   "medium": {
+    "kind": "none"
+   },
+   "verdict": {
+    "state": "approved",
+    "said": "胡泊（hupo-auto2）整片交付用的就是它；2026-10-20 用户：你就对着原片审美做吧",
+    "film": "hupo-auto2"
+   }
+  },
+  "cobalt-print": {
+   "title": "钴蓝印刷",
+   "theme": "hupo-editorial",
+   "fits": [
+    "硬件",
+    "芯片",
+    "工程",
+    "原理",
+    "历史"
+   ],
+   "tokens": {
+    "ground": "light",
+    "paper": "#efe8d6",
+    "ink": "#2747a3",
+    "accent": "#e2261c",
+    "mark": "#e2261c",
+    "brand": "#2747a3",
+    "block": "#efe8d6",
+    "up": "#2747a3",
+    "down": "#e2261c",
+    "bar": "#2747a3",
+    "foot": "#e2261c"
+   },
+   "fonts": {
+    "display": "装甲明朝",
+    "text": "黒華明朝",
+    "accent": "黒華明朝"
+   },
+   "texture": {
+    "grain": 0.6,
+    "vignette": 0.3
+   },
+   "art": "Cream printed paper under soft daylight, risograph-like cobalt and red inks, a technical-manual feeling.",
+   "camera": {
+    "temper": "calm",
+    "scale": 0.8
+   },
+   "material3d": {
+    "ground": "#efe8d6",
+    "body": "#2a2a2a",
+    "unit": "#bdbdbd",
+    "emissive": null,
+    "metal": 0.0,
+    "roughness": 0.9,
+    "light": "overcast"
+   },
+   "medium": {
+    "kind": "print",
+    "preset": "riso",
+    "on": "packaging"
+   },
+   "verdict": {
+    "state": "rejected",
+    "said": "2026-10-20 用户看了米色纸钴蓝印刷的几版：设计的怎么好烂；2026-10-26 Vol.047 关键帧：绝对不行 很ai这种",
+    "film": "paperclip-047-six"
+   }
+  },
+  "glass-screen": {
+   "title": "冷玻璃屏幕",
+   "theme": "glass-screen",
+   "fits": [
+    "科技",
+    "AI",
+    "产品发布",
+    "芯片",
+    "数据"
+   ],
+   "tokens": {
+    "ground": "light",
+    "paper": "#dfe8f2",
+    "ink": "#0f1a2e",
+    "accent": "#3a7bff",
+    "mark": "#9fd0ff",
+    "brand": "#2a5bd7",
+    "block": "#dfe8f2",
+    "up": "#2fbf71",
+    "down": "#ff4d5e",
+    "bar": "#0f1a2e",
+    "foot": "#3a7bff"
+   },
+   "fonts": {
+    "display": "金畫字",
+    "text": "f.k 機械彫刻",
+    "accent": "f.k 機械彫刻"
+   },
+   "texture": {
+    "grain": 0.25,
+    "vignette": 0.3,
+    "contrast": 0.2
+   },
+   "art": "Frosted glass and polished chrome, cool blue studio light with a faint violet holographic rim, product-render cleanliness.",
+   "camera": {
+    "temper": "smooth",
+    "scale": 0.9
+   },
+   "material3d": {
+    "ground": "#dfe8f2",
+    "body": "#394355",
+    "unit": "#96a0ad",
+    "emissive": null,
+    "metal": 0.6,
+    "roughness": 0.3,
+    "light": "studio"
+   },
+   "medium": {
+    "kind": "none"
+   },
+   "verdict": {
+    "state": "untested",
+    "said": "用户没看过整片样子",
+    "film": null
+   }
+  },
+  "terminal-phosphor": {
+   "title": "暗场终端",
+   "theme": "terminal",
+   "fits": [
+    "量化",
+    "黑客",
+    "开源",
+    "代码",
+    "交易",
+    "AI 模型"
+   ],
+   "tokens": {
+    "ground": "dark",
+    "paper": "#0b100c",
+    "ink": "#b8ff9a",
+    "accent": "#ffb000",
+    "mark": "#b46bff",
+    "brand": "#b8ff9a",
+    "block": "#1c2a1d",
+    "up": "#b8ff9a",
+    "down": "#ff5d5d",
+    "bar": "#13241a",
+    "foot": "#ffb000"
+   },
+   "fonts": {
+    "display": "廻想体 ネクスト",
+    "text": "f.k 機械彫刻",
+    "accent": "f.k 機械彫刻"
+   },
+   "texture": {
+    "grain": 0.6,
+    "vignette": 0.6,
+    "fringe": 0.5
+   },
+   "art": "An early-2000s trading terminal room at night: CRT phosphor glow, green and amber light, dark desks, slight scanline haze.",
+   "camera": {
+    "temper": "brisk",
+    "scale": 1.1
+   },
+   "material3d": {
+    "ground": "#0b100c",
+    "body": "#1d2420",
+    "unit": "#3e6b45",
+    "emissive": "#ffb000",
+    "metal": 0.2,
+    "roughness": 0.55,
+    "light": "low-key"
+   },
+   "medium": {
+    "kind": "tube",
+    "preset": "pvm",
+    "on": "packaging"
+   },
+   "verdict": {
+    "state": "untested",
+    "said": "用户认可过 CRT/LED 屏幕介质的质感（2026-10-16），但没看过这套整片样子",
+    "film": null
+   }
+  },
+  "forensic-dark": {
+   "title": "法医暗场",
+   "theme": "film-paperclip-138-full",
+   "fits": [
+    "案件",
+    "悬疑",
+    "调查",
+    "科学",
+    "医学",
+    "人物"
+   ],
+   "tokens": {
+    "ground": "dark",
+    "paper": "#151515",
+    "ink": "#ece8df",
+    "accent": "#e8452c",
+    "mark": "#e8452c",
+    "brand": "#ece8df",
+    "block": "#e8452c",
+    "up": "#8fd18a",
+    "down": "#e8452c",
+    "bar": "#202020",
+    "foot": "#e8452c"
+   },
+   "fonts": {
+    "display": "スミカク",
+    "text": "黒華明朝",
+    "accent": "黒華明朝"
+   },
+   "texture": {
+    "grain": 0.7,
+    "vignette": 0.7
+   },
+   "art": "Low dark forensic light on matte surfaces, a single hard side light, deep near-black shadows, dotted halftone feel.",
+   "camera": {
+    "temper": "calm",
+    "scale": 0.7
+   },
+   "material3d": {
+    "ground": "#151515",
+    "body": "#2a2a2a",
+    "unit": "#8b877f",
+    "emissive": null,
+    "metal": 0.0,
+    "roughness": 0.85,
+    "light": "low-key"
+   },
+   "medium": {
+    "kind": "none"
+   },
+   "verdict": {
+    "state": "approved",
+    "said": "回形针 Vol.138（paperclip-138-full）整片用的就是它，用户逐轮审过",
+    "film": "paperclip-138-full"
+   }
+  },
+  "warm-collage": {
+   "title": "暖纸剪贴",
+   "theme": "paper-collage",
+   "fits": [
+    "人物故事",
+    "创业",
+    "生活",
+    "教育",
+    "温和叙述"
+   ],
+   "tokens": {
+    "ground": "light",
+    "paper": "#e9dcc4",
+    "ink": "#2a2118",
+    "accent": "#b5432a",
+    "mark": "#f0c24b",
+    "brand": "#b5432a",
+    "block": "#f0c24b",
+    "up": "#4e8a3a",
+    "down": "#b5432a",
+    "bar": "#2a2118",
+    "foot": "#b5432a"
+   },
+   "fonts": {
+    "display": "スミカク",
+    "text": "黒華明朝",
+    "accent": "黒華明朝"
+   },
+   "texture": {
+    "grain": 0.5,
+    "vignette": 0.35
+   },
+   "art": "Kraft paper and layered cut paper with soft shadows, warm afternoon light, handmade craft feeling.",
+   "camera": {
+    "temper": "calm",
+    "scale": 0.8
+   },
+   "material3d": {
+    "ground": "#e9dcc4",
+    "body": "#50463a",
+    "unit": "#a69b88",
+    "emissive": null,
+    "metal": 0.0,
+    "roughness": 0.85,
+    "light": "overcast"
+   },
+   "medium": {
+    "kind": "none"
+   },
+   "verdict": {
+    "state": "untested",
+    "said": "用户没看过整片样子",
+    "film": null
+   }
+  },
+  "y2k-chrome": {
+   "title": "Y2K 线条",
+   "theme": "y2k-line",
+   "fits": [
+    "互联网",
+    "年轻",
+    "消费",
+    "流行文化",
+    "AI 应用"
+   ],
+   "tokens": {
+    "ground": "light",
+    "paper": "#e9e6f4",
+    "ink": "#121212",
+    "accent": "#ff5fb3",
+    "mark": "#7ad3ff",
+    "brand": "#5b3bff",
+    "block": "#ffe86b",
+    "up": "#27c08a",
+    "down": "#ff5fb3",
+    "bar": "#121212",
+    "foot": "#7ad3ff"
+   },
+   "fonts": {
+    "display": "金畫字",
+    "text": "f.k 機械彫刻",
+    "accent": "f.k 機械彫刻"
+   },
+   "texture": {
+    "grain": 0.3,
+    "vignette": 0.2,
+    "saturate": 0.3
+   },
+   "art": "Silver-lilac Y2K surfaces, thin black line grids, four-point sparkles, flat pink blue and violet sticker props, chrome highlights.",
+   "camera": {
+    "temper": "bouncy",
+    "scale": 1.1
+   },
+   "material3d": {
+    "ground": "#e9e6f4",
+    "body": "#c9c6d2",
+    "unit": "#f2f0f6",
+    "emissive": "#ff5fb3",
+    "metal": 0.9,
+    "roughness": 0.18,
+    "light": "studio"
+   },
+   "medium": {
+    "kind": "none",
+    "on": "packaging"
+   },
+   "verdict": {
+    "state": "rejected",
+    "said": "2026-10-18 用户：没看出哪里 y2k 像我的 p 站风格（给对标的卡换皮）",
+    "film": null
+   }
+  }
+ }
+}

@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import {resolveAutomaticMotionRoute} from '../apps/studio-next/src/lib/a1-automatic-motion-router-v1.mjs';
+import {deriveCurrentShotReviewSummary,motionReviewSource} from '../apps/studio-next/src/lib/a1-shot-motion-review-v1.mjs';
+const shot={shotId:'FIXTURE',current:true,route:'PRESENTER_BASE',versionId:'v',artifactSha256:'a',timeRange:{durationMs:4000},sourceText:'presenter',actionContract:{before:'before',hold:'speech',after:'after',handoff:'next'},motionDesignContract:{executionRoute:'PRESENTER_SOURCE',formalCopyRequired:false}};
+shot.motionReviewPlan={action:'NO_PACKAGE',source:motionReviewSource(shot),viewerRequirements:{},viewerReview:{status:'REVISE'}};
+const summary=s=>deriveCurrentShotReviewSummary({production:{shotIntelligence:{currentStoryboardAuthority:{current:true,shots:[s]}}}});
+assert.equal(summary(shot).items[0].status,'NO_PACKAGE','pure presenter does not acquire packaging repair debt from sequence review');
+assert.equal(resolveAutomaticMotionRoute(shot).primary,'SOURCE_HOLD');
+const title=structuredClone(shot);title.packageType='TITLE';title.motionDesignContract.formalCopyRequired=true;
+assert.notEqual(resolveAutomaticMotionRoute(title).primary,'SOURCE_HOLD','explicit presenter title must not be skipped');
+assert.notEqual(summary(title).items[0].status,'NO_PACKAGE');
+const stale=structuredClone(shot);stale.motionReviewPlan.source.versionId='old';assert.equal(summary(stale).items[0].status,'STALE_REVIEW_REQUIRED');
+const history=structuredClone(shot);history.current=false;assert.equal(summary(history).items.length,0);
+const missing=structuredClone(title);delete missing.motionReviewPlan;assert.equal(summary(missing).items[0]?.status,'PACKAGING_REQUIREMENTS_REVIEW_REQUIRED');
+console.log('PASS pure presenter / explicit title / missing plan / stale binding / history scope');

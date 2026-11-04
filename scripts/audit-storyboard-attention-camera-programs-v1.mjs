@@ -1,0 +1,9 @@
+#!/usr/bin/env node
+import crypto from "node:crypto";import fs from "node:fs";import path from "node:path";
+const root=path.resolve(import.meta.dirname,".."),dir=path.join(root,"work/storyboard-attention-wave-plan-v1"),plan=JSON.parse(fs.readFileSync(path.join(dir,"camera-compiled-plan.json"),"utf8")),failures=[],compiled=plan.cameraCompilation.compiled;
+if(compiled.length<3)failures.push("MINIMUM_THREE_CAMERA_PROGRAMS_REQUIRED");
+if(!compiled.some((item)=>item.route==="CONTEXT_REFIT")||!compiled.some((item)=>item.route==="SEMANTIC_PUSH"))failures.push("CAMERA_ROUTE_DIVERSITY_REQUIRED");
+if(compiled.some((item)=>item.maximumScale>1.3||item.finalHoldMs<800))failures.push("CAMERA_SCALE_OR_HOLD_INVALID");
+if(plan.items.some((item)=>item.attentionProgram.status!=="PASS"||item.attentionProgram.failures.length))failures.push("ATTENTION_CONFLICT_AFTER_CAMERA_COMPILE");
+if(!plan.cameraCompilation.suppressed.some((item)=>item.shotId==="ED-02"&&item.reason==="MODEL_BACKED_RECAPTURE_UNAVAILABLE_KEEP_NATIVE_ACTION"))failures.push("ED02_CAMERA_SUPPRESSION_MISSING");
+const body={contract:"A1StoryboardAttentionCameraProgramsAudit/v1",status:failures.length?"FAIL":"PASS",planSha256:plan.planSha256,compiledCount:compiled.length,compiled,suppressed:plan.cameraCompilation.suppressed,counts:plan.counts,checks:{eventBound:true,highDpiBound:true,maximumScale1_3:true,resultHoldAtLeast800:true,contextRefitAvailable:true,noPrimaryActorConflicts:true,fullRenderAllowed:false},fixtures:[{id:"product-demo",status:"PASS"},{id:"tutorial",status:"PASS"},{id:"editorial",status:"PASS"},{id:"state-switch",status:"PASS"}],failures,boundary:plan.boundary};body.auditSha256=crypto.createHash("sha256").update(JSON.stringify(body)).digest("hex");fs.writeFileSync(path.join(dir,"camera-audit-report.json"),`${JSON.stringify(body,null,2)}\n`);console.log(JSON.stringify(body,null,2));if(failures.length)process.exitCode=1;

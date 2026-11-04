@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import {frameReuseIntentAnswerMatchesV1} from '../apps/studio-next/src/lib/a1-production-frame-options-v1.mjs';
+const answer={status:'PASS',findings:['Same source actors and reading relationships'],checks:{copyCorrect:true,actorAndDataCorrect:true,readable:true,compositionAcceptable:true,meaningfulContent:true,visualDirectionCorrect:true}};
+const intent=structuredClone(answer),policy={requiresDirection:true};
+assert.equal(frameReuseIntentAnswerMatchesV1(intent,answer,policy),true);
+assert.equal(frameReuseIntentAnswerMatchesV1(intent,{...answer,status:'FAIL'},policy),false,'a stored PASS cannot replace the actual failed answer');
+assert.equal(frameReuseIntentAnswerMatchesV1({...intent,findings:['Unrecorded client rationale']},answer,policy),false);
+const failedChecks={...answer,checks:{...answer.checks,visualDirectionCorrect:false}};
+assert.equal(frameReuseIntentAnswerMatchesV1(failedChecks,failedChecks,policy),false,'same bytes/status do not override source-direction failure');
+const wrongCopy={...answer,checks:{...answer.checks,copyCorrect:false}};
+assert.equal(frameReuseIntentAnswerMatchesV1(wrongCopy,wrongCopy,policy),false);
+const oldAnswer={status:'PASS',findings:['Old content-only check']};
+assert.equal(frameReuseIntentAnswerMatchesV1(oldAnswer,oldAnswer,policy),false);
+assert.equal(frameReuseIntentAnswerMatchesV1(oldAnswer,oldAnswer),true,'legacy scope remains readable without new-policy approval');
+console.log('PASS reuse-intent receipt matches actual answer; forged verdict/rationale and current direction/copy failures stay ineligible. No provider.');

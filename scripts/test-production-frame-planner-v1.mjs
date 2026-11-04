@@ -1,0 +1,70 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import {createHash} from 'node:crypto';
+import {projectProductionMaterialPoolV1} from '../apps/studio-next/src/lib/a1-production-material-pool-v1.mjs';
+import {validateProductionFrameRecipesV1,productionFramePlannerPromptV1,inspectProductionMaterialPoolV1,productionFrameSequenceContextV1} from '../apps/studio-next/src/lib/a1-production-frame-planner-v1.mjs';
+import {referenceVisualPromptV2} from '../apps/studio-next/src/lib/a1-reference-visual-director-v2.mjs';
+
+const root=fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(),'frame-planner-'))),taskRoot=path.join(root,'work','unseen');fs.mkdirSync(taskRoot,{recursive:true});
+try {
+  const files=Array.from({length:24},(_,i)=>{const filename=path.join(taskRoot,'image-'+i+'.png'),bytes=Buffer.from('candidate-'+i);fs.writeFileSync(filename,bytes);
+    return {assetId:'image-'+i,path:filename,sha256:createHash('sha256').update(bytes).digest('hex'),kind:'IMAGE',referenceOnly:false,materialClass:'ORIGINAL_GENERATED_ASSET'};});
+  const plan={projectId:'unseen',shots:['A','B','C','D','E','F'].map((id,i)=>({id,sourceText:'Unseen subject '+i,visualJob:'Explain this subject',exactCopy:['Locked '+i],tasks:[],productionResources:{assets:files.slice(i*4,i*4+4)}}))};
+  const pool=projectProductionMaterialPoolV1({plan});
+  const targets=plan.shots.map(s=>({shotId:s.id,state:'HOLD',targetKey:s.id+':HOLD',availableCopyIndices:[0],reference:{path:files[0].path,sha256:files[0].sha256}}));
+  const recipes=targets.map((t,i)=>({targetKey:t.targetKey,route:'GENERATE',reason:'Complete this target',viewerIntent:'Read locked copy',brief:'One complete editorial composition',transparentBackground:false,
+    productionDecision:{method:'GENERATE_COMPLETE_FRAME',whySelected:'No accepted complete frame exists',alternatives:[{method:'REUSE_COMPLETE_FRAME',reason:'No eligible receipt'}],sequenceRole:'Explain this target',handoff:'Continue to next subject'},nativeMaterialId:'',
+    contentPlan:{referenceKind:'TYPOGRAPHY_EVENT',subject:'Locked '+i,action:'Read the title',viewerTakeaway:'Read current copy',sourceAnchor:'Locked '+i,requiredVisibleAnchors:['Locked '+i],treatment:'REBUILD_EDITORIAL'},
+    copyIndices:[0],appearance:{composition:'One focal object',palette:'Neutral',surface:'Paper'},materialSelections:[{materialId:pool.materials[i+1].id,sha256:pool.materials[i+1].sha256,use:'SUBJECT',reason:'Visible subject supports this target',preserveNative:false}],protectedCores:[],continuityGroup:'family-'+i,masterTargetKey:''}));
+  recipes.forEach((r,i)=>r.brief+=' with Locked '+i);
+  const prepared=validateProductionFrameRecipesV1({repoRoot:root,plan,pool,targets,proposal:{recipes}});
+  assert.equal(prepared.units.length,6);assert.equal(prepared.waiting.length,0);
+  assert.ok(prepared.units.every(u=>u.materialSelections.length===1),'each goal gets selected useful references instead of all 24 images');
+  const unboundStyle=structuredClone(recipes);delete unboundStyle[0].contentPlan;
+  assert.throws(()=>validateProductionFrameRecipesV1({repoRoot:root,plan,pool,targets,proposal:{recipes:unboundStyle}}),/CONTENT_PLAN_REQUIRED/);
+  const filler=structuredClone(recipes);filler[0].brief='Abstract paper and geometric decoration only';
+  assert.throws(()=>validateProductionFrameRecipesV1({repoRoot:root,plan,pool,targets,proposal:{recipes:filler}}),/BRIEF_DROPPED_SOURCE/);
+  const missingCopy=structuredClone(recipes);missingCopy[0].copyIndices=[3];
+  assert.throws(()=>validateProductionFrameRecipesV1({repoRoot:root,plan,pool,targets,proposal:{recipes:missingCopy}}),/RECIPE_INVALID/);
+  const cycle=structuredClone(recipes);cycle[0].masterTargetKey=targets[1].targetKey;cycle[1].masterTargetKey=targets[0].targetKey;
+  assert.throws(()=>validateProductionFrameRecipesV1({repoRoot:root,plan,pool,targets,proposal:{recipes:cycle}}),/CONTINUITY_CYCLE/);
+  const unresolved=structuredClone(recipes);unresolved[0].route='SOURCE_REQUIRED';
+  const noPackage=structuredClone(recipes);noPackage[0].route='NO_PACKAGE';noPackage[0].copyIndices=[];
+  noPackage[0].productionDecision.method='NO_PACKAGE';noPackage[0].contentPlan.referenceKind='NATIVE_INTERFACE';
+  noPackage[0].contentPlan.requiredVisibleAnchors=['Not a new display-copy duty'];
+  const omitted=validateProductionFrameRecipesV1({repoRoot:root,plan,pool,targets,proposal:{recipes:noPackage}});
+  assert.equal(omitted.units.length,5);assert.equal(omitted.waiting[0].observation,'UNPACKAGED_SOURCE_CONTENT');
+  assert.equal(omitted.waiting[0].baseMediaWork,'SEPARATE_SOURCE_INTEGRATION_REQUIRED');
+  const wrongOmission=structuredClone(noPackage);wrongOmission[0].copyIndices=[0];
+  assert.throws(()=>validateProductionFrameRecipesV1({repoRoot:root,plan,pool,targets,proposal:{recipes:wrongOmission}}),/NO_PACKAGE_COPY/);
+  unresolved[0].productionDecision.method='SOURCE_REQUIRED';
+  assert.equal(validateProductionFrameRecipesV1({repoRoot:root,plan,pool,targets,proposal:{recipes:unresolved}}).units.length,5,'unresolved source is not converted into a generated fact');
+  const native=structuredClone(recipes);native[0].route='NATIVE_IMAGE';native[0].nativeMaterialId='known-native';native[0].productionDecision.method='NATIVE_IMAGE';
+  targets[0].nativeImageOptions=[{materialId:'known-native',review:{path:'source-review.json',sha256:'a'.repeat(64)}}];
+  const nativeResult=validateProductionFrameRecipesV1({repoRoot:root,plan,pool,targets,proposal:{recipes:native}});
+  assert.ok(nativeResult.units[0].sourceImage);assert.equal(nativeResult.units[0].visualIntake.sourceCorePolicy,'REVIEWED_NATIVE_IMAGE_INPUT');
+  const action=structuredClone(recipes);action[0].route='SOURCE_ACTION';action[0].productionDecision.method='NATIVE_SOURCE_ACTION';
+  const deferred=validateProductionFrameRecipesV1({repoRoot:root,plan,pool,targets,proposal:{recipes:action}});
+  assert.equal(deferred.waiting[0].route,'SOURCE_ACTION');assert.equal(deferred.units.length,5,'real source action is never turned into a fake generated UI');
+  const unsupported=structuredClone(native);unsupported[0].nativeMaterialId='missing';
+  assert.throws(()=>validateProductionFrameRecipesV1({repoRoot:root,plan,pool,targets,proposal:{recipes:unsupported}}),/NATIVE_IMAGE_UNBOUND/);
+  const prompt=productionFramePlannerPromptV1({});assert.ok(prompt.includes('one complete image brief'));assert.ok(prompt.includes('SOURCE_REQUIRED'));assert.ok(prompt.includes('master'));
+  const wholeFrame=referenceVisualPromptV2({typographyPolicy:{missingFont:'GENERATE_INSIDE_COMPLETE_FRAME'}});
+  assert.ok(wholeFrame.includes('never create a standalone glyph job'));assert.ok(!wholeFrame.includes('without a verified matching font should route'));
+  let calls=0;
+  const visual=async({images,context,outputDirectory})=>{calls++;fs.mkdirSync(outputDirectory,{recursive:true});return {output:{materials:context.materials.map(m=>({...m,visualDescription:'Observed fixture pixels',subjects:[],objects:[],palette:[],composition:'Observed fixture composition',usableAs:['STYLE']}))},trace:{imageInputCount:images.length}};};
+  const args={repoRoot:root,taskRoot,pool,executable:'/usr/bin/true',deadlineMs:Date.now()+60000,runVisualPass:visual};
+  const first=await inspectProductionMaterialPoolV1(args);assert.equal(first.descriptions.length,24);assert.equal(calls,4);
+  const again=await inspectProductionMaterialPoolV1(args);assert.equal(calls,4);assert.ok(again.traces.every(t=>t.reused),'same pixel descriptions are reused without more model passes');
+  const added=path.join(taskRoot,'new-material.png');fs.writeFileSync(added,'new independently observed material');
+  const grownPlan=structuredClone(plan);grownPlan.shots[0].productionResources.assets.push({assetId:'new-material',path:added,sha256:createHash('sha256').update(fs.readFileSync(added)).digest('hex'),kind:'IMAGE',referenceOnly:false,materialClass:'ORIGINAL_GENERATED_ASSET'});
+  const grown=await inspectProductionMaterialPoolV1({...args,pool:projectProductionMaterialPoolV1({plan:grownPlan})});
+  assert.equal(grown.descriptions.length,25);assert.equal(calls,5,'one new image needs one inspection, not four rebatched old groups');
+  const sequence=productionFrameSequenceContextV1(plan,['B:HOLD','E:HOLD']);
+  assert.deepEqual(sequence.map(s=>s.shotId),['A','B','C','D','E','F']);
+  assert.deepEqual(sequence.filter(s=>s.target).map(s=>s.shotId),['B','E'],'neighbor context must not expand production scope');
+  fs.appendFileSync(files[0].path,'changed');await assert.rejects(inspectProductionMaterialPoolV1(args),/BYTES_CHANGED/);
+  console.log('PASS 24-material/6-target recipe bindings; missing copy, source gaps and continuity cycles; whole-frame director policy; bounded visual catalogue with zero-repeat model calls and byte drift. Fixture model only, no real generation.');
+} finally {fs.rmSync(root,{recursive:true,force:true});}

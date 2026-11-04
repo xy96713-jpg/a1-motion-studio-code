@@ -1,0 +1,20 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+import * as gate from '../apps/studio-next/src/lib/a1-packaging-reference-media-v1.mjs';
+import {createRequire} from 'node:module';
+const w=JSON.parse(fs.readFileSync('apps/studio-next/public/generated/system-line/editorial-asset-workbench-v1/workspace.json'));
+const shot=w.production.shotIntelligence.currentStoryboardAuthority.shots.find(s=>s.motionReviewPlan?.approvedReference);
+const a=shot.motionReviewPlan.approvedReference;
+const r={contract:'A1ReviewPlaybackSelection/v1',kind:'APPROVED_REFERENCE',shotId:shot.shotId,source:a.source,scope:'REVIEW_OUTPUT_ONLY',audioStatus:'HISTORICAL_SILENT',productionAdmission:false,userVisualApproval:'NOT_APPROVED',oldVideoSha256:shot.reviewPlaybackSelection?.video?.sha256||shot.motionReviewReceipt?.video?.sha256||null,newVideoSha256:a.video.sha256,route:shot.route,executionRoute:a.executionRoute,evidenceSha256:a.evidence.sha256,reason:'用户明确要求已认可原片作为默认审看；不是新旁白版或正式入片',userDirective:{quote:'实现ED34已认可原片的持久『默认审看』选择，严格区别正式生产视频准入。'}};
+assert.equal(typeof gate.assertApprovedReferenceSelection,'function','explicit historical selection validator required');
+const result=gate.assertApprovedReferenceSelection(w,r,process.cwd());assert.equal(result.productionAdmission,false);
+for(const change of [{productionAdmission:true},{audioStatus:'NARRATED'},{oldVideoSha256:'bad'},{executionRoute:'bad'},{route:'bad'},{source:{...r.source,versionId:'stale'}},{evidenceSha256:'0'.repeat(64)},{userDirective:null},{newVideoSha256:'0'.repeat(64)}])assert.throws(()=>gate.assertApprovedReferenceSelection(w,{...r,...change},process.cwd()));
+for(const mutate of [s=>s.motionReviewPlan.approvedReference.evidence.quote='invented',s=>s.motionReviewPlan.approvedReference.video.path='work/missing.mp4',s=>s.motionReviewPlan.source.versionId='stale',s=>s.motionReviewPlan.approvedReference.executionRoute='wrong']){const copy=structuredClone(w);mutate(copy.production.shotIntelligence.currentStoryboardAuthority.shots.find(s=>s.shotId===shot.shotId));assert.throws(()=>gate.assertApprovedReferenceSelection(copy,r,process.cwd()));}
+const require=createRequire(new URL('../apps/studio-next/package.json',import.meta.url)),ts=require('typescript'),module={exports:{}};
+new Function('require','module','exports',ts.transpileModule(fs.readFileSync('apps/studio-next/src/app/system-line-visual-workbench/ShotMotionReview.tsx','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX}}).outputText)(require,module,module.exports);
+const resolve=module.exports.resolveShotPreview, fixture=structuredClone(shot);delete fixture.reviewPlaybackSelection;
+assert.notEqual(resolve(fixture).playbackSha256,r.newVideoSha256,'reference never auto-selected');
+fixture.reviewPlaybackSelection={...r,video:result.video};assert.equal(resolve(fixture).playbackSha256,r.newVideoSha256);assert.equal(resolve(fixture).historicalSilent,true);
+fixture.motionReviewPlan.viewerReview={...fixture.motionReviewPlan.viewerReview,candidateVideoSha256:'a'.repeat(64)};assert.equal(resolve(fixture).playbackSha256,r.newVideoSha256);
+fixture.motionReviewPlan.approvedReference.evidence.sha256='0'.repeat(64);assert.equal(resolve(fixture).motionUrl,null);
+console.log('PASS approved reference selection: binding, evidence, missing/drift, no preemption, review-only');

@@ -1,0 +1,64 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import { directorIntentErrors, pinRouteIntoAnswerBeat } from '../apps/studio-next/src/lib/recipe-board/directorroutes.mjs';
+import * as TP from '../apps/studio-next/src/lib/recipe-board/typepreflight.mjs';
+import * as G from '../apps/studio-next/src/lib/recipe-board/greybox.mjs';
+import { stillsGroup } from '../apps/studio-next/src/lib/recipe-board/stills.mjs';
+import { contentStateCarryErrors } from '../apps/studio-next/src/lib/recipe-board/refbreakdown.mjs';
+const risk = {beat:'B11', productionRisk:'high'};
+assert(directorIntentErrors(risk).some(x=>x.includes('required')), 'high risk cannot inherit the legacy missing-contract exemption');
+assert.deepEqual(directorIntentErrors({beat:'B10'}), [], 'unrelated legacy rows remain compatible');
+assert(directorIntentErrors({beat:'B12',activeRevision:true}).length);
+const d={assets:[{id:'field',use:'art',source:'generated',file:'field.png',operation:'hold',operability:'whole-image'}],route:'custom',question:'觀眾應該理解什麼',start:'田地中原本有舊作物',change:'保持畫面以讀清結構',end:'田地中仍然是舊作物',handoff:'停穩後硬切下一鏡頭',reason:'給觀眾閱讀空間和時間',layers:{evidence:'none',art:'generated field',type:'code'}};
+assert.deepEqual(directorIntentErrors({...risk,directorIntent:d}), [], 'intentional hold is valid');
+const pick={kind:'compare',composition:'split-compare',devices:['table-grows']};
+assert.equal(pinRouteIntoAnswerBeat(risk,pick).device,undefined,'no implicit director choice on risk');
+assert.equal(pinRouteIntoAnswerBeat({beat:'old'},pick).device,'table-grows');
+assert.deepEqual(stillsGroup({beats:[{beat:'B10',hero:true},risk,{beat:'B12',activeRevision:true},{beat:'old'}]},[]).shots.map(x=>x.shotId),['B10','B11','B12']);
+const asset={id:'field',use:'art',source:'generated',file:'field.png',operation:'hold',operability:'whole-image'};
+d.assets=[asset];
+assert.deepEqual(directorIntentErrors({...risk,directorIntent:d}),[]);
+assert(directorIntentErrors({...risk,directorIntent:{...d,assets:[{...asset,operation:'per-object'}]}}).some(x=>x.includes('operability')));
+assert(directorIntentErrors({...risk,directorIntent:{...d,assets:[{...asset,use:'evidence'}]}}).some(x=>x.includes('real source')));
+assert.deepEqual(directorIntentErrors({...risk,directorIntent:{...d,assets:[{...asset,use:'evidence',source:'real',provenance:'https://example.test/source'}]}}),[], 'real evidence with provenance is valid');
+assert(directorIntentErrors({...risk,directorIntent:{...d,assets:[{...asset,use:'type',source:'generated'}]}}).some(x=>x.includes('code source')), 'generated assets cannot be declared as type');
+assert.deepEqual(directorIntentErrors({...risk,directorIntent:{...d,assets:[asset,{...asset,id:'house-type',use:'type',source:'code',file:'module:fg',operability:'code'}]}}),[], 'generated art and code type remain valid');
+assert(directorIntentErrors({...risk,directorIntent:{...d,assets:[]}}).some(x=>x.includes('assets')));
+assert.equal(typeof G.eventReviewErrors,'function','review must test event correspondence, not pixel motion');
+const evidence=[{beat:'B11',status:'measured',binding:'current'}];
+assert(G.eventReviewErrors({events:[{beat:'B11',binding:'current',verdict:'fail',observed:'海報只有推拉，沒有換種'}]},evidence).length);
+assert(G.eventReviewErrors({events:[{beat:'B11',binding:'old',verdict:'pass',observed:'看到物件改變'}]},evidence).some(x=>x.includes('stale')));
+assert(G.eventReviewErrors({events:[{beat:'B11',binding:'current',verdict:'pass',observed:'看到物件改變'}]},[{...evidence[0],status:'unknown'}]).some(x=>x.includes('unknown')));
+assert.deepEqual(G.eventReviewErrors({events:[{beat:'B11',binding:'current',verdict:'pass',observed:'起態舊作物，逐田換種，落態新作物'}]},evidence),[]);
+assert.equal(typeof TP.measuredFontErrors,'function');
+assert(TP.measuredFontErrors([{face:'MissingFont',text:'換種'}],[]).some(x=>x.includes('font')));
+assert(TP.measuredFontErrors([],[]).some(x=>x.includes('unknown')));
+assert(TP.measuredFontErrors([{face:'Test',text:'換種'}],[{family:'Test',path:'/nonexistent/font.otf'}]).length);
+const carryPlan={beats:{B01:{carryOver:'舊田與已完成表格'},B02:{join:'match',carryOver:'同一塊田保留已完成行，繼續換種'}}};
+const carryShots=[{shotId:'B01',at:0,dur:4},{shotId:'B02',at:4,dur:4}];
+const progressingActors=[
+  {t:0,id:'field',state:{identity:'field-a',count:1,completedRows:[],counters:{converted:0}}},
+  {t:3.9,id:'field',state:{identity:'field-a',count:1,completedRows:['old-crop'],counters:{converted:1}}},
+  {t:4,id:'field',state:{identity:'field-a',count:1,completedRows:['old-crop'],counters:{converted:1}}},
+  {t:7.9,id:'field',state:{identity:'field-a',count:1,completedRows:['old-crop','new-crop'],counters:{converted:2}}},
+];
+assert.deepEqual(contentStateCarryErrors(carryPlan,carryShots,progressingActors),[],'a measured match inherits completed rows and counter state before advancing them');
+const clearedCompleted=progressingActors.map((row)=>row.t===4?{...row,state:{...row.state,completedRows:[]}}:row);
+assert(contentStateCarryErrors(carryPlan,carryShots,clearedCompleted).some((x)=>x.includes('completedRows')&&x.includes('cleared')),'match cannot clear content already completed in the previous shot');
+const changedIdentity=progressingActors.map((row)=>row.t>=4?{...row,state:{...row.state,identity:'field-b'}}:row);
+assert(contentStateCarryErrors(carryPlan,carryShots,changedIdentity).some((x)=>x.includes('identity')&&x.includes('resetReason')),'subject identity cannot reset without an explanation');
+assert.deepEqual(contentStateCarryErrors({beats:{...carryPlan.beats,B02:{...carryPlan.beats.B02,resetReason:'鏡頭明確切到另一塊對照田'}}},carryShots,changedIdentity),[],'an explained intentional subject reset remains possible');
+const resetQuantities=progressingActors.map((row)=>row.t===4?{...row,state:{...row.state,count:0,counters:{converted:0}}}:row);
+const quantityErrors=contentStateCarryErrors(carryPlan,carryShots,resetQuantities);
+assert(quantityErrors.some((x)=>x.includes('count')&&x.includes('resetReason')),'subject quantity cannot reset without an explanation');
+assert(quantityErrors.some((x)=>x.includes('counters.converted')&&x.includes('resetReason')),'a counter cannot silently restart at a match');
+const carryOnlyPlan={beats:{...carryPlan.beats,B02:{carry:true,carryOver:'同一主體與表格繼續推進'}}};
+assert(contentStateCarryErrors(carryOnlyPlan,carryShots,[]).some((x)=>x.includes('unmeasured')),'carry without measurable boundary states fails closed');
+const missingStateObjects=progressingActors.map((row)=>row.t===3.9||row.t===4?{...row,state:null}:row);
+assert(contentStateCarryErrors(carryPlan,carryShots,missingStateObjects).some((x)=>x.includes('unmeasured')),'timestamps without readable content state are not measurements');
+assert.deepEqual(contentStateCarryErrors({beats:{B02:{carryOver:'舊版純文字設計說明'}}},carryShots,[]),[],'legacy prose alone does not invent a new measured carry obligation');
+const chapterRuntime=fs.readFileSync(new URL('../apps/studio-next/src/lib/recipe-board/chapter.mjs',import.meta.url),'utf8');
+assert(chapterRuntime.includes('contentStateCarryErrors(plan, g.shots, measuredActors)'),'chapter runtimeCheck must hard-gate the measured match/carry boundary');
+const previousOutPlan={beats:{B01:{out:'match',carryOver:'主體與已完成行留到後鏡'},B02:{carryOver:'繼續推進'}}};
+assert(contentStateCarryErrors(previousOutPlan,carryShots,[]).some((x)=>x.includes('unmeasured')),'previous-shot plan2 out:match uses the same measured hard gate');
+console.log('director production contract: scope, holds, explicit choice, still coverage, asset operations and review protocol passed');

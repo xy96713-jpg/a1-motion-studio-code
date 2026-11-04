@@ -1,0 +1,96 @@
+{
+ "contract": "A1ProjectRoutes/v1",
+ "asOf": "2026-11-04",
+ "about": "Different projects use different routes. A subject demo (drill/HDD/H100/banana) is not forced through a 20-shot film; local images/GLBs are valid assets.",
+ "routes": [
+  {
+   "id": "film-design",
+   "when": "narrative/explainer film with a design gate",
+   "stages": [
+    "research",
+    "buildPlan",
+    "asset gate",
+    "3-frame",
+    "5s",
+    "10s",
+    "20s previz",
+    "act",
+    "full"
+   ],
+   "gates": [
+    "lookMatch",
+    "benchmark B12/Hupo",
+    "canary quality",
+    "blind review",
+    "user design/final"
+   ]
+  },
+  {
+   "id": "subject-demo",
+   "when": "single built subject test (drill, HDD, H100, B04, banana)",
+   "subjectIds": [
+    "drill",
+    "hdd",
+    "h100",
+    "b04",
+    "banana"
+   ],
+   "stages": [
+    "read subject glb/blender model",
+    "6-view/material sheet",
+    "subject template still",
+    "3s/6s subject canary",
+    "blind review"
+   ],
+   "gates": [
+    "asset review",
+    "do not claim film design"
+   ],
+   "note": "No 20-shot expansion; use the subject kit and its template."
+  },
+  {
+   "id": "evidence-led",
+   "when": "story whose facts/pages/people are the subject",
+   "stages": [
+    "source checklist",
+    "real assets",
+    "evidence binding",
+    "page capture",
+    "still/canary"
+   ],
+   "gates": [
+    "real evidence only",
+    "no generated evidence"
+   ]
+  },
+  {
+   "id": "packaging-text",
+   "when": "arbitrary text -> packaging",
+   "stages": [
+    "semantic split",
+    "beat questions",
+    "6 directions",
+    "user select",
+    "greybox",
+    "shots"
+   ],
+   "gates": [
+    "design gate",
+    "packaging audit"
+   ]
+  },
+  {
+   "id": "canary",
+   "when": "effect/technical probe",
+   "stages": [
+    "smallest pure scene",
+    "still",
+    "5s",
+    "metrics"
+   ],
+   "gates": [
+    "never a delivery"
+   ]
+  }
+ ]
+}

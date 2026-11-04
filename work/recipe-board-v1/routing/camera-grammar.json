@@ -1,0 +1,61 @@
+{
+ "contract": "A1CameraGrammar/v1",
+ "about": "CAMERA.md (camera rules) + SHOT-DIRECTION.md §3 (continuity) as the machine-checkable subset the chapter line enforces on the shot-motion contract (tasks/session-<chapter>.motion.json). A contract that disagrees fails the chapter check before it renders. The rules that need the measured picture (180°/30°, screen direction, reading speed, reference camera path replay) stay with the chapter measurement and the reviews — listed under notMachineChecked.",
+ "source": [
+  "work/recipe-board-v1/CAMERA.md",
+  "work/recipe-board-v1/SHOT-DIRECTION.md"
+ ],
+ "vocabulary": {
+  "static": "locked — the default; the camera stays put",
+  "push": "slow push (2–4 % over 3 s or longer)",
+  "pull": "slow pull",
+  "pan": "reframe laterally",
+  "orbit": "reframe around the subject",
+  "dolly": "travel with the camera",
+  "tilt": "reframe vertically",
+  "cut": "a cut inside the shot, only where the reference cuts at that moment",
+  "whip": "seam-only whip (whip out/in at a cut, never a whole shot)"
+ },
+ "aliases": {
+  "locked": "static",
+  "hold": "static",
+  "reframe": "pan",
+  "punch": "push"
+ },
+ "rules": {
+  "defaultMove": "static",
+  "oneMovePerShot": true,
+  "cameraMoveTopLevelAgreement": true,
+  "staticIntensityMax": 0.05,
+  "seamOnlyMoves": [
+   "whip"
+  ],
+  "whipSeams": [
+   "whip",
+   "cut"
+  ],
+  "moveMinDelta": {
+   "scale": 0.001,
+   "offset": 0.5
+  },
+  "bandBounds": [
+   0,
+   1
+  ],
+  "poseContinuitySeams": [
+   "push",
+   "match",
+   "whip",
+   "pan",
+   "orbit"
+  ]
+ },
+ "notMachineChecked": [
+  "180° rule (needs the spatial camera track)",
+  "30° rule between two appearances of the same subject",
+  "screen direction across a cut",
+  "reading speed (measured on the animatic: camera px per frame while type is read)",
+  "whip/shake amplitude (measured on the animatic)",
+  "the reference's own camera path (OptFlowCam / Blender bake replay — not wired into chapters yet)"
+ ]
+}

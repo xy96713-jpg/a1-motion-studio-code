@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import { buildOptions, validateOptions } from './design-options.mjs';
+const o = buildOptions({ text: '一篇关于单一种植风险的文字', title: '单一种植', transition: '同一道弧线接下一镜' });
+assert.deepEqual(validateOptions(o), []);
+assert.equal(o.options.length, 6);
+assert.ok(new Set(o.options.map((x) => x.direction)).size === 6);
+const bad = JSON.parse(JSON.stringify(o)); bad.options[0].prompt = 'image with text';
+assert.ok(validateOptions(bad).some((e) => e.includes('text-free')));
+const dup = JSON.parse(JSON.stringify(o)); dup.options[1].thesis = dup.options[0].thesis;
+assert.ok(validateOptions(dup).some((e) => e.includes('duplicate thesis')));
+console.log('design options tests pass');

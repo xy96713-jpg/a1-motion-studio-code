@@ -1,0 +1,96 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "shots"
+  ],
+  "properties": {
+    "shots": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "verdict",
+          "owner",
+          "problems",
+          "fix",
+          "notes"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "verdict": {
+            "type": "string",
+            "enum": [
+              "pass",
+              "fix"
+            ]
+          },
+          "owner": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "plan",
+              "module",
+              null
+            ]
+          },
+          "problems": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "at",
+                "say"
+              ],
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "unreadable",
+                    "bad-mark",
+                    "overlap",
+                    "off-frame",
+                    "empty",
+                    "wrong-material",
+                    "unlike-reference",
+                    "weak-design",
+                    "other"
+                  ]
+                },
+                "at": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "say": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "fix": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "notes": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

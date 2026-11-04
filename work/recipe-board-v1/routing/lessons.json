@@ -1,0 +1,2595 @@
+{
+ "contract": "A1RecipeBoardLessons/v1",
+ "about": "The user's corrections as rules the director is given before planning (techniques.mjs lessonsFor). when: devices / grounds (techniques.mjs groundOf) / words (a regular expression over the card's reading) / always. check: the code that fails a plan or a shot that ignores it. New corrections are added here with their check (AGENTS.md: a kind of bad result is fixed in shared code, measured, tested). Since 2026-10-26 (CONVERGE-20261026 conflicts 4, 8): a lesson a later decision replaced names it (supersededBy) and is no longer handed out; a lesson that bears on a review carries review { say, complains, suggests, keepIf }: say goes into the three review prompts as one shared section (reviewrules.mjs), a fix whose complaint matches complains or that asks only for what suggests matches is void.",
+ "lessons": [
+  {
+   "id": "L01-means-first",
+   "said": "2026-10-22 为什么素材对不上；你找那么差的视频素材哪里来的",
+   "when": {
+    "always": true
+   },
+   "do": "先定手段再找素材：数据画面（股价榜、K 线、走势、图表、表格）用代码按真实数据画（market / chart / table）；网页报道用截图；真人用照片或视频；设计的底用生图画无字底再由代码排真实标志和事实；只有氛围空镜才找图库视频",
+   "check": "showsErrors (白模上每个小镜头的画面类别要和原片一致), DEVICES.market"
+  },
+  {
+   "id": "L02-no-unlike-standin",
+   "said": "2026-10-22 你找那么差的视频素材哪里来的",
+   "when": {
+    "devices": [
+     "broll",
+     "brand",
+     "market",
+     "chart"
+    ]
+   },
+   "do": "找不到素材时不拿只沾一个词边的旧素材顶（交易室跑马灯顶股价榜）；替身也要和原片同类画面，否则用代码画、生图画，或显示明显的待补占位",
+   "check": "showsErrors"
+  },
+  {
+   "id": "L03-design-the-ground",
+   "said": "2026-10-22 你是看不懂原片背景设计吗 不能是用 wiki 啊 或者你用生图设计",
+   "when": {
+    "devices": [
+     "title",
+     "brand"
+    ],
+    "grounds": [
+     "designed-card",
+     "designed-scene"
+    ]
+   },
+   "do": "看清原片的底是设计出来的（说明卡、静物场景、拼贴、色块）还是真实截图；设计的底用 bg { art } 生图画无字底（带 refs 指向原片那一帧只取光和布局），真实标志用 tiles / card 贴上，事实写进 card.lines；标题不压在随手的网页截图上",
+   "check": "groundErrors"
+  },
+  {
+   "id": "L04-match-the-type-design",
+   "said": "2026-10-21 拆的不够细，很多没对标上动效、设计",
+   "when": {
+    "devices": [
+     "title",
+     "brand",
+     "article",
+     "quote"
+    ],
+    "words": "立体|倒角|斜体|书法|毛笔|金属|黄底|色块"
+   },
+   "do": "大字的设计照原片的手法做：立体倒角（title style brand）、粗重斜笔书法感（brush）、金属（metal）、瘦高（shape tall）、黄底色块（block）、一侧（side）、局部放大（big）；字高和位置对上拆解卡实测",
+   "check": "compareBreakdown R..type"
+  },
+  {
+   "id": "L05-camera-from-card",
+   "said": "2026-10-21 很多没对标上动效",
+   "when": {
+    "cards": true
+   },
+   "do": "每个小镜头按拆解卡实测的推拉、平移、动的比例和缓动写 spec.camera；导演没要求的移动从静止起步（ease-in-out）；不要在切点前一刻戛然停住",
+   "check": "compareBreakdown R..camera, camera.js default ease"
+  },
+  {
+   "id": "L06-cut-where-the-reference-cuts",
+   "said": "2026-10-21 原片切了 20 次我们只切了 13 次",
+   "when": {
+    "cards": true
+   },
+   "do": "切点对上拆解卡的切点（0.3 秒内）；人物快闪这种 0.4 秒一张的连切要照做；原片没切的地方要切，写 plan-cut 和理由",
+   "check": "followErrors"
+  },
+  {
+   "id": "L07-real-facts-only",
+   "said": "2026-10-16 每个数字都要能追到来源",
+   "when": {
+    "words": "\\d"
+   },
+   "do": "画面上每个数字都要追到存档来源（facts / factSources）；行情数字由 market 模块从存档数据算，导演不手写价格",
+   "check": "checkModuleSpec figures, marketErrors",
+   "review": {
+    "say": "画面上的数字和事实都要有出处：文稿没点名的人、案子、地点不能要求补，真人的脸不能要求生成。",
+    "complains": null,
+    "suggests": "(生成|画出)[^；;。，,]{0,6}(真人|人脸|人像)",
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L08-house-type",
+   "said": "2026-10-21 只用 6 款字体·不加字幕·繁体",
+   "when": {
+    "always": true
+   },
+   "do": "只用六款家用字体；展示体（スミカク、廻想体）只用在 90 px 以上；画面字转繁体；系统不加字幕",
+   "check": "house.mjs typeErrors / glyphErrors",
+   "supersededBy": "L92-six-faces-eva",
+   "mergedNote": "audit 2026-10-27 #12: three lessons on the faces, one now"
+  },
+  {
+   "id": "L09-marks-on-words",
+   "said": "2026-10-21 黄条要刚好盖住字",
+   "when": {
+    "devices": [
+     "article",
+     "screen",
+     "pagecurl"
+    ]
+   },
+   "do": "页面上的条、框、高亮只用 marks.js 画在 OCR 找到的字上；短语要在页面上原样存在、从字开始到字结束；镜头推的时候整句要留在画面里",
+   "check": "markErrors, phraseErrors"
+  },
+  {
+   "id": "L10-text-in-frame",
+   "said": "2026-10-21 字被画面边切掉",
+   "when": {
+    "devices": [
+     "market",
+     "table",
+     "chart",
+     "title"
+    ]
+   },
+   "do": "导演的镜头推近或平移时，模块要把字排在镜头始终看得到的范围里（market 按 spec.camera 算安全边距）",
+   "check": "framecheck off-frame"
+  },
+  {
+   "id": "L11-ground-words-under-title",
+   "said": "2026-10-22 凭什么压在说明卡上",
+   "when": {
+    "grounds": [
+     "designed-card",
+     "capture"
+    ],
+    "devices": [
+     "title"
+    ]
+   },
+   "do": "大字压在底上的字（说明卡要点、页面）上是原片的设计：底上的字放在 data-ground 层；其他字之间不能互相压",
+   "check": "framecheck overlap (data-ground)"
+  },
+  {
+   "id": "L12-structure-not-skin",
+   "said": "2026-10-22 系统需要灵活变体 不能一种风格不同主题视频",
+   "when": {
+    "always": true
+   },
+   "do": "原片教结构（切点、运镜、分层、画面是什么、字的大小位置）；颜色、字体搭配、质感、生图画风、运镜性格按这部片的主题选风格（routing/styles.json），同一手法换风格要换皮不换骨；一部片里章节之间可以在同一风格家族里变体",
+   "check": "styleErrors (方案要选风格并说明和主题的关系)",
+   "supersededBy": "L33-grade-not-copy",
+   "mergedNote": "audit 2026-10-27 #12: the reference is the floor, one lesson"
+  },
+  {
+   "id": "L13-taste-not-copy",
+   "said": "2026-10-21 原片是底线，要系统像设计师一样多样化设计",
+   "when": {
+    "always": true
+   },
+   "do": "原片是底线不是天花板：先达到原片的结构和信息量，再按风格做设计上的变化（同一个手法在不同主题里长得不一样），不逐像素复刻原片的皮",
+   "check": "compareBreakdown (结构), shows (画面类别)",
+   "supersededBy": "L33-grade-not-copy",
+   "mergedNote": "audit 2026-10-27 #12: the reference is the floor, one lesson"
+  },
+  {
+   "id": "L14-speed",
+   "said": "2026-10-22 有点慢 有没有办法提速 又快又好",
+   "when": {
+    "always": true
+   },
+   "do": "先白模（半分辨率、测量）再成片；调一个镜头只渲那一个；画面没变的镜头沿用评审；生图底图缓存复用",
+   "check": "moduleStamp (只重渲改过的模块), sheetSha carry-over"
+  },
+  {
+   "id": "L15-glyphs-first",
+   "said": "2026-10-22 冷启动 who：趴 没有任何家用字体有，渲染时才炸",
+   "when": {
+    "always": true
+   },
+   "do": "画面上的每句话写之前就要确认六款家用字体能排（方案检查 unsettable 会拦）；排不了就换个说法（把英伟达干趴下 → 把英伟达拉下马）",
+   "check": "checkShotplan glyphs (house.mjs unsettable)"
+  },
+  {
+   "id": "L16-paint-atmosphere-not-evidence",
+   "said": "2026-10-22 你用生图设计；冷启动 who：代码屏、K线显示器、量化交易室、奖杯",
+   "when": {
+    "devices": [
+     "title",
+     "side-card",
+     "broll"
+    ]
+   },
+   "do": "不是证据的画面（氛围、场景、道具：代码屏、显示器上的行情、交易室、奖杯）用生图画（title bg { art }、卡片 img { art }）；人物、标志、页面、具体事件是证据，必须真实",
+   "check": "paintedKinds (生图只顶 title 底和卡片道具)"
+  },
+  {
+   "id": "L17-footage-motion",
+   "said": "2026-10-22 冷启动 who：美钞片段自己的推近和原片的拉远相反",
+   "when": {
+    "devices": [
+     "broll"
+    ],
+    "grounds": [
+     "footage"
+    ]
+   },
+   "do": "选实拍片段时看它自己的运镜：和原片小镜头的推拉平移方向一致的片段和起点（in）才用；不一致就换片段，或用定格加 camera；素材比原片暗或艳时用 texture exposure / saturate 调",
+   "check": "compareBreakdown R..camera / R..look（按运动挑片段的功能待补，见 gaps）"
+  },
+  {
+   "id": "L18-cut-at-rest",
+   "said": "2026-10-22 用户：衔接还是不丝滑，不出现卡顿和抽动（8–10 秒那种才对：一张图里一直变）",
+   "when": {
+    "devices": [],
+    "grounds": []
+   },
+   "do": "切点的镜头：原片硬切两边镜头都停稳（17 个里 16 个），动的是画面里的东西；要带着动过切点只有同一个运动接着走或快甩；换世界用几帧 glitch 盖住；说 match 就要上一镜最后一帧的东西在下一镜第一帧原地还在。整片的推拉都从静止起、回到静止（SETTLE），不做匀速蠕动",
+   "check": "sequence.mjs seamJerks（切点两边镜头速度、match 的边缘重合），motion-runtime SETTLE 的测试"
+  },
+  {
+   "id": "L19-presenter-cards",
+   "said": "2026-10-22 盲审（cards 只有文案的盲做）：讲者镜头只贴一张小撕纸标签，对标在讲者两侧立大设计卡、实物卡",
+   "when": {
+    "devices": [
+     "presenter",
+     "side-card"
+    ],
+    "grounds": []
+   },
+   "do": "讲者段的包装主力是大卡：把这句话的问题、物件、产品做成侧卡（sidecard cards，标题、副题、实物抠图或画出来的道具），标签只做点缀；卡在镜头开头就落下，不要让第一拍只有讲者",
+   "check": "scriptcard.mjs varietyErrors：只贴标签的讲者镜头不能多过带卡的"
+  },
+  {
+   "id": "L20-metal-on-quiet",
+   "said": "2026-10-22 盲审（cards-S2）：瘦高金属字压在满屏 K 线的画面上，读不出来，像变形的字",
+   "when": {
+    "devices": [
+     "title"
+    ],
+    "grounds": []
+   },
+   "do": "瘦高字、金属字要压在安静的底上：生图的底画简单的场景，或者压暗 0.45 以上、虚化 4 以上；花的底配粗字",
+   "check": "modules.mjs checkModuleSpec：metal 标题压在生图底上须 dim≥0.45 或 blur≥4"
+  },
+  {
+   "id": "L21-display-face-reads",
+   "said": "2026-10-23 用户看审批白膜：34 秒「核心」不像中国字（スミカク把心画成 |C）；系统给了 6 款字体却没用好",
+   "when": {
+    "devices": [
+     "title",
+     "term-biggest"
+    ],
+    "grounds": []
+   },
+   "do": "展示体只用于在它里面读得出的词：每个大字词先在候选字体里排出来让文字识别读回，读错一个字就换到同一条替补链里读得出的字体，最后兜底黒華明朝",
+   "check": "legible.mjs illegible（Vision 读回，2–8 字须全对）→ morph.js 排字时跳过；chapter.mjs chapterHouse 传 house.illegible"
+  },
+  {
+   "id": "L22-words-may-cross-a-face",
+   "said": "2026-10-23 用户：压脸也可以 不要把时间浪费在这上面或者分层出来放在人像后面 明白吗 要灵活的设计",
+   "when": {
+    "devices": [
+     "quote",
+     "title",
+     "person"
+    ],
+    "grounds": []
+   },
+   "do": "大字（展示字、引语）可以压过人脸，或者把人像抠出来、字放在人像后面分层；不要为了躲脸把字缩小，也不要在躲脸上反复调",
+   "check": "framecheck.mjs LIMITS.faceText 90：只有 90px 以下的小字压脸才判失败；quote.html color 版式不再为躲脸缩字",
+   "review": {
+    "say": "大字（展示字、引语）可以压过人脸，不为躲脸把字缩小或挪开。",
+    "complains": "我们的?[^；;。]{0,6}(大字|标题|引语)[^；;。]{0,8}(压|挡|盖)(住|在)?[^；;。]{0,6}(脸|人脸|面部)",
+    "suggests": "(躲开?|避开|让开)[^；;。，,]{0,3}人?脸",
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L23-no-type-on-cards",
+   "said": "2026-10-23 用户看整片白膜：指出这些问题是希望系统更聪明 不是说为了做这期片子；B20 文字有重叠遮挡；B44 我的那个位置有遮挡",
+   "when": {
+    "devices": [
+     "title",
+     "label",
+     "tag",
+     "pile"
+    ],
+    "grounds": []
+   },
+   "do": "标题出来时卡片先让开或压暗；标签之间不互压，主角（我、凶手）放在视觉中心",
+   "check": "chapter.mjs crossErrors 把物件里的图也算进去（groundSources：一堆卡片不是底；只看得见 2D 画的）；3D 里的牌子互压由盲审规则管（morph-review.md）"
+  },
+  {
+   "id": "L24-tell-many-by-difference",
+   "said": "2026-10-23 用户看整片白膜：指出这些问题是希望系统更聪明 不是说为了做这期片子；B19 设计怎么都是脚印和手指 怎么不多设计变化呢；dna 怎么变得更简陋了 还不如之前设计的手印脚印呢 可以多样性；要通用不是为了改这一个片子",
+   "when": {
+    "devices": [
+     "pile",
+     "cases",
+     "map"
+    ],
+    "grounds": []
+   },
+   "do": "很多件同类的东西每件用共用物件库（routing/props.json）同一族里不同的成员，每种最多重复两次；不复制同一张图，也不拿掉图只剩代码画的条框；库里不够就往库里加",
+   "check": "chapter.mjs repeatErrors（同一张图一拍超过 3 处不过）；propsNamed/propLibrary 自动生成；kit2 props(images, family, n) 轮换"
+  },
+  {
+   "id": "L25-say-it-once",
+   "said": "2026-10-23 用户看整片白膜：指出这些问题是希望系统更聪明 不是说为了做这期片子；21 秒那个为什么重复 3 次",
+   "when": {
+    "devices": [
+     "article",
+     "quote",
+     "page"
+    ],
+    "grounds": []
+   },
+   "do": "报道页上的一句只用一种方式强调（划线、放大、弹卡片选一种），不把同一句再写一遍",
+   "check": "morph-review.md：同一句话出现两次以上最多 3 分"
+  },
+  {
+   "id": "L26-camera-continues",
+   "said": "2026-10-23 用户看整片白膜：指出这些问题是希望系统更聪明 不是说为了做这期片子；b09 b10 什么的怎么衔接的不好了",
+   "when": {
+    "devices": [
+     "camera",
+     "chapter-seam"
+    ],
+    "grounds": []
+   },
+   "do": "下一章从上一章停的地方往前走，不推→拉→推",
+   "check": "morph.md 规则 15；整片审片看接缝"
+  },
+  {
+   "id": "L27-keep-the-metaphor",
+   "said": "2026-10-23 用户看整片白膜：指出这些问题是希望系统更聪明 不是说为了做这期片子；b53 是想表达什么 原片是什么",
+   "when": {
+    "devices": [
+     "metaphor",
+     "object",
+     "ending"
+    ],
+    "grounds": []
+   },
+   "do": "原片物件的比喻意思要保住；生图不肯画就用部件拼；装饰性读数（倒计时、仪表）可以显示数字",
+   "check": "morph.md 规则 16；morph-review.md 比喻丢了最多 3 分"
+  },
+  {
+   "id": "L28-no-empty-frame",
+   "said": "2026-10-23 用户看整片白膜：指出这些问题是希望系统更聪明 不是说为了做这期片子；b47 开始为什么变小画面了 背景灰 中间画面黑",
+   "when": {
+    "devices": [
+     "screen",
+     "inset",
+     "footage"
+    ],
+    "grounds": []
+   },
+   "do": "框、屏幕、纸面一出现里面就有东西；没有原片那段录屏就不学框，内容做满全屏",
+   "check": "morph.md 规则 17；morph-review.md 空框最多 2 分"
+  },
+  {
+   "id": "L29-restraint-like-reference",
+   "said": "2026-10-23 用户看整片白膜：指出这些问题是希望系统更聪明 不是说为了做这期片子；b23 设计的镜头语言太丑了 没设计感",
+   "when": {
+    "devices": [
+     "3d",
+     "symbol",
+     "person"
+    ],
+    "grounds": []
+   },
+   "do": "原片只有一个主体时我们也只放一个，一束光、其余压暗；不堆模型和小人",
+   "check": "morph.md 规则 18；morph-review.md 堆满最多 3 分"
+  },
+  {
+   "id": "L30-moving-ground",
+   "said": "2026-10-23 用户看整片白膜：指出这些问题是希望系统更聪明 不是说为了做这期片子；b25 的背后 dna 螺旋明明可以动起来更好吧",
+   "when": {
+    "devices": [
+     "title",
+     "ground",
+     "helix"
+    ],
+    "grounds": []
+   },
+   "do": "原片在动的背景我们也动：螺旋慢转、光沿链走",
+   "check": "morph.md 规则 19；morph-review.md 背景静止最多 3 分"
+  },
+  {
+   "id": "L31-forms-by-art",
+   "said": "2026-10-23 用户看整片白膜：指出这些问题是希望系统更聪明 不是说为了做这期片子；b33 表格和文字没做好 出格子了 都可以用生图来做吧",
+   "when": {
+    "devices": [
+     "table",
+     "form",
+     "record"
+    ],
+    "grounds": []
+   },
+   "do": "表格、表单、证件的版式用生图（不带字），字由代码按格子大小填进去",
+   "check": "morph.md 规则 20"
+  },
+  {
+   "id": "L32-footage-subtitles-cut",
+   "said": "2026-10-23 用户看整片白膜：指出这些问题是希望系统更聪明 不是说为了做这期片子；b36 挡住字幕 可以直接用视频原片是不是",
+   "when": {
+    "devices": [
+     "footage",
+     "tv",
+     "news"
+    ],
+    "grounds": []
+   },
+   "do": "真实视频自带的字幕整条裁掉，不留半截；视频可以接近满屏直接用",
+   "check": "chapter.mjs subtitleCut：片段帧先 OCR，裁掉下三分之一的字幕行"
+  },
+  {
+   "id": "L33-grade-not-copy",
+   "said": "2026-10-23 用户：做这些设计时候其实差不多就行 倒不用一模一样设计 设计可以有变体什么的要灵活",
+   "when": {
+    "always": true
+   },
+   "do": "对标是底线不是答案：版式、构图、底色、手法可以变，只要一样满、一样好读、焦点一样清楚；不为对齐原片的版面反复返工。（并入 L12-structure-not-skin：原片教结构（切点、运镜、分层、画面是什么、字的大小位置）；颜色、字体搭配、质感、生图画风、运镜性格按这部片的主题选风格（routing/styles.json），同一手法换风格要换皮不换骨；一部片里章节之间可以在同一风格家族里变体。）（并入 L13-taste-not-copy：原片是底线不是天花板：先达到原片的结构和信息量，再按风格做设计上的变化（同一个手法在不同主题里长得不一样），不逐像素复刻原片的皮。）",
+   "check": "prompts/stillcheck.md：只判档次，做法不同不算 unlike-reference；framecheck 量满不满（对标一半以上）",
+   "review": {
+    "say": "对标是底线不是答案：版式、构图、底色、手法可以不同，一样满、一样好读、焦点一样清楚就过；不为对齐对标的版面打回。",
+    "complains": null,
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L34-motion-from-measure",
+   "said": "2026-10-23 用户：你难道还没对标好全篇包括动效复刻；执行吧（测量直接变默认动效）",
+   "when": {
+    "cards": true
+   },
+   "do": "镜头运动和出场节奏不手写：原片拆解量到的推拉、平移、动的时间、元素一样一样出来的节奏直接成为镜头的默认；导演只定先出哪样",
+   "check": "shotplan.mjs withRefMotion（方案写成模块时套用，计划写 differ 的不动）；白膜上 compareBreakdown 再量一遍"
+  },
+  {
+   "id": "L35-formal-sources",
+   "said": "2026-10-23 用户：你找素材是不是有很大问题 对标找到很正式很好 你为什么从博客截呢",
+   "when": {
+    "devices": [
+     "article",
+     "screen",
+     "pagecurl"
+    ],
+    "grounds": []
+   },
+   "do": "报道页用报道本身：先用对标读出的原标题去搜；正式媒体和官方页面优先，博客、自媒体（网易号、头条、百家号、公众号）、社区、转述摘要站不当来源；对标用中文报道的地方中文正式报道优先",
+   "check": "materials.mjs rankNeed（outlets +30 / notSources −45 / 对标标题 refMatch）、pageCandidates 先搜 refTitle；方案检查 notSourceErrors 拒绝博客自媒体页面"
+  },
+  {
+   "id": "L33-look-again-after-a-fix",
+   "said": "2026-10-23 重做 29 拍，8 拍过线：多数是改一处冒一处（撤卡片画面空、挪标签推镜出画、换位置撞背景大字、3D 物体挡字）；要通用不是为了改这一个片子",
+   "when": {
+    "devices": [
+     "any"
+    ],
+    "grounds": []
+   },
+   "do": "每次修改后整拍看帧条：空不空、出不出画、新位置撞不撞别的；3D 里物体挡字系统量不出，交之前自己看",
+   "check": "morph.md 规则 21；盲审硬条件照常"
+  },
+  {
+   "id": "L34-one-move-not-steps",
+   "said": "2026-10-23 用户：开篇镜头怎么变成一缓动一缓动的感觉呢 是做了什么设计呢",
+   "when": {
+    "devices": [
+     "camera"
+    ],
+    "grounds": []
+   },
+   "do": "一镜到底的推拉写成首尾相接的关键帧，系统连成一个连续动作；想停住就在两个关键帧之间真的留出停顿（0.25 秒以上）；要切就用 0 秒或 0.1 秒以下的关键帧",
+   "check": "moves.js camPose / pan2 把相接的关键帧连成一条曲线；测试 camera shots"
+  },
+  {
+   "id": "L35-no-repeat-cuts",
+   "said": "2026-10-23 用户：21秒开始为什么还是重复划好几次呢 怎么做这么低级的错误呢",
+   "when": {
+    "devices": [
+     "page",
+     "quote",
+     "screen"
+    ],
+    "grounds": []
+   },
+   "do": "一个镜头里切成几段，每段必须展示不同的东西（不同的句子、不同的局部）；内容一样就合成一段，不照搬原片的切点",
+   "check": "scenes.mjs sameSceneKeep：写镜头时去掉与上一段相同的场景，渲染时也合并（旧镜头同样生效）"
+  },
+  {
+   "id": "L36-everything-on-screen-is-registered",
+   "said": "2026-10-23 用户：45秒开始左上角还叠字 系统连这么基础的问题都还做不好吗 肯定能从代码上 数学上做好",
+   "when": {
+    "devices": [
+     "any"
+    ],
+    "grounds": []
+   },
+   "do": "画面上读得见的字，不管走哪条通道画（背景大字、卡片里的字），都要登记位置；找空地时把它们当障碍物扣掉",
+   "check": "morph.js lookUnder 登记 alpha≥0.2 的背景大字；where.free 避开它们；overlapErrors 量它们"
+  },
+  {
+   "id": "L37-on-the-word",
+   "said": "2026-10-23 用户：58秒左右设计的两段dna螺旋 消失不自然 肯定要尽量连贯动画设计 最重要的 是否卡住了节奏呢 原片说话的 字幕节奏",
+   "when": {
+    "devices": [
+     "any"
+    ],
+    "grounds": []
+   },
+   "do": "画面上的字和动作落在台词说到它的那一刻（where.said('词')）；元素不凭空消失，交给下一拍的东西要变形过去（两条 DNA 合成一条）",
+   "check": "chapter.mjs cueTimingErrors（早 0.8 秒或晚 1.2 秒以上不过）；morph.js where.said",
+   "review": {
+    "say": "台词原话的字在说到它的那一刻才出（系统按住的）：字和台词同时出现不扣，只有说过了字还不出才扣。",
+    "complains": null,
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L38-card-geometry",
+   "said": "2026-10-23 用户：系统连这么基础的问题都还做不好吗 肯定能从代码上 数学上做好（卡片镜头：B04 页上标黑的句子又在引语卡上原样再说一遍，B05/B06 小字压在证物照片的掌印上）",
+   "when": {
+    "devices": [
+     "any"
+    ],
+    "grounds": []
+   },
+   "do": "卡片镜头和章节一样：每 0.2 秒量字叠字、字压不属于它的图、字压在照片里的东西上、图和字被画框切掉、字太小，站住 0.8 秒就不过；同一句话同一时刻只说一次（页上标了就不再上引语卡）；照片上的小字给自己的标签底",
+   "check": "cardgeometry.mjs frameGeometryErrors / busyErrors / sayTwiceErrors（framecheck.measureFrames 和 run.mjs cardCheck、recipe-board.mjs cardcheck）"
+  },
+  {
+   "id": "L39-paper-plates",
+   "said": "2026-10-23 用户（看 hupo-auto2 r1-S8 的答案板）：这种设计的挺丑排版有错误也 为什么不能生图来做什么的",
+   "when": {
+    "devices": [
+     "any"
+    ],
+    "grounds": []
+   },
+   "do": "字下面的标签、底板、答案板不用代码画纯色块：用 routing/props.json 的 label 家族（生图的贴纸、撕纸、胶带、卡纸、折痕纸，不带字），颜色取片子的风格，相邻的用不同成员；字仍由代码排。部件之间不叠、推镜到最近时也不出画（frame.html 自动排开）",
+   "check": "cardgeometry.mjs flatPlateErrors（字压在代码纯色块上不过）；labels.mjs tintPlates / plateCss；frame.html settle（避让和留边）",
+   "supersededBy": "L91-no-red-plate"
+  },
+  {
+   "id": "L38-start-from-rest",
+   "said": "2026-10-23 用户：为什么很多字尤其小字经常出现一卡一卡的感觉 乱动 是帧数原因还是什么",
+   "when": {
+    "devices": [
+     "camera",
+     "any"
+    ],
+    "grounds": []
+   },
+   "do": "已经在画面上的东西移动从零速起步（inOut）；out 曲线只给入场；自动摆位置整章只算一次，不每帧重算",
+   "check": "chapter.mjs hopErrors（每 1/30 秒，停着的字一帧走 8 像素以上不过）；morph.js where.place 整章求解（__placeSolve，places 随参数进渲染）"
+  },
+  {
+   "id": "L39-lead-steps-back",
+   "said": "2026-10-23 盲审（ending S11 两轮）：引子开场只是角落一行小灰字没焦点；放大后新句进来它又不让位，四行抢主角",
+   "when": {
+    "devices": [
+     "quote",
+     "title",
+     "frame"
+    ],
+    "grounds": []
+   },
+   "do": "一拍一个主角：引子独占时设成主字一档；下一句进来时上一句缩小一档、变暗退到上方（frame 部件 recede: { at, scale, dim }）",
+   "check": "盲审 scorecard [focus]；frame.html recede"
+  },
+  {
+   "id": "L40-hold-to-the-cut",
+   "said": "2026-10-23 盲审（B09 两条螺旋拍尾并成一条，B17 证据拍尾飞走，B33 档案拍尾缩成一点）：交接放在这一拍末尾，最后一帧丢了要点",
+   "when": {
+    "devices": [
+     "carrier",
+     "subject-stays",
+     "zoom-out-whole",
+     "scale-jump"
+    ],
+    "grounds": []
+   },
+   "do": "这一拍的要点停到拍尾；合并、飞走、缩小这些交接动作放到下一拍开头的第一秒（跨章就在下一章开头接住）",
+   "check": "chapter.mjs seamErrors：拍尾 0.35 秒的画面内容少于第三个四分之一段（较满时）的 60% 判不过"
+  },
+  {
+   "id": "L41-focus-first-build-later",
+   "said": "2026-10-24 盲审与动效量尺相撑（talent S2：竖条慢慢扫下去满足了“逐个出现”，盲审说 210.9 秒那一列还没压住、焦点没了）",
+   "when": {
+    "devices": [
+     "table",
+     "chart",
+     "list"
+    ],
+    "grounds": []
+   },
+   "do": "这一拍的焦点按时到位（压暗的列、点名的数字在口播说到时就完整）；量尺要的“逐个出现、铺开多秒”用后来才加进来的东西做（多一行、多一家、镜头下移带出新内容），不要把焦点本身放慢",
+   "check": "breakdown compareBreakdown anim.build 与 stillcheck 盲审 [focus] 同时过"
+  },
+  {
+   "id": "L42-one-source-twice-a-film",
+   "said": "2026-10-24 整片盲审（hupo-auto2）：同一段美钞飘落素材在 1:34、4:00、5:49、6:53、8:05 出现五次，每段只看自己时各用一次",
+   "when": {
+    "devices": [
+     "insert",
+     "footage",
+     "photo"
+    ],
+    "grounds": []
+   },
+   "do": "同一来源（同一素材的不同剪切、裁切也算）全片最多用两次；第三次起换同主题的别的素材，没有就提请求、先用别的替身",
+   "check": "shotplan.mjs repeatPlanErrors（film：读其他段的方案，sourceKey 认来源）"
+  },
+  {
+   "id": "L43-no-empty-handover",
+   "said": "2026-10-24 整片盲审：对比图左组先退完右组才出（3:01），表格先铺一整张空格线再出行（3:09），行情板第一行滑进来时整板是空的（0:03）",
+   "when": {
+    "devices": [
+     "compare",
+     "table",
+     "market",
+     "list"
+    ],
+    "grounds": []
+   },
+   "do": "一组退、一组进要同时发生，画面上任何时刻都有主体；格线、底框随内容一起出，不先画空架子；切进来的那一帧内容已基本到位（进场动作从切点前开始）",
+   "check": "模块自身（compare.html 平移起点、table.html 格线随行、market.html 行在切点前进场）＋ framecheck 的满度、开场检查"
+  },
+  {
+   "id": "L44-try-the-verified-library",
+   "said": "2026-10-24 整片盲审：0:18 该是马斯克，画面是一张几乎全黑的白宫替身，素材库里却有已核实的马斯克 TED 片段",
+   "when": {
+    "devices": [
+     "person",
+     "insert"
+    ],
+    "grounds": []
+   },
+   "do": "挑图顺序里的都失败后，先试素材库里点名对得上、没给眼睛看过的已核实素材，再考虑替身；替身不能是暗到看不清的画面",
+   "check": "materials.mjs proposeBatch（unseen library）"
+  },
+  {
+   "id": "L45-emphasis-only-where-it-wins",
+   "said": "2026-10-24 盲审（opensrc S8）：GPQA 一行 R1 71.5 低于 o1 75.7，却和赢的几行一样红色放大",
+   "when": {
+    "devices": [
+     "table",
+     "chart",
+     "compare"
+    ],
+    "grounds": []
+   },
+   "do": "对比表写明哪边大为好（table spec.better: high/low），强调色只给真的赢的那一格；输的那行照常排，不放大不上色",
+   "check": "table.html wins(row)"
+  },
+  {
+   "id": "L46-footage-own-motion",
+   "said": "2026-10-24 白模比对（talent S11、ending S13）：数钱实拍里的手和钞票自己在动，量出的镜头平移和对标相反或被抵消，增益环反而越加越大",
+   "when": {
+    "devices": [
+     "insert",
+     "footage"
+    ],
+    "grounds": []
+   },
+   "do": "实拍插入先挑素材自身运动和对标方向一致、或最稳的那几秒；镜头只轻推，自身运动对不上就在 follows 里写明是素材的运动；换了素材，旧增益作废（gainSrcOf）",
+   "check": "shotplan.mjs applyCamGain（增益绑定素材来源）"
+  },
+  {
+   "id": "L47-one-device-twice",
+   "said": "2026-10-24 整片盲审：r1 七十秒里画了四条圆章图标链，对标四拍各用一种画法（图标链、奖励表、1-4 时间轴加括号、Wait 黑框）",
+   "when": {
+    "devices": [
+     "steps",
+     "table",
+     "chart",
+     "compare",
+     "market"
+    ],
+    "grounds": []
+   },
+   "do": "同一种图示（同样的画法）一段里 90 秒内最多两次；第三拍换装置，或同一装置换画法（有图/无图、表/时间轴），照对标那一拍的画法",
+   "check": "shotplan.mjs deviceRepeatErrors"
+  },
+  {
+   "id": "L48-carry-across-the-cut",
+   "said": "2026-10-24 第七次整片盲审：cards 1:51 两张卡切过去重新弹入、叠化成重影；r1 4:49 奖励表切过去从头重画、镜头跳一下",
+   "when": {
+    "devices": [
+     "sidecard",
+     "frame",
+     "table",
+     "steps"
+    ],
+    "grounds": []
+   },
+   "do": "前一镜已经在画面上的东西，下一镜原样接住：卡片、表、链在切点直接完整在场，不重新入场；镜头从上一镜结束的取景接着走（camera.from = 上一镜 camera.to）；要换的东西在前一镜末尾退场，不在切点同时退和进",
+   "check": "sidecard.html 切点上的卡片承接；frame.html 切点上的淡入先进一半；seamstudy.py 量切点两侧"
+  },
+  {
+   "id": "L49-one-canvas-across-shots",
+   "said": "2026-10-24 第八次整片盲审：对标 r1 R07 是一块 41 秒不切的画布，我们切成五镜，每个切点都把板子重画一遍",
+   "when": {
+    "devices": [
+     "frame",
+     "steps",
+     "table",
+     "chart"
+    ],
+    "grounds": []
+   },
+   "do": "对标一镜到底而我们要拆成几镜时（单镜 12 秒、部件 14 个的上限），后一镜写 ground: { src: { shot: '前一镜' } }：底就是前一镜的最后一帧，镜头从那里接着走，只往上加新东西；要换掉的东西在前一镜末尾退场",
+   "check": "shotplan.mjs continueFrom；modules.mjs afterStill；seamstudy.py 量切点两侧的延续"
+  },
+  {
+   "id": "L50-cards-grow-with-the-words",
+   "said": "2026-10-24 第十次整片盲审：讲者两侧的卡十秒一个字不变，加上讲者是静帧，整幅像定格；对标卡上的字跟着口播一句句长出来",
+   "when": {
+    "devices": [
+     "sidecard",
+     "presenter"
+    ],
+    "grounds": []
+   },
+   "do": "讲者旁的卡在口播展开时往卡里加条目（cards[].list，每条 7 字以内，按说到的时间），让画面一直在长；不要靠横移镜头在两张卡之间切换",
+   "check": "sidecard.html list；framecheck progressProblem"
+  },
+  {
+   "id": "L51-stand-in-names-no-one",
+   "said": "2026-10-24 第十次整片盲审：替身航拍一眼认出是苹果总部，讲 DeepSeek 时会被误读",
+   "when": {
+    "devices": [
+     "insert"
+    ],
+    "grounds": []
+   },
+   "do": "替身素材不能是能认出的别家公司、地标或人物；用同主题、不点名的素材（同一段实拍的另一截、近景），或提请求等实拍",
+   "check": "盲审 [subject]"
+  },
+  {
+   "id": "L52-open-close-pull-out-as-it-builds",
+   "said": "2026-10-24 第十一次整片盲审：r1 4:38 板子在左上一小块、85% 空纸、镜头不动；h800 3:09 表格切进来只有表头，下面一片空",
+   "when": {
+    "devices": [
+     "table",
+     "frame",
+     "steps",
+     "chart"
+    ],
+    "grounds": []
+   },
+   "do": "逐行/逐项长出来的东西，镜头开场贴近第一项（1.3–1.4 倍），随后面各项出来逐步拉开，最后落到全景；任何时刻画面都是满的、镜头都在走",
+   "check": "framecheck fills / opening；breakdown camera moving"
+  },
+  {
+   "id": "L53-recall-by-reference",
+   "said": "2026-10-24 第十三次整片盲审：回顾段 6:23『省錢』压在一张全片没出现过的小狗图上——前面讲这件事的 12×12 算式板早改了，回顾抄的是旧版本",
+   "when": {
+    "devices": [
+     "title",
+     "frame"
+    ],
+    "grounds": [
+     "module"
+    ]
+   },
+   "do": "回顾/呼应前面某段时，底图引用那一镜（ground.src 或 bg 写 { shot: '段/S#' }），自动取它现在的整幅画面（不带它的推镜），不要把它的模块抄一份；原镜改了，回顾跟着变",
+   "check": "shotplan recallCopyErrors"
+  },
+  {
+   "id": "L54-close-framing-keeps-the-newest",
+   "said": "2026-10-24 h800 群聊加了第三条消息后推近没了：取景要把标题和所有消息都装下，三条就推不进去",
+   "when": {
+    "devices": [
+     "chat",
+     "table",
+     "steps"
+    ],
+    "grounds": []
+   },
+   "do": "逐条长出来的东西推近时，取景对准最新的两条（对标的特写）；标题和更早的条目出画就整条隐去，不露半截。条目变多不会让推近失效",
+   "check": "chat.html keep；framecheck edges"
+  },
+  {
+   "id": "L55-lay-out-in-the-cameras-view",
+   "said": "2026-10-24 第十四次整片盲审：0:52 黑底上主句和引语全挤在上方 40%，下面 60% 空着；引语只有 20 px 左右、很淡",
+   "when": {
+    "devices": [
+     "quote",
+     "title",
+     "frame"
+    ],
+    "grounds": []
+   },
+   "do": "版面按镜头停住时看到的范围来排（M.view），不按整幅画面的固定比例；主句放在可见范围正中，其余的围在四周、避开字幕带；围着的引语字号接近原片（约 80 px）",
+   "check": "quote.html scatter place；framecheck balance"
+  },
+  {
+   "id": "L56-card-picture-beside-its-words",
+   "said": "2026-10-24 who S7 / cards S2 连续四轮盲审：清单字印在放大的道具上读不清；道具缩到角落又太小；放大后杯柄碰到 OpenAI 的 I",
+   "when": {
+    "devices": [
+     "sidecard"
+    ],
+    "grounds": []
+   },
+   "do": "卡上的道具要大（至少卡宽三分之一），放在清单最长一行右边那一栏、从标题下方到标签上方；在栏里贴底放，让道具最宽的部分落在短行旁边；字和道具不相碰、不叠，留出间距；栏太窄（长句）时退回右下角",
+   "check": "sidecard.html；framecheck overlap（相碰目前靠盲审 [overlap]）"
+  },
+  {
+   "id": "L57-coming-back-shows-more",
+   "said": "2026-10-24 第十五次整片盲审：h800 3:06 回到「原生H800調度」，画面和 3:00 一模一样，原样重放",
+   "when": {
+    "devices": [
+     "compare",
+     "table",
+     "steps",
+     "frame"
+    ],
+    "grounds": []
+   },
+   "do": "镜头回到之前出现过的那一组时，要带出新东西：多一行（口播这时说到的）、关键一行染色、取景近一档；绝不原样重放",
+   "check": "compare.html left.back / MARK；盲审 [progress]"
+  },
+  {
+   "id": "L58-push-in-on-the-phrase-one-bar-at-a-time",
+   "said": "2026-10-24 meta S4、who S1、h800 S2 盲审：整页远景、整行放进画面，划线句和正文一样小，没有焦点；之前推太近时划完的黑条又被画框切掉",
+   "when": {
+    "devices": [
+     "article"
+    ],
+    "grounds": [
+     "page"
+    ]
+   },
+   "do": "报道页推近到正在划的那句，让它够大、是主角，旁边的行虚化；一次只亮一条黑条，下一句开始划时上一条淡出，不留在画框边被切",
+   "check": "article.html；markErrors；盲审 [focus][readable]"
+  },
+  {
+   "id": "L59-cut-lands-on-content",
+   "said": "2026-10-24 第十六次整片盲审：3:09 切到对照表时只有一排表头压在黑底上，一秒后第一行才长出来",
+   "when": {
+    "devices": [
+     "table",
+     "steps",
+     "chart",
+     "frame",
+     "chat"
+    ],
+    "grounds": []
+   },
+   "do": "切点落在有内容的画面上：切点时已经说到的那一项（行、步骤、柱子），切进来时就已经在画面上，不在空底上重新长；后面的项按口播逐个长出",
+   "check": "table.html cue <= S.at + .2；seam report fill after the cut"
+  },
+  {
+   "id": "L60-big-word-keeps-off-the-list",
+   "said": "2026-10-24 第十七次整片盲审：0:45「憑什麼」大字长到右边列表上，压住「中國AI實驗室」「開發大模型」",
+   "when": {
+    "devices": [
+     "title"
+    ],
+    "grounds": [
+     "card"
+    ]
+   },
+   "do": "大字和一列说明字同屏时，大字只占另一半（压在标志或图上），不进说明字那一列；大字可以压脸、压图，不压正在读的字",
+   "check": "title.html side；framecheck overlap（大字豁免不该用在说明列上）"
+  },
+  {
+   "id": "L61-a-card-at-rest-keeps-moving",
+   "said": "2026-10-24 第十六次整片盲审：讲者旁两张卡加静止替身，整格 12 秒一点不动",
+   "when": {
+    "devices": [
+     "sidecard",
+     "presenter"
+    ],
+    "grounds": []
+   },
+   "do": "停住的卡也要有动作：慢慢上浮、标签跟着；停得久的卡中段再扫一次光；不靠讲者画面提供运动",
+   "check": "sidecard.html rise / mid glint；动效测量 still seconds"
+  },
+  {
+   "id": "L62-one-board-pull-back-and-keep",
+   "said": "2026-10-25 第十九次整片盲审：4:52 推近后停 5 秒、标题和算式被切，4:58 整块板直接换掉；5:04 步骤条被「等一下」整个盖掉、再从空底上长新图",
+   "when": {
+    "devices": [
+     "steps",
+     "frame",
+     "title"
+    ],
+    "grounds": [
+     "module"
+    ]
+   },
+   "do": "同一块板跨镜头延续时，后一镜画在整块板上、镜头按整块板写（第一步从前一镜结束的取景接上），可以拉回整板；读完一块板、切走之前拉回全景；压在板上的大字用板本身（引用那一镜）做底，不另画一份",
+   "check": "shotplan continueFrom（whole + 合成镜头）；recall { shot: 'seg/S#' }"
+  },
+  {
+   "id": "L63-term-from-its-line",
+   "said": "2026-10-25 paperclip-138-full 整片盲审：1:13 STR 到 1:16 才出（原片 1:10 就压上）；4:37 IBD 只闪 1 秒（原片停 5 秒）",
+   "when": {
+    "devices": [
+     "term-biggest",
+     "title"
+    ],
+    "grounds": [
+     "module"
+    ]
+   },
+   "do": "这一拍新出的名词（几个字、做成全屏最大的字）从这句话一开始就上屏，并留到下一拍开头；它的中文释义和其余小字照旧等说到才出",
+   "check": "morph.js cueGate 放行 TERM_PX 以上、TERM_CHARS 以内的字；chapter.mjs cueTimingErrors 不计它"
+  },
+  {
+   "id": "L64-bare-replay-short",
+   "said": "2026-10-25 整片盲审：4:11 B37 把 B23 的 Y 家谱原样放了 2.5 秒才抹掉（原片这里换了新画面 WOMAN）",
+   "when": {
+    "devices": [
+     "recall"
+    ],
+    "grounds": [
+     "storyboard"
+    ]
+   },
+   "do": "回放前面的画面，裸放不超过 3.5 秒（抹掉在切点前 1.5 秒落下）；更长就在回放上压这一问的大字（title-hero-over-photo），或者换新画面",
+   "check": "storyboard.mjs RECALL_BARE_MAX"
+  },
+  {
+   "id": "L65-new-case-named",
+   "said": "2026-10-25 整片盲审：5:10 B46 素描像和照片并排，画面上没有案件名，看不出转到哪个案子（原片压着「美国金州杀人案」）",
+   "when": {
+    "devices": [
+     "title",
+     "nameplate"
+    ],
+    "grounds": [
+     "storyboard"
+    ]
+   },
+   "do": "一个新案子、新人物第一次出场，画面上要有它的名字（大字，名牌卡或标题压图）；两张脸并排的素材放在半幅框里，要写取景（position），不要从中间切开",
+   "check": "导演规则（prompts/storyboard.md）；writer 保留 position/zoom"
+  },
+  {
+   "id": "L66-world-ink",
+   "said": "2026-10-25 B46 名牌的大字套用了 hupo 主题的藏青墨色，和本片的暗底白字红强调不搭",
+   "when": {
+    "grounds": [
+     "theme"
+    ]
+   },
+   "do": "按世界生成的主题，继承来的卡片纸条的字色换成本世界的深色（亮底用 ink，暗底用 paper）",
+   "check": "look.mjs worldTheme inked"
+  },
+  {
+   "id": "L67-no-code-props",
+   "said": "2026-10-25 整片审片第三轮：5:39 B51 照片上压一排代码画的黑色竖条当监狱栏杆，一眼是方块拼的（原片是一张满幅真实狱中照片）",
+   "when": {
+    "devices": [
+     "literal-metaphor"
+    ],
+    "grounds": [
+     "module"
+    ]
+   },
+   "do": "比喻用的道具（栏杆、手铐、锁）不用代码的方块拼；有真实照片就把照片放大到半幅满高，或者向生图要透明道具层（art），没有就不画",
+   "check": "导演规则（家规：美术不用基本形状拼）；整片审片"
+  },
+  {
+   "id": "L68-carry-the-object",
+   "said": "2026-10-25 整片审片第三轮：2:39 B22 末尾红色竖着的染色体，切到 B23 变成白色横躺的，红色跑到了小人身上",
+   "when": {
+    "devices": [
+     "carrier"
+    ],
+    "grounds": [
+     "module"
+    ]
+   },
+   "do": "上一拍结尾的主角物件（颜色、朝向）在下一拍开头接住，再变到这一拍要的样子；跨卡片和章节的切点也一样",
+   "check": "整片审片；seamJerks 只看运动，不看颜色和朝向"
+  },
+  {
+   "id": "L69-one-picture-a-page",
+   "said": "2026-10-25 整片审片第二轮：0:22 B04 同一张报道页切了三刀，6 秒几乎一样（素材只给第一刀绑了阅读窗口）",
+   "when": {
+    "devices": [
+     "read-page"
+    ],
+    "grounds": [
+     "storyboard"
+    ]
+   },
+   "do": "一份证据只是一张画面：同一张页面卡不连着切两刀；要第二个画面就换证据、用回放压大字，或者把这一拍并进连续图解",
+   "check": "storyboard.mjs SAME_PAGE_CARDS"
+  },
+  {
+   "id": "L70-two-faces",
+   "said": "2026-10-25 用户：红背景字体设计的不好看；「個」不像汉字；3:05 怎么字体不统一",
+   "when": {
+    "devices": [
+     "title",
+     "label"
+    ],
+    "grounds": [
+     "module"
+    ]
+   },
+   "do": "一帧最多两款字（标签数字一款窄粗体、中文一款），层级靠字号；廻想体只排拉丁和数字",
+   "check": "chapter.mjs faceMixErrors；morph.js 自动把廻想体的中文换成スミカク"
+  },
+  {
+   "id": "L71-label-on-its-object",
+   "said": "2026-10-25 用户：框框什么的没有跟字做居中 有点顶上方",
+   "when": {
+    "devices": [
+     "label",
+     "frame"
+    ],
+    "grounds": [
+     "module"
+    ]
+   },
+   "do": "标签贴着它标的对象排：框名居中压在框上沿或放在框内底部，编号位点用原片的编号红签",
+   "check": "kit2 labelOn / locus；审片规则高级感一节"
+  },
+  {
+   "id": "L72-camera-rest-to-rest",
+   "said": "2026-10-25 用户：3:05 开始镜头做的抽动不成熟；祠堂家谱突然回了一下；染色体开场动画很不高级",
+   "when": {
+    "devices": [
+     "camera",
+     "carrier"
+    ],
+    "grounds": [
+     "module"
+    ]
+   },
+   "do": "镜头从静到静一次走完；物件不自转变色当转场，要接住上一拍就原地不动、镜头推过去，或者切到新构图",
+   "check": "chapter.mjs jerkErrors（整幅一帧跳 50 px 以上、前后不动）",
+   "review": {
+    "say": "物件自转、变色当转场，镜头一帧里整幅跳一下、停住又猛地回：扣。高级的做法是物件不动、镜头从静到静推过去，或者硬切。",
+    "complains": null,
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L73-recall-still",
+   "said": "2026-10-25 用户：「女性」背景不好 怎么还循环",
+   "when": {
+    "devices": [
+     "recall"
+    ],
+    "grounds": [
+     "storyboard",
+     "writer"
+    ]
+   },
+   "do": "回放取那一拍最后一帧的定格，压暗慢推，不重放刚看过的运镜",
+   "check": "writer.mjs recallStill"
+  },
+  {
+   "id": "L74-page-on-a-card",
+   "said": "2026-10-25 用户：GEDmatch 网页排版太丑 成熟的该怎么做",
+   "when": {
+    "devices": [
+     "read-page",
+     "screen"
+    ],
+    "grounds": [
+     "module"
+    ]
+   },
+   "do": "真实网页在章节里裁到讲的那一块，放在圆角卡片上、四周暗底，不整页平铺",
+   "check": "kit2 pageCard；审片规则高级感一节",
+   "review": {
+    "say": "真实网页裁到讲的那一块，放在卡上、四周压暗；整页带版头按钮原样平铺在灰底上就扣。",
+    "complains": null,
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L75-no-torn-paper",
+   "said": "2026-10-25 用户（open S19 憑什麼毛笔破边压在 deepseek 字标上、梁文鋒撕纸条）：这一镜不好 之后也不要这种纸条撕纸设计什么的了",
+   "when": {
+    "devices": [
+     "title",
+     "person",
+     "label"
+    ],
+    "grounds": [
+     "any"
+    ]
+   },
+   "do": "不用撕纸、纸条、毛笔破边：名字和标题干净地立在画面上（标签是白色粗字加一道强调色底线）；标题不压在 logo 字标上，卡片有标志时标志上移、标题立在它下面",
+   "check": "modules.mjs checkModuleSpec 拒 title brush / person torn；common.js M.torn 无纸底；title.html 卡片标志上移",
+   "review": {
+    "say": "不用撕纸、纸条、胶带、毛笔破边、墨刷底块：对标用了这些，就提同档的别的做法（字本身的做工、版面），不要提补撕纸标签。标题不压在品牌标志（logo 字标）上，不要建议把大字叠到 logo 上。",
+    "complains": null,
+    "suggests": "((?<!胶)带|加|补|用|做|贴|换成?)[^；;。，,]{0,6}(撕纸|纸条|胶带|毛笔破边|墨刷)|(大字|标题)[^；;。，,]{0,8}(压|叠)[^；;。，,]{0,4}(logo|标志|字标)",
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L76-unit-on-figure",
+   "said": "2026-10-25 盲审（paperclip-138-full B14/B15/B20）：「323」和「人」空了 110 px，「1000」和「個」120 px，「2004」和「年・公安部」100 px",
+   "when": {
+    "devices": [
+     "number",
+     "title",
+     "label"
+    ],
+    "grounds": [
+     "any"
+    ]
+   },
+   "do": "单位紧贴数字最后一位排（量数字宽度再放单位，不写死 x）；同一类标签一种样式（位点名都用 kit 的红底签，压在它标的框上沿正中）；数字里的中点用圆点",
+   "check": "chapter.mjs unitGapErrors（单位离数字超过单位字号 0.6 倍即失败）；morph.js 中点归思源黑体"
+  },
+  {
+   "id": "L76-depth-lens",
+   "said": "2026-10-25 用户：还差什么……像PPT（量出来：包装镜头里『有纹理但虚』的比例 0.08，对标 0.13，差距全在 insert/article/person/market/chat/chart）",
+   "when": {
+    "devices": [
+     "insert",
+     "person",
+     "read-page",
+     "market"
+    ],
+    "grounds": [
+     "any"
+    ]
+   },
+   "do": "照片、视频、人像、K线默认带景深（camera.js lens：主体清楚、四周渐虚，压在上面的字不虚）；报道页远离阅读行的行更虚；线条画用轻一档的虚化；数字刻度放在镜头层之上",
+   "check": "film.mjs depth（flat 镜头列表）；camera.js lens；测试 depth"
+  },
+  {
+   "id": "L77-standing-faults",
+   "said": "2026-10-25 用户：盲审放过的老毛病一轮轮带着走",
+   "when": {
+    "devices": [
+     "any"
+    ],
+    "grounds": [
+     "any"
+    ]
+   },
+   "do": "盲审只为新问题打回（防止来回摆），但它在 notes 里写的老毛病按类汇总进整片报告（像幻灯片/下半空/不动/偏素/贴边），下一轮按类做设计升级",
+   "check": "film.mjs standingFaults → profile-gaps 的 standing faults 一节",
+   "review": {
+    "say": "只为新出现的问题、或比过审版差了的地方打回；两版都有的老毛病写进 notes 不打回，整片报告里按类汇总。",
+    "complains": null,
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L78-steps-branch",
+   "said": "2026-10-25 整片审片 5:00：对标从第 3 步落线到 Wait 黑框，我们一排到底、下半空",
+   "when": {
+    "devices": [
+     "steps"
+    ],
+    "grounds": [
+     "module"
+    ]
+   },
+   "do": "流程里有一步岔出去（停下检查、例外、结果），用 steps 的 drop：一条线落到下方一个框，整排上移给它留位，镜头从那一步起就把框框进来",
+   "check": "modules.mjs steps drop 校验；steps.html dropBottom"
+  },
+  {
+   "id": "L77-cards-lettered-as-chapters",
+   "said": "2026-10-25 整片盲审：0:31 卡片上「A, T, C, G」是衬线字带一根打字光标，4:10「女性」衬线——章节已统一两款字，卡片还是旧字体",
+   "when": {
+    "devices": [
+     "title",
+     "label",
+     "person"
+    ],
+    "grounds": [
+     "any"
+    ]
+   },
+   "do": "项目设 lettering: gothic-kaiso 时，卡片页的所有字体名都走思源黑体，拉丁字母和数字走廻想体，不出打字光标；片子里卡片和章节同一套字",
+   "check": "house.mjs houseFontCss（RB_LETTERING）；test-recipe-board 卡片字体测试",
+   "supersededBy": "L92-six-faces-eva"
+  },
+  {
+   "id": "L78-prop-on-paper",
+   "said": "2026-10-25 盲审 B20：卡片堆里三张 DNA 卡的照片区纯黑，空框（血迹、烟头的抠图放在黑底上看不见）",
+   "when": {
+    "devices": [
+     "card",
+     "evidence"
+    ],
+    "grounds": [
+     "any"
+    ]
+   },
+   "do": "透明底的道具图放在纸色底上再进卡片，不放黑底；一摞同类卡只在最前几张上贴红签",
+   "check": "盲审空框硬条件；morph.md 道具一条"
+  },
+  {
+   "id": "L79-family-frames-chrom-bar",
+   "said": "2026-10-25 用户定：家谱里的人照原片做去色头像框；Y 染色体做平面条纹竖条加淡 Y（整片盲审四轮都把 3D 插钉小人、毛绒染色体读成反例）",
+   "when": {
+    "devices": [
+     "tree",
+     "chromosome"
+    ],
+    "grounds": [
+     "any"
+    ]
+   },
+   "do": "家谱用 kit2 familyFrames（去色剪影头像框，标签压框上沿正中，细肘线，父系变红）；染色体用 kit2 chromBar 平面条纹竖条，后衬淡大字",
+   "check": "tells.json；盲审露馅清单",
+   "review": {
+    "say": "家谱里很多人用同一族去色剪影头像框是照原片定的，不报重复。",
+    "complains": "头像框[^；;。]{0,12}(一样|相同|重复|同一)",
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L79-type-treatment",
+   "said": "2026-10-25 用户：客观看一下呢 我觉得很多细节都不好 对比原片（大字全是一种干净宋体）",
+   "when": {
+    "devices": [
+     "title",
+     "frame"
+    ],
+    "grounds": [
+     "any"
+    ]
+   },
+   "do": "大字照原片这一刻的做法处理：金属/做旧、立体厚度、发光色散；数字算式用粗黑体（スミカク）",
+   "check": "shotplan withRefDesign → treat；modules.mjs TREATS；审片 [type]",
+   "supersededBy": "L93-no-type-dress"
+  },
+  {
+   "id": "L80-space-layout",
+   "said": "2026-10-25 整片对比 0:14：原片斜放的纸、互相压着的卡片，我们一张平纸稀稀几个字",
+   "when": {
+    "devices": [
+     "chart",
+     "frame"
+    ],
+    "grounds": [
+     "any"
+    ]
+   },
+   "do": "卡片和纸斜着放（tilt）、前后分开（depth，后面的虚暗）、镜头贴近跟着讲到的那一个",
+   "check": "chart stack TILT；frame tilt/depth；审片 [layout]"
+  },
+  {
+   "id": "L81-carry-across-cuts",
+   "said": "2026-10-25 整片对比 0:03 / 4:14：原片年份叠化进股价表、章节标签跨几镜挂着，我们每镜各管各",
+   "when": {
+    "devices": [
+     "any"
+    ],
+    "grounds": [
+     "any"
+    ]
+   },
+   "do": "原片跨镜留着的东西照做：章节标签挂在顶上，上一镜大字叠化进下一镜（字是我们自己的）",
+   "check": "shotplan passageCarry；camera.js header/carry"
+  },
+  {
+   "id": "L82-review-against-reference",
+   "said": "2026-10-25 用户：盲审说同一档，但细节明显差",
+   "when": {
+    "devices": [
+     "any"
+    ],
+    "grounds": [
+     "any"
+    ]
+   },
+   "do": "做工两项（type、layout）对着原片同一刻审，不对着过审版；审片规则一变，过审的镜头按新规则再审一次",
+   "check": "scorecard type/layout；layers.mjs REVIEW_RULES"
+  },
+  {
+   "id": "L83-treat-craft",
+   "said": "2026-10-26 盲审对原片逐镜：大字要有做工，但做工不能伤可读",
+   "when": {
+    "devices": [
+     "title",
+     "frame",
+     "person",
+     "quote",
+     "sidecard",
+     "article",
+     "compare",
+     "steps"
+    ],
+    "grounds": [
+     "any"
+    ]
+   },
+   "do": "字效从拆解卡自动配（treat.js）；スミカク只在方案点名的短词上用（多投國推理读不出）；网点保持亮白细点、不带文字阴影；无纸标签靠柔光晕和背景分开、卡片标签挂在卡下不压道具；扭曲字效（故障）幅度小",
+   "check": "shotplan withRefTreat/faceFits；treat.js；已知缺口：网点字（background-clip 文字）在对比度检查里量成 0，先不用网点做大字，待修检查"
+  },
+  {
+   "id": "L80-red-for-the-one-named",
+   "said": "2026-10-26 盲审 B44/B45：五个红框同时亮，堂哥堂妹提前抢戏；红线横穿压暗的残影签",
+   "when": {
+    "devices": [
+     "tree",
+     "label",
+     "mark-in-red"
+    ],
+    "grounds": [
+     "any"
+    ]
+   },
+   "do": "红只给这一刻台词点名的那一个（先是「我」，说到远亲时换成那两个）；连线用灰，退场的成员完全收掉，不留两成残影",
+   "check": "盲审高级感一节；oneAccentErrors 管第二种饱和色"
+  },
+  {
+   "id": "L84-prop-by-its-body",
+   "said": "2026-10-26 盲审 who S7 / cards S2：奖杯把手压在 OpenAI 上，金条压在「血本無歸」上；recap S7/S8 卡面插图缩成一条",
+   "when": {
+    "devices": [
+     "side-card",
+     "card",
+     "prop"
+    ],
+    "grounds": [
+     "any"
+    ]
+   },
+   "do": "道具按图里不透明的部分排（逐行对每一行字的实际宽度），不按图框；旁边放不下就放到名单下面、卡加高；没名单的卡插图放大铺满标题下到卡脚；卡的标签印在卡脚、上面一道细线，不用代码平底块也不用纸条",
+   "check": "framecheck onCut：小字（90 px 以下）压在抠图不透明处超过 6% 判失败；sidecard 测试"
+  },
+  {
+   "id": "L85-clip-fill-per-character",
+   "said": "2026-10-26 talent S8：金属字效加在整行上，逐字出现的名字整行透明（对比度 0）",
+   "when": {
+    "devices": [
+     "title",
+     "person",
+     "quote"
+    ],
+    "grounds": [
+     "any"
+    ]
+   },
+   "do": "裁成字形的填充（metal、halftone）逐字加在 .ch 上，不加在整行上",
+   "check": "treat.js 测试；对比度检查会量到 0"
+  },
+  {
+   "id": "L86-type-margin",
+   "said": "2026-10-26 整片审片 9 B29：地名随镜头下摇贴到画面上沿 4 px，读着像被切掉",
+   "when": {
+    "devices": [
+     "title",
+     "map",
+     "any"
+    ],
+    "grounds": [
+     "any"
+    ]
+   },
+   "do": "字离画面边缘留 24 px 以上；镜头要把字带到边上，字先淡出",
+   "check": "chapter.mjs textEdgeErrors（TEXT_MARGIN），geometryErrors 每 0.2 s 量，站 0.8 s 失败"
+  },
+  {
+   "id": "L87-picture-off-accent-blocks",
+   "said": "2026-10-26 整片审片 9 B44：家谱头像框随镜头滑到 IBD 红条上，盖住一截",
+   "when": {
+    "devices": [
+     "chart",
+     "family",
+     "tag",
+     "any"
+    ],
+    "grounds": [
+     "any"
+    ]
+   },
+   "do": "数据条、红签底、标记和照片各占一块；照片不压强调色块的一部分（红底托照片可以）",
+   "check": "morph.js 记录强调色 fillRect（kind fill），chapter.mjs coverErrors"
+  },
+  {
+   "id": "L88-3d-where-3d",
+   "said": "2026-10-26 用户：不用啊 该 3d 就 3d（整片审片 10 把 DNA、染色体 3D 和平面混用算作问题，用户否了）",
+   "when": {
+    "always": true
+   },
+   "do": "同一个物件这里 3D、那里平面可以，按这一拍要说的选，不为统一把 3D 改平；只是不拿变色当转场",
+   "check": "film-review.md 第 1 条不再把 3D 接平面算问题；导演规则 morph.md 第 26 条",
+   "review": {
+    "say": "同一个东西这里 3D、那里平面是允许的；3D 物件转动、推拉时的拖影和残影是运动，不是毛病。只有拿变色当转场才扣。",
+    "complains": "(3D|立体|物件|模型|转动|推拉)[^；;。]{0,10}(拖影|残影)|(拖影|残影)[^；;。]{0,6}(3D|物件|模型)|(3D|立体)[^；;。]{0,10}平面[^；;。]{0,8}(不一致|不统一|混用)",
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L86-subject-in-front",
+   "said": "2026-10-26 盲审一再要「字在人后面」「插画压住标题一角」（ending S11、talent S5、recap S8）；用户 10-23：分层出来放在人像后面",
+   "when": {
+    "devices": [
+     "title",
+     "quote",
+     "person",
+     "frame",
+     "side-card"
+    ],
+    "grounds": [
+     "photo",
+     "portrait",
+     "card"
+    ]
+   },
+   "do": "spec.front: true 把这一镜照片的主体（macOS Vision 抠出，和原图同尺寸）叠在字上；frame 的人物图部件、手绘卡的插画也可标 front。大字从人头后穿过、插画压住标题最后一行的下沿，每一行最多挡 40%，小字不进人后面",
+   "check": "framecheck frontMax（按每行字身取样，只算前景不透明处）；cardgeometry 不把前景当字压着的图"
+  },
+  {
+   "id": "L89-type-budget",
+   "said": "2026-10-26 系统成熟度：每秒 10 字 2 行对原片 4 字 1 行，审片九轮都提副题、说明叠层",
+   "when": {
+    "always": true
+   },
+   "do": "一帧同时最多三行要读的自由字；副题默认不加；离边由系统整章校位，不手调坐标",
+   "check": "chapter.mjs typeLoadErrors（TYPE_LINES 3）；morph.js __nudgeSolve",
+   "review": {
+    "say": "一帧同时最多三行要读的自由字；字离画面边缘 24 px 以上。",
+    "complains": null,
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L87-one-type-for-the-film",
+   "said": "2026-10-26 用户：你怎么来回改字 我不是规定了用哪些字 你做的怎么越来越丑了 越来越不会设计了",
+   "when": {
+    "devices": [
+     "any"
+    ],
+    "grounds": [
+     "any"
+    ]
+   },
+   "do": "整部片一套字：项目 lettering（gothic-kaiso：中文思源黑体 Heavy，拉丁字母和数字廻想体），镜头不自己挑字体；字效每镜最多一种，不叠；审片提的换字体、叠字效不照改",
+   "check": "modules.mjs checkModuleSpec：lettering 项目里镜头写 type/face 被拒，treat 多于一种被拒；stillcheck.md「字体不归审片管」",
+   "supersededBy": "L92-six-faces-eva"
+  },
+  {
+   "id": "L88-six-faces-first-eva",
+   "said": "2026-10-26 用户：不是什么明朝什么的字体吗；我不是规定那 6 款字吗 没有思源黑体吧；尽量还是用那 6 款字 实在没有的用思源黑体兜底 但是最好变形 细一点高一点 像 eva 的感觉",
+   "when": {
+    "devices": [
+     "any"
+    ],
+    "grounds": [
+     "any"
+    ]
+   },
+   "do": "项目 lettering 用 eva：90 px 以上的字用黒華明朝压窄（×0.72，又细又高；装甲明朝放大后装饰笔画像坏字、· 是空的，不用作大字），小号中文黒華明朝，拉丁字母和数字廻想体（放大到中文字身）；思源黑体只在两款明朝都缺字时兜底；字号按实际排出的宽度定，不按猜的字宽",
+   "check": "modules.mjs letterFaces / evaLacks、treat.js __letter（按字号逐行定字体，一行不拆两种字）；缺字检查按真实字体文件核对（EVA_PICK）；framecheck displayProblem 按一段里最大一行比原片显示字",
+   "supersededBy": "L95-six-faces-reshaped"
+  },
+  {
+   "id": "L90-motion-sits-together",
+   "said": "2026-10-26 用户：怎么字还漂移 乱闪 … 画面运动不和谐 感觉都能通过代码审查出",
+   "when": {
+    "always": true
+   },
+   "do": "字停住时钉在屏幕上（系统 __holdSolve），不被镜头带着漂；不闪（消失又回来）；镜头不用 0.01 s 关键帧复位，停前减速；不回弹；一时刻只有一个主要运动。（并入 L94-type-follows-or-stands：标东西的字挂在东西上（where.pin 或画在物件里）跟着动；其余字钉在屏幕上由 __holdSolve 按住；进退场一次到位，不自己飘。）",
+   "check": "chapter.mjs creepErrors、flickerErrors、motionErrors；morph.js __holdSolve",
+   "review": {
+    "say": "字停住时钉在屏幕上，不被镜头带着漂，不闪，不回弹；标东西的字跟着东西：犯了就扣。",
+    "complains": null,
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L91-no-red-plate",
+   "said": "2026-10-26 用户：我不是说了不要红底的文字 有点丑",
+   "when": {
+    "always": true
+   },
+   "do": "字不放红底板/红签带上：红字加细红线，或白字；卡片的 chip/plate 也去底",
+   "check": "chapter.mjs redPlateErrors；cardsmoke 红底；kit2 tag/tape 无底",
+   "review": {
+    "say": "字不放在红底板、红签、深色底栏这类底块上；红只做字色。不要建议加底板、底栏、红签来托字。",
+    "complains": null,
+    "suggests": "(红|深色|黑色?)[^；;。，,]{0,2}(底栏|底板|底牌|底块|底签)|红签|红底",
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L92-six-faces-eva",
+   "said": "2026-10-26 用户：不该是思源黑体 就用那 6 个好的字；思源黑体是兜底 主要用之前安装的 6 个 那些什么机械雕刻什么的",
+   "when": {
+    "always": true
+   },
+   "do": "项目写 lettering: eva 和 style；章节和卡片按风格分角色用 6 款：大号中文用风格展示字（金畫字或压窄黒華明朝），小字黒華明朝，拉丁和数字 f.k 機械彫刻或廻想体；思源黑体只在 6 款都缺字时兜底；模块不写字体名；整部片一套字，镜头不自己挑字体，字效每镜最多一种、不叠（L87）。（并入 L08-house-type：只用六款家用字体；展示体（スミカク、廻想体）只用在 90 px 以上；画面字转繁体；系统不加字幕。）（并入 L95-six-faces-reshaped：字只用 6 款（機械彫刻、スミカク、黒華明朝、装甲明朝、金畫字、廻想体），思源黑体只兜底；风格选大字那款和压窄程度（styles.json fonts.display / displayX），系统重新压一份字（shapedFont），模块不自己拉字。）",
+   "check": "house-rules.json lettering.eva；house.mjs letterRoles；chapter.mjs chapterHouse；morph.js face()；modules.mjs letterFaces/evaPick/evaLacks；faceMixErrors",
+   "review": {
+    "say": "字体不归审片管：整部片一套字（项目 lettering；eva 的大字是压窄的六款之一，细而高是有意设计），不要因为对标用了粗黑体或别的字体打回，也不要建议换字体、改粗黑、改思源黑体。字效每镜最多一种，不要建议叠加。某个字读不出、字形不像汉字照样报，系统会换成读得出的家用字体。",
+    "complains": "(我们|这一版)[^；;。]{0,24}(明朝|宋体|宋/明朝|细黑|瘦高|窄长|装饰展示体|细笔画)",
+    "suggests": "(换|改用|改成|换成|回到|用)[^；;。，,]{0,10}(粗黑|黑体|gothic|スミカク|思源|宋体|明朝|最粗的|更重的?字面)",
+    "keepIf": "乱码|读不出|读成|认不出|拆成|不像汉字|像「|小一档|只占|缩在|字宽|字号|太小|挤在|偏在|出画|切掉"
+   }
+  },
+  {
+   "id": "L93-no-type-dress",
+   "said": "2026-10-26 用户：不要加字描边阴影 下面或者侧面的红线什么的",
+   "when": {
+    "always": true
+   },
+   "do": "字不描边、不加阴影发光、下面和旁边不画红线红条；强调靠颜色字号；读不清就挪位置或压暗底",
+   "check": "chapter.mjs decoErrors（morph.js decoOf、kind rule）；cardsmoke 'words dressed up'；kit2 tag/tape/readout 无装饰",
+   "review": {
+    "say": "字不加描边、阴影、发光，下面和旁边不画红线红条；字带这些就扣。读不清时建议挪位置或压暗底，不要建议给字加这些装饰（图表曲线的发光不是字，不在此列）。",
+    "complains": "字[^；;。]{0,12}(没有|缺少?|不够)[^；;。]{0,6}(发光|阴影|描边|光晕)",
+    "suggests": "(字|标题|标签|文字)[^；;。，,]{0,10}(加|添|带)[^；;。，,]{0,6}(描边|阴影|发光|光晕|辉光)|红线|红条|下划线",
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L94-type-follows-or-stands",
+   "said": "2026-10-26 用户：字体问题 有时候不跟随或者动的不好",
+   "when": {
+    "always": true
+   },
+   "do": "标东西的字挂在东西上（where.pin 或画在物件里）跟着动；其余字钉在屏幕上由 __holdSolve 按住；进退场一次到位，不自己飘",
+   "check": "chapter.mjs creepErrors、hopErrors、motionErrors；__holdSolve",
+   "supersededBy": "L90-motion-sits-together",
+   "mergedNote": "audit 2026-10-27 #12: how type moves, one lesson"
+  },
+  {
+   "id": "L95-six-faces-reshaped",
+   "said": "2026-10-26 用户：梳理一下 之后字体怎么用 尽量都是用这里的 可以变形 变高 窄 根据设计来",
+   "when": {
+    "always": true
+   },
+   "do": "字只用 6 款（機械彫刻、スミカク、黒華明朝、装甲明朝、金畫字、廻想体），思源黑体只兜底；风格选大字那款和压窄程度（styles.json fonts.display / displayX），系统重新压一份字（shapedFont），模块不自己拉字",
+   "check": "house-rules.json lettering.eva shape；house.mjs letterRoles/shapedFont；tallface.py；chapterHouse；letterFaces",
+   "supersededBy": "L92-six-faces-eva",
+   "mergedNote": "audit 2026-10-27 #12: three lessons on the faces, one now"
+  },
+  {
+   "id": "L96-look-from-the-films-the-user-took",
+   "said": "2026-10-26 用户看 Vol.047 定样子关的八张生图关键帧（钴蓝印刷）：绝对不行 很ai这种 你已经做好了两期 回形针的和胡泊的 都不知道我喜欢什么感觉的吗",
+   "when": {
+    "always": true
+   },
+   "do": "一部新片只从用户认可过的风格里选（styles.json verdict approved：法医暗场＝回形针 Vol.138，冷灰报刊＝胡泊）；用户否过的风格（钴蓝印刷、Y2K）不再拿出来；没看过的只能作为提案在定样子关给用户判。定样子看的画面要用成片同样的做法做：代码画的平面图解零件、真实照片和页面、家用字体排字，生图只画不带字的底和道具；生图整幅画的关键帧（插画感、写实 3D 渲染）不拿来给用户定样子",
+   "check": "styles.json verdict；gatestate.mjs gatesOf（rejected 不过关）；gates.mjs approveGate（rejected 不收，untested 批了记 approved）、lookFrames（只收 out/look/parts，不收 concept/keyframes）",
+   "supersededBy": "L107-house-look",
+   "mergedNote": "2026-10-27: the house look takes the two approved films as its presets"
+  },
+  {
+   "id": "L97-space-ground-variety",
+   "said": "2026-10-27 用户看香蕉白膜：怎么没2.5d 3d什么的 而且很多问题 很不成熟 背景也不该全黑 可以各种变体不是吗",
+   "when": {
+    "always": true
+   },
+   "do": "章节照分镜的形式搭空间（2.5d/地图放进透视，3d 用 3D），更平要写理由；底照定样子关挑中的样子铺满（生图底板：标本台、土壤、灯箱、纸、场景），不站在一块纯色上；各章轮换世界里的几种底，亮暗都可以，相邻两章不同底",
+   "check": "refbreakdown.mjs storyboardFormErrors；chapter.mjs flatGroundErrors（对样子图的满度）、sameGroundErrors（和上一章比）",
+   "review": {
+    "say": "章节画面应当放在分镜要的空间里（2.5D/3D），底要有质地和光，不是一整片纯黑；各章的底可以不同。",
+    "complains": null,
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L98-design-brain-variants",
+   "said": "2026-10-27 用户：可以 但是要多样性变化明白吗 要智能不要死板 各种变体背景 反转颜色 搭配的配色和谐什么的都要有 要做有设计大脑的导演 设计系统",
+   "when": {
+    "always": true
+   },
+   "do": "一部片的世界色在 OKLCH 里推成一族和谐配色（原底深色调、反转亮底、强调色反色场、中间调、邻近色、纸色），每章按它各拍的语义和前后章错开派一个；一部片至少一个亮底章和一个反色场章，相邻章不同配色，同一色调不连三章；后果、反转的拍可以章内翻底",
+   "check": "designbrain.mjs paletteFamily/harmonyErrors/assignVariants；chapter.mjs designPlan（design.json）、designErrors（关键帧的底是不是派的色调）",
+   "review": {
+    "say": "各章换底、换配色、亮暗和反色交替是设计意图（同一个世界的变体），不是不统一。",
+    "complains": "(底|背景|配色|颜色)[^；;。，,]{0,8}(不统一|不一致|跳)",
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L99-materials-never-stuck",
+   "said": "2026-10-27 用户：之后尽量不要卡住 按照刚才说的搜不到就多搜几轮 不行就3d展示概念或ai生图什么的 明白吗 系统要聪明像真设计师一样",
+   "when": {
+    "always": true
+   },
+   "do": "一个需要没有可用的真实素材时，系统自己换说法再搜（英文名加卫星图/航拍/照片、中文名、分镜原词、Wikimedia），最多三轮；仍没有就放弃这个需要：讲原理的拍走章节的 3D/图解，卡片上的画面由生图按片子风格画示意图顶上（不画人脸、不带字、明显是插画不是新闻照），角上标「示意」；以后找到真图自动替换。不留 TODO 占位，也不为素材停下来问用户。中英两种写法的名字各算一个名字。",
+   "check": "materials.mjs searchVariant/noteRounds/researchDue（materials/rounds.json）、nameParts；arttemplates.mjs standInSlots；compose.mjs 示意 credit",
+   "review": {
+    "say": "标「示意」的画面是找不到真实素材时按片子风格画的替身，是设计决定，不算素材缺失。",
+    "complains": "(示意|插画|生成)[^；;。，,]{0,8}(不真实|不是实拍|假)",
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L100-profile-gawx",
+   "said": "2026-10-27 用户：先做字的密度、字长在实物上、画面低调化，这三件一起改进系统，用 Suez 验证（此前：最好客观研究透博主这种风格 … 胶片模拟 … 文字排版设计）",
+   "when": {
+    "always": true
+   },
+   "do": "片子按风格档案做（project/style 的 profile）。gawx 档案：大字是少见的事件（130 px 以上悬空字一拍最多两成时间，同时最多两行），名字和数字先写在场景里的东西上（type.surfaceType 漆、喷、印、粉笔；printOn；groundType），一章至少三成五的字长在东西上；画面低调，暗底、光一块一块落在要看的东西上，关键帧大半平均亮度 0.36 以下；整片过胶片层（finish.mjs）。",
+   "check": "profile.mjs typeDensityErrors / surfaceTypeErrors / lowKeyErrors；designbrain assignVariants lowKey；film.py / finish.mjs；实测 style-lab/tools/film-measure.py",
+   "review": {
+    "say": "gawx 档案的片子画面偏暗、字少而小、很多字印在场景里的东西上（船壳、地图、集装箱），这是选定的风格，不是字太小或太暗。",
+    "complains": "(字|文字)[^；;。，,]{0,8}(太小|太少|看不清)|(画面|背景)[^；;。，,]{0,8}(太暗|偏暗)",
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L101-house-fusion",
+   "said": "2026-10-27 用户：你找这些美学风格不强烈 还是专注 Gawx 的配色 文字排版设计 回形针动效和质感 胡泊等融合好 反正你综合梳理下吧 但是可以各种和谐的变体都可以",
+   "when": {
+    "always": true
+   },
+   "do": "一部片三家各管一块：配色和文字排版照 Gawx（大半中性、一族同色相的深浅约一成、强色只给一点；字少、成对、长在东西上、大字成块轮换），动效和质感照回形针（一镜到底、停动停、颗粒体积），证据包装照胡泊（卡片模块、划线、名牌）。变体在和谐范围里随意：配色变体、字的机制、光的位置。",
+   "check": "style-lab/SYNTHESIS-house-style-20261027.md；profile.mjs colourErrors / pairErrors；designbrain tonesOf；type.flat.pair、surfaceType sub",
+   "review": {
+    "say": "配色大半中性、只有一族颜色，字少而成对，是选定的融合风格（Gawx 配色排版 + 回形针动效 + 胡泊卡片），不是单调。",
+    "complains": "(配色|颜色)[^；;。，,]{0,8}(单调|太少|灰)",
+    "suggests": null,
+    "keepIf": null
+   },
+   "supersededBy": "L111-film-palettes"
+  },
+  {
+   "id": "L102-design-first",
+   "said": "2026-10-27 用户：背景铁锈不好 梳理一下为什么做那么不成熟 之后系统怎么做才行 导演如何更智能 设计如何更好呢；然后：先做设计先行（每拍设计简报+样张+品味评审）、构图语法库、背景和主体分离的量尺",
+   "when": {
+    "always": true
+   },
+   "do": "先设计再写代码：每拍从构图语法库（routing/compositions.json）挑一种构图，写清画面、焦点、底是故事里的哪个地方（一章一个地方，转折处才换）、配色角色、字怎么立、另一种构图为什么不选；底是安静的（深中性加网点颗粒或压暗虚化的地方），不用铁锈、毛毡、木纹这类花纹贴图；主体和底的明度拉开、底比主体安静；过了代码检查后关键帧交另一位评审打品味分。",
+   "check": "beatdesign.mjs briefErrors / tasteErrors；profile.mjs figureGroundErrors；prompts/beatdesign.md、prompts/taste.md",
+   "review": {
+    "say": "底安静、画面只有一个焦点，是有意的克制，不是空；安静可以是任何一套配色的底，不一定是灰。",
+    "complains": "(底|背景)[^；;。，,]{0,8}(太空|没内容)",
+    "suggests": "(铁锈|毛毡|木纹|花纹)",
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L103-map-chapter-mono",
+   "said": "2026-10-27 用户：地图章节按回形针做：中性灰的干净海图，只有一处点缀红；颜色族不要求铺满画面，放宽 colourErrors 对这类章节的要求",
+   "when": {
+    "always": true
+   },
+   "do": "地图类章节（简报过半是 map-table、globe-route）做成中性灰的干净海图：陆浅一档、海深一档、细海岸线，中性白光，船和物件是灰的深浅，点缀红只在一处；不靠暖光染出颜色族，不铺地形起伏。",
+   "check": "profile.mjs colourErrors({ mono })；beatdesign.mjs monoChapter；compositions.json palettes",
+   "review": {
+    "say": "地图章节是中性灰海图加一处点缀红，是选定的做法，颜色少不是缺点。",
+    "complains": "(颜色|配色|色彩)[^；;。，,]{0,8}(单调|太少|太灰|没有)",
+    "suggests": "(暖光|暖色光|染成?暖)",
+    "keepIf": null
+   },
+   "supersededBy": "L111-film-palettes"
+  },
+  {
+   "id": "L104-film-design",
+   "said": "2026-10-27 用户：我没说细节这些 我再说整片的美学设计；然后：按你说的加整片设计这一步（整片的起伏图、重头画面、整片量尺和整片盲审）",
+   "when": {
+    "always": true
+   },
+   "do": "先把整部片当一件作品设计：每拍在整片里演什么（开场、压上来、高潮、转折、松开、收尾）、景别、明暗、媒介（图解、真画面、大字、证据卡）、红有多强；定 4 到 6 个重头画面（开场、中段、收尾必有，不挨着）；不连续四拍同一种样子，图解至多七成，红在高潮最强。白模出来后量整片（每分钟换样子 6 次以上、明暗幅度 0.15 以上、20 秒以上不变的长段至多一半），再由两位评审看整片抽帧打分。",
+   "check": "filmdesign.mjs filmDesignErrors / filmArcErrors / filmTasteErrors；filmarc.py；prompts/filmdesign.md、film-taste.md",
+   "review": {
+    "say": "整片的起伏、重头画面、媒介的变化是整片设计定的；单拍评审不因为这一拍和上一拍不同而扣分。",
+    "complains": "(和|跟)(上一拍|前一拍|前面)[^；;。，,]{0,8}(不统一|不一样|跳)",
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L105-made-models",
+   "said": "2026-10-27 用户：尽量不要网上找低质量素材做模型吧 我不是把任意需要的模型都能转换很好的模型给打通了吗 怎么回事",
+   "when": {
+    "always": true
+   },
+   "do": "片里要出现的东西（船、机器、建筑、产品）用图生 3D 流程做成模型：blender/partset.mjs <名字> \"<它是什么>\"（GPT 生成侧、前、后三视图，不带字 → Hunyuan3D-2mv → 带贴图的 GLB，进 engine/subjects/parts/），章节里用 await kit.props.model(THREE, '<名字>', { length })；代码搭的方块道具只当模型做好前的替身（fallback），不从网上找低清照片或玩具模型顶。",
+   "check": "chapter.mjs codePropErrors（新片的章节和重头样张里直接调 kit.props.containerShip / tugboat 打回）；props.js model",
+   "review": null
+  },
+  {
+   "id": "L106-engine-capabilities",
+   "said": "2026-10-27 用户：系统怎么能把这环节丢掉呢 是不是还有很多重要的没接上什么的",
+   "when": {
+    "always": true
+   },
+   "do": "引擎的每样能力登记在 routing/engine-capabilities.json，写清章节怎么调；章节先看这张表再动手，有现成的（做好的模型、可拆的主体、Blender 算好的物理和运镜、屏幕介质、现成场景）就用，不要自己用代码重搭；还标着 card 的能力是待接的，不当作没有。改线、合并线时这张表跟着改，测试会抓没登记或接不上的。",
+   "check": "scripts/test-recipe-board.mjs 'every engine ability is registered'；morph.js ENGINE_KIT；chapter.mjs prepareAssets 建缺的模型",
+   "review": null
+  },
+  {
+   "id": "L107-house-look",
+   "said": "2026-10-27 用户：按你推荐的执行（新片的样子从哪来：一套家里的样子，题材只转旋钮）",
+   "when": {
+    "always": true
+   },
+   "do": "新片都用一套家里的样子（routing/house-style.json）：配色和文字排版照 Gawx，动效和质感照回形针，证据包装照胡泊；题材只换强色色相、底是哪里、亮暗、展示字和宽度、光、图示画法、颗粒暗角。推世界给的 2–3 个方向都是这套样子的变体；用户认可的回形针 Vol.138、胡泊两套是现成变体；否过的（钴蓝印刷、Y2K、生图整幅关键帧、写实 3D 渲染当关键帧、脏棕色底）不再拿出来；定样子看的画面用成片同样的做法做。",
+   "check": "filmworld.mjs houseErrors（directionErrors 里查每个方向）；routing/house-style.json；gatestate verdict",
+   "review": null
+  },
+  {
+   "id": "L108-design-free-within-house",
+   "said": "2026-10-27 用户：我想确定画风和喜欢的风格后不限制你 claude 发挥 你还是要做顶级视觉包装师 明白吗",
+   "when": {
+    "always": true
+   },
+   "do": "家里的样子定的是硬线（routing/house-style.json freedom.hard：真事实、家用字、字不加装饰、读得清、家里的配色、否过的不做、实物用做好的模型）；硬线之内像顶级视觉包装师一样自由设计：构图库和成品模板是起点，可以写 custom 自己设计构图和底、新的字的机制、3D、材质、光和镜头。评审按画面水准打分，不因为没照模板扣分。",
+   "check": "beatdesign.mjs briefErrors（custom 构图和底要讲清）；prompts/morph.md 38、stills.md、beatdesign.md、taste.md",
+   "review": {
+    "say": "构图库和模板只是起点；导演自己设计的构图（custom）按画面水准打分，不因为不像某个模板扣分。",
+    "complains": "(没有|未|不)(照|按|用)(构图库|模板)",
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L109-delegated-gates",
+   "said": "2026-10-27 用户：你可以批 猜我喜好 简单决策你来就好之后希望的就是你直接包装我正品全弄好",
+   "when": {
+    "always": true
+   },
+   "do": "检查和盲审都过了、按用户定过的样子、教训和口味能判断的关口，会话自己批（--by \"Claude 代批（用户 2026-10-27 授权）：<理由>\"），一路做到精渲成片；用户没表过态的方向性取舍才问。",
+   "check": "AGENTS.md 六段说明；SOP §8",
+   "review": null
+  },
+  {
+   "id": "L110-road-to-four-arbiter",
+   "said": "2026-10-28 用户：按复盘先做第 1、2、4 条：评审到 4 分清单、仲裁子代理、空跑全流程测试",
+   "when": {
+    "always": true
+   },
+   "do": "一拍评审给 4 分以下时写到 4 分的清单（最多 3 条），下一轮只查清单和新的硬伤，全做到就是 4 分；清单两轮一条没动、评了四轮或导演申诉，交给仲裁子代理裁（pass 或新清单，有约束力），两份评审要求相反时仲裁立一条规矩给所有评审；导演不再自己放行。结构关过后每次 run 都用精渲的页面试画每章首、中、尾三帧并把每拍对上成片的一段，过不了成片关不能批。",
+   "check": "reviewlist.mjs settleBeat/arbiterDue；arbiter.mjs rulingErrors/applyRulings；animatic.mjs preflightFilm；gates.mjs approveGate final；prompts/morph-review.md、taste.md、arbiter.md"
+  },
+  {
+   "id": "ARB-morph-B02-review-B03-a8e67a",
+   "from": "arbiter",
+   "said": "2026-10-28 仲裁（morph-B02-review B03；用户 2026-10-28 授权，可推翻）：两份评审要的正相反；这一版站在有道理的一边：台词先说「400米」，它做大字立在红色量线上、标的就是它量的东西，「2萬個集裝箱」小一级跟在后面，主次跟着话走。字读得清、不压字、不出画、离上沿够远，没碰硬线；谁大谁小是构图自由里的事。",
+   "when": {
+    "always": true
+   },
+   "do": "一拍里两个数字时，台词先说的那个做大字、长在它量的东西上（量线、物件），后说的做小一级配在旁边；不因为后一个数字更大、更震撼就要求两者对调或让先说的缩小退后。",
+   "check": "arbiter.mjs; prompts/arbiter.md",
+   "review": {
+    "say": "一拍里两个数字时，台词先说的那个做大字、长在它量的东西上（量线、物件），后说的做小一级配在旁边；不因为后一个数字更大、更震撼就要求两者对调或让先说的缩小退后。",
+    "complains": null,
+    "suggests": "(2萬個集裝箱|2万个集装箱|2萬个集装箱)」?[^。；]{0,8}(全屏)?最大的?字|400米」?[^。；]{0,10}(同时|同時)?(缩小|縮小|退后|退後|变小|變小)",
+    "keepIf": null
+   }
+  },
+  {
+   "id": "ARB-taste-B02-B05-6e287b",
+   "from": "arbiter",
+   "said": "2026-10-28 仲裁（taste-B02 B05；用户 2026-10-28 授权，可推翻）：清单第 3 条「北朝上、运河竖摆」是构图口味，不碰硬线，而且和整片设计相反：B05 到 B08 都把运河横摆、红海在左、地中海在右，讲亚洲到欧洲从左到右走，单改这一拍地图会在相邻几拍里转 90 度。第 1、2 条已照改：底均匀压暗，中性灰海图加一条红色航线，红海、地中海和标题都读得清，只有一个焦点，已到能交的水准。",
+   "when": {
+    "always": true
+   },
+   "do": "地图（海图、地球）的朝向和摆法由整片设计定，相邻几拍保持同一朝向；不因为不是北朝上、或想让航线竖着走，就要求单独一拍转图。",
+   "check": "arbiter.mjs; prompts/arbiter.md",
+   "review": {
+    "say": "地图（海图、地球）的朝向和摆法由整片设计定，相邻几拍保持同一朝向；不因为不是北朝上、或想让航线竖着走，就要求单独一拍转图。",
+    "complains": "(北朝上|北在上|朝北摆|上北下南|不是北朝上)",
+    "suggests": "(北朝上|北在上|上北下南|竖着(摆|走|从)|转\\s*90\\s*度|地图转)",
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L111-film-palettes",
+   "said": "2026-10-28 用户：怎么每遍跑每遍都有问题 还有就是我没看到多样化为什么 基本都是黑灰底背景 是忘了我说的了吗；然后：就是可以各种配色 但要和谐 比如 gawx 会用些胶片感的红 黄 蓝等等 还有字体颜色也是的多样性 当然要站在设计师角度看 导演角度看怎么好怎么做 不能硬做 要变通",
+   "when": {
+    "always": true
+   },
+   "do": "整片设计给每拍选一套配色（routing/palettes.json：中性暗、琥珀灯、胶片红、芥黄、靛蓝夜、青海图、米白印刷、钴蓝卡），按故事轮换：一部片 3 套以上，中性暗至多一半，彩色的底约两成，同一套至多连用 4 拍；画面暗为主但一直有颜色（在光里、在东西上、在卡片底上），字色也跟配色走。和谐看：同一画面有颜色的至多两族（相近或冷暖相对）、不脏（暗处低彩度的暖色读成棕）、字读得清。选哪套由导演按这一拍讲什么、在整片里演什么来定，不机械轮换。地图章节也可以是青海图、靛蓝夜，不再一律中性灰。",
+   "check": "palettes.mjs filmPaletteErrors / paletteErrors / filmColourErrors（白膜有主色的画面 35% 以上、3 族以上）；filmworld.mjs houseErrors（暗底中性或明确的颜色）；style-lab/tools/palette-arc.py；chapter.mjs colourErrors 只对选中性暗的地图章节豁免",
+   "review": {
+    "say": "配色可以多样：每拍一套胶片配色（琥珀、红、芥黄、靛蓝、青、钴蓝），彩色的底和彩色的字都可以；一直是中性灰加一点红算单调。和谐看三点：同一画面有颜色的至多两族、颜色干净不脏棕、字读得清。",
+    "complains": null,
+    "suggests": "(改成|换成|压成|回到|统一成)[^；;。，,]{0,4}(中性灰|灰色|灰底|中性的?暗)",
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L112-screen-medium",
+   "said": "2026-10-28 用户：按审计建议的顺序补：先介质进家里的样子；（2026-10-16 还不如之前的那种 led，喜欢的是质感；之前的光郡那种也是我喜欢的美学风格画风）",
+   "when": {
+    "always": true
+   },
+   "do": "整片设计每拍选一个介质（routing/media.json：LED 点阵、CRT、琥珀和绿色终端、录像带、报纸网点，或不经屏），三成以上的拍在屏上；精渲和白膜按拍取对应介质的一版。钴蓝油墨的 print 介质不用（就是否过的钴蓝印刷）。",
+   "check": "filmdesign.mjs filmScreenErrors；chapter.mjs screensOf / filmOfScreen；animatic.mjs finalPlan",
+   "review": {
+    "say": "画面经过一块屏（LED 灯珠、CRT 扫描线和弧面、终端的单色辉光、录像带的色带、报纸网点）是整片设计选的介质质感，不是画面脏、糊或有毛病。",
+    "complains": "(扫描线|掃描線|灯珠|燈珠|网点|網點|色带|色帶|辉光|輝光|颗粒感|顆粒感)[^；;。，,]{0,8}(太|脏|髒|糊|干扰|干擾|毛病|問題|问题)",
+    "suggests": "(去掉|拿掉|去除)[^；;。，,]{0,6}(扫描线|掃描線|灯珠|燈珠|网点|網點|屏幕效果|介质|介質)",
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L113-evidence-shown",
+   "said": "2026-10-28 用户：证据拍必须放证据和屏幕包装（审计：苏伊士 B02 标了证据，任务里有卫星照片，画面却是 3D 地图）",
+   "when": {
+    "always": true
+   },
+   "do": "整片设计标成证据的拍，章节里必须真放证据（真照片、真录屏、真页面），写明并画出来；网页、软件、录屏和证据照片放在暗场里一块被摄像机斜着拍的屏上（kit.engine.filmedScreen），不平贴满屏。",
+   "check": "chapter.mjs evidenceErrors；morph.js filmedScreen；devices filmed-screen",
+   "review": null
+  },
+  {
+   "id": "L114-guangjun-gawx-devices",
+   "said": "2026-10-28 用户：之前的光郡那种也是我喜欢的美学风格画风；也不用金属 3d 字什么的 可以去掉 其他的设计感觉 画风 可以重点弄好",
+   "when": {
+    "always": true
+   },
+   "do": "光郡和 Gawx 的手法进了手法库（kit5.js、devices.json）：打字光标、坐标追踪、描边读数、双语标题、关键词塌缩、章节母题地图、闪白、快摇、越界巨字、拆字网格、纯色底海报、照片满屏压字；金属 3D 字不做。",
+   "check": "kit5.js；kit4.bench.js；routing/taste-inventory.json",
+   "review": null
+  },
+  {
+   "id": "L115-fit-not-forced",
+   "said": "2026-10-28 用户：对 但是要合适 要客观设计 不要为了做而做 硬塞 导演要知道这些",
+   "when": {
+    "always": true
+   },
+   "do": "配色、介质、手法按这一拍讲什么来挑，整片设计每拍写 why；数量只做提醒（filmPaletteNotes、filmScreenNotes），不当指标；章节里一拍只用这句话需要的一两样，和台词无关的装饰不用。",
+   "check": "filmdesign.mjs designWhyErrors / filmPaletteNotes / filmScreenNotes；prompts/filmdesign.md 5、6，morph.md 35c",
+   "review": {
+    "say": "手法、介质、配色要贴这一拍讲的内容：和台词无关、为用而用的装饰（无的放矢的坐标标签、打字光标、读数框、换介质、彩色底）扣分；贴着内容用的不扣。",
+    "complains": null,
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "ARB-taste-B02-B03-5bdfd4",
+   "from": "arbiter",
+   "said": "2026-10-28 仲裁（taste-B02 B03；用户 2026-10-28 授权，可推翻）：中段那条亮灰带是主灯在海图桌上的柔光区，边缘是软的，不抢船，也不压字；「400米」长在量线上，「2萬個集裝箱」读得清，画面已经能交。去不去这条光带是口味，主灯怎么打本来就归导演定。",
+   "when": {
+    "always": true
+   },
+   "do": "主灯在底上照出的一片柔和光区或光带（边缘是软的，不压字，不比主体亮）是导演定的布光，不因为它亮就要求去掉或把底整体压平；只有边缘硬的光斑，或光区抢了主体、让字读不清时才扣。",
+   "check": "arbiter.mjs; prompts/arbiter.md",
+   "review": {
+    "say": "主灯在底上照出的一片柔和光区或光带（边缘是软的，不压字，不比主体亮）是导演定的布光，不因为它亮就要求去掉或把底整体压平；只有边缘硬的光斑，或光区抢了主体、让字读不清时才扣。",
+    "complains": "光带|亮带",
+    "suggests": "(去掉|拿掉|压掉|抹掉).{0,12}(光带|亮带|灯光|光区)",
+    "keepIf": null
+   }
+  },
+  {
+   "id": "ARB-taste-B02-B03-d8927a",
+   "from": "arbiter",
+   "said": "2026-10-28 仲裁（taste-B02 B03；用户 2026-10-28 授权，可推翻）：「2萬個集裝箱」就在船身正下方、和「400米」上下成对，字清楚、不压字、不出画，已算长在船上；改印到货柜侧面随透视只是口味偏好，还会让字变斜变小、更难读，不碰任何硬线。画面本身（3D 船、量尺、海图网点底、琥珀强调）已到能交的水准。",
+   "when": {
+    "always": true
+   },
+   "do": "数量标签紧贴它说的那个物体（在其正上、正下或旁边、与物体之间没有别的东西），就算「长在东西上」；字的机制归导演自由，不因为标签没有印到物体表面、没有随透视变形就扣分或要求改，除非它读不清、压字或离物体远到看不出是哪个的。",
+   "check": "arbiter.mjs; prompts/arbiter.md",
+   "review": {
+    "say": "数量标签紧贴它说的那个物体（在其正上、正下或旁边、与物体之间没有别的东西），就算「长在东西上」；字的机制归导演自由，不因为标签没有印到物体表面、没有随透视变形就扣分或要求改，除非它读不清、压字或离物体远到看不出是哪个的。",
+    "complains": "(悬在|飘在|浮在).{0,12}(空底|空处|下方|船下|空白)|不(要)?悬在",
+    "suggests": "(改印在|印在|贴在|印到).{0,16}(侧面|表面|货柜|船身|箱体).{0,16}透视|随.{0,8}透视",
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L116-gate-once-film-first",
+   "said": "2026-10-28 用户：是不是效率 流程太低效和不规范呢 客观觉得怎么做最好呢；能不能现在就执行优化呢",
+   "when": {
+    "always": true
+   },
+   "do": "先定大的再抠小的：六段片的单拍口味评审等整片白模先评过一次（filmFirstDue）。关口过一次就算过：过线时没做完的到 4 分清单收成备注（<step>.notes.json），之后改版的评审只看有没有变差、有没有犯硬条件，不再开新清单；仲裁每拍每关只裁一次，关口过线时不叫仲裁。导演不为了把 3 分抠成 4 分反复改已过线的章节，备注留给下一轮系统改进。",
+   "check": "reviewlist.mjs closeGate / gatePassed / settleBeat newLists / arbiterDue byArbiter；beatdesign.mjs tasteGate；stills.mjs；filmdesign.mjs filmFirstDue",
+   "review": null
+  },
+  {
+   "id": "L117-model-check-formation-screens",
+   "said": "2026-10-28 用户：继续都做好 也确保客观看是规范 高效的流程",
+   "when": {
+    "always": true
+   },
+   "do": "图生 3D 的模型用之前先验收（六视角，OpenCLIP 判像不像 what，六个里至少两个像才用，不像退回导演）；一群帮手围着主体用 kit.props.formation 按规则摆，不手调坐标；一章按屏幕渲多版时，非 clean 的屏只渲用到它的拍（其余黑帧，时间轴不变）。",
+   "check": "chapter.mjs modelCheck / modelVerdict / screenSpans；blender/model_sheet.py；likeness.py --model；templates/formation.js；shoot.mjs spans",
+   "review": null
+  },
+  {
+   "id": "L118-greybox-direction-first",
+   "said": "2026-10-28 用户：我发现你一直在扣细节 但是整篇走向和设计排版和感觉都没做好呢 我说了粗稿可以很低精度几何模块或者什么的能替代 确保全篇方向 … 可以创建子对话执行；模型 背景 字体设计什么的耗时不长的可以正常做 只有耗时的才做 明白吗 尤其是镜头的衔接和动效不能打折",
+   "when": {
+    "always": true
+   },
+   "do": "整片先出灰盒动态粗稿定方向，再逐章精做（每章一个子会话）：快的照成片标准做（底和介质质感、字和版式、库里的模型、手上的真素材），只有慢的（新模型、生图、重 3D）用几何块占位；镜头运动、每样东西的入场时机和方式、拍与拍的衔接按成片标准，不打折。方向关在外观关之前。",
+   "check": "greybox.mjs greyboxErrors / reelHtml / renderGreybox；gatestate.mjs GATES direction；stills.mjs 灰盒和方向关在剧照之前",
+   "review": null
+  },
+  {
+   "id": "L119-studio-two-gates",
+   "said": "2026-10-28 用户：客观说说 不要我说什么就是什么 怎么样标准 专业 高效；按你推荐的都执行好 做完要检查",
+   "when": {
+    "always": true
+   },
+   "do": "新片两个用户关：定设计（灰盒粗稿＋风格帧＋整片设计板一起批）和成片预览；结构就是灰盒，不另设结构关；预检是系统自己的技术关。灰盒先过一位新审片人盲审再给用户；字的位置由求解器排、时间跟台词（最早提前 0.3 秒）；切点那一刻要有东西、同一种版式不连用三拍。逐章制作每章一个会话，任务书由 session-brief 按批过的设计生成，带上盲审留下的备注。现行家规一页（HOUSE.md），先读它。",
+   "check": "gatestate.mjs GATES / designSet；gates.mjs approveGate design；greybox.mjs greyboxReview / placeType / typeIn / layoutSig；sessionbrief.mjs；HOUSE.md",
+   "review": null
+  },
+  {
+   "id": "L120-audit-greybox-bound",
+   "said": "2026-10-28 用户：做完要检查你说的是否都做到了 而且要客观检查是否专业 规范 高效的流程（独立审计找出的缺口）",
+   "when": {
+    "always": true
+   },
+   "do": "章节只认设计关批过的那版灰盒（改过或被退回就停下等重新批）；任务带上它、渲染后量字在不在（缺字是错误；位置偏离先作备注，等第一部照灰盒做的片校准）；切点空不空在粗稿上实测，对比画面自身的底色（中位色），量不了就报错不放行；小字不压主体（满屏照片算底，说明标签可贴物）；数字中文写法和阿拉伯数字视为同一；有配音用逐字时间，没有就在总览上写明是估算；盲审没解决的严重度 3 问题列在总览上；家里字体缺了或压窄失败直接报错；子会话在同一工作目录、只改自己章节的答案、单渲染任务（新 worktree 没有字体素材和渲染）。",
+   "check": "greybox.mjs greyboxDriftErrors / measureCuts / cutErrors / voiceTiming；gates.mjs approveGate；run.mjs 预检条件；sessionbrief.mjs",
+   "review": null
+  },
+  {
+   "id": "L121-type-bible",
+   "said": "2026-10-28 用户：字体设计的不好 你没什么排版规则和圣经吗 很多位置都怪怪的；做",
+   "when": {
+    "always": true
+   },
+   "do": "排字按排版圣经（TYPE.md）：12 栏网格，字的边缘落在栏线上；字号只用 hero 300 / figure 200 / title 128 / sub 64 / caption 48；大小字左边缘对齐，台词先说的小字在上、后说的在下；关键数字和标题放在屏幕网格上，不钉在会动的 3D 物体上；全片同一种角色同一档；点缀色一帧一处。",
+   "check": "typebible.mjs typeBibleErrors / filmTypeErrors；templates/typegrid.js type.grid；greybox.mjs placeType；routing/type-bible.json",
+   "review": {
+    "say": "字的排法按排版圣经（TYPE.md）评：字不在网格上、字号乱（同一种角色大小不一）、大小字不对齐、关键数字钉在会动的物体上漂着、标签离它标的东西远，都扣分；按圣经排的字（左对齐成组、固定落位、一档字号）不因为「位置可以更活」扣分。",
+    "complains": null,
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L122-type-ink-one-height-one-gap",
+   "said": "2026-10-28 用户：数字和文字为什么对齐不了 为什么检查不出来；间隔什么的是不是也怪 应该可以更规范的；字体规则记好 之后不要有这种低级错误",
+   "when": {
+    "always": true
+   },
+   "do": "字按看得见的笔画排和量，不按字号盒子：一行里的数字画到中文的高度，顶和底都齐；大小字是一组，一起钉住、一起微移，左边缘对齐到 6 px 内；两行之间只有一个间距，笔画到笔画是大字字号的 0.15 倍；这些在一拍的每一刻都成立，不只停稳的一帧。用 kit2 pair / peakType / evidenceCard 排，不手算间距。",
+   "check": "typebible.mjs typeBibleErrors（墨迹同高、配对 6 px、墨迹间距 0.15±0.03、墨迹字压字）/ trackBibleErrors（每 0.2 秒，错 0.8 秒即败）；morph.js 数字同高与 g.__group；kit2 pairBaseline；typegrid INK_GAP",
+   "review": {
+    "say": "看字时按看得见的笔画评：一行里数字比中文矮或高、大小字左边不齐、两行间距忽紧忽松（同一部片里不一样），都是低级错误，扣分；整拍里看，不只看一帧，字后来漂开也算。",
+    "complains": null,
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L123-type-as-designed-blocks",
+   "said": "2026-10-28 用户：为什么废止这种设计了…你难道没有很好的字体设计 排版skill吗 最新的小字和一艘船都不居中 设计的很怪 要系统上做好设计 不要我说一点改一点 找好方法；上网找最好的设计规范 字体的 排版的 嵌入进去 要特别成熟 才行；之前版本是拓很宽啊 就三个字",
+   "when": {
+    "always": true
+   },
+   "do": "一帧的字是一个设计好的字组：用 typeBlock / spreadWord / pair / peakType / evidenceCard / stackType 排，按笔画对到一条轴，组内间距 0.15、组间至少 0.5；一帧最多三级，同框两级至少差 1.5 倍，最大一档只有一个；3D 场景里的字不和屏幕字配成一组；每行停留 ≥ 字数÷9+0.3 秒（TYPE.md §7）。用户看过、认可的版式不因审片或仲裁的口味意见重做（开篇「一　艘　船」拉宽三字），要改先给用户看前后对比。",
+   "check": "typebible.mjs designErrors（手排、对轴、世界字配屏幕字、层级、接近）/ readTimeErrors；kit2 typeBlock / spreadWord；routing/type-bible.json design",
+   "review": {
+    "say": "按成熟的排版规范评字（TYPE.md §7）：一个先读的、最多三级、组内紧组间松、一条轴；用户认可过的版式（例如开篇拉宽铺满的「一　艘　船」三字）不提改构图或字距的意见——那是用户定的，只报硬错（叠字、出画、看不清、事实错）。",
+    "complains": "(一\\s*艘\\s*船|開篇|开篇|开场|開場|三个字|三個字)[^；;。]{0,16}(散|太開|太开|间距太大|間距太大|分得太|拉得太|隔得太|读不成|讀不成)",
+    "suggests": "(收拢|收攏|靠拢|靠攏|缩小|縮小|收紧|收緊)[^；;。，,]{0,10}(三个字|三個字|一\\s*艘\\s*船|字距)",
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L124-greybox-review-bounded",
+   "said": "2026-10-28 用户：关口过一次就算过 … 是不是效率 流程太低效和不规范呢（香蕉片灰盒审了四轮，每轮新审片人都回同样三条笼统意见：硬切多、构图连用）",
+   "when": {
+    "always": true
+   },
+   "do": "灰盒定的是整片走向和大错：连审三轮后，各项不低于 3、没有严重度 4 的问题就算过；剩下的严重度 3 意见作为备注写进各章任务书，在章节里做。轮数按答卷计，不按跑线次数计。",
+   "check": "greybox.mjs greyboxReviewErrors(a, round) / GREYBOX_ROUNDS；sessionbrief 带上灰盒审片意见",
+   "review": null
+  },
+  {
+   "id": "L125-greybox-director-intent-visible",
+   "said": "2026-10-29 用户：看 SOP 是否规范，导演是否根据分镜设计得很好；正常先给我看粗剪确认后再精渲",
+   "when": {
+    "always": true
+   },
+   "do": "导演的叙事动作和切点必须在粗稿实际可见：已有真素材必须解析到真实文件，未知素材代号不得静默变空框；过程中的标记用强调色，传染、位置或变化按故事顺序出现；闪白在切点达到峰值。先检查全片与分镜及声音节奏的对应，再给用户看完整动态粗剪；没有逐字配音时明确标记为估时，不代替最终声音对齐。",
+   "check": "greybox.mjs greyboxAssetErrors / flashAt / shapeHtml；greybox-review；test-recipe-board.mjs",
+   "review": null
+  },
+  {
+   "id": "L126-photo-plane-as-subject",
+   "said": "2026-10-29 Neo/用户：章节用 Plane + banana_photo 公告板冒充 3D 主体；门禁未硬失败",
+   "when": {
+    "always": true
+   },
+   "do": "3D/2.5D 主戏主体必须是 kit.props.model / kit.engine.subject / block.model / 真 mesh；禁止 PlaneGeometry（或等价扁平面）+ 照片贴图当主戏。照片只可作非平面 mesh 的材质。故意的 2D 证据卡/卡片平面在 formFor/medium/role 未声称是 3D 主体时允许。",
+   "check": "chapter.mjs photoPlaneSubjectErrors (photo-plane-as-subject); test-recipe-board.mjs",
+   "review": null
+  },
+  {
+   "id": "L127-shot-motion-contract",
+   "said": "2026-10-29 Claude workflow nails per-shot motion in session-brief prose but morph barely verifies prescription was eaten",
+   "when": {
+    "always": true
+   },
+   "do": "分镜运动是硬输入：session-brief 写 session-*.motion.json（A1ShotMotionContract/v1：shotId、camera.move/camMoveMin/Max、subjectMotion、subject.model、type.in late|after-motion、seam.in/out/poseFrom、motif.layers、delivery.previewMp4）；章节工必须吃进 morph；检查 motionContractUneatenErrors + previewDeliveryErrors 拦截「运动合同选了但答案未吃」；偏离写 greyboxDiffer 理由",
+   "check": "motionContractUneatenErrors|previewDeliveryErrors",
+   "leakFixed": "2026-10-29 poseFromScaleContinuityErrors; morphEatsPoseFrom string-only is insufficient"
+  },
+  {
+   "id": "L128-director-before-production",
+   "said": "2026-10-29 用户：做之前是不是导演先想规划好；吸芽繁殖是不是做平面更好；重新接回导演系统，把 Claude 先摘除。",
+   "when": {
+    "always": true
+   },
+   "do": "先规划整片视觉段落与逐镜问题、表达形式、起止画面、动作、字和接缝，再做静态故事板和动态粗稿。关系、数量、流程优先考虑平面图解；有空间解释必要才用3D，不因已有模型或章节代码倒推讲法。AI整帧可作草图，最终无字分层与代码字/数据分开；已有视角与模型规范先复用，不自由试角度。当前由Codex导演，manual为会话任务路径，Claude退出生产调度。",
+   "check": "现行Codex导演入口、SOP和导演任务；关键帧/动稿由独立审片判断表达，不将静态检查当作导演质量证明。",
+   "review": {
+    "say": "先判断画面是否让观众理解这一拍的关系和变化。平面图解能清楚表达时，不因缺少3D复杂度而扣分；3D若增加认知负担应建议换表达。先看全篇与接缝再给局部修复清单，AI设计草图不是事实图或已完成成片。",
+    "complains": null,
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L129-rough-cut-calm-gate-profile",
+   "said": "2026-10-29 banana session-B02 粗版 GO；morph round75 被 B26-gold calm（nothing new … 7.8s / at most ~6.5s）挡死。粗版不该用成片 calm 硬阈值拦 check0；mature/design-set 全门仍硬。type-over-line / filmdesign lightness 仍章侧。",
+   "when": {
+    "always": true
+   },
+   "do": "会话/运动合同声明 粗版|roughCut|rough-cut GO 时：gateProfile=rough-cut（顶栏或 delivery.gateProfile；亦可 source=rough-cut-* / about·session「粗版 GO」推断）。resolveGateProfile→holdErrors(calmAsWarn)：calm/B26-gold 时长类只 warn、不挡 check0。gateSet=design 的 filmdesign/mature 门不变。previewChapter 成功写出 preview.mp4 后必须先 writePreviewBind(renderedSource) 再做输入漂移检查，避免 bind 停在旧 morphHash。",
+   "check": "resolveGateProfile(rough-cut|source rough-cut*|粗版 GO)=rough-cut；默认/full 时 calm 仍进 errors。previewChapter 源码 writePreviewBind 在 drift throw 之前。node --test scripts/test-recipe-board 绿。禁止改 banana morph 答案、代过章、空壳 ready。",
+   "review": {
+    "say": "粗版 GO 只软化 calm 时长门；设计关与成片门仍按 design-set。preview bind 必须跟当前渲染 morphHash。",
+    "complains": null,
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L130-rough-cut-fill-busy-ground-warn",
+   "said": "2026-10-29 Neo：粗版 gateProfile 下「主体偏上 fill」「ground busier than subject」应与 B26 calm 同降为 warn；字被 3D 穿过 / 文盖物仍 HARD。",
+   "when": {
+    "always": true
+   },
+   "do": "gateProfile=rough-cut 时：balanceErrors（picture sits in the top half）与 figureGround「ground is busier」→ warnings；crossErrors / objectErrors 永不降级。partitionRoughCutWarns + chapter runtimeCheck。",
+   "check": "partitionRoughCutWarns / gateProfile rough-cut fill+busy-ground warn; cross+object hard"
+  },
+  {
+   "id": "L131-shot-design-density-opus55",
+   "said": "2026-11-02 用户：看看 opus 5.5 为什么做的那么好，图形、文字、空间不断接替都做的那么好；怎么优化，接入系统没有，导演能更聪明、有设计感一点吗。",
+   "when": {
+    "always": true
+   },
+   "do": "对标 Opus 5.5 视频库（7,610 条/1,251 条 prompt，docs/analysis/OPUS55-STUDY-20261102.md）：一章是一个连续系统，全章 8–12 个状态，不是每拍一张静帧；每拍写起/變/落三态和 3–6 个事件（图形/文字/空间轮流变），事件间隔不超过 1.8 秒，落幅停在事件上；1× 播不过密度门不渲染。",
+   "check": "design-density.designDensityErrors（beatdesign.briefErrors 调用；本拍有 states/events 才查）与 scripts/test-design-density.mjs；prompts/beatdesign.md 每拍答案要求 states/events。",
+   "review": {
+    "say": "先看 1 秒里画面有没有变化：图形/文字/空间是不是轮流接替，有没有超过 1.8 秒什么都不变；只是加一行字不算事件。",
+    "complains": null,
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L132-typeplan-anchors-measured",
+   "said": "2026-11-03 盲审 type-acea42cffc1a713cd34b（banana-design typeplan）：四个透视框是同一块平行四边形平移，无透视收敛，36 行复用 13/13/5/5 次；框与提供的帧对不上；B20 遮挡只写“香蕉果串”，没有笔画覆盖/接触阴影。",
+   "when": {
+    "always": true
+   },
+   "do": "字的锚点必须来自实际 plate/greybox 帧上的面：框要按那个面量（透视收缩、边缘落在面上的边），不要复用同一块四边形；遮挡要写清哪几个笔画被谁挡住、接触阴影在哪。字的大小必须放得进它自己的框。",
+   "check": "typedesign.typedesignErrors（one quad reused ≥6 次、line 宽于 quad 宽度即 fail）+ framecheck.frameProblems（perspective-mismatch、floating-type、cheap-3d）+ scripts/test-typedesign.mjs、scripts/test-type-checks.mjs",
+   "review": {
+    "say": "看框是不是从画面里的面量出来的：有没有透视收敛、边缘是否落在桌沿/纸边/果身上；同一块框复用多次就是贴纸。",
+    "complains": null,
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L133-typeplan-reveal-per-beat",
+   "said": "2026-11-03 同一盲审：20 拍 motion.type 全 null、reveal 全是同一句 “camera settles; the word is already in the picture”、drift 全 0；设计稿的六种 typeMove（stackType/surfaceType/band/label/knockout/pair）没有一处被回答。",
+   "when": {
+    "always": true
+   },
+   "do": "reveal 是唯一决定“字怎么进画”的字段：按这一拍的 typeMove 写具体动作（叠/贴/带/标/挖/配对），每拍不同；禁止把同一句 reveal 复制到全片。",
+   "check": "typedesign.typedesignErrors（同一 reveal ≥5 次即 fail）",
+   "review": {
+    "say": "逐拍看 reveal 是否回答了 typeMove：字是叠上来、贴在面上、带子扫过、标签钉上、地面挖空、还是与另一行配对？全片同一句就是没设计。",
+    "complains": null,
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L134-typeplan-size-fits-anchor",
+   "said": "2026-11-03 同一盲审：5 拍字放不进自己的锚点——B01 五字 300px≈1500px 放进 422px 竖框（超 3.5 倍），B12/B15/B08/B17 同类。",
+   "when": {
+    "always": true
+   },
+   "do": "先按 role 字号估宽（CJK 约 0.95em/字，拉丁约 0.55em），再量锚点框宽度；放不下就改框（更大的面）或改 role/分行，不许硬塞。",
+   "check": "typedesign.typedesignErrors（估算宽度 > quad 宽度 1.05 倍即 fail）",
+   "review": {
+    "say": "把字放进框里看：超出框的字不可能印在那个面上。",
+    "complains": null,
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L135-typeplan-copy-is-the-film",
+   "said": "2026-11-03 盲审 v2：typeplan 20 拍每拍至少一行与片子不同（B06 写 1921、片子是「發生過一次」；B14 写 NO DEFENCE、片子是「和當年的大麥克一樣」），所有锚点/字号/光都不可验证。",
+   "when": {
+    "always": true
+   },
+   "do": "typeplan 的每个字必须是片子实际会放的字（plan.onScreen 的 headline/keywords，经 hant 转换）；不许从设计稿另起文案。答案里出现片子没有的字即 fail。",
+   "check": "typedesign.filmErrors（text-not-in-film）+ 必须覆盖每拍；scripts/test-typedesign.mjs",
+   "review": {
+    "say": "先把字和片子的字对上：屏幕上的字必须是片子里那一句，不是设计稿里的同义词。",
+    "complains": null,
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L136-typeplan-graphic-share",
+   "said": "2026-11-03 盲审 v2：35/39 行都用“网格栏”当锚点，把参考片只用在封面的 graphic 处理铺满全片，页面/地图/物件/聊天卡都没用上。",
+   "when": {
+    "always": true
+   },
+   "do": "graphic（画面排版）只给 hero/封面拍，全片 ≤25% 行；片内字优先压在真实表面（页/地图/图版/果身/屏幕），没有表面才用 graphic。",
+   "check": "typedesign.typedesignErrors（graphic-share、graphic 必须是该拍 headline）",
+   "review": {
+    "say": "数一下 graphic 占多少：参考片片内字都在表面/人物/页面上，只有封面是大字排版。",
+    "complains": null,
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L137-typeplan-ink-geometry",
+   "said": "2026-11-03 盲审 v18-v24：quad 一直是排版槽（1em/0.72 塑形）而不是画面里画出的墨迹，公式永远差 10-16px；anchor.quad 与 perspective.quad 不同步导致“anchor 2×”反复出现。",
+   "when": {
+    "always": true
+   },
+   "do": "typeplan 的 quad 必须等于渲染器实际画出的墨迹：用 house font 在 file://+fontCss 页面里量 actualBoundingBox（不是 about:blank），再按 0.05em 基线校准；anchor.quad 与 perspective.quad 同步；所有位移只改 slot，quad=slot+墨迹偏移。",
+   "check": "typedesign.typedesignErrors（quad-off-box 0.85、inkOffset 匹配、lead/axis、type-off-frame）+ greyboxFilm(measureTextBoxes)",
+   "review": {
+    "say": "先量：quad 与画面墨迹是否逐行对齐（±3px）；anchor.quad 是否等于 perspective.quad。",
+    "complains": null,
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L138-packaging-codebook",
+   "said": "2026-11-03 用户：要不要把对标视频包装效果分类代码化，之后复用保持设计水准？",
+   "when": {
+    "always": true
+   },
+   "do": "把包装拆成不变量 + 可参数化变体 + 可测契约 + 对标区间 + 选择器（4 拍重复窗口、同分类最多 2 个），代码在 routing/packaging-taxonomy.json + lib/recipe-board/packaging.mjs + scripts/packaging.mjs；新变体必须带参数/契约/对标帧/失败模式/检查/测试，不进 taxonomy 不许在项目里私写。",
+   "check": "scripts/test-packaging.mjs（6 项）+ packagingErrors/contractErrors",
+   "review": {
+    "say": "问：这拍用哪个变体、契约哪条兜底、最近 4 拍是否重复；没有变体就先补 taxonomy 并过测试。",
+    "complains": null,
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L140-no-ppt-scrim",
+   "said": "2026-11-03 用户：你这还是像 PPT 偷懒做黑渐变不是吗",
+   "when": {
+    "always": true
+   },
+   "do": "静态排版稿禁止用“全幅照片 + 黑色线性渐变 + 角落大字”当设计：那是 PPT 模板，不是场景。真设计至少要有三层（底/主体/前景）和一次真实遮挡；字要和主体发生关系（被遮、穿出、钉在物体上），不是浮在压暗的角落。静态 HTML 只能证明字号/网格/间距规则，不能冒充设计；要场景就进 3D/章节引擎渲染，别用暗角渐变偷懒。",
+   "check": "design study 盲审：问“这帧去掉字之后还是一张有构图的照片吗？字和主体有没有关系？是不是只有一层暗渐变？”任一不过即退回",
+   "review": {
+    "say": "先问：这是场景还是 PPT？有没有第三层和遮挡？只有照片+黑渐变+字，直接判模板，不看字号。",
+    "complains": null,
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L141-type-method",
+   "said": "2026-11-03 用户：没上网研究怎么样是好的排版设计吗 怎么做才行呢",
+   "when": {
+    "always": true
+   },
+   "do": "排版先构图后排字：1) 一句话定唯一第一阅读点；2) 不带字先放三层（背景场/主体/前景遮挡）并预留字区；3) 五档字+三级+120网格+935字幕带；4) 字与主体发生遮挡/穿出/钉住之一；5) 墨隙0.15em按像素量、混排间距≤1/4汉字宽、9字/秒；6) 动效顺序=阅读顺序；7) 渲染后像素量+盲审≥3.5。缺第2、4步就会做成PPT。",
+   "check": "design study 先交无字构图；字必须与主体有遮挡关系；像素量gap/对比/字幕带；fresh盲审",
+   "review": {
+    "say": "问：无字构图成立吗？三层在哪？字和主体什么关系？只有照片+黑渐变+角落字直接判PPT。",
+    "complains": null,
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L142-type-image-pairing",
+   "said": "2026-11-03 用户：字体要配合画面不是吗 对标都是怎么做的学不到吗",
+   "when": {
+    "always": true
+   },
+   "do": "字族/字重/字号/颜色/材质/位置都由场景 register 决定：页面/数据→衬线或重字覆盖页面栏、强调块只给数字；人物→轻衬线≤128、负空间、不碰脸；安静虚焦→细衬线≤128低对比、grain、禁黑遮罩；产品/3D→被主体遮20–40%或钉住，3D recap 才用挤出。家里无手写，不伪造。codebook routing/type-image-pairing.json + pairingErrors 硬查。",
+   "check": "pairingErrors（register/face/size/placement/black-scrim/脸bbox/遮挡比例/headline+source+date）+ fresh盲审",
+   "review": {
+    "say": "先问：这是哪种场景？字族和字号为什么配它？字和主体什么关系？黑渐变直接判错。",
+    "complains": null,
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L143-code-kinetic-type",
+   "said": "2026-11-03 用户：X 上 Claude Opus5.5 是什么技术做文字 包括衔接 你怎么做不到；最好还是不要 3D 文字",
+   "when": {
+    "always": true
+   },
+   "do": "文字/衔接用代码逐帧做，不做 3D 文字：Canvas2D 字 + three.js/WebGL 层 + post（split/slice/grain），每个 shot 是 t 的纯函数，120BPM cue 时间轴锁拍；转场用形状连续（zoom-through/iris/push/wipe/slats/grid，0.45–0.6s，从画面元素发起）；HUD 网格（140/1780、标题 y250–470、内容不进 y>950）；审片出 contact sheet + transition strip 逐张看。",
+   "check": "kinetic proof：contact sheet/stills/transition strip + 碰撞/可读性/空帧/转场起落；3D 文字默认禁止",
+   "review": {
+    "say": "先问：这是逐帧 Canvas/WebGL 的 shot 吗？时间轴锁拍了吗？转场从画面里的什么元素发起？3D 文字直接判错。",
+    "complains": null,
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L144-art-direction-first",
+   "said": "2026-11-03 用户：motionvideo.xyz 的 Opus 5.5 案例为什么那么有设计感 你差什么",
+   "when": {
+    "always": true
+   },
+   "do": "先定 art direction 再做片：一句话概念；三色系统（主色大面积/墨/强调）；一个 70–90% 画幅可裁的主字；一个二次元素（ghost/蓝圆点/手写批注/时间轴/timecode/BPM/bar）；具体运动参数（stagger 45ms/overlap/mask/beat）；15s 起，不是 6s 三段信息；声音与片头片尾签名。技术不是差距，概念/美术/编排/完成度才是。",
+   "check": "每片先交 concept+palette+type scale+HUD kit+motion numbers，再写 shot；对照 motionvideo.xyz 案例盲审",
+   "review": {
+    "say": "先问：一句话概念是什么？主色占多大？主字占画幅多少？二次元素是什么？stagger/overlap 多少？没有就退回。",
+    "complains": null,
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L145-3d-clone-field",
+   "said": "2026-11-03 用户：对标研究透 要 3D 就 3D okazaky 的 3D 效果不错",
+   "when": {
+    "always": true
+   },
+   "do": "3D 用在“场/物体/相机”：克隆香蕉场、地面网格、感染个体；标题字保持 2D house 字体，不做塑料 3D 字。参考 okazaky：Three.js/Blender 程序化、engraved 线材质（wireframe/hatch）、黑/骨/橙三色、参数 HUD、相机穿过 3D 布景、1 句 1 scene、contact sheet 验证。",
+   "check": "3D 试片：线框/材质统一、相机连续、HUD 参数真实、2D 字在 3D 前/后关系明确；盲审通过才进片",
+   "review": {
+    "say": "先问：3D 是场还是塑料字？材质统一吗？相机是不是穿过布景？HUD 参数真实吗？",
+    "complains": null,
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L146-engraved-3d-field",
+   "said": "2026-11-03 盲审：香蕉 3D 克隆场像爆炸网格、HUD 交叉叠字、数据卡黑话",
+   "when": {
+    "always": true
+   },
+   "do": "3D engraved 场：网格必须 manifold（remesh+decimate）再 wireframe，禁止顶点杂线射出；每克隆随机微旋转/尺度，近处更亮、远处更暖，接触阴影；2D→2D 转场禁止交叉溶解两套字/HUD，用硬切/清场交接；证据卡一句话：measure+value+source，禁止 48→48/CARD 生产黑话；22s 至少每 2–4s 一个 beat。",
+   "check": "3D 帧查杂线；转场 strip 查双字/HUD；数据卡查一句话+来源；节拍表查 2–4s",
+   "review": {
+    "say": "先问：线框有没有射出线？转场有没有两套字叠？数据卡是不是一句话？22s 有几个 beat？",
+    "complains": null,
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L147-evidence-page-packaging",
+   "said": "2026-11-03 整片盲审：证据页只做截图裁切、没有放大划线；地图 navy 不合 house；生产备注上屏；简繁混排",
+   "when": {
+    "always": true
+   },
+   "do": "真实案例页必须做页面工作：完整段落边界裁切、zoom 到 claim、underline 扫描；来源行 28px+ 且只放来源；地图先 tint 成 house 黑/黄/橙再上屏；禁止把制作备注/免责声明写在画面上；所有上屏文案繁体；每 9s+ 卡至少 2–3 个内部事件。",
+   "check": "证据页 strip 看 zoom/underline；地图颜色；OCR 文案繁简；画面无 production note；每 5s frame diff",
+   "review": {
+    "say": "先问：页面有没有 zoom/underline 到 claim？来源行是否只写来源？地图是不是 house 色？有没有制作备注？",
+    "complains": null,
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L148-architecture-first",
+   "said": "2026-11-03 用户：导演还不会选架构 从历史和系统学不到东西",
+   "when": {
+    "always": true
+   },
+   "do": "先做制作架构决策：按运动密度/迭代速度/镜头数/资产类型选引擎；本片主渲染 Three.js/WebGL + Canvas 字层 + headless Playwright + ffmpeg；Blender 只做离线 hero asset。先跑 10s 基准和世界测试，过了才进 20s/全片。",
+   "check": "有无架构决策记录；60 帧是否 <60s；世界测试相机/背景视差/无>2s冻结；盲审 10s 世界",
+   "review": {
+    "say": "先问：引擎为什么是它？10s 基准多少？世界有视差/相机连续吗？有没有卡片滑过锁定背景？",
+    "complains": null,
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L149-lessons-become-gates",
+   "said": "2026-11-03 用户：从历史和系统学不到任何东西吗",
+   "when": {
+    "always": true
+   },
+   "do": "每条教训必须落成开工前/交付前的检查或评审；只写 lessons 不执行等于没学。新项目先读 L140–L149，把适用的条目变成当前项目的 gate checklist。",
+   "check": "项目开工前列出本次适用的 lessons 与 gate；交付时逐条核对",
+   "review": {
+    "say": "这条教训有没有变成这次的门？没有就是没学。",
+    "complains": null,
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L150-reuse-before-rebuild",
+   "said": "2026-11-03 用户：回形针有螺旋DNA和3D染色体 没学习到？",
+   "when": {
+    "always": true
+   },
+   "do": "拆参考前先做 capability audit：搜 engine/templates、style-lab 参考输出、kit3/stage/morph；能复用不新建。回形针 3D 已在 kit.helix/kit.chromosomes + helix-v1/chrom-v1，不应从零开 Blender。",
+   "check": "开工前有 capability audit；每个参考技术点有 module/params/test",
+   "review": {
+    "say": "先问：系统里有没有现成模块/参考输出？为什么还要新建？",
+    "complains": null,
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L151-decompose-to-modules",
+   "said": "2026-11-03 用户：之前没有很好拆分 怎么接入系统",
+   "when": {
+    "always": true
+   },
+   "do": "逐镜拆到技术模块：主体(3D/2.5D/纸/字)、camera path、材质灯、遮挡、2-4s motion beats；映射 module+params+状态(ready/needs-param/missing)；先跑5-10s测试，再过 shotlist/make 接入。不要只写观感。",
+   "check": "拆解表完整；每项有 module/params/test；5-10s 测试过审才进全片",
+   "review": {
+    "say": "这镜的主体/相机/材质/beat 对应哪个模块和参数？测试在哪？",
+    "complains": null,
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L152-director-preflight",
+   "said": "2026-11-03 用户：把导演安排写到系统 Claude 怎么做那么好",
+   "when": {
+    "always": true
+   },
+   "do": "开镜前按 DIRECTOR.md 做 12 个决定 + capability audit + 逐镜技术拆解 + 5-10s 测试 + 盲审；先复用 kit3/stage/morph，再新建。导演是 1 Lead + 1 blind reviewer，不靠多 agent。",
+   "check": "DIRECTOR.md 12 项；capability audit；拆解卡；10s 测试；盲审",
+   "review": {
+    "say": "12 个决定写了吗？系统里现成模块查了吗？10s 测试在哪？",
+    "complains": null,
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L153-shot-direction-contract",
+   "said": "2026-11-03 用户：整篇走向/镜头调度/画面衔接/相机运动约束过 Claude",
+   "when": {
+    "always": true
+   },
+   "do": "先写整片镜头调度表：每镜时间/问题/起落态/主体/镜头家族/焦段/相机运动/主体运动/转场/字/module。遵守 180°、30°、屏幕方向、切在动作上、匹配剪接、不空转、不隐藏跳切；每缝一种转场并出 strip；按幕节奏曲线，禁止 >4s 无变化/连续3镜同构图/平均>7s。",
+   "check": "调度表完整；camera3/keys；transition strip；盲审顺序；平均镜长",
+   "review": {
+    "say": "这镜为什么切？机位差够30°吗？越轴了吗？转场是哪一种？有没有空转？",
+    "complains": null,
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L154-camera-variation",
+   "said": "2026-11-03 用户：怎么都是一样的运镜 怎么全篇设计好",
+   "when": {
+    "always": true
+   },
+   "do": "镜头调度先分运镜类型：推入/拉远/横移/升降/俯拍锁定/低机位绕行/固定/跟拍/变焦/匹配运动。连续两镜不得同运镜/同焦段/同高度；每幕 1 主运镜+1 例外；低机位绕行每幕最多1次；模板默认相机不得直接出片，必须按镜头目的写 keys/camera3。",
+   "check": "20镜运镜分配表；连续镜不同；每幕例外次数；contact sheet 1fps 看运镜变化",
+   "review": {
+    "say": "这两镜为什么同一种运镜？这一镜的问题变了吗？低绕是不是又用了？",
+    "complains": null,
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L155-reference-not-skin",
+   "said": "2026-11-03 用户：界面还是抄袭回形针 离开对标不会设计",
+   "when": {
+    "always": true
+   },
+   "do": "对标只取工艺（相机/节奏/3D/证据组织/字画关系），不取皮肤（黑底+左上明朝+红规线+地图案卷卡）。每个 act 先交原创 DNA：材料/构图/颜色/运动/母题，必须来自主体；不能换进对标片而不违和。红/黄/黑按香蕉主体定，不按对标定。",
+   "check": "DNA 五问；3 个非换色方案；画面若可原样换入对标=FAIL；红只用于紧急一次",
+   "review": {
+    "say": "这画面如果换进回形针违和吗？颜色/构图/字是从香蕉来的还是从对标抄的？",
+    "complains": null,
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L156-no-still-plate-as-film",
+   "said": "2026-11-03 用户：这个不是 ppt 吗 谁允许你这么做",
+   "when": {
+    "always": true
+   },
+   "do": "禁止把生成静帧+平移/遮罩当镜头或 animatic 给用户看。静帧只做概念/art plate；镜头必须是真 3D mesh+物理相机+灯（或真实素材），有真实运动/视差/材质。交付前必须问：这是不是 PPT？是就不许 present。",
+   "check": "镜头是否有真 3D/真素材；相机是否在 3D 里；有无静帧平移；present 前自检",
+   "review": {
+    "say": "这镜头如果按暂停键，是不是就是一张图？是就 fail。",
+    "complains": null,
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L157-design-first-workflow",
+   "said": "2026-11-03 用户：梳理工作流 现在设计好差 不管3D还是平面",
+   "when": {
+    "always": true
+   },
+   "do": "先 art direction（tokens/光/相机/材质/3 style frames/5s motion test）再 production；设计门用户过；真 3D+物理相机+真素材，静帧只做 art plate；每项目写 FILM-DESIGN.md；按 WORKFLOW-V2 七段走。",
+   "check": "12 项 art direction 答完；3 style frames 最终质量；5s 非PPT；设计门；然后 previz",
+   "review": {
+    "say": "这画面有art direction吗？暂停键测试过吗？3D是真的吗？光和材质有设计吗？",
+    "complains": null,
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L158-evidence-vs-concept-pipeline",
+   "said": "2026-11-03 用户：为什么堵船能做好 香蕉做不好",
+   "when": {
+    "always": true
+   },
+   "do": "先判断 evidence-led（真实影像即论点）还是 concept-led（必须自建世界/材质/隐喻）。Evidence 用真实素材+证据包装；Concept 必须先写 visual thesis、逐句媒介表、art direction、2 style frames + 5s 真动态，再 shot-by-shot。不能用生成图冒充现场证据。",
+   "check": "流水线选择；逐句媒介表；concept-led 设计门；真实素材来源",
+   "review": {
+    "say": "这条文案的视觉对象是现成影像还是必须发明？用生成图当证据了吗？",
+    "complains": null,
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L159-mainline-enforcement",
+   "said": "2026-11-03 用户：怎么全约束沿着主线优化 不纵自己跑外面",
+   "when": {
+    "always": true
+   },
+   "do": "项目目录是唯一写区；style-lab 生产期只读；无 task 不写；present 只走 release；art direction 12项+3论点+3帧+5s真动态过check和盲审才给用户；evidence/art 分标签；旧gold frame先复用。",
+   "check": "task/guard；present release；设计门；越线写入；未过审present=0",
+   "review": {
+    "say": "这个输出来自哪条task？过check/review了吗？是不是又绕style-lab？",
+    "complains": null,
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L160-shelf-bay-back-type",
+   "said": "2026-11-03 Neo→系统引擎：Banana B02 货架 bay 需要可读字（卡文迪什/47%/一样的弱点）；cream box plate 触 rules-11 / plateErrors",
+   "when": {
+    "always": true
+   },
+   "do": "货架/仓位背板或前挡板要可读品种名、百分比、弱点句时，用 type.bayBackType（device shelf-bay-back-type）：字形贴在背板材质上（parent=bay back mesh），走 surfaceType 透明字形路径并登记 window.__surface。禁止 cream/暗色 box plate 底板牌（rules-11）；禁止 hud-label / type.dev.hudLabel 冒充货架标签。",
+   "check": "devices.json#shelf-bay-back-type kit.ready + type.bayBackType；plateErrors；非 hud-label",
+   "review": {
+    "say": "货架字是写在背板材质上，还是又做了奶油底板牌/HUD？",
+    "complains": null,
+    "suggests": null,
+    "keepIf": null
+   }
+  },
+  {
+   "id": "L-imagegen-art-plates",
+   "said": "2026-11-04 1 5 明显错误，是你生图质量不行还是关键词不行",
+   "when": {
+    "always": true
+   },
+   "do": "生图只出无字美术底/物件/材质，不承担版式、标题、印章、裁切；版式和字用代码。prompt 要短，写死 no text/no letters/no logos/no stamps/no watermark；先出 art plate，再由代码构图。出图必须过滤：文字/假 logo/错数量/低清/低方差直接拒，且要过人工或盲审才给用户。",
+   "check": "design-image-qa.py + design-gate + 人工/盲审"
+  }
+ ],
+ "proseHardConstraintGaps": [
+  {
+   "id": "gap-camMove-numeric-band",
+   "where": "session-brief §0.7 / 金样 camMove ≈ 0.55–0.65",
+   "status": "wired",
+   "wired": "camera.camMoveMin/Max on A1ShotMotionContract/v1; motionContractUneatenErrors.camMoveBand verifies morph beats[].move|camMove in band; gold B02/B04 0.55–0.65",
+   "check": "motionContractUneatenErrors"
+  },
+  {
+   "id": "gap-b01-camera-pose-inheritance",
+   "where": "B01 camera.to → B02 camera.from exact pose values",
+   "status": "wired",
+   "wired": "seam.poseFrom {s,x,y} from greybox camera.from / session prose; motionContractUneatenErrors string-eats poseFrom.s; poseFromScaleContinuityErrors HARD: morph early subject scale lerp + track camera.flat.s adjacent Δs / 忽大忽小 (inherit must match poseFrom.s; no unprescribed scale mutation). Gold poseFrom={s:1.08,x:0,y:-20}",
+   "check": "motionContractUneatenErrors + poseFromScaleContinuityErrors",
+   "leakFixed": "2026-10-29: string-only morphEatsPoseFrom let B02 hero scale 1.35→1.05 pass; continuity gate fails 忽大忽小"
+  },
+  {
+   "id": "gap-material-packaging-language",
+   "where": "§0.7 材料/转场 column + 成熟第一稿「材料包装」",
+   "status": "不可机读",
+   "不可机读原因": "芥黄台面 / 剖面可读 / 病斑材质 是味觉与表面形容词，没有稳定的 morph AST、kit enum 或证据卡字段可钉；转场半句已由 seam.out 机读吃掉；包装条保留在 mature-first-draft material-packaging（evidenceErrors / evidence-not-card / filmScreenErrors）。再钉就要另造一套 surface vocabulary，等于第二管道。",
+   "wiredInstead": [
+    "seam.out from 材料/转场",
+    "mature-first-draft bars.material-packaging"
+   ],
+   "foldLater": "none — do not invent surface enum without house materials registry"
+  },
+  {
+   "id": "gap-clone-motif-three-layers",
+   "where": "总导演意图「克隆＝单一」三层可读",
+   "status": "wired",
+   "wired": "contract.motif {id, layers[{shotId,subjectMotion,read}]}; uneaten fails if layer missing or subjectMotion signals absent; gold clone-equals-singular B02/B04/B05",
+   "check": "motionContractUneatenErrors"
+  },
+  {
+   "id": "gap-subject-model-path",
+   "where": "主体 banana.glb via kit.props.model",
+   "status": "wired",
+   "wired": "shot.subject.model on contract; motionContractUneatenErrors fails when declared model not called via kit.props.model/engine.subject/block.model; aligns subjectPipelineErrors (filler) — contract declares name, pipeline verifies glb/QA",
+   "check": "motionContractUneatenErrors + subjectPipelineErrors"
+  },
+  {
+   "id": "gap-preview-delivery-mp4",
+   "where": "交付章节低模 preview.mp4",
+   "status": "wired",
+   "wired": "contract.delivery {previewMp4, bindMorphHash}; previewDeliveryErrors requires out/chapters/<id>/preview.mp4 + preview.bind.json morphHash === sha(morph); previewChapter writes bind",
+   "check": "previewDeliveryErrors"
+  },
+  {
+   "id": "gap-p2-d4-time-hierarchy",
+   "where": "TYPE P2 D4 / AUDIT-skills hyperframes「时间就是层级」",
+   "status": "不可机读",
+   "不可机读原因": "「先出现的最重要」需要画面元素出现序与叙事重要性的对齐 AST；现行只有 type.in late 信号与台词序人读，没有 drawn-order→importance 字段可钉。人读落 TYPE§8；机读止于 type.in / readTimeErrors。",
+   "wiredInstead": [
+    "TYPE.md §8 人读",
+    "type.in late / motionContractUneatenErrors"
+   ],
+   "foldLater": "none unless greybox answers gain explicit revealOrder enum"
+  },
+  {
+   "id": "gap-p2-d4-tracking-pct",
+   "where": "TYPE P2 D4 大字收紧字距 3–5%",
+   "status": "不可机读",
+   "不可机读原因": "字形 letter-spacing 百分比无稳定 morph/kit AST；意图由 shapedFont + spreadWord 覆盖。明确不做独立 3–5% 量尺（P2 D4）。",
+   "wiredInstead": [
+    "shapedFont",
+    "spreadWord",
+    "TYPE.md P2 D4 明确不做"
+   ],
+   "foldLater": "none"
+  },
+  {
+   "id": "gap-p2-d4-dark-leading",
+   "where": "TYPE P2 D4 深底浅字光学行距补偿",
+   "status": "不可机读",
+   "不可机读原因": "「浅字压深底显得更重更挤」是光学感知；framecheck 已有 contrast，但行距加量无独立字段。部分吸收 contrast；光学 leading 不做第二门。",
+   "wiredInstead": [
+    "framecheck contrast",
+    "TYPE.md §8 人读"
+   ],
+   "foldLater": "none"
+  },
+  {
+   "id": "gap-rough-cut-gate-profile",
+   "where": "session 粗版 GO / rough-cut GO → morph check calm thresholds",
+   "status": "wired",
+   "wired": "shotmotion.resolveGateProfile + chapter.holdErrors(calmAsWarn); schema gateProfile; banana-design session-B02.motion.json gateProfile=rough-cut; previewChapter bind-before-drift",
+   "foldLater": "none"
+  },
+  {
+   "id": "gap-rough-cut-fill-busy-ground",
+   "status": "wired",
+   "where": "gateProfile=rough-cut → balance fill + ground-busier demote to warn; pierce/cover HARD",
+   "wired": "p1hard.partitionRoughCutWarns + ROUGH_CUT_WARN_RE; chapter.mjs runtimeCheck; HOUSE 粗版 fill/busy-ground; L130-rough-cut-fill-busy-ground-warn"
+  }
+ ]
+}

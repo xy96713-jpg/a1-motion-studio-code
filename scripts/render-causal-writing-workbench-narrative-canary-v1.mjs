@@ -1,0 +1,32 @@
+#!/usr/bin/env node
+import crypto from "node:crypto";
+import fs from "node:fs";
+import fsp from "node:fs/promises";
+import path from "node:path";
+import {execFileSync} from "node:child_process";
+import sharp from "sharp";
+
+const root = path.resolve(import.meta.dirname, "..");
+const source = path.join(root, ".codex-artifacts/system-progress-system-line/causal-writing-workbench-v1/causal-writing-workbench-real.mp4");
+const sourceReportPath = path.join(root, ".codex-artifacts/system-progress-system-line/causal-writing-workbench-v1/report.json");
+const outputRoot = path.join(root, "work/screen-recording-maturity-test-v1/causal-narrative-canary-v1");
+const output = path.join(outputRoot, "causal-narrative-canary-1280x720-25fps.mp4");
+const contact = path.join(outputRoot, "causal-narrative-contact-sheet.png");
+const auditPath = path.join(outputRoot, "audit-report.json");
+const ffmpeg = path.join(root, ".tools/bin/ffmpeg");
+const ffprobe = path.join(root, ".tools/bin/ffprobe");
+const sha = (file) => crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex");
+const sourceReport = JSON.parse(fs.readFileSync(sourceReportPath, "utf8"));
+await fsp.mkdir(outputRoot, {recursive: true});
+execFileSync(ffmpeg, ["-v", "error", "-y", "-i", source, "-map", "0:v:0", "-an", "-vf", "scale=1280:720:flags=lanczos,format=yuv420p", "-c:v", "libx264", "-crf", "18", "-r", "25", "-movflags", "+faststart", output]);
+const probe = JSON.parse(execFileSync(ffprobe, ["-v", "error", "-count_frames", "-show_entries", "stream=codec_type,width,height,r_frame_rate,nb_read_frames:format=duration", "-of", "json", output], {encoding: "utf8"}));
+const stream = probe.streams.find((row) => row.codec_type === "video");
+const decode = execFileSync(ffmpeg, ["-v", "error", "-i", output, "-f", "null", "-"], {encoding: "utf8"});
+const beatTimes = [{id: "selected", atMs: 3200}, {id: "candidate", atMs: 5600}, {id: "typing", atMs: 7000}, {id: "result", atMs: 8400}];
+for (const beat of beatTimes) execFileSync(ffmpeg, ["-v", "error", "-y", "-ss", String(beat.atMs / 1000), "-i", output, "-frames:v", "1", path.join(outputRoot, `${beat.id}.png`)]);
+const tiles = await Promise.all(beatTimes.map(async (beat) => { const image = await sharp(path.join(outputRoot, `${beat.id}.png`)).resize(426, 240, {fit: "cover"}).png().toBuffer(); return sharp({create: {width: 426, height: 282, channels: 3, background: "#091011"}}).composite([{input: Buffer.from(`<svg width="426" height="42"><rect width="426" height="42" fill="#091011"/><text x="14" y="27" fill="#F4F1E8" font-size="14" font-family="Arial" font-weight="700">${beat.id.toUpperCase()}</text></svg>`), left: 0, top: 0}, {input: image, left: 0, top: 42}]).png().toBuffer(); }));
+await sharp({create: {width: 852, height: 564, channels: 3, background: "#091011"}}).composite(tiles.map((input, index) => ({input, left: (index % 2) * 426, top: Math.floor(index / 2) * 282}))).png().toFile(contact);
+const checks = {sourceReportPass: sourceReport.status === "PASS", realRuntime: sourceReport.checks?.realRuntimeUsed === true, nativeDrag: sourceReport.checks?.nativePointerDragSelectionObserved === true, productApply: sourceReport.checks?.productApplyObserved === true, contenteditableTyping: sourceReport.checks?.contenteditableInputTypingObserved === true, resultCommit: sourceReport.interaction?.replay?.events?.some((event) => event.eventType === "result-commit") === true, screenOnly: probe.streams.every((row) => row.codec_type !== "audio"), media: stream.width === 1280 && stream.height === 720 && stream.r_frame_rate === "25/1" && decode === ""};
+const failures = Object.entries(checks).filter(([, value]) => !value).map(([key]) => key);
+const audit = {contract: "A1CausalNarrativeCanary/v1", status: failures.length ? "FAIL" : "PASS_REVIEW_ONLY", source: {report: ".codex-artifacts/system-progress-system-line/causal-writing-workbench-v1/report.json", reportSha256: sha(sourceReportPath), video: ".codex-artifacts/system-progress-system-line/causal-writing-workbench-v1/causal-writing-workbench-real.mp4", videoSha256: sha(source)}, output: {path: path.relative(root, output), sha256: sha(output), width: stream.width, height: stream.height, fps: stream.r_frame_rate, frameCount: Number(stream.nb_read_frames), durationMs: Math.round(Number(probe.format.duration) * 1000), fullDecode: true, audioStreams: probe.streams.filter((row) => row.codec_type === "audio").length}, beats: [{id: "source", atMs: 1500}, {id: "selected", atMs: 3200}, {id: "candidate", atMs: 5600}, {id: "typing", atMs: 7000}, {id: "result", atMs: 8400}], contactSheet: {path: path.relative(root, contact), sha256: sha(contact)}, checks, failures, boundary: {reviewOnly: true, productionAdmission: false}};
+audit.auditSha256 = crypto.createHash("sha256").update(JSON.stringify(audit)).digest("hex"); await fsp.writeFile(auditPath, `${JSON.stringify(audit, null, 2)}\n`); console.log(JSON.stringify({status: audit.status, output: path.relative(root, output), contactSheet: path.relative(root, contact), failures}, null, 2)); if (failures.length) process.exitCode = 1;

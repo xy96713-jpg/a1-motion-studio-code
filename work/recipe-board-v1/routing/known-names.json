@@ -1,0 +1,313 @@
+{
+ "contract": "A1RecipeBoardKnownNames/v1",
+ "note": "Names the storyboard check recognises in the narration text (beside work/recipe-board-v1/entities.json, whose entries already have verified pictures). A line that names one of these should show it (treatment ladder); the check warns when it does not. Add names here; pictures still come through the materials step. `domains`: the official sites of the org; a web page or paper about it is searched there first and an official page is preferred. `context`: for a name that means other things too (H800, High Flyer), words a picture search hit must carry; the search also asks with the first one. `gallery`: product gallery pages (photos of that exact model) the photo search reads.",
+ "names": [
+  {
+   "kind": "org",
+   "names": [
+    "DeepSeek",
+    "深度求索"
+   ],
+   "domains": [
+    "deepseek.com",
+    "github.com/deepseek-ai",
+    "huggingface.co/deepseek-ai",
+    "arxiv.org"
+   ]
+  },
+  {
+   "kind": "org",
+   "names": [
+    "英伟达",
+    "NVIDIA",
+    "Nvidia"
+   ],
+   "domains": [
+    "nvidia.com"
+   ]
+  },
+  {
+   "kind": "org",
+   "names": [
+    "Meta",
+    "Meta Platforms"
+   ],
+   "domains": [
+    "about.fb.com",
+    "ai.meta.com"
+   ]
+  },
+  {
+   "kind": "org",
+   "names": [
+    "谷歌",
+    "Google"
+   ],
+   "domains": [
+    "blog.google",
+    "google.com"
+   ]
+  },
+  {
+   "kind": "org",
+   "names": [
+    "OpenAI"
+   ],
+   "domains": [
+    "openai.com"
+   ]
+  },
+  {
+   "kind": "org",
+   "names": [
+    "微软",
+    "Microsoft"
+   ],
+   "domains": [
+    "microsoft.com"
+   ]
+  },
+  {
+   "kind": "org",
+   "names": [
+    "苹果公司",
+    "Apple"
+   ]
+  },
+  {
+   "kind": "org",
+   "names": [
+    "亚马逊",
+    "Amazon"
+   ]
+  },
+  {
+   "kind": "org",
+   "names": [
+    "特斯拉",
+    "Tesla"
+   ]
+  },
+  {
+   "kind": "org",
+   "names": [
+    "Anthropic"
+   ],
+   "domains": [
+    "anthropic.com"
+   ]
+  },
+  {
+   "kind": "org",
+   "names": [
+    "xAI"
+   ]
+  },
+  {
+   "kind": "org",
+   "names": [
+    "华为"
+   ]
+  },
+  {
+   "kind": "org",
+   "names": [
+    "腾讯"
+   ]
+  },
+  {
+   "kind": "org",
+   "names": [
+    "阿里巴巴",
+    "阿里"
+   ]
+  },
+  {
+   "kind": "org",
+   "names": [
+    "字节跳动"
+   ]
+  },
+  {
+   "kind": "org",
+   "names": [
+    "幻方",
+    "幻方量化",
+    "High-Flyer",
+    "High Flyer"
+   ],
+   "domains": [
+    "high-flyer.cn"
+   ],
+   "context": [
+    "幻方",
+    "量化",
+    "quant",
+    "high-flyer.cn",
+    "capital"
+   ]
+  },
+  {
+   "kind": "org",
+   "names": [
+    "台积电",
+    "TSMC"
+   ]
+  },
+  {
+   "kind": "product",
+   "names": [
+    "ChatGPT"
+   ]
+  },
+  {
+   "kind": "product",
+   "names": [
+    "H100"
+   ],
+   "context": [
+    "NVIDIA",
+    "英伟达",
+    "GPU",
+    "Hopper"
+   ]
+  },
+  {
+   "kind": "product",
+   "names": [
+    "H800"
+   ],
+   "context": [
+    "NVIDIA",
+    "英伟达",
+    "GPU",
+    "Hopper"
+   ],
+   "gallery": [
+    "https://detail.zol.com.cn/2127/2126341/pic.shtml"
+   ]
+  },
+  {
+   "kind": "person",
+   "names": [
+    "马斯克",
+    "Elon Musk"
+   ]
+  },
+  {
+   "kind": "person",
+   "names": [
+    "黄仁勋",
+    "Jensen Huang"
+   ]
+  },
+  {
+   "kind": "person",
+   "names": [
+    "奥特曼",
+    "Sam Altman"
+   ]
+  },
+  {
+   "kind": "person",
+   "names": [
+    "特朗普",
+    "Trump"
+   ]
+  },
+  {
+   "kind": "place",
+   "names": [
+    "华尔街",
+    "Wall Street"
+   ]
+  },
+  {
+   "kind": "place",
+   "names": [
+    "硅谷",
+    "Silicon Valley"
+   ]
+  },
+  {
+   "kind": "org",
+   "names": [
+    "清华大学",
+    "清华"
+   ]
+  },
+  {
+   "kind": "org",
+   "names": [
+    "北京大学",
+    "北大"
+   ]
+  },
+  {
+   "kind": "person",
+   "names": [
+    "孙正义",
+    "孫正義",
+    "Masayoshi Son"
+   ],
+   "domains": [
+    "group.softbank"
+   ]
+  },
+  {
+   "kind": "event",
+   "names": [
+    "金州杀手案",
+    "金州杀手",
+    "金州杀人案",
+    "Golden State Killer",
+    "East Area Rapist",
+    "Original Night Stalker"
+   ],
+   "domains": [
+    "fbi.gov",
+    "nist.gov",
+    "sacsheriff.com"
+   ]
+  },
+  {
+   "kind": "person",
+   "names": [
+    "Joseph James DeAngelo",
+    "约瑟夫·詹姆斯·迪安杰洛",
+    "DeAngelo"
+   ],
+   "domains": []
+  },
+  {
+   "kind": "event",
+   "names": [
+    "白银连环杀人案",
+    "白银案",
+    "甘蒙8·05系列强奸杀人残害女性案",
+    "Baiyin serial murders",
+    "Baiyin murders"
+   ],
+   "domains": [
+    "mps.gov.cn"
+   ]
+  },
+  {
+   "kind": "person",
+   "names": [
+    "高承勇",
+    "Gao Chengyong"
+   ],
+   "domains": []
+  },
+  {
+   "kind": "org",
+   "names": [
+    "GEDmatch"
+   ],
+   "domains": [
+    "gedmatch.com"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,584 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "A1FilmDesign/v1 (agent answer)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "arc",
+    "motionRules",
+    "houseStyle",
+    "beats"
+  ],
+  "properties": {
+    "motionRules": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "timing",
+        "continuity"
+      ],
+      "properties": {
+        "timing": {
+          "type": "string",
+          "minLength": 5
+        },
+        "continuity": {
+          "type": "string",
+          "minLength": 5
+        }
+      },
+      "description": "Director-authored shared motion principles, inherited unchanged by chapters. Not a style, effect quota, uniform axis or compulsory match cut."
+    },
+    "houseStyle": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Approved house preset id, or null when the project's own derived house style is selected."
+    },
+    "arc": {
+      "type": "string"
+    },
+    "beats": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "beat",
+          "act",
+          "scale",
+          "value",
+          "medium",
+          "red",
+          "hero",
+          "heroHow",
+          "subject",
+          "palette",
+          "screen",
+          "why",
+          "device",
+          "kind",
+          "composition",
+          "directorIntent",
+          "productionRisk",
+          "activeRevision"
+        ],
+        "properties": {
+          "directorIntent": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": false,
+            "required": [
+              "route",
+              "question",
+              "start",
+              "change",
+              "end",
+              "handoff",
+              "reason",
+              "layers",
+              "eventTimes",
+              "assets"
+            ],
+            "properties": {
+              "route": {
+                "enum": [
+                  "opening",
+                  "evidence",
+                  "numbers",
+                  "map",
+                  "compare",
+                  "custom"
+                ]
+              },
+              "start": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "minLength": 5
+              },
+              "end": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "minLength": 5
+              },
+              "handoff": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "minLength": 5
+              },
+              "question": {
+                "type": "string",
+                "minLength": 5
+              },
+              "change": {
+                "type": "string",
+                "minLength": 5
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 5
+              },
+              "layers": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "evidence",
+                  "art",
+                  "type"
+                ],
+                "properties": {
+                  "evidence": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "art": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "type": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              },
+              "eventTimes": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "description": "Director-selected local seconds: 0 <= start <= key <= end < beat duration. Missing times mean unknown, never a midpoint semantic proof. Holds may use equal times.",
+                "additionalProperties": false,
+                "required": [
+                  "start",
+                  "key",
+                  "end"
+                ],
+                "properties": {
+                  "start": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "key": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "end": {
+                    "type": "number",
+                    "minimum": 0
+                  }
+                }
+              },
+              "assets": {
+                "type": [
+                  "array",
+                  "null"
+                ],
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "id",
+                        "use",
+                        "source",
+                        "file",
+                        "operation",
+                        "operability",
+                        "provenance",
+                        "sha256",
+                        "targets"
+                      ],
+                      "properties": {
+                        "sha256": {
+                          "type": "string",
+                          "pattern": "^[a-f0-9]{64}$",
+                          "description": "Full lowercase SHA-256 of existing file bytes or answer.code for module:fg. Never a truncated production hash."
+                        },
+                        "targets": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "description": "Per-object: parsed layer IDs or active GLB mesh node names. Code hold: supported direct call anchors in module:fg. Other operations: empty targets."
+                        },
+                        "id": {
+                          "type": "string"
+                        },
+                        "use": {
+                          "enum": [
+                            "art",
+                            "evidence",
+                            "type"
+                          ]
+                        },
+                        "source": {
+                          "enum": [
+                            "generated",
+                            "real",
+                            "code"
+                          ]
+                        },
+                        "file": {
+                          "type": "string"
+                        },
+                        "operation": {
+                          "enum": [
+                            "hold",
+                            "camera",
+                            "deform",
+                            "reveal"
+                          ]
+                        },
+                        "operability": {
+                          "enum": [
+                            "whole-image",
+                            "layers",
+                            "mesh",
+                            "code"
+                          ]
+                        },
+                        "provenance": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "id",
+                        "use",
+                        "source",
+                        "file",
+                        "operation",
+                        "operability",
+                        "provenance",
+                        "sha256",
+                        "targets"
+                      ],
+                      "properties": {
+                        "sha256": {
+                          "type": "string",
+                          "pattern": "^[a-f0-9]{64}$",
+                          "description": "Full lowercase SHA-256 of existing file bytes or answer.code for module:fg. Never a truncated production hash."
+                        },
+                        "targets": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "description": "Per-object: parsed layer IDs or active GLB mesh node names. Code hold: supported direct call anchors in module:fg. Other operations: empty targets.",
+                          "minItems": 1
+                        },
+                        "id": {
+                          "type": "string"
+                        },
+                        "use": {
+                          "enum": [
+                            "art",
+                            "evidence",
+                            "type"
+                          ]
+                        },
+                        "source": {
+                          "enum": [
+                            "generated",
+                            "real",
+                            "code"
+                          ]
+                        },
+                        "file": {
+                          "type": "string"
+                        },
+                        "operation": {
+                          "enum": [
+                            "per-object"
+                          ]
+                        },
+                        "operability": {
+                          "enum": [
+                            "layers",
+                            "mesh"
+                          ]
+                        },
+                        "provenance": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "id",
+                        "use",
+                        "source",
+                        "file",
+                        "operation",
+                        "operability",
+                        "provenance",
+                        "sha256",
+                        "targets"
+                      ],
+                      "properties": {
+                        "sha256": {
+                          "type": "string",
+                          "enum": [
+                            "pending"
+                          ],
+                          "description": "Generation admission only. Final output must be pinned and inspected before render."
+                        },
+                        "targets": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "description": "Per-object: parsed layer IDs or active GLB mesh node names. Code hold: supported direct call anchors in module:fg. Other operations: empty targets."
+                        },
+                        "id": {
+                          "type": "string"
+                        },
+                        "use": {
+                          "enum": [
+                            "art"
+                          ]
+                        },
+                        "source": {
+                          "enum": [
+                            "generated"
+                          ]
+                        },
+                        "file": {
+                          "type": "string",
+                          "pattern": "^(art|model):[A-Za-z0-9_-]+$",
+                          "description": "Binds answer.art key + prompt or a named model task with what; never an existing file."
+                        },
+                        "operation": {
+                          "enum": [
+                            "hold",
+                            "camera",
+                            "reveal"
+                          ]
+                        },
+                        "operability": {
+                          "enum": [
+                            "whole-image",
+                            "mesh"
+                          ]
+                        },
+                        "provenance": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "id",
+                        "use",
+                        "source",
+                        "file",
+                        "operation",
+                        "operability",
+                        "provenance",
+                        "sha256",
+                        "targets"
+                      ],
+                      "properties": {
+                        "sha256": {
+                          "type": "string",
+                          "enum": [
+                            "pending"
+                          ],
+                          "description": "Generation admission only. Final output must be pinned and inspected before render."
+                        },
+                        "targets": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "description": "Per-object: parsed layer IDs or active GLB mesh node names. Code hold: supported direct call anchors in module:fg. Other operations: empty targets.",
+                          "minItems": 1
+                        },
+                        "id": {
+                          "type": "string"
+                        },
+                        "use": {
+                          "enum": [
+                            "art"
+                          ]
+                        },
+                        "source": {
+                          "enum": [
+                            "generated"
+                          ]
+                        },
+                        "file": {
+                          "type": "string",
+                          "pattern": "^model:[A-Za-z0-9_-]+$",
+                          "description": "Binds answer.art key + prompt or a named model task with what; never an existing file."
+                        },
+                        "operation": {
+                          "enum": [
+                            "per-object"
+                          ]
+                        },
+                        "operability": {
+                          "enum": [
+                            "mesh"
+                          ]
+                        },
+                        "provenance": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "beat": {
+            "type": "string"
+          },
+          "act": {
+            "type": "string",
+            "enum": [
+              "open",
+              "build",
+              "press",
+              "peak",
+              "turn",
+              "release",
+              "close"
+            ]
+          },
+          "scale": {
+            "type": "string",
+            "enum": [
+              "world",
+              "region",
+              "place",
+              "object",
+              "detail"
+            ]
+          },
+          "value": {
+            "type": "string",
+            "enum": [
+              "dark",
+              "mid",
+              "light"
+            ]
+          },
+          "medium": {
+            "type": "string",
+            "enum": [
+              "diagram",
+              "footage",
+              "type",
+              "evidence"
+            ]
+          },
+          "red": {
+            "type": "integer",
+            "enum": [
+              0,
+              1,
+              2,
+              3
+            ]
+          },
+          "hero": {
+            "type": "boolean"
+          },
+          "heroHow": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "subject": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "palette": {
+            "type": "string"
+          },
+          "screen": {
+            "type": "string"
+          },
+          "why": {
+            "type": "string"
+          },
+          "device": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "devices.json id; when director-routes auto-pick selects ready devices, answer must eat one of them (pin fills missing). Opening defaults (kit.status ready only): lineup-row / copy-to-repeat / table-grows; shells array-build / stagger-reveal / light-3d / presenter-close never. Also must land in shortlists.byBeat.<beat>.devices when that shortlist is present."
+          },
+          "kind": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Director-routes kind pinned from auto-pick (opening/evidence/numbers/map/compare). When routeDefaults selects a kind, answer must eat it (kind/composition/device) — 路由选了但答案未吃."
+          },
+          "composition": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Director-routes composition pinned from auto-pick (e.g. evidence-card). Must match route default or altCompositions when route selected."
+          },
+          "productionRisk": {
+            "enum": [
+              "high",
+              "normal",
+              null
+            ]
+          },
+          "activeRevision": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

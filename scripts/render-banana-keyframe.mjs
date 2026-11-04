@@ -1,0 +1,16 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import { pathToFileURL } from 'node:url';
+import { chromium } from 'playwright';
+import { boardConfig } from '../apps/studio-next/src/lib/recipe-board/store.mjs';
+import { fontCss } from '../apps/studio-next/src/lib/recipe-board/greybox.mjs';
+const cfg=boardConfig(process.env);
+const dir=path.join(cfg.dataDir,'style-lab','banana-3d-proof');
+const css=await fontCss(cfg,'banana-design');
+const bg=pathToFileURL(path.join(dir,'clonefield.png')).href;
+const html='<!doctype html><html><head><meta charset="utf-8"><style>'+css+'*{margin:0;box-sizing:border-box}html,body{width:1920px;height:1080px;background:#000}.f{position:relative;width:1920px;height:1080px;background:url('+bg+') center/cover no-repeat}.t{position:absolute;white-space:pre;line-height:.95}.hud{position:absolute;font-family:GBLatin;color:rgba(242,239,232,.66);font-size:20px;letter-spacing:.08em}</style></head><body><div class="f"><div class="t" style="left:140px;top:190px;font-family:GBDisplay;font-size:300px;color:#f2efe8">同一棵</div><div class="t" style="left:146px;top:500px;font-family:GBDisplay;font-size:120px;color:#f2c230">香蕉</div><div class="hud" style="left:58px;top:58px">BANANA / 3D CLONE FIELD / 01</div><div class="hud" style="right:58px;top:58px;text-align:right">GEN 0/8 · CLONES 48</div><div class="hud" style="left:58px;bottom:58px">CLONES 1 → 48 · 128 BPM</div><div class="hud" style="right:58px;bottom:58px;text-align:right">TR4 0/175 · 2026.11</div></div></body></html>';
+const f=path.join(dir,'banana-clone-keyframe.html'); fs.writeFileSync(f,html);
+const b=await chromium.launch(); const p=await b.newPage({viewport:{width:1920,height:1080}});
+await p.goto(pathToFileURL(f).href,{waitUntil:'load'}); await p.evaluate(()=>document.fonts.ready);
+await p.screenshot({path:path.join(dir,'banana-clone-keyframe.png')}); await b.close();
+console.log('ok');

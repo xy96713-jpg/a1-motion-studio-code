@@ -1,0 +1,481 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "A1ShotMotionContract/v1",
+  "description": "Machine-readable per-shot motion contract: hard input for 章节工 (morph). Source priority: approved greybox/filmdesign answers; session-brief §0.7 shot table MUST serialize into the same structure. Morph check motionContractUneatenErrors fails when the module does not eat it (same tier as routeUneatenErrors / 路由选了但答案未吃). Explicit greyboxDiffer with a written reason is the only escape. Extended hard fields: camera.camMoveMin/Max band, seam.poseFrom, subject.model, motif.layers, delivery.previewMp4+bindMorphHash.",
+  "contract": "A1ShotMotionContract/v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "chapter",
+    "shots"
+  ],
+  "properties": {
+    "motionRules": {"type": "object", "additionalProperties": false, "required": ["timing", "continuity"], "properties": {"timing": {"type": "string", "minLength": 5}, "continuity": {"type": "string", "minLength": 5}}, "description": "Director-authored shared motion principles, inherited unchanged by chapters. Not a style, effect quota, uniform axis or compulsory match cut."},
+    "contract": {
+      "const": "A1ShotMotionContract/v1"
+    },
+    "chapter": {
+      "type": "string",
+      "description": "Chapter id (e.g. B02)"
+    },
+    "project": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "source": {
+      "type": "string",
+      "description": "Where shots[] was primarily built from Common: greybox | session-brief-0.7 | merged | manual | rough-cut-<date>."
+    },
+    "updated": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "about": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "gateProfile": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Morph check gate profile. rough-cut: calm/B26-gold duration-class thresholds warn (do not block check0). full/omit: mature/design-set full gates. Set when session/motion marks 粗版 GO / rough-cut GO.",
+      "enum": [
+        "rough-cut",
+        "roughCut",
+        "full"
+      ]
+    },
+    "motif": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "description": "Cross-shot motif (e.g. banana 克隆＝单一 three layers). When set, each layer's shotId+subjectMotion must be present and eaten.",
+      "required": [
+        "id",
+        "layers"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "layers": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "shotId",
+              "subjectMotion"
+            ],
+            "properties": {
+              "shotId": {
+                "type": "string"
+              },
+              "subjectMotion": {
+                "type": "string"
+              },
+              "read": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "delivery": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "description": "Session/morph delivery hard requirements (preview.mp4 exists + binds current morph hash).",
+      "properties": {
+        "previewMp4": {
+          "type": [
+            "boolean",
+            "string",
+            "null"
+          ],
+          "description": "Require preview.mp4 (true) or path hint string"
+        },
+        "bindMorphHash": {
+          "type": "boolean"
+        },
+        "gateProfile": {
+          "type": [
+            "string",
+            "boolean",
+            "null"
+          ],
+          "description": "Optional alias of top-level gateProfile (rough-cut)."
+        },
+        "check0": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Session asks check0 green"
+        },
+        "perShotTechOneLiner": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Per-shot tech one-liner in report"
+        },
+        "matchStillComposition": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Align still composition"
+        },
+        "photorealRequired": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Photoreal not required when false"
+        },
+        "stillsBeforePreview": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "When true, require ≥3 PNGs in out/chapters/<id>/stills/ before/with preview bind (OVH contact-sheet). rough-cut warns if omitted; full/studio hard-requires when preview delivery is active."
+        }
+      }
+    },
+    "shots": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "shotId",
+          "camera",
+          "subjectMotion",
+          "type",
+          "seam"
+        ],
+        "properties": {
+          "medium": {
+            "type": ["object", "string", "null"],
+            "description": "What the beat is made of (kind/model/palette/screen/viaScreen): the medium contract of this shot."
+          },
+          "pictureLock": {
+            "type": ["string", "null"],
+            "description": "The locked design still this beat follows (picture lock path)."
+          },
+          "directorIntent": { "$ref": "filmdesign.schema.json#/properties/beats/items/properties/directorIntent" },
+          "hero": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "stateFrom", "stateTo"],
+            "properties": {
+              "id": { "type": "string", "description": "Runtime actor id exposed by __actorTrack" },
+              "stateFrom": { "type": ["object", "array", "string", "number", "boolean", "null"] },
+              "stateTo": { "type": ["object", "array", "string", "number", "boolean", "null"] }
+            },
+            "description": "Optional declared endpoints; acceptance still requires measured runtime actor states, never this declaration alone"
+          },
+          "actors": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["id", "stateFrom", "stateTo"],
+              "properties": {
+                "id": { "type": "string", "description": "Runtime actor id exposed by __actorTrack" },
+                "stateFrom": { "type": ["object", "array", "string", "number", "boolean", "null"] },
+                "stateTo": { "type": ["object", "array", "string", "number", "boolean", "null"] }
+              }
+            },
+            "description": "Optional array/multi-subject endpoints. Every declared id must independently change and match both endpoints in the same shot; no other actor can substitute."
+          },
+          "firstFrame": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["read"],
+            "properties": {
+              "read": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "actor": {"type": "string"},
+                    "text": {"type": "string", "minLength": 1}
+                  },
+                  "anyOf": [{"required": ["actor"]}, {"required": ["text"]}]
+                }
+              }
+            },
+            "description": "Optional per-shot first-frame information contract. Only declared actor/text is measured; black or empty openings without this field are not rejected."
+          },
+          "shotId": {
+            "type": "string"
+          },
+          "camera": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "move"
+            ],
+            "properties": {
+              "move": {
+                "type": "string",
+                "enum": [
+                  "static",
+                  "push",
+                  "pull",
+                  "pan",
+                  "orbit",
+                  "cut",
+                  "dolly",
+                  "tilt",
+                  "whip"
+                ],
+                "description": "Camera class; alias camMove class when morph uses beats[].camMove intensity"
+              },
+              "camMove": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "description": "Optional pinned morph beats[].move / camMove intensity"
+              },
+              "camMoveMin": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "description": "Inclusive lower bound for morph beats[].move (gold ≈ 0.55)"
+              },
+              "camMoveMax": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "description": "Inclusive upper bound for morph beats[].move (gold ≈ 0.65)"
+              },
+              "from": {
+                "type": ["object", "null"],
+                "additionalProperties": false,
+                "required": ["s", "x", "y"],
+                "properties": {
+                  "s": { "type": "number" },
+                  "x": { "type": "number" },
+                  "y": { "type": "number" }
+                },
+                "description": "Camera pose at the shot's start, in the chapter canvas (s scale, x/y offset)."
+              },
+              "to": {
+                "type": ["object", "null"],
+                "additionalProperties": false,
+                "required": ["s", "x", "y"],
+                "properties": {
+                  "s": { "type": "number" },
+                  "x": { "type": "number" },
+                  "y": { "type": "number" }
+                },
+                "description": "Camera pose at the shot's end (the next shot's seam.poseFrom must continue it when the seam carries)."
+              },
+              "note": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "camMove": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Alias of camera.move for agents that say camMove as class name"
+          },
+          "subjectMotion": {
+            "type": "string",
+            "description": "Machine-readable subject/array motion class the morph must signal",
+            "enum": [
+              "stagger",
+              "tableGrows",
+              "gridMotion",
+              "formation-chain",
+              "copyRepeat",
+              "lineup",
+              "subject-push",
+              "orbit-subject",
+              "contagion-stagger",
+              "subject-motion",
+              "none"
+            ]
+          },
+          "subject": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": false,
+            "description": "Declared kit/glb subject; uneaten if morph does not call kit.props.model / engine.subject / block.model with this name (aligns subjectPipeline).",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Optional runtime actor id; defaults to model when omitted"
+              },
+              "model": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "kit.props.model name (e.g. banana → parts/banana.glb)"
+              }
+            }
+          },
+          "type": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "inStrategy"
+            ],
+            "properties": {
+              "inStrategy": {
+                "type": "string",
+                "enum": [
+                  "late",
+                  "after-motion"
+                ],
+                "description": "Type enters late / after subject motion is readable"
+              },
+              "in": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "description": "Optional absolute type.in seconds when known from greybox"
+              }
+            }
+          },
+          "seam": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "out"
+            ],
+            "properties": {
+              "in": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Seam into this shot (prev out / carry)"
+              },
+              "out": {
+                "type": "string",
+                "enum": [
+                  "cut",
+                  "match",
+                  "whip",
+                  "push",
+                  "glitch",
+                  "flash",
+                  "pan",
+                  "orbit"
+                ]
+              },
+              "poseFrom": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "additionalProperties": false,
+                "description": "Inherited camera pose from previous shot camera.to / this shot camera.from (B01→B02).",
+                "required": [
+                  "s",
+                  "x",
+                  "y"
+                ],
+                "properties": {
+                  "s": {
+                    "type": "number"
+                  },
+                  "x": {
+                    "type": "number"
+                  },
+                  "y": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          },
+          "note": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "beats": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "description": "Optional timed beat grid {t,read,cam} (Opus55 G6). When set, morph must eat declared beat times (briefBeatsUneatenErrors).",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "t"
+        ],
+        "properties": {
+          "t": {
+            "type": "number",
+            "description": "Beat time seconds"
+          },
+          "read": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "On-screen read / narration cue"
+          },
+          "cam": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Camera move at this beat"
+          },
+          "shotId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

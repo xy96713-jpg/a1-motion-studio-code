@@ -1,0 +1,65 @@
+#!/usr/bin/env node
+import {createHash} from "node:crypto";
+import {execFileSync} from "node:child_process";
+import fs from "node:fs";
+import path from "node:path";
+
+const root = process.cwd();
+const phaseId = "h-series-semantic-directed-v1";
+const artifactRoot = path.join(root, ".codex-artifacts/system-progress-system-line");
+const publicRoot = path.join(root, "apps/studio-next/public");
+const manifestDir = path.join(artifactRoot, "h-series-packaging-manifests-v1");
+const publicManifestDir = path.join(publicRoot, "generated/system-line/h-series-packaging-manifests-v1");
+const reviewReportPath = path.join(publicRoot, "generated/system-line", phaseId, "report.json");
+const candidateReportPath = path.join(publicRoot, "generated/system-line/h-series-preproduction-motion-candidate-v1/report.json");
+const artworkPolicyPath = path.join(publicRoot, "generated/system-line/h-series-generated-artwork-policy-v1/report.json");
+const reviewVideoPath = path.join(publicRoot, "generated/system-line", phaseId, "review-960x540-with-source-audio.mp4");
+const reviewContactPath = path.join(publicRoot, "generated/system-line", phaseId, "semantic-mainline-contact-sheet.png");
+const pagePath = path.join(root, "apps/studio-next/src/app/system-line-review/page.tsx");
+const read = (file) => JSON.parse(fs.readFileSync(file, "utf8"));
+const sha = (file) => createHash("sha256").update(fs.readFileSync(file)).digest("hex");
+const run = (command, args) => { try { return execFileSync(command, args, {cwd: root, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"], maxBuffer: 2 * 1024 * 1024}).trim(); } catch { return ""; } };
+const failures = [];
+const check = (id, condition, detail) => { if (!condition) failures.push({id, detail}); };
+const material = fs.existsSync(path.join(manifestDir, "material-manifest.json")) ? read(path.join(manifestDir, "material-manifest.json")) : {};
+const continuity = fs.existsSync(path.join(manifestDir, "continuity-manifest.json")) ? read(path.join(manifestDir, "continuity-manifest.json")) : {};
+const manifestAudit = fs.existsSync(path.join(manifestDir, "audit.json")) ? read(path.join(manifestDir, "audit.json")) : {};
+const review = fs.existsSync(reviewReportPath) ? read(reviewReportPath) : {};
+const candidateReview = fs.existsSync(candidateReportPath) ? read(candidateReportPath) : {};
+const artworkPolicy = fs.existsSync(artworkPolicyPath) ? read(artworkPolicyPath) : {};
+const rendererPropsPath = path.join(root, "remotion-renderer/src/generated/microbeatLayeredFullProps.json");
+const rendererSourcePath = path.join(root, "remotion-renderer/src/MicrobeatLayeredFullReview.tsx");
+const directedRendererPath = path.join(root, "remotion-renderer/src/HSeriesSemanticDirectedStage.tsx");
+const directorPlanPath = path.join(root, "remotion-renderer/src/hSeriesSemanticDirectorPlan.json");
+const materialSourcePath = path.join(root, "remotion-renderer/src/generated/hSeriesMaterialManifest.json");
+const continuitySourcePath = path.join(root, "remotion-renderer/src/generated/hSeriesContinuityManifest.json");
+const pageSource = fs.existsSync(pagePath) ? fs.readFileSync(pagePath, "utf8") : "";
+const pageHtml = run("curl", ["-fsS", "--max-time", "8", "http://127.0.0.1:4311/system-line-review"]);
+
+check("worktree", path.basename(root) === "a1-motion-studio-system-line", root);
+check("branch", run("git", ["branch", "--show-current"]) === "codex/system-maturity-line-20260722", run("git", ["branch", "--show-current"]));
+check("frontend-port", run("sh", ["-c", "lsof -nP -iTCP:4311 -sTCP:LISTEN -Fpct 2>/dev/null | head -1"]).startsWith("p"), "4311 not listening");
+check("manifest-audit", manifestAudit.status === "PASS_REVIEW_ONLY" && manifestAudit.reviewOnly === true && manifestAudit.rendererAdoptionAllowed === false && manifestAudit.finalRenderAllowed === false && manifestAudit.material?.summary?.rendererBoundCount === 47, manifestAudit.status);
+check("semantic-director", review.director?.sceneCount === 47 && review.director?.macroCount === 11 && review.sourceBinding?.directorPlanSha256 === sha(directorPlanPath) && review.sourceBinding?.directedRendererSha256 === sha(directedRendererPath), review.director || review.sourceBinding);
+check("material-source-parity", fs.existsSync(materialSourcePath) && fs.existsSync(path.join(manifestDir, "material-manifest.json")) && sha(materialSourcePath) === sha(path.join(manifestDir, "material-manifest.json")) && fs.existsSync(path.join(publicManifestDir, "material-manifest.json")) && sha(materialSourcePath) === sha(path.join(publicManifestDir, "material-manifest.json")), "material manifest hash/public parity");
+check("continuity-source-parity", fs.existsSync(continuitySourcePath) && fs.existsSync(path.join(manifestDir, "continuity-manifest.json")) && sha(continuitySourcePath) === sha(path.join(manifestDir, "continuity-manifest.json")) && fs.existsSync(path.join(publicManifestDir, "continuity-manifest.json")) && sha(continuitySourcePath) === sha(path.join(publicManifestDir, "continuity-manifest.json")), "continuity manifest hash/public parity");
+check("renderer-source-binds-manifests", fs.existsSync(rendererSourcePath) && fs.existsSync(directedRendererPath) && pageSource.includes("h-series-packaging-manifests-v1") && fs.readFileSync(rendererSourcePath, "utf8").includes("HSeriesSemanticDirectedStage") && fs.readFileSync(directedRendererPath, "utf8").includes("hSeriesContinuityManifest.json") && fs.readFileSync(directedRendererPath, "utf8").includes("hSeriesSemanticDirectorPlan.json"), "renderer/page/director/continuity binding");
+check("review-report-current", review.status === "READY_FOR_DIRECT_REVIEW" && review.reviewOnly === true && review.candidateOnly === true && review.finalRenderAllowed === false && review.sourceBinding?.materialManifestSha256 === sha(materialSourcePath) && review.sourceBinding?.continuityManifestSha256 === sha(continuitySourcePath), review.sourceBinding || review.status);
+check("candidate-review-gate-bound", candidateReview.contract === "A1HSeriesPreproductionMotionPreview/v1" && candidateReview.status === "PASS" && candidateReview.reviewOnly === true && candidateReview.proofOnly === true && candidateReview.reviewLedger?.status === "PENDING_USER_VISUAL_REVIEW" && candidateReview.reviewLedger?.pendingCount === 47 && candidateReview.reviewLedger?.reviewedCount === 0 && candidateReview.rendererAdoptionAllowed === false && candidateReview.finalRenderAllowed === false && candidateReview.sourceBinding?.candidateProps?.sha256 && candidateReview.generatedArtworkReview?.pendingVisualReviewCount === 7, candidateReview.reviewLedger || candidateReview.status);
+check("artwork-policy-bound-and-adoption-locked", artworkPolicy.contract === "A1HSeriesGeneratedArtworkPolicyAudit/v1" && artworkPolicy.reviewOnly === true && artworkPolicy.rendererAdoptionAllowed === false && artworkPolicy.finalRenderAllowed === false && artworkPolicy.policy?.humanReviewStillRequired === true && artworkPolicy.summary?.assetCount === 7 && artworkPolicy.summary?.adoptionBlockedByPolicyRisk === (Number(artworkPolicy.summary?.warningCount || 0) > 0 || Number(artworkPolicy.summary?.failureCount || 0) > 0), artworkPolicy.summary || artworkPolicy.status);
+check("review-video-sha", fs.existsSync(reviewVideoPath) && review.media?.video?.sha256 === sha(reviewVideoPath), review.media?.video || "missing");
+check("review-contact-sheet-sha", fs.existsSync(reviewContactPath) && review.media?.contactSheet?.sha256 === sha(reviewContactPath), review.media?.contactSheet || "missing");
+check("live-page-version", pageHtml.includes(phaseId), pageHtml ? "page did not expose directed v1" : "page unavailable");
+check("live-page-material-marker", pageHtml.includes('data-a1-material-pipeline="pass-review-only"') && pageHtml.includes('data-a1-material-bound-count="47"') && pageHtml.includes('data-a1-deterministic-rendered-count="33"') && pageHtml.includes('data-a1-unique-artwork-count="7"'), "material marker");
+check("live-page-material-adoption-locked", pageHtml.includes('data-a1-material-adoption="locked"') && pageHtml.includes("素材已绑定只代表可以审片，不代表已经授权采用"), "material adoption must remain locked until visual review");
+check("live-page-candidate-review-marker", pageHtml.includes('data-a1-preproduction-motion-candidate="ready-for-review"') && pageHtml.includes('data-a1-preproduction-motion-candidate-review-ledger="PENDING_USER_VISUAL_REVIEW"') && pageHtml.includes('data-a1-preproduction-motion-candidate-renderer-adoption="false"') && pageHtml.includes('data-a1-preproduction-motion-candidate-full-mp4="false"'), "candidate review gate marker");
+const artworkPolicyStatusMarker = `data-a1-preproduction-motion-candidate-artwork-policy="${artworkPolicy.status || "missing"}"`;
+const artworkPolicyWarningMarker = `data-a1-preproduction-motion-candidate-artwork-policy-warnings="${Number(artworkPolicy.summary?.warningCount || 0)}"`;
+check("live-page-artwork-policy-marker", pageHtml.includes(artworkPolicyStatusMarker) && pageHtml.includes(artworkPolicyWarningMarker) && (Number(artworkPolicy.summary?.warningCount || 0) === 0 || (pageHtml.includes('data-a1-generated-artwork-policy-warning="forbidden-line-primitive"') && pageHtml.includes("疑似装饰性破线/线框"))), {status: artworkPolicy.status, warningCount: artworkPolicy.summary?.warningCount});
+check("live-page-artwork-repair-brief-marker", pageHtml.includes('data-a1-generated-artwork-repair-brief="READY_FOR_SHOT_REVIEW"') && pageHtml.includes('data-a1-generated-artwork-repair-brief-count="7"') && pageHtml.includes("逐镜返修 brief"), "shot-level artwork repair brief marker");
+check("live-page-continuity-marker", pageHtml.includes('data-a1-continuity-pipeline="pass-review-only"') && pageHtml.includes('data-a1-continuity-transition-count="46"') && pageHtml.includes('data-a1-chapter-overlap-frames="0"'), "continuity marker");
+
+const report = {contract: "A1SystemLinePackagingClosedLoop/v1", status: failures.length ? "FAIL" : "PASS_REVIEW_ONLY", generatedAt: new Date().toISOString(), authority: {phaseId, reviewOnly: true, finalRenderAllowed: false}, sourceBinding: {propsSha256: sha(rendererPropsPath), rendererSourceSha256: sha(rendererSourcePath), directedRendererSha256: sha(directedRendererPath), directorPlanSha256: sha(directorPlanPath), materialManifestSha256: sha(materialSourcePath), continuityManifestSha256: sha(continuitySourcePath), artworkPolicySha256: fs.existsSync(artworkPolicyPath) ? sha(artworkPolicyPath) : null}, material: {contract: material.contract, sceneCount: material.summary?.sceneCount, routeCounts: material.summary?.routeCounts, rendererBoundCount: material.summary?.rendererBoundCount, uniqueArtworkAssetCount: material.summary?.uniqueArtworkAssetCount, deterministicRenderedCount: material.summary?.deterministicRenderedCount, pendingVisualReviewCount: material.summary?.pendingVisualReviewCount}, candidateReview: {contract: candidateReview.contract, status: candidateReview.status, reportPath: path.relative(root, candidateReportPath), reportSha256: fs.existsSync(candidateReportPath) ? sha(candidateReportPath) : null, candidatePropsSha256: candidateReview.sourceBinding?.candidateProps?.sha256 || null, reviewLedgerStatus: candidateReview.reviewLedger?.status || null, pendingCount: candidateReview.reviewLedger?.pendingCount ?? null, reviewedCount: candidateReview.reviewLedger?.reviewedCount ?? null, generatedArtworkPendingVisualReviewCount: candidateReview.generatedArtworkReview?.pendingVisualReviewCount ?? null, artworkPolicyStatus: artworkPolicy.status || null, artworkPolicyWarningCount: artworkPolicy.summary?.warningCount ?? null, rendererAdoptionAllowed: candidateReview.rendererAdoptionAllowed ?? null, finalRenderAllowed: candidateReview.finalRenderAllowed ?? null}, continuity: {contract: continuity.contract, sceneCount: continuity.summary?.sceneCount, transitionCount: continuity.summary?.transitionCount, motifCount: continuity.motifs?.length, sameMotifCarryCount: continuity.summary?.sameMotifCarryCount, chapterOverlapFrames: review.continuityProof?.chapterOverlapFrames}, reviewMedia: review.media || null, failures, nextAction: failures.length ? "repair-packaging-closed-loop-failures" : "review-47-shot-candidate-before-source-adoption"};
+for (const output of [path.join(manifestDir, "closed-loop-report.json"), path.join(publicManifestDir, "closed-loop-report.json")]) { fs.mkdirSync(path.dirname(output), {recursive: true}); fs.writeFileSync(output, `${JSON.stringify(report, null, 2)}\n`); }
+console.log(JSON.stringify(report, null, 2));
+if (failures.length) process.exitCode = 2;

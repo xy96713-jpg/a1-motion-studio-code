@@ -1,0 +1,256 @@
+{
+ "contract": "A1TasteInventory/v1",
+  "recoveredDirectorGuidance": {
+    "authority": {"design":"user", "final":"user", "historicalApprovalTransfers":false, "autoApproval":"held-without-trusted-presentation-and-activity-receipts", "source":"work/recipe-board-v1/HOUSE.md#工作方式"},
+    "classification": {
+      "current": [
+        {"rule":"先具体视觉参考与已有工程，再决定本镜信息关系；复用已选素材；必要时无字设计探索；实现后同内容同尺度对照。", "source":"docs/audits/claude-history-recovery-20261030/successful-workflows.md:112-119", "humanEvidence":["aec6179b-31d5-49ea-b8a4-3c83ee57542e.jsonl:L35440","3f7a6d28-9353-4e63-a411-9862f3bbbdb3.jsonl:L6702"]}
+      ],
+      "superseded": [
+        {"rule":"旧 Claude-only / 不用 Codex", "source":"docs/audits/claude-history-recovery-20261030/decision-history.md H0426", "replacedBy":"HOUSE 执行人更新 2026-10-29"},
+        {"rule":"历史导演代批或超时自动放行不能成为当前权限", "source":"docs/audits/claude-history-recovery-20261030/decision-history.md:150-172 (H0746/H0769/H0780)", "humanEvidence":["14e54fdc-c661-4a0e-9595-2580ae7b18ac.jsonl:L22461","14e54fdc-c661-4a0e-9595-2580ae7b18ac.jsonl:L40244","14e54fdc-c661-4a0e-9595-2580ae7b18ac.jsonl:L42455"], "replacedBy":"HOUSE 工作方式：design/final 用户关；缺可信展示与活动回执自动批暂停"},
+        {"rule":"默认全屏复古、旧米纸、红签、旧字体比例不能全盘继承", "source":"docs/audits/claude-history-recovery-20261030/decision-history.md H0252", "replacedBy":"HOUSE 样子 / TYPE 现行规范"}
+      ],
+      "projectOnly":["B26-v12","type-v1-BC","chromosome-B","P21-one-page"]
+    },
+    "workflow": [
+      "先写观众要理解的关系；打开同功能原片/对照图和已有工程源码，不用审美形容词代替视觉参考。",
+      "查当前项目已选素材与锁定设计，适用即复用；只有缺失或不适用才补素材，不要求每镜生图或每镜3D。",
+      "只有方向未定且确有必要时出无字 A/B/C 目标；已有设计选择不重开审批；事实真素材、可读字数值代码。",
+      "技术实现后与同内容目标同尺度并排，先比信息关系、构图和阅读层级，再修细节；当前文件不是当年批准 hash。"
+    ],
+    "examples": [
+      {"id":"B26-v12", "project":"paperclip-138-full", "classification":"project-only", "when":{"words":"DNA|染色体|身高|家谱|基因|位点", "gold":["work/recipe-board-v1/projects/paperclip-138-full/chapters/B26.mjs"]}, "applies":"同内容对照、局部裁切、字体与主体遮挡修正", "notApplicable":"不是全片一次过；不能把现存源码视作当年批准 hash；不要求复制配色", "frame":"work/recipe-board-v1/projects/paperclip-138-full/out/chapters/B26/b26-v12-pairs.jpg", "frameRole":"historical-comparison", "source":"work/recipe-board-v1/projects/paperclip-138-full/chapters/B26.mjs", "decision":{"role":"human", "quote":"B26 这版可以了，按同样的逐帧对照和检查去做 B01、B07、B23、B32、B47", "locator":"7a201f09-2514-4f2b-94f5-7d9bd36fd2c1.jsonl:L8358"}, "acceptance":{"scope":"chapter-version-only", "currentApproval":false}, "evidence":"docs/audits/claude-history-recovery-20261030/successful-workflows.md:22-37"},
+      {"id":"type-v1-BC", "project":"paperclip-138", "classification":"project-only", "when":{"words":"地图|字体|排版|字组", "kinds":["map"]}, "applies":"同拍同地图比较 B 编辑衬线网格与 C 字印地图；字与场景关系", "notApplicable":"手做方向小样，不证明自动导演全片成熟；旧字体比例不得覆盖 TYPE", "frame":"work/recipe-board-v1/style-lab/type-v1/out/type-directions.jpg", "frameRole":"historical-directions", "source":"work/recipe-board-v1/style-lab/type-v1/seq.js", "decision":{"role":"human", "quote":"b c 好一点；还不错了", "locator":"3f7a6d28-9353-4e63-a411-9862f3bbbdb3.jsonl:L8504,L8589"}, "acceptance":{"scope":"handmade-direction-sample-only", "currentApproval":false}, "evidence":"docs/audits/claude-history-recovery-20261030/successful-workflows.md:52-61"},
+      {"id":"chromosome-B", "project":"paperclip-138", "classification":"project-only", "when":{"words":"染色体|DNA|基因|chromosome"}, "applies":"形态难定且需要体积时，以无字目标定主角特写与景深，再对照实现", "notApplicable":"仅设计方向选择，非最终 Blender 动画验收；不是每镜3D/生图要求；现行主体 QA 不豁免", "frame":"work/recipe-board-v1/style-lab/keyframe-v1/chromosome-B.png", "comparison":"work/recipe-board-v1/style-lab/keyframe-v1/cmp-6.jpg", "frameRole":"selected-wordless-target", "source":"work/recipe-board-v1/style-lab/engine/blender/plates/chromosome.py", "designSource":"work/recipe-board-v1/style-lab/keyframe-v1/gen.mjs", "decision":{"role":"human", "quote":"用 B 主角特写加景深，照着它用 Blender 复刻，并把先出效果图再复刻接进系统", "locator":"87547f2e-b758-4f4e-bdae-60b59101205a.jsonl:L3281"}, "acceptance":{"scope":"design-direction-only", "currentApproval":false}, "evidence":"docs/audits/claude-history-recovery-20261030/successful-workflows.md:39-50"},
+      {"id":"P21-one-page", "project":"hupo-auto2", "classification":"project-only", "when":{"words":"报道|网页|页面|高亮", "kinds":["evidence"]}, "applies":"标题和正文属于同一页面；先纠正空间结构，不拆成标题卡加网页。静帧先核对同页关系。", "notApplicable":"旧对照视频缺失，不能声称当前看过或验收运动；不可用测试通过替代用户判断", "frame":null, "frameRole":"historical-comparison-missing", "source":"work/recipe-board-v1/modules/article.html", "input":"work/recipe-board-v1/projects/hupo-auto2/modules/p21-article.json", "decision":{"role":"human", "quote":"你看第一个不是一张画布或者页面运动下去的吗；对了", "locator":"aec6179b-31d5-49ea-b8a4-3c83ee57542e.jsonl:L36931,L37031"}, "acceptance":{"scope":"single-shot-structure-correction", "currentApproval":false}, "evidence":"docs/audits/claude-history-recovery-20261030/successful-workflows.md:74-83"}
+    ]
+  },
+ "about": "用户说过喜欢、认可过的样子，一条一条：原话、日期、落在系统哪里、状态。合并流程或收规则时，测试对着这张表查：in 的条目，它点名的文件必须存在、点名的字符串必须还在；有一条落空就失败。status：in（在线上）、partial（一部分在线上）、sample（先出样张给用户看）、deferred（用户定的暂缓）、dropped（用户说不要了）、gap（还没补）。2026-10-28 建（AUDIT-aesthetics-20261028.md；用户：查查是否有其他遗漏）。",
+ "items": [
+  {
+   "id": "screen-medium",
+   "liked": "屏幕介质的质感：LED 点阵、CRT、报纸网点、示波器、录像带；虚拟摄像机翻拍，辉光、色差、子帧拖影",
+   "said": "2026-10-16 还不如之前的那种 led（喜欢的是质感）；2026-10-20 显像管滤镜还行",
+   "status": "in",
+   "lands": [
+    {
+     "file": "work/recipe-board-v1/routing/media.json"
+    },
+    {
+     "file": "apps/studio-next/src/lib/recipe-board/filmdesign.mjs",
+     "has": "filmScreenErrors"
+    },
+    {
+     "file": "apps/studio-next/src/lib/recipe-board/chapter.mjs",
+     "has": "screensOf"
+    }
+   ]
+  },
+  {
+   "id": "film-palettes",
+   "liked": "各种配色但和谐，Gawx 那样胶片感的红黄蓝，字色也多样",
+   "said": "2026-10-28 可以各种配色 但要和谐 比如 gawx 会用些胶片感的红 黄 蓝等等 还有字体颜色也是的多样性",
+   "status": "in",
+   "lands": [
+    {
+     "file": "work/recipe-board-v1/routing/palettes.json"
+    },
+    {
+     "file": "apps/studio-next/src/lib/recipe-board/palettes.mjs",
+     "has": "filmPaletteErrors"
+    }
+   ]
+  },
+  {
+   "id": "evidence-shown",
+   "liked": "证据要真放：真报道推到那一句加划线、真照片、真录屏和网站",
+   "said": "2026-10-22 为什么素材对不上；2026-10-25 GEDmatch 网页排版太丑 成熟的该怎么做；胡泊的证据包装",
+   "status": "in",
+   "lands": [
+    {
+     "file": "apps/studio-next/src/lib/recipe-board/chapter.mjs",
+     "has": "evidenceErrors"
+    }
+   ]
+  },
+  {
+   "id": "screen-packaging",
+   "liked": "屏幕和网页包装：录屏、网页放在暗场里，带透视和轻微倾斜、景深，像被摄像机拍到的一块屏",
+   "said": "光郡第 29 集（用户点名喜欢）；2026-10-25 网页平贴排版太丑",
+   "status": "in",
+   "lands": [
+    {
+     "file": "work/recipe-board-v1/style-lab/engine/templates/morph.js",
+     "has": "filmedScreen"
+    },
+    {
+     "file": "work/recipe-board-v1/routing/devices.json",
+     "has": "filmed-screen"
+    }
+   ]
+  },
+  {
+   "id": "guangjun-grammar",
+   "liked": "光郡的手法：打字加斜线块光标、坐标追踪标签、描边像素标签和实时读数、双语标题、章节母题（线框网格加方块）、关键词塌缩、闪白硬切、快摇拖影",
+   "said": "2026-10-28 之前的光郡那种也是我喜欢的美学风格画风",
+   "status": "in",
+   "lands": [
+    {
+     "file": "work/recipe-board-v1/style-lab/REFERENCE-guangjun-ep29.md"
+    },
+    {
+     "file": "work/recipe-board-v1/routing/devices.json",
+     "has": "type-cursor"
+    },
+    {
+     "file": "work/recipe-board-v1/routing/devices.json",
+     "has": "coord-track"
+    },
+    {
+     "file": "work/recipe-board-v1/routing/devices.json",
+     "has": "hud-label"
+    },
+    {
+     "file": "work/recipe-board-v1/routing/devices.json",
+     "has": "bilingual-title"
+    },
+    {
+     "file": "work/recipe-board-v1/routing/devices.json",
+     "has": "keyword-collapse"
+    },
+    {
+     "file": "work/recipe-board-v1/routing/devices.json",
+     "has": "chapter-map"
+    }
+   ]
+  },
+  {
+   "id": "gawx-type",
+   "liked": "Gawx 的大字：大字成块占满画面、每行强制同宽；越界裁切的巨字；拆字网格；纯色底上的海报版式；照片满屏调低调，米白字直接压上",
+   "said": "2026-10-27 喜欢 Gawx Art；标题机制轮换，别平灰照片配一行字",
+   "status": "in",
+   "lands": [
+    {
+     "file": "work/recipe-board-v1/routing/devices.json",
+     "has": "giant-crop"
+    },
+    {
+     "file": "work/recipe-board-v1/routing/devices.json",
+     "has": "letter-grid"
+    },
+    {
+     "file": "work/recipe-board-v1/routing/devices.json",
+     "has": "poster-ground"
+    },
+    {
+     "file": "work/recipe-board-v1/routing/devices.json",
+     "has": "photo-over-type"
+    }
+   ]
+  },
+  {
+   "id": "eva-type",
+   "liked": "EVA 那样细高、压窄的展示字；家用 6 款字",
+   "said": "2026-10-20 我之前不是说我喜欢 EVA 的感觉；2026-10-26 尽量还是用那 6 款字",
+   "status": "in",
+   "lands": [
+    {
+     "file": "work/recipe-board-v1/routing/house-rules.json",
+     "has": "eva"
+    }
+   ]
+  },
+  {
+   "id": "paperclip-motion",
+   "liked": "回形针的动效：一章一镜到底，停—动—停，变形换内容",
+   "said": "2026-10-27 按你推荐的执行（家里的样子）",
+   "status": "in",
+   "lands": [
+    {
+     "file": "work/recipe-board-v1/routing/house-style.json",
+     "has": "以回形针与胡泊的完整镜头和节奏设计为成熟标准"
+    }
+   ]
+  },
+  {
+   "id": "film-finish",
+   "liked": "胶片质感：黑轻抬、高光不到纯白、颗粒、暗角",
+   "said": "2026-10-27 Gawx 的电影感",
+   "status": "in",
+   "lands": [
+    {
+     "file": "apps/studio-next/src/lib/recipe-board/finish.mjs"
+    }
+   ]
+  },
+  {
+   "id": "made-models",
+   "liked": "实物用做好的模型，不用代码方块或低清网图",
+   "said": "2026-10-27 尽量不要网上找低质量素材做模型；系统怎么能把这环节丢掉呢",
+   "status": "in",
+   "lands": [
+    {
+     "file": "work/recipe-board-v1/routing/engine-capabilities.json",
+     "has": "made-model"
+    }
+   ]
+  },
+  {
+   "id": "3d-where-3d",
+   "liked": "该 3D 就 3D，3D 和平面混用，运动拖影不是毛病",
+   "said": "2026-10-26 不用啊 该 3d 就 3d；不是 是运动",
+   "status": "in",
+   "lands": [
+    {
+     "file": "work/recipe-board-v1/routing/lessons.json",
+     "has": "L88"
+    }
+   ]
+  },
+  {
+   "id": "retro-interfaces",
+   "liked": "复古图形：昭和海报红黄黑、录像带 OSD、旧视窗界面、像素游戏对话框、卡西欧液晶",
+   "said": "2026-10-20 比较喜欢复古的感觉（Pinterest xy96713）",
+   "status": "in",
+   "note": "2026-10-28 用户看过样张：对 但是要合适 … 不要为了做而做 硬塞；收进手法库，每条写明什么时候才用",
+   "lands": [
+    {
+     "file": "work/recipe-board-v1/routing/devices.json",
+     "has": "vhs-osd"
+    },
+    {
+     "file": "work/recipe-board-v1/routing/devices.json",
+     "has": "retro-window"
+    },
+    {
+     "file": "work/recipe-board-v1/routing/devices.json",
+     "has": "pixel-dialog"
+    },
+    {
+     "file": "work/recipe-board-v1/routing/devices.json",
+     "has": "showa-poster"
+    },
+    {
+     "file": "work/recipe-board-v1/style-lab/engine/templates/kit5.js",
+     "has": "dialogBox"
+    }
+   ]
+  },
+  {
+   "id": "metal-3d-type",
+   "liked": "金属 3D 字",
+   "said": "2026-10-16 主视觉方向之一（记忆 aesthetic-source-pinterest）",
+   "status": "dropped",
+   "note": "2026-10-28 用户：也不用金属 3d 字什么的 可以去掉 其他的设计感觉 画风 可以重点弄好",
+   "lands": []
+  },
+  {
+   "id": "sound-presenter",
+   "liked": "声音、讲者出镜",
+   "said": "2026-10-22 先只做包装，声音和讲者先不管",
+   "status": "deferred",
+   "lands": []
+  }
+ ]
+}

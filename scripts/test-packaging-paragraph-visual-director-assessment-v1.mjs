@@ -1,0 +1,55 @@
+#!/usr/bin/env node
+import assert from "node:assert/strict";
+import crypto from "node:crypto";
+import fs from "node:fs";
+import path from "node:path";
+import {assertPackagingParagraphCanaryRequestPack} from "../apps/studio-next/src/lib/a1-packaging-paragraph-canary-request-pack-v1.mjs";
+import {assertPackagingParagraphVisualDirectorAssessment, createPackagingParagraphVisualDirectorAssessment} from "../apps/studio-next/src/lib/a1-packaging-paragraph-visual-director-assessment-v1.mjs";
+
+const projectRoot = path.resolve(import.meta.dirname, "..");
+const canonicalize = (value) => Array.isArray(value) ? value.map(canonicalize) : value && typeof value === "object" ? Object.fromEntries(Object.keys(value).sort().map((key) => [key, canonicalize(value[key])])) : value;
+const rehash = (assessment) => {
+  const body = structuredClone(assessment);
+  delete body.assessmentSha256;
+  assessment.assessmentSha256 = crypto.createHash("sha256").update(JSON.stringify(canonicalize(body))).digest("hex");
+  return assessment;
+};
+const currentPackPath=path.join(projectRoot,".codex-artifacts/system-progress-system-line/current-storyboard-production-v1/packaging-paragraph-canary-request-pack.json");
+if(!fs.existsSync(currentPackPath)){console.log(JSON.stringify({status:"SKIPPED_NOT_CURRENT",contract:"A1PackagingParagraphVisualDirectorAssessmentTest/v1"}));process.exit(0);}
+const pack = assertPackagingParagraphCanaryRequestPack(JSON.parse(fs.readFileSync(currentPackPath, "utf8")));
+const objectiveAudit = {status: "READY_FOR_VISUAL_DIRECTOR_AGENT_ASSESSMENT", auditSha256: "a".repeat(64), source: {workspaceSha256: "1".repeat(64), transitionSha256: "2".repeat(64), storyboardRevisionSha256: pack.source.storyboardRevisionSha256, planSha256: pack.source.canaryPlanSha256, requestPackSha256: pack.packSha256, implementationSha256: "3".repeat(64), reviewBatchManifestSha256: "4".repeat(64)}, nextReview: {reviewerMayClaimHumanStatus: false}, boundary: {userVisualApproval: "NOT_APPROVED"}, items: pack.requests.map((request, index) => ({shotId: request.shotId, paragraphRole: request.paragraphRole, status: "OBJECTIVE_PIXEL_PASS_REVIEW_ONLY", artifact: {sha256: String(index + 5).repeat(64)}, expectedVisibleAction: request.actualPixelReviewTemplate.expectedVisibleAction}))};
+const passItems = pack.requests.map((request, index) => ({shotId: request.shotId, paragraphRole: request.paragraphRole, artifactSha256: String(index + 5).repeat(64), expectedVisibleAction: request.actualPixelReviewTemplate.expectedVisibleAction, threeSecondRead: "PASS", visibleAction: "PASS", focalActor: `decisive actor ${request.shotId}`, visualThesisObserved: `specific observed visual thesis for ${request.shotId}`, compositionEvidence: `asymmetric crop and scale hierarchy observed in ${request.shotId}`, typographyEvidence: `formal local glyphs are readable and image-bound in ${request.shotId}`, weaknesses: [], coreCheckResults: request.actualPixelReviewTemplate.tasteScorecard.coreChecks.map((check) => ({id: check.id, result: "PASS", evidence: `actual pixel evidence for ${check.id} in ${request.shotId}`})), hardFailureResults: request.actualPixelReviewTemplate.tasteScorecard.hardFailures.map((id) => ({id, present: false, evidence: `not observed in actual pixels for ${request.shotId}`}))}));
+const paragraph = {evidenceToMechanism: {result: "PASS", evidence: "evidence actor hands off to the causal mechanism"}, mechanismToVerdict: {result: "PASS", evidence: "unresolved mechanism hands off to bounded research verdict"}, roleDifferentiation: {result: "PASS", evidence: "evidence mechanism and verdict remain visibly distinct"}, densityProgression: {result: "PASS", evidence: "quiet collision and dense profiles progress deliberately"}, singleParagraphRead: {result: "PASS", evidence: "the three frames read as one causal editorial paragraph"}, strongestHandoff: "mechanism to bounded verdict", weakestHandoff: "evidence to mechanism is acceptable", repairInstruction: null};
+const input = {contract: "A1PackagingParagraphVisualDirectorAssessmentInput/v1", status: "COMPLETED_ACTUAL_PIXEL_ASSESSMENT", objectivePixelAuditSha256: objectiveAudit.auditSha256, reviewer: {kind: "visual-director-agent", id: "codex-a1-visual-director", model: "gpt-5", human: false, mayClaimHumanStatus: false, assessedAt: "2026-08-12T22:00:00.000Z"}, items: passItems, paragraph};
+const pass = assertPackagingParagraphVisualDirectorAssessment(createPackagingParagraphVisualDirectorAssessment({...input, pack, objectiveAudit}), {requestPackSha256: pack.packSha256, objectivePixelAuditSha256: objectiveAudit.auditSha256});
+assert.equal(pass.status, "AGENT_RECOMMENDS_USER_ACTUAL_PIXEL_REVIEW");
+assert.equal(pass.items.every((item) => item.status === "AGENT_TASTE_PASS_USER_REVIEW_REQUIRED" && item.corePassCount === 10), true);
+assert.equal(pass.reviewer.human, false);
+assert.equal(pass.reviewer.mayClaimHumanStatus, false);
+assert.equal(pass.completionBoundary.agentAssessmentIsNotHumanReview, true);
+assert.equal(pass.completionBoundary.agentRecommendationIsNotVisualApproval, true);
+assert.equal(pass.completionBoundary.userVisualApproval, "NOT_APPROVED");
+const failedInput = structuredClone(input);
+failedInput.items[1].threeSecondRead = "FAIL";
+failedInput.items[1].coreCheckResults.find((result) => result.id === "three-second-read").result = "FAIL";
+failedInput.items[1].weaknesses = ["mechanism cannot be read in three seconds"];
+failedInput.paragraph.singleParagraphRead = {result: "FAIL", evidence: "the middle beat breaks the causal reading path"};
+failedInput.paragraph.repairInstruction = "repair only ED-13 causal action and preserve adjacent evidence and verdict";
+const failed = createPackagingParagraphVisualDirectorAssessment({...failedInput, pack, objectiveAudit});
+assert.equal(failed.status, "VISUAL_REPAIR_REQUIRED");
+assert.equal(failed.items[1].recommendation, "STOP_AND_REPAIR_WITHOUT_EXPANSION");
+assert.throws(() => createPackagingParagraphVisualDirectorAssessment({...input, reviewer: {...input.reviewer, human: true}, pack, objectiveAudit}), /reviewer-boundary/u);
+assert.throws(() => createPackagingParagraphVisualDirectorAssessment({...input, status: "UNREVIEWED_ACTUAL_PIXELS_REQUIRED", pack, objectiveAudit}), /input-incomplete/u);
+assert.throws(() => createPackagingParagraphVisualDirectorAssessment({...input, objectivePixelAuditSha256: "f".repeat(64), pack, objectiveAudit}), /objective-audit-mismatch/u);
+assert.throws(() => createPackagingParagraphVisualDirectorAssessment({...input, reviewer: {...input.reviewer, model: "UNSET"}, pack, objectiveAudit}), /unreviewed/u);
+const contradictory = structuredClone(input);
+contradictory.items[0].threeSecondRead = "FAIL";
+assert.throws(() => createPackagingParagraphVisualDirectorAssessment({...contradictory, pack, objectiveAudit}), /three-second-read-conflict/u);
+const forged = structuredClone(pass);
+forged.completionBoundary.userVisualApproval = "APPROVED";
+assert.throws(() => assertPackagingParagraphVisualDirectorAssessment(forged, {requestPackSha256: pack.packSha256}), /sha|boundary/u);
+const recomputedSemanticForgery = structuredClone(pass);
+recomputedSemanticForgery.items[0].status = "VISUAL_REPAIR_REQUIRED";
+rehash(recomputedSemanticForgery);
+assert.throws(() => assertPackagingParagraphVisualDirectorAssessment(recomputedSemanticForgery, {requestPackSha256: pack.packSha256}), /item-semantics/u);
+console.log(JSON.stringify({status: "PASS", contract: pass.contract, assessmentSha256: pass.assessmentSha256, passRecommendation: pass.status, failedRecommendation: failed.status, incompleteTemplateRejected: true, mismatchedObjectiveAuditRejected: true, placeholderReviewerRejected: true, contradictoryThreeSecondReadRejected: true, agentCannotClaimHumanReview: true, forgedApprovalRejected: true, recomputedSemanticForgeryRejected: true, subsequentHumanUserActualPixelReviewRequired: true, userVisualApproval: "NOT_APPROVED", productionAdmitted: false, workspaceMutationPerformed: false}, null, 2));

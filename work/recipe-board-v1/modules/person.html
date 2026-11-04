@@ -1,0 +1,172 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>person</title>
+<style>
+#photo { position: absolute; background-size: cover; background-position: center 30%; transform-origin: 50% 40%; }
+.full #photo { inset: -3%; }
+/* the side the name sits on is shaded, as the reference lays its name over the dim half of the photo (who R09: the red
+   English line read at contrast 61 over a mid-grey stage) */
+.full #photo::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,.5) 0%, rgba(0,0,0,.3) 42%, transparent 64%); }
+.full.flip #photo::after { background: linear-gradient(270deg, rgba(0,0,0,.42) 0%, rgba(0,0,0,.25) 40%, transparent 62%); }
+.card #photo { left: 70px; top: 120px; width: 820px; height: 820px; box-shadow: 0 30px 60px rgba(0,0,0,.35); }   /* the photograph the card's full height (ending-S3: it sat small in the top left) */
+#ghost { position: absolute; left: -40px; right: -40px; font-family: 'Harmony Cond'; font-size: 420px; color: rgba(222,10,22,.55); letter-spacing: .02em; white-space: nowrap; line-height: 1; }
+.card #ghost { top: -90px; } .card #ghost2 { top: 690px; }
+.card .g { filter: blur(3px) saturate(1.4) drop-shadow(8px 0 0 rgba(0,170,255,.45)) drop-shadow(-8px 0 0 rgba(255,0,80,.45)); opacity: 1; }   /* (out of focus behind the card, as the reference's: sharp it pulled the eye, talent-S6/S7) */   /* the ghost name soft, split in colour (the reference's card) */
+.card #role { font-family: 'SourceHanSerif Heavy'; }
+.full #ghost, .full #ghost2 { display: none; }
+#block { position: absolute; }
+.full #block { left: 140px; top: 360px; } .card #block { left: 990px; top: 330px; }
+#name { font-size: 112px; color: #1c1c1c; }
+.card #name { font-size: 176px; }
+/* the card's words: the name with the role beside it on its line, the Latin name and the lines under (the reference's
+   ending R03 / talent R06: 潘梓正 震動矽谷的模型論文核心貢獻者 on one line; ours stacked the role as a line of its own) */
+.card #block { display: grid; grid-template-columns: auto 1fr; column-gap: 26px; align-items: end; width: 880px; }
+.card #name { grid-column: 1; grid-row: 1; } .card #role { grid-column: 2; grid-row: 1; align-self: end; margin: 0 0 22px; font-size: 40px; white-space: normal; line-height: 1.2; }
+.card #en { grid-column: 1 / 3; grid-row: 2; } .card #bio { grid-column: 1 / 3; grid-row: 3; }
+.card #en { font-size: 44px; color: #c8221c; } .card #role { font-size: 50px; color: #333; }
+/* a few lines on who the person is under the role, as the reference's card (ending-S3: the right half stood empty) */
+#bio { font-family: 'SourceHanSans Regular'; font-size: 34px; line-height: 1.5; color: #555; margin-top: 26px; width: 820px; white-space: normal; }
+.full #bio { color: rgba(255,255,255,.8); width: 760px; }
+.card #bio { font-size: 42px; line-height: 1.45; width: 860px; }   /* (three lines that read, as the reference's: one line of 34 px was a footnote, ending-S3 review) */
+.full #name { color: #f3f1ec; text-shadow: 0 6px 24px rgba(0,0,0,.6); font-size: 150px; }   /* (the reference's name over a full photo at ~150 px; ours 112 read a size down: talent-S9 review) */
+#en { font-family: 'SourceHanSans Regular'; font-size: 30px; color: #d42a24; margin-top: 10px; letter-spacing: .02em; }
+.full #en { position: relative; left: 40px; top: 4px; color: #ff5d4f; font-family: 'Times New Roman', serif; font-style: oblique 14deg; font-size: 68px; margin-top: 6px; -webkit-text-stroke: 1.5px rgba(40,0,0,.55); rotate: -5deg; transform-origin: 0 50%; text-shadow: 0 2px 0 rgba(255,255,255,.3), 0 0 14px rgba(0,0,0,.6), 0 0 6px rgba(0,0,0,.6), 0 0 2px rgba(0,0,0,.85); white-space: nowrap; }   /* (a darker rim: on a light photograph the red signature measured contrast 69, who S10) */   /* (the English name the red slanted signature line across the foot of the name, as the reference's who R09 / meta R08 — with no paper under it; set small and white it read as a caption, meta-S7 review) */
+#role { font-family: 'SourceHanSans Regular'; font-size: 34px; color: #555; margin-top: 18px; white-space: nowrap; }
+.full #role { color: #fff; font-size: 48px; margin-top: 16px; text-shadow: 0 3px 14px rgba(0,0,0,.7); }   /* (the English and the role were grey at 40 and 34 px over a dark photo, unread: talent-S9) */
+/* three ranks, no paper (the torn strip gone, the user 2026-10-25: 之后也不要这种纸条撕纸设计什么的了; set plain the three
+   lines read as a temporary subtitle, who-S10 review): the name large, the English a size down, the role the second lead —
+   heavy, large, behind a bar in the accent */
+.full #name { font-size: 176px; line-height: 1.05; }
+.full #role { font-family: 'SourceHanSerif Heavy'; font-size: 84px; line-height: 1.1; margin-top: 22px; padding-left: 26px; border-left: 12px solid var(--accent, #e0281f); }
+#tornname { position: absolute; left: 140px; top: 380px; }
+.full.torn #tornname { top: 300px; }
+/* (rotate and oblique, not transform: the entrance's fade set transform every frame and the slant was lost, meta-S7) */
+.full.torn #en { position: relative; left: 40px; top: 6px;   /* (below the name, not over it: the cards measured by geometry, talent-S7) */  font-style: oblique 14deg; font-size: 74px; color: #ff3b2e; -webkit-text-stroke: 1.5px rgba(40,0,0,.55); rotate: -5deg; transform-origin: 0 50%; text-shadow: 0 2px 0 rgba(255,255,255,.35), 0 0 14px rgba(0,0,0,.6), 0 0 6px rgba(0,0,0,.6), 0 0 2px rgba(0,0,0,.85); white-space: nowrap; }   /* (a darker rim: on a light photograph the red signature measured contrast 69, who S10) */
+#say { position: absolute; left: 140px; top: 330px; width: 1000px; height: 600px; }
+#say .ln { position: absolute; left: 0; white-space: nowrap; }
+#say .t { font-size: 104px; color: #f4f2ee; text-shadow: 0 8px 30px rgba(0,0,0,.6); }
+#say .t b { font-weight: normal; font-size: 1.5em; color: #fff; }
+.card #say .t { color: #1a1a1a; text-shadow: none; } .card #say .t b { color: #d42a24; }
+.card #say { left: 990px; top: 300px; width: 860px; }
+</style></head>
+<body>
+<!-- data-deco: lettering as pattern, not words to read (framecheck: kept faint, not judged as text) -->
+<div id="ghost" class="g" data-deco></div><div id="ghost2" class="g" data-deco style="position:absolute;left:-40px;right:-40px;font-family:'Harmony Cond';font-size:420px;color:rgba(206,22,26,.5);white-space:nowrap;line-height:1"></div>
+<div id="photobg" style="position:absolute;inset:-6%;background-size:cover;background-position:center;filter:blur(34px) brightness(.42) saturate(.8);display:none"></div><div id="photo"></div><div id="shade" style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.62),rgba(0,0,0,.1) 55%,transparent);display:none"></div>
+<div id="block"><div id="name" class="song fringe"></div><div id="en"></div><div id="role"></div><div id="bio"></div></div><div id="tornname"></div><div id="say"></div>
+<div id="vig"></div><div id="sub"></div>
+<script>window.__spec = window.__spec || {};</script>
+<script src="common.js"></script>
+<script>
+// 人物资料卡 (reference P12, P30, P31, P46, P47): a real portrait and the person's name and role, set by code; then, in
+// the same shot, what the person said or did (P47: 安德森身份与判断, the judgment in big white type; P46: the phrase,
+// then the figure enlarged): `say` groups come on their words, the name block steps back and up as the first arrives.
+//   full  the photograph fills the frame (P12 / P31): the name rises big at the left, a torn paper strip when `torn`,
+//         the Latin name and the role line follow (P31: 伊尔亚·苏茨克维 / Ilya Sutskever / OpenAI前首席科学家)
+//   card  grey paper (P30): the photograph on the left, the name and role on the right, the Latin name huge and faint
+//         in red across the paper behind
+const S = M.S, $ = M.$;
+S.torn = false;   // (no torn strips any more: user 2026-10-25 之后也不要这种纸条撕纸设计什么的了; the plan check refuses it)
+document.body.className = S.layout || 'full';
+if (S.layout === 'card') M.paper(document.body); else $('#shade').style.display = 'block';
+$('#photo').style.backgroundImage = `url("${S.photo}")`;
+// a portrait-shaped photograph in the full layout: shown at the frame's height on the right, the rest of the frame its
+// own picture blurred and dimmed (cover-filling a landscape frame with it blew the face up across the middle, and the
+// name had nowhere to go: meta-S7, Andreessen, found by the module bench; the reference sets him at the side with the
+// room dark beside him)
+if ((S.layout || 'full') === 'full' && S.photoSize && S.photoSize[1] > S.photoSize[0] * .9) {
+  const w = Math.round(1080 * 1.06 * S.photoSize[0] / S.photoSize[1]);
+  Object.assign($('#photo').style, { inset: 'auto', right: '-2%', top: '-3%', width: `${w}px`, height: '106%', webkitMaskImage: 'linear-gradient(90deg, transparent 0%, #000 22%)' });
+  Object.assign($('#photobg').style, { display: 'block', backgroundImage: `url("${S.photo}")` }); }
+$('#ghost').textContent = (S.en || '').toUpperCase(); $('#ghost2').textContent = (S.en || '').toUpperCase();
+// (ghost: the huge name's colour, one per person on cards in a row: the reference's red Pan, blue-violet Guo)
+if (S.ghost) for (const g of ['#ghost', '#ghost2']) $(g).style.color = S.ghost;
+// torn, full (the reference's P12 / meta R08): the name large on its torn strip, the English name in red slanted across
+// the strip's lower edge as if written on it, the role a small white label under (ours was a small strip, the English
+// a plain line, the role grey text: meta-S7 review)
+if (S.torn) { $('#tornname').innerHTML = M.torn(S.name, { size: S.layout === 'card' ? 96 : 132 }); /* no quotes round a name: who-S10 review */ $('#name').style.display = 'none'; $('#block').style.top = S.layout === 'card' ? '520px' : '545px'; if (S.layout !== 'card') document.body.classList.add('torn'); }
+else $('#name').innerHTML = `<span class="cond">${M.chars(S.name)}</span>`;
+$('#en').textContent = S.en || ''; $('#role').textContent = S.role || ''; $('#bio').textContent = S.bio || '';
+// the role's strip is a paper prop (labels.mjs), not a clipped rectangle; its shadow follows the paper's edge
+if (S.torn && S.layout !== 'card') { const pl = M.plate(0, '#f1efea'); if (pl) { const r = $('#role'); r.style.cssText += pl + 'clip-path:none;box-shadow:none;filter:drop-shadow(0 10px 14px rgba(0,0,0,.35));padding:10px 34px 14px;'; } }
+const big = (text, words) => { let h = M.esc(text); for (const w of words || []) h = h.replace(M.esc(w), `<b>${M.esc(w)}</b>`); return h; };
+const SAY = (S.say || []).map((l) => { const el = document.createElement('div'); el.className = 'ln'; el.innerHTML = `<span class="t song cond">${big(l.text, l.big)}</span>`; $('#say').appendChild(el); return { el, l }; });
+// a group wider than its column is set smaller to fit (meta-S5: 斯普特尼克时刻 ran off the card's right edge)
+const fitSay = () => { const room = (S.layout === 'card' ? 1880 - 990 : 1100); for (const g of SAY) { const t = g.el.querySelector('.t'); const w = t.getBoundingClientRect().width; if (w > room) t.style.fontSize = `${104 * room / w}px`; } };
+// the name, the Latin name, the role and the lines under it stacked by their ink, not their boxes (talent-S8: the
+// serif name's glyphs reached down onto Ilya Sutskever; the checks measure the words, and so does this)
+const stack = () => { if (S.layout === 'card') return; const els = ['#name', '#en', '#role', '#bio'].map((q) => $(q)).filter((e) => e && e.textContent.trim() && getComputedStyle(e).display !== 'none'), saved = els.map((e) => e.style.transform), r = document.createRange();
+  els.forEach((e) => { e.style.transform = 'none'; });
+  for (let i = 1; i < els.length; i++) { r.selectNodeContents(els[i - 1]); const a = r.getBoundingClientRect(); r.selectNodeContents(els[i]); const b = r.getBoundingClientRect(), d = a.bottom + 6 - b.top; if (d > 0) els[i].style.marginTop = `${parseFloat(getComputedStyle(els[i]).marginTop) + d}px`; }
+  els.forEach((e, i) => { e.style.transform = saved[i]; }); };
+// the name block off the face: on the photograph's other side when it would cover it (the module bench: a wider face
+// set 馬克·安德森 over Andreessen's face; the reference lays the name on the empty half)
+const offFace = () => { if (S.layout === 'card' || !S.faceN) return; const f = M.faceOn($('#photo')); const els = ['#block', '#tornname'].map((q) => $(q)).filter((e) => e.textContent.trim());
+  const rs = els.map((e) => M.extent(e)).filter(Boolean); if (!f || !rs.some((r) => M.hits(r, f, 40))) return;
+  const x0 = Math.min(...rs.map((r) => r.x)), y0 = Math.min(...rs.map((r) => r.y)), w = Math.max(...rs.map((r) => r.x + r.w)) - x0, h = Math.max(...rs.map((r) => r.y + r.h)) - y0;
+  // where the block keeps most of its size: beside the face on the left or the right, or under it (a close-up fills the
+  // middle: meta-S7, the bench); x, y where the block's top left goes, k its scale
+  const left = { x: 140, y: y0, k: Math.min(1, (f.x - 40 - 140) / w) }, right = { k: Math.min(1, (1920 - 140 - (f.x + f.w + 40)) / w) }, under = { x: 140, y: f.y + f.h + 40, k: Math.min(1, (900 - (f.y + f.h + 40)) / h, (1920 - 280) / w) };
+  right.x = 1920 - 140 - w * right.k; right.y = y0;
+  const best = [left, right, under].sort((a, b) => b.k - a.k)[0]; if (best.k < .45) return;
+  if (best === right) document.body.classList.add('flip');
+  // (zoom scales the element's own place too: its offsets are set divided by it)
+  els.forEach((e) => { const r = M.extent(e); if (!r) return; const dx = (r.x - x0) * best.k, dy = (r.y - y0) * best.k, cs = getComputedStyle(e), ox = r.x - parseFloat(cs.left), oy = r.y - parseFloat(cs.top);
+    e.style.zoom = best.k; e.style.left = `${(best.x + dx - ox) / best.k}px`; e.style.top = `${(best.y + dy - oy) / best.k}px`; }); };
+// the card's words centred on the photograph's middle (ending-S3/S4: the block sat at the top of the card)
+const centreCard = () => { if (S.layout !== 'card' || S.torn) return; const b = $('#block'), ph = $('#photo'); const mid = ph.offsetTop + ph.offsetHeight / 2; b.style.top = `${Math.max(90, Math.min(670 - b.offsetHeight, mid - b.offsetHeight / 2))}px`; };   // (above the huge name at the foot: a role on its own line pushed the lines down onto DAYA, talent-S7)
+// a full photograph whose face is small (a stage seen whole, a chair and the knees: talent-S10, meta-S8) is brought in
+// on the face, as the reference's close-ups: the face about 400 px high on the right third, the photo still covering
+// the frame (the camera would have taken the name in with it)
+const closeUp = () => { if ((S.layout || 'full') !== 'full' || !S.faceN || !S.photoSize || S.photoSize[1] > S.photoSize[0] * .9) return;
+  const el = $('#photo'), f = M.faceOn(el); if (!f || f.h >= 300) return;
+  const r = el.getBoundingClientRect(), k = Math.min(2.2, 400 / f.h), W = r.width * k, H = r.height * k, cx = f.x + f.w / 2 - r.left, cy = f.y + f.h / 2 - r.top;
+  const left = Math.min(0, Math.max(1920 - W, 1290 - cx * k)), top = Math.min(0, Math.max(1080 - H, 450 - cy * k));
+  Object.assign(el.style, { inset: 'auto', left: `${left}px`, top: `${top}px`, width: `${W}px`, height: `${H}px` }); };
+// a card whose name leaves the role too little room beside it takes the role onto its own line, and a name wider than
+// the card is set smaller to fit (the module bench: a ten-character role beside a long name ran off the frame)
+const cardLine = () => { if (S.layout !== 'card') return; const nm = $('#name'), rl = $('#role'), w = nm.getBoundingClientRect().width;
+  if (w > 880) nm.style.fontSize = `${parseFloat(getComputedStyle(nm).fontSize) * 880 / w}px`;
+  rl.style.whiteSpace = 'nowrap';   /* (never a single character left on a second line: 者 alone, talent-S7) */
+  if (rl.textContent.trim() && nm.getBoundingClientRect().width + 26 + rl.scrollWidth > 880) { Object.assign(rl.style, { gridColumn: '1 / 3', gridRow: '2', margin: '26px 0 0' }); $('#en').style.gridRow = '3'; $('#bio').style.gridRow = '4'; } };
+// the huge ghost name keeps off the card's words (the frame checks read a look word strong enough to see as type:
+// ending-S3's red ZIZHENG ran under 潘梓正): the top row rises until its letters' ink clears the words, the bottom row
+// drops; each may run off the frame, as lettering laid as a pattern does
+const ghostClear = () => { if (S.layout !== 'card') return; const ws = ['#block', '#tornname', '#say'].map((q) => $(q)).filter((e) => e && e.textContent.trim() && getComputedStyle(e).display !== 'none').map((e) => M.extent(e)).filter(Boolean); if (!ws.length) return;
+  const top = Math.min(...ws.map((r) => r.y)), bot = Math.max(...ws.map((r) => r.y + r.h)), cx = document.createElement('canvas').getContext('2d'), gap = 14;
+  const ink = (g) => { const cs = getComputedStyle(g), r = g.getBoundingClientRect(); cx.font = `${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`; const m = cx.measureText(g.textContent || 'M'), fa = m.fontBoundingBoxAscent, fd = m.fontBoundingBoxDescent, k = r.height / (fa + fd || 1); return { y0: r.top + (fa - m.actualBoundingBoxAscent) * k, y1: r.top + (fa + m.actualBoundingBoxDescent) * k }; };
+  const g1 = $('#ghost'), g2 = $('#ghost2');
+  if (g1.textContent.trim()) { const d = ink(g1).y1 - (top - gap); if (d > 0) g1.style.top = `${parseFloat(getComputedStyle(g1).top) - d}px`; }
+  if (g2.textContent.trim()) { const d = (bot + gap) - ink(g2).y0; if (d > 0) g2.style.top = `${parseFloat(getComputedStyle(g2).top) + d}px`; } };
+M.settle(() => { closeUp(); cardLine(); fitSay(); stack(); centreCard(); offFace(); ghostClear(); });
+window.render = (t) => {
+  M.subs(t);
+  const a = M.seg(t, S.at, S.end), nameAt = S.nameAt ?? S.at + .25;
+  // the statement: each group rises on its words; the older ones move up and dim; the name block steps back
+  const shown = SAY.filter((g) => t >= g.l.at), first = SAY[0]?.l.at ?? Infinity, back = M.E.inout(M.seg(t, first - .2, first + .3));
+  SAY.forEach((g) => { if (t < g.l.at) { g.el.style.opacity = 0; return; } const k = M.E.out(M.seg(t, g.l.at, g.l.at + .4)), age = shown.length - 1 - shown.indexOf(g);
+    // below the name block (which has stepped up): the newest group low, the one before it dimmed above, older ones gone
+    g.el.style.top = `${330 - age * 150 + (1 - k) * 40}px`; g.el.style.opacity = age === 0 ? k : age === 1 ? .28 : 0; g.el.style.filter = `blur(${(1 - k) * 10 + (age ? 2 : 0)}px)`; });
+  for (const q of ['#block', '#tornname']) { $(q).style.opacity = 1 - .45 * back; $(q).style.translate = `0 ${-230 * back}px`; $(q).style.scale = `${1 - .4 * back}`; $(q).style.transformOrigin = '0 0'; }
+  $('#photo').style.transform = `scale(${1.02 + .06 * a})`; $('#photobg').style.transform = `scale(${1.04 + .04 * a})`;
+  for (const g of ['#ghost', '#ghost2']) $(g).style.transform = `translateX(${(g === '#ghost' ? -1 : 1) * 160 * a}px)`;
+  if (S.torn) { const k = M.E.back(M.seg(t, nameAt, nameAt + .3)); const el = $('#tornname'); el.style.opacity = t >= nameAt ? 1 : 0; el.style.transform = `translateX(${(1 - k) * -80}px)`; }
+  else M.reveal($('#name'), t, nameAt, { step: .06 });
+  // reveal: the name, its English line and the role come one after another over that many seconds, each landing on
+  // its beat (the reference's who R09 builds over 2.5 s; ours showed all three within 0.2 s)
+  // (in a short shot the card is whole by 45 % of it: Guo Daya's 1.6 s card showed its lines only in the last 0.2 s, talent-S7)
+  const late = S.at + (S.end - S.at) * .45, rv = S.reveal, enAt = Math.min(late - .15, rv ? nameAt + rv * .45 : nameAt + .35), roleAt = Math.min(late - .25, S.roleAt ?? (rv ? nameAt + rv : nameAt + .6)), fd = rv ? .18 : .35;
+  M.fade($('#en'), t, enAt, fd, rv ? -60 : -20);
+  M.fade($('#role'), t, roleAt, fd, rv ? -60 : -20);
+  M.fade($('#bio'), t, Math.min(roleAt + .25, late), .3, -20);   // (the lines on who they are last, after the role: talent-S7, they stood there before the name came)
+};
+// the photograph in focus on the face, soft toward the edges (camera.js lens): a full-frame portrait sharp edge to edge
+// read as a picture pasted on a slide (hupo-auto2 talent-S10, meta-S7: no soft layer where the reference has one)
+if (S.layout !== 'card') { $('#photo').dataset.lens = ''; window.__lensFocus = () => { const f = M.faceOn($('#photo')); return f ? { x: f.x + f.w / 2, y: f.y + f.h * .55 } : null; }; }
+// the name takes the reference's treatment at its moment (shotplan withRefTreat: metal, glow ...); the huge name behind the
+// person leans and glows in red and cyan, as the reference's does (talent S6/S7 review: ours stood upright and clean)
+if (S.face && M.FACE[S.face]) $('#name').style.fontFamily = `'${M.FACE[S.face]}', 'House Kokka'`;
+if (S.treat) M.treat($('#name'), S.treat);
+for (const g of [$('#ghost'), $('#ghost2')]) if (g && g.textContent.trim()) M.treat(g, ['slant', 'glow']);
+M.ready([S.photo]);
+</script>
+</body></html>

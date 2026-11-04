@@ -1,0 +1,54 @@
+{
+ "type": "object",
+ "additionalProperties": false,
+ "required": [
+  "shots"
+ ],
+ "properties": {
+  "shots": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "shotId",
+     "score",
+     "issues"
+    ],
+    "properties": {
+     "shotId": {
+      "type": "string"
+     },
+     "score": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 5
+     },
+     "issues": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "slot",
+        "problem",
+        "fix"
+       ],
+       "properties": {
+        "slot": {
+         "type": "string"
+        },
+        "problem": {
+         "type": "string"
+        },
+        "fix": {
+         "type": "string"
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}

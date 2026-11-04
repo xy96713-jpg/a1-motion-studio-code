@@ -1,0 +1,58 @@
+{
+ "contract": "A1MediaPolicy/v1",
+ "updated": "2026-11-04",
+ "generatedImage": "reference-only",
+ "finalShotBuilds": [
+  "3d",
+  "real",
+  "procedural",
+  "graphic",
+  "ai-video"
+ ],
+ "aiVideo": {
+  "contract": "A1AiVideoFallback/v1",
+  "allowedForRoles": [
+   "main-spine",
+   "scale-motif",
+   "material-motif",
+   "field-scale"
+  ],
+  "forbiddenForRoles": [
+   "optional-evidence",
+   "evidence",
+   "data",
+   "type"
+  ],
+  "maxDurationSec": 5,
+  "textless": true,
+  "requiresUserApproval": true,
+  "note": "AI video is a fallback for art/mood shots whose reproduction is too hard; never for evidence, real people, data or readable type. A generated video is not a real asset."
+ },
+ "forbiddenFinalPaths": [
+  "/gen/",
+  "generated/",
+  "b01-art/",
+  "b01-key-",
+  "b01-design-v",
+  "b01-style-"
+ ],
+ "note": "Generated stills are lookdev/reference only. A final frame/video must be built from 3D, real footage, procedural graphics, or live type — never a generated still used as the shot.",
+ "generatedAsset": {
+  "approvedByUser": true,
+  "approvedAt": "2026-11-04",
+  "allowedFor": [
+   "texture",
+   "normal",
+   "roughness",
+   "hero-reference",
+   "hero-3d-asset"
+  ],
+  "notAllowedAs": "full-frame final shot",
+  "requires": [
+   "asset QA",
+   "final built by 3d/real/procedural/graphic",
+   "user can reject any asset"
+  ],
+  "note": "User 2026-11-04: assets can be generated, including various normal maps; final frame still cannot be a generated still."
+ }
+}

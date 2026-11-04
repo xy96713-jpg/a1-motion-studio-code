@@ -1,0 +1,32 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import {sha} from '../apps/studio-next/src/lib/recipe-board/agenttask.mjs';
+import {planHash} from '../apps/studio-next/src/lib/recipe-board/brief.mjs';
+import {applyStoryboard, storyboardState, needsRewrite} from '../apps/studio-next/src/lib/recipe-board/storyboard.mjs';
+import {greyboxAdvancePinErrors} from '../apps/studio-next/src/lib/recipe-board/gatestate.mjs';
+const root=fs.mkdtempSync(path.join(process.env.TMPDIR,'storyboard-pending-'));
+const cfg={dataDir:path.join(root,'data'),repoRoot:process.cwd(),sourceRoot:process.cwd()}, id='fixture', p=path.join(cfg.dataDir,'projects',id);
+const put=(f,v)=>{fs.mkdirSync(path.dirname(f),{recursive:true});fs.writeFileSync(f,JSON.stringify(v,null,2)+'\n');};
+try {
+ for(const n of ['recipes','routing','themes','worlds']) fs.cpSync(path.resolve('work/recipe-board-v1',n),path.join(cfg.dataDir,n),{recursive:true});
+ const project={id,process:'six-stage',gateSet:'design',design:{approved:true,by:'user'}}; put(path.join(p,'project.json'),project);
+ const evidence=[{kind:'person',what:'A',form:'photo'},{kind:'event',what:'B',form:'video'}];
+ const scenes=[{card:'footage-plate',at:0,visual:'A',evidence:0},{card:'footage-plate',at:2,visual:'B',evidence:1}];
+ const d={beat:'B01',card:'footage-plate',seconds:4,hero:{action:'hold',at:0},camera:{move:'locked',amount:0},evidence,scenes};
+ const plan={beats:[{id:'B01',text:'test',route:{recipe:d.card}}]}; put(path.join(p,'plan.json'),plan);
+ const brief={planHash:planHash(plan),answerHash:'brief'};put(path.join(p,'brief.json'),brief);
+ const rules=['work/recipe-board-v1/prompts/storyboard.md','work/recipe-board-v1/routing/storyboard.schema.json','work/recipe-board-v1/routing/rhythm-by-role.json','work/recipe-board-v1/prompts/storyboard-semantic.md','work/recipe-board-v1/routing/storyboard.v3.schema.json','work/recipe-board-v1/routing/semantic-acts.json'];
+ const inputHash=sha(planHash(plan)+brief.answerHash+sha(rules.map(f=>fs.readFileSync(f,'utf8')).join('\n')));
+ put(path.join(p,'shots/B01.json'),{shotId:'B01',recipe:d.card,scenes:[{slots:{}},{slots:{}}],design:{evidence}});
+ put(path.join(p,'storyboard.json'),{inputHash,shots:[d]});
+ const before=fs.readFileSync(path.join(p,'plan.json'),'utf8');
+ assert.deepEqual(applyStoryboard(cfg,id).redesign,['B01']);
+ assert.equal(fs.readFileSync(path.join(p,'plan.json'),'utf8'),before);
+ assert.equal(storyboardState(cfg,id).state,'current', 'accepted storyboard remains current independently of shot application');
+ assert.doesNotMatch((await greyboxAdvancePinErrors(cfg,id)).join('\n'),/storyboard is pending/);
+ assert.deepEqual(JSON.parse(fs.readFileSync(path.join(p,'project.json'))),project);
+ assert.equal(needsRewrite({recipe:'footage-plate'}, {card:'footage-plate'}),false);
+ assert.equal(needsRewrite({recipe:'footage-plate',design:{evidence:[evidence[0]]}}, {card:'footage-plate',evidence:[evidence[0]]}),false);
+ console.log('pending greybox gate and legacy compatibility passed');
+} finally {fs.rmSync(root,{recursive:true,force:true});}

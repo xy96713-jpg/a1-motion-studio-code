@@ -1,0 +1,134 @@
+{
+ "contract": "A1RecipeBoardScorecard/v1",
+ "about": "The one list a shot is held to, by the director when planning, by the code before rendering and by the blind reviewer (user 2026-10-23: 怎么反复有问题 能不能做到没问题最优呢). Every item is measured by code where it can be (by: code, with the check that measures it) and judged by the reviewer only where it cannot (by: review). The reference itself passes every item at the same moment: an item the reference does not meet is not asked of us. A reviewer's fix names the item it fails (its id) and says how; no fix without an item. Kinds: the picture review's (layers.mjs PROBLEMS). Counts: the blind reviews' notes on hupo-auto2 that fall under the item before it was measured (133 shots, 16.8 versions each).",
+ "items": [
+  {
+   "id": "full",
+   "kind": "unlike-reference",
+   "by": "code",
+   "check": "framecheck fills: at least half of what the reference carries at the moment",
+   "ask": "画面一样满：和对标同一时刻比，有内容的面积不少于对标的一半",
+   "notes": 146
+  },
+  {
+   "id": "balance",
+   "kind": "unlike-reference",
+   "by": "code",
+   "check": "framecheck balanceProblem: the lower half above the subtitle band carries its part where the reference's does",
+   "ask": "上下不头重脚轻：对标下半有东西时，我们的下半不空",
+   "notes": 146
+  },
+  {
+   "id": "opening",
+   "kind": "empty",
+   "by": "code",
+   "check": "framecheck firstFrameProblem: the first key frame carries a third of the reference's",
+   "ask": "第一张就有焦点：开头不是一行小字或空底",
+   "notes": 31
+  },
+  {
+   "id": "progress",
+   "kind": "unlike-reference",
+   "by": "code",
+   "check": "framecheck progressProblem at the sheet; breakdown compareBreakdown on the white model",
+   "ask": "三张看得出推进：对标在变的地方，我们也有东西一样样出来或镜头在走",
+   "notes": 75
+  },
+  {
+   "id": "edges",
+   "kind": "off-frame",
+   "by": "code",
+   "check": "framecheck: nothing cut by the frame at rest, every quarter second; 4 % margin",
+   "ask": "不出画：字和主体不被画框切，四边留边",
+   "notes": 132
+  },
+  {
+   "id": "overlap",
+   "kind": "overlap",
+   "by": "code",
+   "check": "framecheck: words over words (on one line 4 %), small type over a face, words hidden under a picture",
+   "ask": "不叠：字不压字、小字不压脸、字不被图盖住（大字压脸、压在产品后面可以）",
+   "notes": 142
+  },
+  {
+   "id": "readable",
+   "kind": "unreadable",
+   "by": "code",
+   "check": "framecheck: CJK 34 px, Latin 20 px, contrast 70, stand-off 60",
+   "ask": "读得清：字够大、够亮、和底分得开",
+   "notes": 43
+  },
+  {
+   "id": "band",
+   "kind": "overlap",
+   "by": "code",
+   "check": "framecheck: nothing below 935 px",
+   "ask": "字幕带（935 px 以下）空着",
+   "notes": null
+  },
+  {
+   "id": "marks",
+   "kind": "bad-mark",
+   "by": "code",
+   "check": "markErrors and phraseErrors: bars on whole words, at the line's height, on one line per cut",
+   "ask": "划线贴字：从词头到词尾、跟字一样高、不碰邻字",
+   "notes": 85
+  },
+  {
+   "id": "source",
+   "kind": "wrong-material",
+   "by": "code",
+   "check": "notSourceErrors, pageClaimError, STOCK_MARK: a formal source, the claim on the page, the story's dates, no watermark",
+   "ask": "来源正式：报道本身或官方，页面上就有口播那句话，时间对得上，没有图库水印",
+   "notes": 60
+  },
+  {
+   "id": "subject",
+   "kind": "wrong-material",
+   "by": "review",
+   "check": "likeness.py showsErrors on the white model helps",
+   "ask": "画面是这一拍说的人、物、事（不是同类别的别的东西）",
+   "notes": null
+  },
+  {
+   "id": "focus",
+   "kind": "weak-design",
+   "by": "review",
+   "check": null,
+   "ask": "一个焦点、三档主次：最大的那样东西是主角，其余小一档淡一档",
+   "notes": 130
+  },
+  {
+   "id": "depth",
+   "kind": "weak-design",
+   "by": "review",
+   "check": "camera.js lens (from the reference's own depth, modules.mjs refLens); film.mjs flat shots",
+   "ask": "有层次不像幻灯片：底、主体、字分得开，有质感（虚化、光、颗粒），不是平涂色块排字",
+   "notes": 130
+  },
+  {
+   "id": "type",
+   "kind": "weak-design",
+   "by": "review",
+   "check": "shotplan withRefDesign sets the reference's treatment from the card (metal, extrude, glow); modules.mjs TREATS",
+   "ask": "字有做工：对标这一刻的大字有处理（金属/做旧、立体厚度、斜体压色条、发光色散、粗黑体）时，我们的大字也有同类处理，不是一种干净宋体规规矩矩居中",
+   "notes": null
+  },
+  {
+   "id": "layout",
+   "kind": "weak-design",
+   "by": "review",
+   "check": "depth.py flat shots in the film report; frame tilt/depth; passageCarry header/carry",
+   "ask": "版面有空间：对标是斜放的纸、互相压着的卡片、跨镜头留着的标签或叠化过去的标题时，我们不是一张正对镜头的平图、每镜各管各",
+   "notes": null
+  },
+  {
+   "id": "grade",
+   "kind": "unlike-reference",
+   "by": "review",
+   "check": null,
+   "ask": "同一档：上面各项都过了，整体讲究程度和对标同一时刻一样；版式、手法、配色不同不算",
+   "notes": 291
+  }
+ ]
+}

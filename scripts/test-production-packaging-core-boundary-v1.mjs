@@ -1,0 +1,22 @@
+import assert from 'node:assert/strict';
+import {productionBatchReviewScopeV1,packagingCoreCandidateBoundaryV1,bindApproximateFrameReviewV1} from '../apps/studio-next/src/lib/a1-production-batch-registration-v1.mjs';
+import {researchStaticCoreOnlyV1} from '../apps/studio-next/src/lib/a1-research-static-scope-v1.mjs';
+
+const plan={activeWorkScope:{referencePackagingOnly:true}},shot={fullFrameRequests:[{state:'HOLD',transparentBackground:true}]};
+assert.equal(productionBatchReviewScopeV1(plan,shot,'HOLD'),'PACKAGING_CORE');
+assert.equal(productionBatchReviewScopeV1({},shot,'HOLD'),'WHOLE_FRAME');
+assert.equal(productionBatchReviewScopeV1(plan,shot,'ENTRY'),'WHOLE_FRAME');
+const binding={state:'HOLD',reviewScope:'PACKAGING_CORE',visualDirectionRequired:true};
+const pixel={state:'HOLD',copyCorrect:true,actorAndDataCorrect:true,readable:true,compositionAcceptable:true,meaningfulContent:true,visualDirectionCorrect:true,findings:[],styleNotes:[]};
+const item=bindApproximateFrameReviewV1(binding,pixel,{id:'fixture',inputSha256:'a'.repeat(64)});
+assert.equal(item.status,'PASS');assert.match(item.label,/底片仍待接入/);
+const boundary=packagingCoreCandidateBoundaryV1({plan,shot,state:'HOLD',item});
+assert.equal(boundary.wholeAnchorPASS,false);assert.equal(boundary.coreVisualPASS,true);
+assert.equal(researchStaticCoreOnlyV1(boundary,{}),true);
+assert.deepEqual(boundary.missingForWhole,['SEPARATE_SOURCE_INTEGRATION_REQUIRED']);
+assert.throws(()=>packagingCoreCandidateBoundaryV1({plan,shot,state:'HOLD',item:{status:'PASS'}}),/CORE_REVIEW_REQUIRED/);
+assert.throws(()=>packagingCoreCandidateBoundaryV1({plan:{},shot,state:'HOLD',item}),/CORE_SCOPE_CHANGED/);
+const failed=packagingCoreCandidateBoundaryV1({plan,shot,state:'HOLD',item:{...item,status:'VISUAL_FAIL'}});
+assert.equal(failed.coreVisualPASS,false);assert.equal(researchStaticCoreOnlyV1(failed,{}),true);
+assert.deepEqual(packagingCoreCandidateBoundaryV1({plan:{},shot,state:'HOLD',item:{status:'PASS'}}),{});
+console.log(JSON.stringify({status:'PASS',checks:['scope-bound-to-transparent-current-request','whole-frame-legacy-unchanged','review-required','scope-drift-rejected','core-pass-and-fail-never-whole-anchor']}));

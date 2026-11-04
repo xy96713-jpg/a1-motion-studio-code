@@ -1,0 +1,16 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+const wp='apps/studio-next/public/generated/system-line/editorial-asset-workbench-v1/workspace.json';
+const paths=[wp,'.codex-artifacts/system-progress-system-line/current-phase.json','.codex-artifacts/system-progress-system-line/system-line-current-authority-v2/audit-report.json'];
+const snapshot=()=>Object.fromEntries(paths.map(p=>[p,createHash('sha256').update(fs.readFileSync(p)).digest('hex')]));
+const before=snapshot();const w=JSON.parse(fs.readFileSync(wp));
+const url='http://127.0.0.1:4311/api/system-line/editorial-asset-workbench/partition-dry-run';
+const post=async body=>{const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body});return {status:r.status,body:await r.json()};};
+const good=await post(JSON.stringify({action:'dry-run-package-layer-partition',shotId:'ED-17',workspaceSha256:w.workspaceSha256}));
+assert.equal(good.status,200);assert.equal(good.body.dryRun.admission.allowed,false);assert.equal(good.body.dryRun.semanticIsolationApproved,false);
+const malformed=await post('{"secret":"PRIVATE');assert.equal(malformed.status,400);assert.equal(malformed.body.error,'partition-request-json-invalid');
+const oversized=await post(' '.repeat(4097));assert.equal(oversized.status,413);assert.equal(oversized.body.error,'partition-body-too-large');
+assert.deepEqual(snapshot(),before);
+const report={status:'PASS',endpoint:url,httpStatus:good.status,partitionPlanSha256:good.body.dryRun.partitionPlan.partitionPlanSha256,malformed,oversized,authorityFilesUnchanged:true,before,after:snapshot()};
+fs.writeFileSync('work/partition-api-review/api-budget-http.json',JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report));

@@ -1,0 +1,106 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>chat</title>
+<style>
+html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: #e8e8e6; }
+#cam { position: absolute; inset: 0; transform-origin: 0 0; }
+#panel { position: absolute; left: 160px; top: 170px; width: 1610px; height: 900px; border-radius: 34px; background: linear-gradient(#fbfbfa, #eeeeec);
+  border: 3px solid #3a3a3a; border-top-width: 7px; box-shadow: inset 0 18px 40px rgba(0,0,0,.18), inset 0 -10px 30px rgba(0,0,0,.06), 0 26px 50px rgba(0,0,0,.35); }
+#title { position: absolute; left: 0; right: 0; top: 60px; text-align: center; font-family: "SourceHanSans Regular"; font-size: 70px; color: #3a3a3a; transform: scaleX(.86); white-space: nowrap; }
+.msg { position: absolute; left: 90px; display: flex; align-items: center; gap: 18px; transform-origin: 0 50%; }
+.av { width: 150px; height: 150px; border-radius: 50%; background-size: cover; background-position: center; border: 7px solid #fff; box-shadow: 0 8px 18px rgba(0,0,0,.35); flex: none; position: relative; z-index: 2; }
+.bub { position: relative; background: #2b2b2b; color: #fff; border-radius: 10px; padding: 14px 26px 16px; font-family: "SourceHanSans Regular"; font-size: 58px; white-space: nowrap; box-shadow: 0 6px 10px rgba(0,0,0,.25); }
+.bub span.t { display: inline-block; transform: scaleX(.88); transform-origin: 0 50%; }
+.bub b { font-weight: normal; color: #f0261c; }
+.shadow { position: absolute; left: 60px; top: 70%; height: 140px; background: linear-gradient(160deg, rgba(0,0,0,.22), rgba(0,0,0,0) 70%); transform: skewX(-38deg); transform-origin: 0 0; filter: blur(6px); z-index: -1; }
+/* the member names sit at the panel's top right, by the title: the lower right is the user's subtitle band (framecheck) */
+.members { position: absolute; right: 90px; top: 40px; display: flex; align-items: center; gap: 10px; transform-origin: 100% 0; }
+.members .who { width: 96px; height: 96px; margin-left: -26px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #444, #161616); border: 4px solid #e9e9e7; color: #fff; font-family: "SourceHanSans Regular"; font-size: 34px; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 12px rgba(0,0,0,.35); }
+.members .badge { width: 52px; height: 52px; border-radius: 10px; background: #2b2b2b; color: #fff; font-size: 30px; display: flex; align-items: center; justify-content: center; }
+#vig { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse 75% 70% at 50% 50%, transparent 45%, rgba(0,0,0,.42)); }
+#grid { position: absolute; inset: 0; pointer-events: none; background-image: linear-gradient(rgba(0,0,0,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,.05) 1px, transparent 1px); background-size: 7px 7px; }
+#sub { position: absolute; left: 0; right: 0; top: 930px; text-align: center; font-family: 'SourceHanSans Regular', 'PingFang SC'; font-size: 58px; color: #fff; text-shadow: 0 0 6px rgba(0,0,0,.55), 0 2px 3px rgba(0,0,0,.6); transform: scaleX(.86); z-index: 50; }
+</style></head>
+<body data-ui><!-- data-ui: the page draws a real app's screen (a chat thread): its bubbles and badges are that screen's, not plates (cardgeometry flatPlateErrors) -->
+<div id="cam"><div id="panel"><div id="title"></div><div id="msgs"></div><div class="members" id="mem"></div></div></div>
+<div id="grid"></div><div id="vig"></div><div id="sub"></div>
+<script>
+// 聊天记录 (reference P14, P20; measured at 4 fps): a white chat stage with an inner shadow drops in from above, its
+// title types in, messages pop in from the left on their words (a real portrait in a white ring, a dark bubble, the key
+// words in red, a long soft shadow to the lower right), a cluster of member names lands at the lower right, then the
+// camera pushes in on the messages. One canvas, one continuous push; the look of the reference.
+const S = window.__spec, $ = (q) => document.querySelector(q);
+const E = { out: (k) => 1 - Math.pow(1 - k, 3), inout: (k) => (k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2), back: (k) => { const c = 1.5; return 1 + (c + 1) * Math.pow(k - 1, 3) + c * Math.pow(k - 1, 2); } };
+const seg = (t, a, b) => Math.min(1, Math.max(0, (t - a) / (b - a)));
+const esc = (x) => String(x).replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+const msgs = (S.messages || []).map((m, i) => {
+  const el = document.createElement('div'); el.className = 'msg'; el.style.top = `${230 + i * 210}px`;
+  const txt = m.mark && m.text.includes(m.mark) ? esc(m.text).replace(esc(m.mark), `<b>${esc(m.mark)}</b>`) : esc(m.text);
+  el.innerHTML = `<div class="av" style="background-image:url('${m.avatar}')"></div><div class="bub"><div class="shadow"></div><span class="t">${txt}</span></div>`;
+  $('#msgs').appendChild(el); return { el, m };
+});
+// no emoji default: the house fonts carry no emoji (house rules 2026-10-21); a badge is set only when the spec gives words
+if (S.members) $('#mem').innerHTML = (S.members.badge ? `<div class="badge" style="margin-right:30px">${esc(S.members.badge)}</div>` : '') + S.members.names.map((n) => `<div class="who">${esc(n)}</div>`).join('');
+document.fonts.ready.then(() => {
+  for (const g of msgs) { const b = g.el.querySelector('.bub'), sh = g.el.querySelector('.shadow'); sh.style.width = `${b.offsetWidth * .9}px`; }
+  window.__ready = true; render(S.at);
+});
+// the push: from the whole stage to the messages (their middle), eased over 1.2 s, then a slow drift on
+const pushTo = () => { const r = { x: 160 + 90, y: 170 + 230 - 20, w: 1200, h: msgs.length * 210 }; const z = S.push?.zoom || 1.55; return { z, x: 120 - r.x * z, y: 430 - (r.y + r.h / 2) * z + 120 }; };
+window.render = (t) => {
+  { const sb = (S.subs || []).find((x) => t >= x.at && t < x.end); $('#sub').textContent = sb ? sb.text : ''; }
+  // the stage drops in from above, eased, a small settle
+  const k = seg(t, S.at, S.at + 1.0);
+  $('#panel').style.transform = `translateY(${(1 - E.out(k)) * -620}px)`;   /* (fast at once, settling: the reference's stage moves from its first frame, ours 0.7 s in, who S13) */
+  // title: typed a character every 2 frames
+  const title = S.title || '', n = [...title].length, c = Math.round(seg(t, S.at + .15, S.at + .15 + n * .067) * n);
+  $('#title').textContent = [...title].slice(0, c).join('');
+  for (const g of msgs) {
+    const q = seg(t, g.m.at, g.m.at + .25);
+    g.el.style.opacity = q > 0 ? 1 : 0;
+    // (once in, each bubble drifts a few pixels, eased in from rest, each on its own phase: the reference's bubbles float
+    // and ours stood still, h800-S1)
+    const fl = q >= 1 ? 7 * E.inout(Math.min(1, Math.max(0, (t - g.m.at - .25) / .8))) * Math.sin((t - g.m.at) * 1.7 + g.el.offsetTop * .01) : 0;
+    g.el.style.transform = `translate(${(1 - E.out(q)) * -70}px, ${fl.toFixed(2)}px) scale(${.9 + .1 * E.back(q)})`;
+  }
+  if (S.members) { const q = seg(t, S.members.at, S.members.at + .2); $('#mem').style.opacity = q > 0 ? 1 : 0; $('#mem').style.transform = `scale(${.6 + .4 * E.back(q)})`; }
+  // camera: still while the stage builds, then one push in on the messages that keeps drifting
+  // camera (measured: the reference keeps moving 81% of the time and cuts to the close framing, it does not push):
+  // a slow push across the whole shot, and at push.at a cut to the messages, which keeps drifting
+  const all = seg(t, S.at, S.end), cut = S.push && t >= S.push.at;
+  // the reference drifts about 2.5x faster than this did (P20 measured: moving 80% of the time)
+  let z = 1 + .26 * all, x = -340 * all, y = -150 * all;
+  if (cut) { const p = pushTo(), d = seg(t, S.push.at, S.end); z = p.z * (1 + .22 * d); x = p.x - 380 * d; y = p.y - 90 * d; }
+  // the title and every message stay between the top edge and the subtitle band (below 900 px), whatever the push:
+  // the drift cut the title (h800-S1, 3 %) and the close framing put the second message half under the band; when they
+  // do not fit at this zoom, the zoom gives way (framecheck: off-frame, subtitle band)
+  // ... at the push the framing keeps the newest two messages, as the reference's close framing does (a third line
+  // made the whole column the frame and the push gave way to nothing, h800-S1 review 97); what then falls off the top
+  // (the title, older lines) fades out instead of showing half
+  const keep = cut && msgs.length > 2 ? msgs.at(-2).el : null, my = $('#panel').offsetTop + $('#msgs').offsetTop;
+  for (const el of [$('#title'), ...msgs.map((m) => m.el)]) el.style.visibility = '';
+  { const pt = $('#panel').offsetTop, top = keep ? my + keep.offsetTop - 40 : pt + $('#title').offsetTop, last = msgs.at(-1)?.el, bot = last ? pt + $('#msgs').offsetTop + last.offsetTop + last.offsetHeight : top + 200;
+    const fit = 876 / Math.max(1, bot - top); if (z > fit) z = fit;
+    y = Math.min(Math.max(y, 24 - top * z), 900 - bot * z);
+    // across: the message column (avatars to the widest bubble) whole and its middle a little left of the frame's
+    // middle, drifting from there (the push left the avatars off the left edge and the right half empty: h800-S1)
+    const ml = $('#panel').offsetLeft + $('#msgs').offsetLeft, L = ml + Math.min(...msgs.map((m) => m.el.offsetLeft)), R = ml + Math.max(...msgs.map((m) => m.el.offsetLeft + m.el.querySelector('.bub').offsetLeft + m.el.querySelector('.bub').offsetWidth), 0);
+    if (cut && msgs.length) { const w = (R - L) * z, d = seg(t, S.push.at, S.end); x = w < 1760 ? 880 - (L + R) / 2 * z - 60 * d : 80 - L * z; }
+    if (keep) { const vis = (top0) => top0 * z + y >= 0; if (!vis(pt + $('#title').offsetTop)) $('#title').style.visibility = 'hidden'; for (const m of msgs) if (!vis(my + m.el.offsetTop)) m.el.style.visibility = 'hidden'; }
+    else if (msgs.length) x = Math.min(x, 60 - L * z) === x ? x : Math.max(x, 60 - L * z);
+    // anything the framing would cut at an edge (the member names at the top right) fades out instead of showing half
+    { const r = $('#mem').getBoundingClientRect(), m = $('#mem'), ox = x + ($('#panel').offsetLeft + m.offsetLeft) * z, ow = m.offsetWidth * z;
+      if (ox < 0 || ox + ow > 1920) m.style.opacity = 0; } }
+  // push.msg: the cut goes to one message, close (its bubble across the frame), and reads along it by push.travel frame
+  // widths (the reference's who R13: 我要去做AGI at 280 px, travelling 0.34 of the frame; ours pushed on the column)
+  if (cut && S.push.msg != null && msgs[S.push.msg]) { const g = msgs[S.push.msg], bub = g.el.querySelector('.bub'), pl = $('#panel').offsetLeft + $('#msgs').offsetLeft + g.el.offsetLeft + bub.offsetLeft, pt = $('#panel').offsetTop + $('#msgs').offsetTop + g.el.offsetTop + bub.offsetTop, d = E.out(seg(t, S.push.at, S.end));
+    z = S.push.zoom || 2.6; x = 120 - pl * z - (S.push.travel || 0) * 1920 * d; y = 440 - (pt + bub.offsetHeight / 2) * z;
+    // the close-up holds that message alone: the others and the title go (cut at the top edge they showed in halves)
+    // (it lands: a small pop on the cut, the reference's close-up arrives with a beat)
+    { const q = seg(t, S.push.at, S.push.at + .22); bub.style.transform = `scale(${(1 + .1 * (1 - E.out(q))).toFixed(3)})`; bub.style.transformOrigin = '0 50%'; }
+    for (const o of msgs) if (o !== g) o.el.style.opacity = 0; $('#title').style.opacity = 0; $('#mem').style.opacity = 0; bub.dataset.reading = ''; }
+  else { $('#title').style.opacity = 1; for (const o of msgs) delete o.el.querySelector('.bub').dataset.reading; }
+// (under the director's camera, spec.camera, this page holds still and the camera moves it: modules/camera.js)
+  $('#cam').style.transform = (S.camera || []).length ? 'none' : `translate(${x}px, ${y}px) scale(${z})`;
+};
+</script>
+</body></html>

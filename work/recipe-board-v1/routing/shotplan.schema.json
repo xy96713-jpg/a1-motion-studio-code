@@ -1,0 +1,223 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "reference",
+    "shots",
+    "requests",
+    "follows",
+    "style"
+  ],
+  "properties": {
+    "reference": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "at",
+          "end",
+          "device",
+          "material",
+          "shows"
+        ],
+        "properties": {
+          "at": {
+            "type": "number"
+          },
+          "end": {
+            "type": "number"
+          },
+          "device": {
+            "type": "string",
+            "enum": [
+              "presenter",
+              "side-card",
+              "pagecurl",
+              "article",
+              "chat",
+              "table",
+              "compare3d",
+              "brand",
+              "broll",
+              "diagram",
+              "title",
+              "quote",
+              "person",
+              "recap",
+              "chart",
+              "screen",
+              "market"
+            ]
+          },
+          "material": {
+            "type": "string",
+            "enum": [
+              "page",
+              "photo",
+              "cutout",
+              "portrait",
+              "logo",
+              "footage",
+              "none"
+            ]
+          },
+          "shows": {
+            "type": "string",
+            "description": "what is on the reference's screen in this beat (one line)"
+          }
+        }
+      }
+    },
+    "shots": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "module",
+          "at",
+          "end",
+          "why",
+          "spec"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "module": {
+            "type": "string",
+            "enum": [
+              "sidecard",
+              "article",
+              "chat",
+              "table",
+              "compare",
+              "brand",
+              "insert",
+              "title",
+              "person",
+              "quote",
+              "steps",
+              "chart",
+              "screen",
+              "market"
+            ]
+          },
+          "at": {
+            "type": "number"
+          },
+          "end": {
+            "type": "number"
+          },
+          "why": {
+            "type": "string"
+          },
+          "spec": {
+            "type": "string",
+            "description": "the module's parameters as JSON text (prompts/shotplan.md)"
+          }
+        }
+      }
+    },
+    "requests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "shot",
+          "kind",
+          "what",
+          "search",
+          "reference",
+          "entity"
+        ],
+        "properties": {
+          "shot": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "page",
+              "photo",
+              "cutout",
+              "portrait",
+              "logo",
+              "footage"
+            ]
+          },
+          "what": {
+            "type": "string"
+          },
+          "search": {
+            "type": "string"
+          },
+          "reference": {
+            "type": "string"
+          },
+          "entity": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "the one person, product or organisation the material must show (null for none)"
+          }
+        }
+      }
+    },
+    "follows": {
+      "type": "array",
+      "description": "the answer to every item of the breakdown card (prompts/shotplan.md 第三步)",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "item",
+          "does",
+          "how"
+        ],
+        "properties": {
+          "item": {
+            "type": "string",
+            "description": "R03.camera, R05.cut, ... or plan-cut@S4"
+          },
+          "does": {
+            "type": "string",
+            "enum": [
+              "match",
+              "differ"
+            ]
+          },
+          "how": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "style": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "why"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "a style of routing/styles.json (input.styles); editorial-grey is the reference's own look"
+        },
+        "why": {
+          "type": "string",
+          "description": "why this subject calls for this style"
+        }
+      },
+      "description": "the film's look, chosen from the subject (the reference teaches structure; the style is the skin); null keeps the reference's look"
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "contract": "A1RecipeBoardForms/v1",
+  "about": "When a beat is flat, 2.5D or 3D (the user 2026-10-26: 导演 … 知道什么时候做适合的包装 什么时候平面 2.5 3d展示; earlier: 该 3d 就 3d). Measured on the two references' 92 beats (Vol.138 + Vol.047 breakdowns): flat 83 %, 2.5D 5 %, 3D 13 %. The rule under it: what is read is flat; what is a place or a pile is 2.5D; what is a shape is 3D — and a 3D thing is unrolled to flat when its parts are read. Every chapter beat names its form in plan2 (form, formFor); refbreakdown.mjs planErrors holds it.",
+  "measured": { "beats": 92, "flat": 0.83, "2.5d": 0.05, "3d": 0.13 },
+  "forms": {
+    "flat": {
+      "name": "平面",
+      "for": ["read"],
+      "when": "观众要读的东西：数字、表格、比较、列表、时间线、家谱、定义、逻辑推理、标签。原片 83% 的拍都是平面。",
+      "parts": "type.flat（kit2：card、tag、locus、familyFrames、chromBar、counter、layout.*）、type.dev（kit4：tableGrows、bracketGroup、quadrant、narrowingFrames …）、kit3 dots/seq（平面用）",
+      "examples": ["138 B13 位点红签一排", "138 B17 两轴可信度图", "138 B27 STR 比对表", "047 成分表逐行出现"]
+    },
+    "2.5d": {
+      "name": "2.5D（平面放进空间）",
+      "for": ["place", "quantity", "object"],
+      "when": "东西是摆在空间里的实物或地方：讲「在哪」的地图（斜放、镜头压低）、讲「有多少、拖了多久」的一堆剪报卷宗、讲「这是真东西」的论文页滑进来、斜扫的警戒带。字还是平的，立在外面。",
+      "parts": "K2.onPlane / planePoint（平面铺成透视）、kit.mapPlane（地图平放）、K2.strip3d（有厚度的纸条）、K2.pageCard 加 turn 和阴影、K2.props 堆叠、镜头 tilt-into-space",
+      "examples": ["138 B01 白银地图倾斜、针一根根落", "138 B20 剪报斜着滑进来叠成堆", "138 B32 位点带斜扫满屏", "047 R37 论文页滑进来"]
+    },
+    "3d": {
+      "name": "3D",
+      "for": ["shape", "structure", "object"],
+      "when": "形状本身就是要讲的：分子和结构（双螺旋）、产品的机关（香烟滤嘴的通气孔）、一个要当主角站住的物件（Y 光柱、巨大 DNA 字块、老电视）。一章最多一个 3D 主体；讲到它的部件要读时，展平回平面（unwind-3d-to-flat）。",
+      "parts": "kit3（helix、dna、chromosomes、blockType、particleType、tokenGeometry）、stage3/place3、camera3；生图只做材质参考，不拼 3D 美术",
+      "examples": ["138 B08–B10 字母梯扭成双螺旋、再拉直展平", "138 B44 布满小字母的 3D DNA 字块", "047 R16–R17 3D 香烟推近滤嘴的通气孔", "138 B36 复古电视实物里放新闻"]
+    }
+  },
+  "reasons": {
+    "read": "要读：字、数、表、比较",
+    "place": "地方：在哪、分布、路线",
+    "quantity": "数量感：一堆、一排、很多年",
+    "object": "这是一件真东西：文件、电视、证物",
+    "shape": "形状就是重点：长什么样、怎么扭",
+    "structure": "结构：里面有什么、怎么组成、机关在哪"
+  }
+}

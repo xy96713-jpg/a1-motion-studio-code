@@ -1,0 +1,106 @@
+{
+ "contract": "A1FilmMedia/v1",
+ "decided": "2026-10-28 用户：按审计建议的顺序补：先介质进家里的样子。用户 2026-10-16：还不如之前的那种 led（喜欢的是质感）；2026-10-20：显像管滤镜还行；光郡第 29 集的显示设备模拟。",
+ "about": "一拍的画面经过哪一块屏：画面先画在内容画布上，再显示到这块屏上，虚拟摄像机对着屏拍（辉光、色差、虚焦、暗角、颗粒、子帧拖影）。整片设计每拍选一个（filmdesign screen）；精渲和白膜按拍取对应介质的那一版（chapter.mjs screensOf）。介质的参数在 style-lab/engine/display.js MEDIA。",
+ "media": [
+  {
+   "id": "clean",
+   "name": "不经屏",
+   "screen": false,
+   "for": "真照片、真页面要看清细节的拍；精致的 3D 物件特写",
+   "palettes": "any"
+  },
+  {
+   "id": "film",
+   "name": "胶片",
+   "screen": false,
+   "for": "真画面、人和地方：颗粒、晕光、24 格的抖动",
+   "palettes": "any"
+  },
+  {
+   "id": "led2",
+   "name": "LED 点阵屏",
+   "screen": true,
+   "for": "数据、数字、标题、流程：一颗颗灯珠，辉光；光郡的主介质",
+   "palettes": [
+    "noir",
+    "amber-lamp",
+    "indigo-night",
+    "teal-chart",
+    "film-red",
+    "cobalt-card"
+   ]
+  },
+  {
+   "id": "ledred",
+   "name": "红色 LED",
+   "screen": true,
+   "for": "警示、倒计时、一个红字",
+   "palettes": [
+    "noir",
+    "film-red"
+   ]
+  },
+  {
+   "id": "crt",
+   "name": "CRT 显像管",
+   "screen": true,
+   "for": "旧机器、监控、新闻画面、信号：扫描线、弧面、色差",
+   "palettes": [
+    "noir",
+    "indigo-night",
+    "teal-chart",
+    "amber-lamp"
+   ]
+  },
+  {
+   "id": "amber",
+   "name": "琥珀荧光终端",
+   "screen": true,
+   "for": "代码、日志、读数、单色界面",
+   "palettes": [
+    "noir",
+    "amber-lamp"
+   ]
+  },
+  {
+   "id": "mono",
+   "name": "绿色荧光终端",
+   "screen": true,
+   "for": "示波器、雷达、单色读数",
+   "palettes": [
+    "noir",
+    "teal-chart"
+   ]
+  },
+  {
+   "id": "vhs",
+   "name": "录像带",
+   "screen": true,
+   "for": "回忆、旧影像、新闻录像：色带错位、噪点",
+   "palettes": "any"
+  },
+  {
+   "id": "halftone",
+   "name": "报纸网点",
+   "screen": true,
+   "for": "报道、旧报纸、宣传品：黑网点",
+   "palettes": [
+    "cream-print",
+    "mustard",
+    "noir"
+   ]
+  }
+ ],
+ "film": {
+  "screenShareMin": 0.3,
+  "screenShareMax": 0.85,
+  "note": "参考，不是指标（用户 2026-10-28：不要为了做而做 硬塞）：用户最看重屏幕介质的质感，三成左右的拍在一块屏上是参考；只放在画面本来就该在屏上的拍（读数、记录、信号、旧画面、软件和网站）。换介质落在拍和拍之间，最好跟一个手法（信号坏掉、错位色条、闪白硬切）；同一个镜头里不换介质。"
+ },
+ "never": [
+  {
+   "id": "print",
+   "why": "display.js 的 print 介质把画面换成钴蓝单色油墨：就是用户 2026-10-20 否过的米色纸钴蓝印刷（2026-10-28 样张里昭和海报的红黄黑被它换成蓝紫）；海报用 clean 加胶片颗粒"
+  }
+ ]
+}

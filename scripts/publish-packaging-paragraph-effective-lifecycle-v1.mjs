@@ -1,0 +1,33 @@
+#!/usr/bin/env node
+import fs from "node:fs";
+import path from "node:path";
+import {readPackagingParagraphCanaryLifecycle} from "../apps/studio-next/src/lib/a1-packaging-paragraph-canary-lifecycle-v1.mjs";
+import {createPackagingParagraphEffectiveLifecycle, createPackagingParagraphEffectiveLifecycleCheckpoint, packagingParagraphEffectiveLifecyclePaths} from "../apps/studio-next/src/lib/a1-packaging-paragraph-effective-lifecycle-v1.mjs";
+import {assertPackagingParagraphVisualRepairAssessment, assertPackagingParagraphVisualRepairBatch, assertPackagingParagraphVisualRepairObjectiveAudit, assertPackagingParagraphVisualRepairPlan, buildPackagingParagraphVisualRepairImplementationBinding} from "../apps/studio-next/src/lib/a1-packaging-paragraph-visual-repair-v1.mjs";
+
+const projectRoot = path.resolve(import.meta.dirname, "..");
+const appRoot = path.join(projectRoot, "apps/studio-next");
+const paths = packagingParagraphEffectiveLifecyclePaths(appRoot);
+const baseLifecycle = readPackagingParagraphCanaryLifecycle(appRoot, {refresh: true});
+if (baseLifecycle?.status !== "VISUAL_REPAIR_REQUIRED") throw new Error("paragraph-effective-lifecycle-base-repair-required");
+const planPath = path.join(paths.currentRoot, "packaging-paragraph-visual-repairs", baseLifecycle.evidence.visualDirectorAssessmentSha256, "plan.json");
+const implementation = buildPackagingParagraphVisualRepairImplementationBinding(projectRoot);
+const plan = assertPackagingParagraphVisualRepairPlan(JSON.parse(fs.readFileSync(planPath, "utf8")), {projectRoot});
+const reviewRoot = path.join(appRoot, "public/generated/system-line/editorial-asset-workbench-v1/packaging-paragraph-canary-repair-v1", plan.planSha256);
+const manifestPath = path.join(reviewRoot, "manifest.json");
+const auditPath = path.join(reviewRoot, "objective-pixel-audit-v1/objective-pixel-audit.json");
+const stripPath = path.join(reviewRoot, "objective-pixel-audit-v1/paragraph-review-strip.png");
+const assessmentPath = path.join(reviewRoot, "visual-director-assessment-v1/assessment.json");
+const manifest = assertPackagingParagraphVisualRepairBatch(JSON.parse(fs.readFileSync(manifestPath, "utf8")), {plan, implementation});
+const audit = assertPackagingParagraphVisualRepairObjectiveAudit(JSON.parse(fs.readFileSync(auditPath, "utf8")), {plan, batch: manifest, implementation});
+const assessment = assertPackagingParagraphVisualRepairAssessment(JSON.parse(fs.readFileSync(assessmentPath, "utf8")), {plan, batch: manifest, audit});
+const lifecycle = createPackagingParagraphEffectiveLifecycle({baseLifecycle, plan, manifest, audit, assessment, implementation});
+const validatedFiles = [planPath, manifestPath, auditPath, assessmentPath, stripPath, ...["ED-12.png", "ED-13.png", "ED-14.png"].map((file) => path.join(reviewRoot, file)), ...implementation.entries.map((entry) => path.join(projectRoot, entry.relativePath))];
+const checkpoint = createPackagingParagraphEffectiveLifecycleCheckpoint({projectRoot, lifecycle, validatedFiles});
+const outputRoot = path.dirname(paths.checkpoint);
+const stagingPath = `${paths.checkpoint}.staging-${process.pid}`;
+if (fs.existsSync(stagingPath)) throw new Error("paragraph-effective-lifecycle-checkpoint-staging-must-be-new");
+fs.mkdirSync(outputRoot, {recursive: true});
+fs.writeFileSync(stagingPath, `${JSON.stringify(checkpoint, null, 2)}\n`, {encoding: "utf8", flag: "wx"});
+fs.renameSync(stagingPath, paths.checkpoint);
+console.log(JSON.stringify({status: lifecycle.status, outputPath: paths.checkpoint, lifecycleSha256: lifecycle.lifecycleSha256, checkpointSha256: checkpoint.checkpointSha256, fileSealCount: checkpoint.fileSeals.length, fullCryptographicValidationPerformedAtPublication: true, hotPathSourceAssetRehashAllowed: false, fullWorkspaceRead: false, recursiveMediaScan: false, userVisualApproval: "NOT_APPROVED", productionAdmitted: false}, null, 2));

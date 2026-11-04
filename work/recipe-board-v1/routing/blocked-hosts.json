@@ -1,0 +1,110 @@
+{
+  "contract": "A1RecipeBoardBlockedHosts/v1",
+  "note": "Sites that answered the page capture with a bot check, a paywall stub or a blank page. The materials step adds a host when a capture fails that way; proposals rank these hosts last (a page we cannot archive cannot back a number or go on screen).",
+  "hosts": {
+    "datacenterdynamics.com": {
+      "reason": "Cloudflare bot check",
+      "at": "2026-10-17"
+    },
+    "techinasia.com": {
+      "reason": "paywall stub",
+      "at": "2026-10-17"
+    },
+    "openai.com": {
+      "reason": "blank page (index articles)",
+      "at": "2026-10-17"
+    },
+    "reuters.com": {
+      "reason": "empty page",
+      "at": "2026-10-17"
+    },
+    "tbsnews.net": {
+      "reason": "Cloudflare bot check",
+      "at": "2026-10-17"
+    },
+    "theepochtimes.com": {
+      "reason": "home page instead of the article",
+      "at": "2026-10-17"
+    },
+    "firstpost.com": {
+      "reason": "access denied",
+      "at": "2026-10-17"
+    },
+    "chinatechbite.substack.com": {
+      "reason": "blank page",
+      "at": "2026-10-17"
+    },
+    "xyzlabs.substack.com": {
+      "reason": "blank page",
+      "at": "2026-10-17"
+    },
+    "high-flyer.cn": {
+      "reason": "blank page",
+      "at": "2026-10-19"
+    },
+    "ft.com": {
+      "reason": "bot check or paywall",
+      "at": "2026-10-19"
+    },
+    "cnbc.com": {
+      "reason": "bot check or paywall",
+      "at": "2026-10-19"
+    },
+    "aichief.com": {
+      "reason": "bot check or paywall",
+      "at": "2026-10-19"
+    },
+    "ainvest.com": {
+      "reason": "bot check or paywall",
+      "at": "2026-10-19"
+    },
+    "grokipedia.com": {
+      "reason": "AI-written encyclopedia: not a source (paperclip-138-full B51~1)",
+      "at": "2026-10-21"
+    },
+    "abc10.com": {
+      "reason": "bot check or paywall",
+      "at": "2026-10-21"
+    },
+    "t.cj.sina.com.cn": {
+      "reason": "bot check or paywall",
+      "at": "2026-10-21"
+    },
+    "inkl.com": {
+      "reason": "bot check or paywall",
+      "at": "2026-10-21"
+    },
+    "xueqiu.com": {
+      "reason": "bot check or paywall",
+      "at": "2026-10-22"
+    },
+    "zhuanlan.zhihu.com": {
+      "reason": "bot check or paywall",
+      "at": "2026-10-22"
+    },
+    "platform.twitter.com": {
+      "reason": "bot check or paywall",
+      "at": "2026-10-23"
+    },
+    "paddlenlp.readthedocs.io": {
+      "reason": "bot check or paywall",
+      "at": "2026-10-23"
+    },
+    "crn.com": {
+      "reason": "blank page",
+      "at": "2026-10-23"
+    },
+    "scmp.com": {
+      "reason": "bot check or paywall",
+      "at": "2026-10-23"
+    },
+    "moneycontrol.com": {
+      "reason": "bot check or paywall",
+      "at": "2026-10-23"
+    },
+    "apnews.com": {
+      "reason": "bot check or paywall",
+      "at": "2026-10-23"
+    }
+  }
+}

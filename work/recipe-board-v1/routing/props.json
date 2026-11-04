@@ -1,0 +1,136 @@
+{
+  "contract": "A1PropLibrary/v1",
+  "about": "Text-free photographed props every chapter gets as images.prop_<family>_<name> (chapter.mjs prepareAssets: generated once by imagegen, cached by prompt) when its code names a member (prop_trace_blood) or a family (K.props(images, 'trace', n)). Many things of one kind on screen (cases, samples, records) take different members of a family, never one picture copied (repeatErrors), and never bare code shapes in their place. Add members and families as films need them.",
+  "families": [
+    {
+      "family": "trace",
+      "use": "a crime scene's traces, one per case or per card: many cases told apart by what was left (用户 2026-10-23: 都是脚印和手指 / 条码更简陋了 — 可以多样性)",
+      "members": {
+        "blood": "A small dried bloodstain soaked into pale woven cotton fabric, macro, photographed from directly above on a plain matte black background, forensic evidence photograph, black and white, hard light, sharp detail, film grain, no text, no letters, no numbers, no labels, no people, no faces",
+        "hair": "A few single dark human hairs lying loosely, macro, photographed from directly above on a plain matte black background, forensic evidence photograph, black and white, hard light, sharp detail, film grain, no text, no letters, no numbers, no labels, no people, no faces",
+        "butt": "One smoked cigarette butt lying on its side, macro, photographed from directly above on a plain matte black background, forensic evidence photograph, black and white, hard light, sharp detail, film grain, no text, no letters, no numbers, no labels, no people, no faces",
+        "fibre": "A tangle of loose textile fibres, macro, photographed from directly above on a plain matte black background, forensic evidence photograph, black and white, hard light, sharp detail, film grain, no text, no letters, no numbers, no labels, no people, no faces",
+        "swatch": "A small torn scrap of pale cotton fabric with a faint dried brownish stain, photographed from directly above, isolated on a plain black background, macro photograph, matte, soft film grain, no text, no letters, no people",
+        "shoeprint": "A single dusty shoe sole print with a clear tread pattern on a concrete floor, photographed from directly above on a plain matte black background, forensic evidence photograph, black and white, hard light, sharp detail, film grain, no text, no letters, no numbers, no labels, no people, no faces",
+        "handprint": "A single smudged dusty handprint on a grey plaster wall, photographed from directly above on a plain matte black background, forensic evidence photograph, black and white, hard light, sharp detail, film grain, no text, no letters, no numbers, no labels, no people, no faces"
+      }
+    },
+    {
+      "family": "silhouette",
+      "use": "anonymous people in a row (suspects, relatives, a line-up): no faces are generated, so each is a different silhouette — build, hair, collar — never one copied; women and a boy too, so a family's frames are told apart by sex and age (B23 2026-10-25: sixteen frames of one man's outline, XX marked on a man)",
+      "members": {
+        "short": {
+          "prompt": "Solid flat black silhouette of an anonymous man's head and shoulders, front view, short cropped hair, average build, plain round collar, isolated on a transparent background, no face, no features, no text, no letters",
+          "transparent": true
+        },
+        "broad": {
+          "prompt": "Solid flat black silhouette of an anonymous man's head and shoulders, front view, very short hair, broad heavy shoulders, jacket collar, isolated on a transparent background, no face, no features, no text, no letters",
+          "transparent": true
+        },
+        "thin": {
+          "prompt": "Solid flat black silhouette of an anonymous man's head and shoulders, front view, side-parted hair, narrow shoulders, shirt collar, isolated on a transparent background, no face, no features, no text, no letters",
+          "transparent": true
+        },
+        "cap": {
+          "prompt": "Solid flat black silhouette of an anonymous man's head and shoulders, front view, wearing a flat cap, average build, jacket, isolated on a transparent background, no face, no features, no text, no letters",
+          "transparent": true
+        },
+        "older": {
+          "prompt": "Solid flat black silhouette of an anonymous man's head and shoulders, front view, receding hairline, slightly stooped shoulders, buttoned coat, isolated on a transparent background, no face, no features, no text, no letters",
+          "transparent": true
+        },
+        "woman_bob": {
+          "prompt": "Solid flat black silhouette of an anonymous woman's head and shoulders, front view, chin-length bob haircut, slim shoulders, round neckline, isolated on a transparent background, no face, no features, no text, no letters",
+          "transparent": true
+        },
+        "woman_bun": {
+          "prompt": "Solid flat black silhouette of an anonymous woman's head and shoulders, front view, hair pulled back in a bun, narrow shoulders, blouse collar, isolated on a transparent background, no face, no features, no text, no letters",
+          "transparent": true
+        },
+        "woman_long": {
+          "prompt": "Solid flat black silhouette of an anonymous young woman's head and shoulders, front view, long straight hair past the shoulders, slim build, plain top, isolated on a transparent background, no face, no features, no text, no letters",
+          "transparent": true
+        },
+        "woman_older": {
+          "prompt": "Solid flat black silhouette of an anonymous older woman's head and shoulders, front view, short permed hair, slightly rounded shoulders, cardigan, isolated on a transparent background, no face, no features, no text, no letters",
+          "transparent": true
+        },
+        "boy": {
+          "prompt": "Solid flat black silhouette of an anonymous teenage boy's head and shoulders, front view, short tousled hair, thin narrow shoulders, t-shirt, isolated on a transparent background, no face, no features, no text, no letters",
+          "transparent": true
+        }
+      }
+    },
+    {
+      "family": "label",
+      "use": "RETIRED for new films (2026-10-26, CONVERGE-20261026 §3.5; the user: 不要红底的文字 / 不要加字描边阴影 下面或者侧面的红线 / 不要撕纸): words stand on no plate, emphasis is colour and size (lessons L91, L93, L75). Kept only so the films made before keep their pictures: the plate under a word, a tag or a chip of an older card page (labels.mjs, the white paper multiplied by the colour); an eva-lettered page strips it to its words in red. Never ask for it in a new plan or chapter. Was: the plate under a word, a tag or a chip (錯/對, 有推理, an annotation on a photo, a figure's board): its outline and paper come from one of these, its colour from the film's style (labels.mjs: the white paper multiplied by the colour, cut to its own edge); neighbouring tags take different members; never a flat code rectangle (cardgeometry.mjs flatPlateErrors; user 2026-10-23: 这种设计的挺丑 为什么不能生图来做) — no torn paper and no paper strips (user 2026-10-25: 之后也不要这种纸条撕纸设计什么的了): the torn strip and the masking tape were taken out",
+      "members": {
+        "sticker": {
+          "prompt": "A blank white matte paper sticker label, a wide rectangle about three times as wide as tall with slightly rounded corners, one corner lifting a little, faint creases and fibres, seen straight from above, flat and evenly lit, isolated on a transparent background, the whole object in frame with a margin, no text, no letters, no numbers, no logos, no symbols, no shadow",
+          "transparent": true
+        },
+        "card": {
+          "prompt": "A blank piece of plain white matte cardboard, a wide rectangle about three times as wide as tall, worn soft corners, light scuffs and a dented edge, seen straight from above, flat and evenly lit, isolated on a transparent background, the whole object in frame with a margin, no text, no letters, no numbers, no logos, no symbols, no shadow",
+          "transparent": true
+        },
+        "crease": {
+          "prompt": "A blank white paper tag folded once and flattened again, a wide rectangle about three times as wide as tall, a soft diagonal crease across it, matte paper, seen straight from above, flat and evenly lit, isolated on a transparent background, the whole object in frame with a margin, no text, no letters, no numbers, no logos, no symbols, no shadow",
+          "transparent": true
+        }
+      },
+      "retired": true
+    },
+    {
+      "family": "casefile",
+      "use": "old case files in an archive (cold cases, a pile of dossiers, files pulled from shelves): each file a different folder — worn, tied, clipped, stained — never one picture copied (B52's review: one folder picture shown four times) — cut out (transparent): on a black square each file read as a slide on a plate (B52's third review)",
+      "members": {
+        "tied": {
+          "prompt": "An old thick manila case file folder tied shut with a faded cotton string, yellowed paper edges sticking out, worn corners, photographed slightly from above on a plain matte black background, archive evidence photograph, black and white with a faint sepia cast, soft top light, sharp detail, film grain, no text, no letters, no numbers, no labels, no writing, no people, no faces",
+          "transparent": true
+        },
+        "stained": {
+          "prompt": "An old cardboard case file folder with a large water stain and dusty surface, yellowed papers inside slightly showing, photographed slightly from above on a plain matte black background, archive evidence photograph, black and white with a faint sepia cast, soft top light, sharp detail, film grain, no text, no letters, no numbers, no labels, no writing, no people, no faces",
+          "transparent": true
+        },
+        "clipped": {
+          "prompt": "An old thin paper dossier folder held with a rusty metal binder clip, curled yellowed edges, photographed slightly from above on a plain matte black background, archive evidence photograph, black and white with a faint sepia cast, soft top light, sharp detail, film grain, no text, no letters, no numbers, no labels, no writing, no people, no faces",
+          "transparent": true
+        },
+        "boxed": {
+          "prompt": "An old archive box file of grey cardboard with a worn lid and frayed corners, photographed slightly from above on a plain matte black background, archive evidence photograph, black and white with a faint sepia cast, soft top light, sharp detail, film grain, no text, no letters, no numbers, no labels, no writing, no people, no faces",
+          "transparent": true
+        },
+        "bundle": {
+          "prompt": "A bundle of old yellowed loose papers tied with twine into a stack, photographed slightly from above on a plain matte black background, archive evidence photograph, black and white with a faint sepia cast, soft top light, sharp detail, film grain, no text, no letters, no numbers, no labels, no writing, no people, no faces",
+          "transparent": true
+        },
+        "kraft": {
+          "prompt": "An old brown kraft paper envelope file, creased and dog-eared, with a string-and-button closure, photographed slightly from above on a plain matte black background, archive evidence photograph, black and white with a faint sepia cast, soft top light, sharp detail, film grain, no text, no letters, no numbers, no labels, no writing, no people, no faces",
+          "transparent": true
+        }
+      }
+    },
+    {
+      "family": "screen",
+      "use": "a screen a real page, a news frame or a recording is shown in (real-in-frame: the reference's 2003 news on an old television, a database on a monitor): the screen of each member is drawn plain flat white so the line finds it (type.js propBoxes) and lays the real picture into it (kit4 onScreen) — the device is art, what it shows is the fact; cut out (transparent)",
+      "members": {
+        "crt": {
+          "prompt": "An old 1990s cathode-ray tube television set with a thick plastic case and a slightly curved screen, the screen glowing plain flat pure white and empty, photographed straight on at eye level on a plain matte black background, product photograph, black and white, soft studio light, sharp detail, film grain, no text, no letters, no numbers, no logos, no brand marks, no buttons with writing, no people, no faces",
+          "transparent": true
+        },
+        "monitor": {
+          "prompt": "An old beige 1990s desktop computer CRT monitor on a small stand, the screen glowing plain flat pure white and empty, photographed straight on at eye level on a plain matte black background, product photograph, black and white, soft studio light, sharp detail, film grain, no text, no letters, no numbers, no logos, no brand marks, no buttons with writing, no people, no faces",
+          "transparent": true
+        },
+        "laptop": {
+          "prompt": "An open thin modern laptop computer seen from the front, the screen glowing plain flat pure white and empty, the keyboard plain, photographed straight on at eye level on a plain matte black background, product photograph, black and white, soft studio light, sharp detail, film grain, no text, no letters, no numbers, no logos, no brand marks, no buttons with writing, no people, no faces",
+          "transparent": true
+        },
+        "phone": {
+          "prompt": "A modern smartphone standing upright seen from the front, the screen glowing plain flat pure white and empty edge to edge, photographed straight on at eye level on a plain matte black background, product photograph, black and white, soft studio light, sharp detail, film grain, no text, no letters, no numbers, no logos, no brand marks, no buttons with writing, no people, no faces",
+          "transparent": true
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "A1 greybox blind review",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "scores",
+    "issues",
+    "overall",
+    "events"
+  ],
+  "properties": {
+    "scores": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "arc",
+        "telling",
+        "layout",
+        "colour",
+        "seams",
+        "motion"
+      ],
+      "properties": {
+        "arc": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "telling": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "layout": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "colour": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "seams": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "motion": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        }
+      }
+    },
+    "issues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "beat",
+          "severity",
+          "say",
+          "fix"
+        ],
+        "properties": {
+          "beat": {
+            "type": "string"
+          },
+          "severity": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5
+          },
+          "say": {
+            "type": "string"
+          },
+          "fix": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "overall": {
+      "type": "string"
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "beat",
+          "binding",
+          "verdict",
+          "observed"
+        ],
+        "properties": {
+          "beat": {
+            "type": "string"
+          },
+          "binding": {
+            "type": "string"
+          },
+          "verdict": {
+            "enum": [
+              "pass",
+              "fail",
+              "unknown"
+            ]
+          },
+          "observed": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

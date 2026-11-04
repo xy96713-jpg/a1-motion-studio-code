@@ -1,0 +1,66 @@
+{
+  "id": "ed20-handoff-timing-content-v1",
+  "shotId": "ED-20",
+  "source": {
+    "versionId": "ed-20-approved-design-07c6e8cacb7d",
+    "artifactSha256": "07c6e8cacb7d06e5c11f6a60f1cc63001ea3c2de0d906394dd807e09418f87f8",
+    "motionDesignSha256": "05371eb068d72131750326f72244a1b78acf89d6433b3e9b0ceecfc32f5ba8cd",
+    "durationMs": 7920,
+    "semanticSha256": "886108a3ca55226a51efe62121618ddd6d905d85c4c4ab15af4b59dfc8dfca95"
+  },
+  "rendererFiles": [
+    "remotion-renderer/src/CurrentShotLocalMotionReviewV1.tsx",
+    "remotion-renderer/src/current-shot-local-motion-review-index.tsx",
+    "work/ed20-handoff-timing-candidate-20260911/render.mjs"
+  ],
+  "output": {
+    "path": "work/ed20-handoff-timing-candidate-20260911/ED-20-handoff-fixed-with-original-audio.mp4",
+    "sha256": "2dafbbe078b07a4990316e33bbb2bb02722d2378c7289dc9604342e0446d433c"
+  },
+  "files": [
+    {
+      "path": "remotion-renderer/src/CurrentShotLocalMotionReviewV1.tsx",
+      "sha256": "87359e6d912d3969c7c75574d3995cbc7b014529b0dbd3b142993e355eee254f"
+    },
+    {
+      "path": "remotion-renderer/src/current-shot-local-motion-review-index.tsx",
+      "sha256": "62f27a935122fdd3001b989c804b7ae7a9478f556cdd9aca4fc3dd0affd12222"
+    },
+    {
+      "path": "work/ed20-handoff-timing-candidate-20260911/render.mjs",
+      "sha256": "50e4178eaea31caad6fec755c8c994d2f39f4b14370c3983e7c9440c02ba23e1"
+    },
+    {
+      "path": "work/ed20-handoff-timing-candidate-20260911/ED-20-1b96e2f87769/props.json",
+      "sha256": "0a3845b33cbaa73024452b9c6f8588fd9543648cc06e404673078de55414f2e3"
+    },
+    {
+      "path": "work/ed20-handoff-timing-candidate-20260911/ED-20-1b96e2f87769/public/source.png",
+      "sha256": "07c6e8cacb7d06e5c11f6a60f1cc63001ea3c2de0d906394dd807e09418f87f8"
+    },
+    {
+      "path": "remotion-renderer/package.json",
+      "sha256": "64cf54b496fa7cfc3a8000a5d6f836aae764e6b091f1130a50ebfabcf0d235d9"
+    },
+    {
+      "path": "remotion-renderer/package-lock.json",
+      "sha256": "9f1f0701649f9fe567dfae632c92e3bb044a452476ba75bebcb6af74cb1033e5"
+    },
+    {
+      "path": "package.json",
+      "sha256": "f79a701a4665f083595d678cc91c0d36bb0cafe04ad35b43905b9cbae48a17a8"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "2f77a22c6d3f555e51d73cea878e97f07553eb5c70f65e4582e89e65cb54d2e6"
+    },
+    {
+      "path": "apps/studio-next/src/lib/a1-editorial-project-store-v2.mjs",
+      "sha256": "ee7fb60bf41c75625e9b82f4a2e91c093e0dd1488c6a72bf40e6bc6a640fc9e5"
+    },
+    {
+      "path": "apps/studio-next/src/lib/a1-shot-motion-review-v1.mjs",
+      "sha256": "4297a99848cdc51da04da7e6b65f8442e26268750394f2b35addebf54b9c9fd7"
+    }
+  ]
+}

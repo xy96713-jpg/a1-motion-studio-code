@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {readPartitionBody,partitionApiError} from '../apps/studio-next/src/lib/a1-partition-api-budget-v1.mjs';
+import {runSingleShotPartitionDryRun as run} from '../apps/studio-next/src/lib/a1-single-shot-partition-server-v1.mjs';
+let cancelled=false;
+const request=new Request('http://localhost',{method:'POST',headers:{'Content-Length':'1'},duplex:'half',body:new ReadableStream({pull(c){c.enqueue(new Uint8Array(3));},cancel(){cancelled=true;}})});
+await assert.rejects(()=>readPartitionBody(request,5),/partition-body-too-large/);assert.equal(cancelled,true);
+assert.deepEqual(await readPartitionBody(new Request('http://localhost',{method:'POST',body:'{}'}),2),{});
+await assert.rejects(()=>readPartitionBody(new Request('http://localhost',{method:'POST',body:'{"private":'})),/partition-request-json-invalid/);
+for(const sha of ['a'.repeat(65),'A'.repeat(64),'g'.repeat(64),7,null])await assert.rejects(()=>run('/nonexistent',{action:'dry-run-package-layer-partition',shotId:'ED-17',workspaceSha256:sha}),/partition-request-sha-invalid/);
+for(const e of [new SyntaxError('secret JSON'),Object.assign(Error('ENOENT /private'),{code:'ENOENT'}),Error('partition-workspace-binding /secret'),Error('Sharp decoder secret')])assert.deepEqual(partitionApiError(e),{error:'partition-unavailable',status:503});
+assert.ok(fs.existsSync('apps/studio-next/src/app/api/system-line/editorial-asset-workbench/partition-dry-run/route.ts'),'bounded partition endpoint required');
+console.log('PASS body counted stream, cancel, JSON redaction, SHA validation and dedicated route');

@@ -1,0 +1,254 @@
+{
+ "contract": "A1TypeImagePairing/v1",
+ "at": "2026-11-03",
+ "why": "对标里字体不是套模板：字族/字重/大小/颜色/材质/位置都跟画面主体、光线、介质和叙事语气配合。Hupo 的帧逐帧拆出 6 种配对，写死成可检查的规则。",
+ "sourceFrames": {
+  "q385": "tmp/hupo-type-refs/q-385.png：思考巨字当结构，细衬线注记围着它，数字 1–4 穿过字",
+  "q390": "tmp/hupo-type-refs/q-390.png：新闻页上 5926.58亿美元，粗衬线数字+黄块高亮，字覆盖页面而不是另起一块",
+  "q439": "tmp/hupo-type-refs/q-439.png：人物脸旁的低对比衬线，字不压脸",
+  "q467": "tmp/hupo-type-refs/q-467.png：人物场景左侧灰衬线，低对比、留白，语气轻",
+  "f325": "tmp/hupo-type-refs/f-325.9.png：虚焦键盘上的顿悟时刻，细衬线+英文小字",
+  "f380": "tmp/hupo-type-refs/f-380.9.png：3D 芯片与信息表，字/物体/表格三层"
+ },
+ "pairings": [
+  {
+   "id": "tip-page-slab",
+   "register": "evidence-page",
+   "sceneSignals": [
+    "page",
+    "article",
+    "table"
+   ],
+   "faces": [
+    "House Kokka"
+   ],
+   "sizeCap": 200,
+   "placement": [
+    "over-page-column",
+    "between-columns"
+   ],
+   "material": [
+    "highlight-block",
+    "print-grain"
+   ],
+   "colorRule": "ink 用页面深色或 palette 深色，强调最多一处",
+   "requires": {
+    "headlineVisible": true,
+    "sourceLine": true
+   },
+   "refs": [
+    "q390",
+    "q385"
+   ],
+   "failureModes": [
+    "另起黑底把页面丢掉",
+    "字只放页边不参与页面"
+   ],
+   "checks": [
+    "pairing:page",
+    "contrast"
+   ]
+  },
+  {
+   "id": "tip-page-number",
+   "register": "evidence-page",
+   "sceneSignals": [
+    "page",
+    "number",
+    "data"
+   ],
+   "faces": [
+    "House Kikai",
+    "House Kokka"
+   ],
+   "sizeCap": 200,
+   "placement": [
+    "over-page-column",
+    "bottom-left"
+   ],
+   "material": [
+    "highlight-block"
+   ],
+   "colorRule": "数字用 palette 主色，高亮块只给数字，不描边",
+   "requires": {
+    "headlineVisible": true,
+    "sourceLine": true,
+    "dateLine": true
+   },
+   "refs": [
+    "q390"
+   ],
+   "failureModes": [
+    "数字没有单位/来源",
+    "高亮块盖住 headline"
+   ],
+   "checks": [
+    "pairing:page",
+    "typebible:figure"
+   ]
+  },
+  {
+   "id": "tip-person-side",
+   "register": "person",
+   "sceneSignals": [
+    "face",
+    "presenter",
+    "interview"
+   ],
+   "faces": [
+    "House Kokka",
+    "House Sumikaku"
+   ],
+   "sizeCap": 128,
+   "placement": [
+    "beside-face",
+    "negative-space"
+   ],
+   "material": [
+    "none",
+    "grain"
+   ],
+   "colorRule": "低对比或 palette 浅色；不压眼睛/嘴；一帧最多一句",
+   "requires": {
+    "faceClear": true
+   },
+   "refs": [
+    "q439",
+    "q467"
+   ],
+   "failureModes": [
+    "字压脸",
+    "字比人抢",
+    "满屏字幕化"
+   ],
+   "checks": [
+    "pairing:person",
+    "contrast"
+   ]
+  },
+  {
+   "id": "tip-reflection-serif",
+   "register": "quiet-bokeh",
+   "sceneSignals": [
+    "blurred",
+    "low-detail",
+    "atmosphere"
+   ],
+   "faces": [
+    "House Kokka"
+   ],
+   "sizeCap": 128,
+   "placement": [
+    "negative-space",
+    "centre-safe"
+   ],
+   "material": [
+    "grain",
+    "ink-bite"
+   ],
+   "colorRule": "palette 浅色/低透明，轻字重；不要用黑底遮罩",
+   "requires": {
+    "sceneDetailMax": 0.35
+   },
+   "refs": [
+    "f325"
+   ],
+   "failureModes": [
+    "黑渐变遮罩",
+    "字太重把安静打碎"
+   ],
+   "checks": [
+    "pairing:reflection",
+    "contrast"
+   ]
+  },
+  {
+   "id": "tip-object-behind",
+   "register": "product-object",
+   "sceneSignals": [
+    "banana",
+    "product",
+    "object"
+   ],
+   "faces": [
+    "House Kokka",
+    "House Sumikaku"
+   ],
+   "sizeCap": 200,
+   "placement": [
+    "behind-subject",
+    "pinned-label"
+   ],
+   "material": [
+    "grain"
+   ],
+   "colorRule": "ink 与主体同族或互补；被主体遮 20–40%",
+   "requires": {
+    "occlusionMin": 0.2,
+    "occlusionMax": 0.4
+   },
+   "refs": [
+    "f380"
+   ],
+   "failureModes": [
+    "字全在主体外面",
+    "字盖满主体",
+    "黑渐变"
+   ],
+   "checks": [
+    "pairing:object",
+    "overlap"
+   ]
+  },
+  {
+   "id": "tip-3d-material",
+   "register": "3d-recap",
+   "sceneSignals": [
+    "3d",
+    "recap",
+    "structure"
+   ],
+   "faces": [
+    "House Sumikaku",
+    "House Kikai"
+   ],
+   "sizeCap": 300,
+   "placement": [
+    "in-scene",
+    "behind-object"
+   ],
+   "material": [
+    "extrusion",
+    "chrome",
+    "screen-print"
+   ],
+   "colorRule": "字体本身是材料：一个正面+一个侧面+两档明暗；厚度不糊字",
+   "requires": {
+    "effectCount": 1
+   },
+   "refs": [
+    "q385",
+    "f380"
+   ],
+   "failureModes": [
+    "30 层挤出糊成团",
+    "字效和场景无关"
+   ],
+   "checks": [
+    "pairing:3d",
+    "typebible"
+   ]
+  }
+ ],
+ "rules": [
+  "字体必须从 scene register 选：页面/数据用衬线或重字，人物旁用轻衬线，安静场景用低对比衬线，3D recap 才用挤出/金属。",
+  "字色和材质从画面 palette 取，最多一个强调；黑渐变遮罩不是场景。",
+  "字和主体至少一种关系：被遮 20–40%、穿出、钉住、或在人物负空间；没有关系的字判 PPT。",
+  "一帧的字效数量 ≤1；效果必须解释材质来源（纸/印/屏幕/金属）。"
+ ],
+ "gaps": [
+  "还没把 pairing 接进灰盒/章节的自动分配；需要 scene register 从 filmdesign 读取",
+  "人物场景的脸部 bbox 还没自动传入",
+  "3D/recap 的 material 还需要引擎侧支持"
+ ]
+}

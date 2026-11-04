@@ -1,0 +1,75 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "title": "A1ArbiterRuling/v1",
+ "type": "object",
+ "additionalProperties": false,
+ "required": [
+  "rulings"
+ ],
+ "properties": {
+  "rulings": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "beat",
+     "verdict",
+     "why",
+     "items",
+     "rule"
+    ],
+    "properties": {
+     "beat": {
+      "type": "string"
+     },
+     "verdict": {
+      "enum": [
+       "pass",
+       "fix"
+      ]
+     },
+     "why": {
+      "type": "string"
+     },
+     "items": {
+      "type": "array",
+      "maxItems": 3,
+      "items": {
+       "type": "string"
+      }
+     },
+     "rule": {
+      "type": [
+       "object",
+       "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+       "say",
+       "complains",
+       "suggests"
+      ],
+      "properties": {
+       "say": {
+        "type": "string"
+       },
+       "complains": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "suggests": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}

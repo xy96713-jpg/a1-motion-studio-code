@@ -1,0 +1,32 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import * as W from '../apps/studio-next/src/lib/recipe-board/writer.mjs';
+import { readMaterials, needPrint } from '../apps/studio-next/src/lib/recipe-board/materials.mjs';
+import { chapterMaterials } from '../apps/studio-next/src/lib/recipe-board/chapter.mjs';
+const root = fs.mkdtempSync(path.join(os.tmpdir(), 'writer-need-retirement-'));
+try {
+  const cfg = {dataDir: root, repoRoot: root, sourceRoot: root}, id = 'fixture';
+  const dir = path.join(root, 'projects', id, 'materials'); fs.mkdirSync(dir, {recursive: true});
+  fs.writeFileSync(path.join(root, 'projects', id, 'project.json'), JSON.stringify({id}));
+  const write = (file, v) => fs.writeFileSync(path.join(dir, file), JSON.stringify(v));
+  const read = (file) => JSON.parse(fs.readFileSync(path.join(dir, file)));
+  const beat = {text:'fixture', onScreen:{keywords:[]}};
+  const n = (id, q) => W.toNeed(id, {kind:'stock', form:'photo', slot:'background', original:'subject', entity:id, queryEn:q}, beat);
+  const old = [n('B01','first'), n('B02','same'), n('B03','delete')];
+  const next = [n('B01','changed'), n('B02','same'), n('B04','added')];
+  const file = path.join(dir, 'keep.jpg'); fs.writeFileSync(file, 'original bytes');
+  write('needs.json', {needs:old});
+  write('candidates.json', {shots:Object.fromEntries(old.map(x => [x.shotId,{need:x,candidates:[{id:'candidate'}]}]))});
+  write('bindings.json', {shots:Object.fromEntries(old.map(x => [x.shotId,{file,needPrint:needPrint(x)}]))});
+  write('approvals.json', {batches:[{items:old.map(x => ({shotId:x.shotId,status:'fetched',needPrint:needPrint(x)}))}]});
+  const snapshot = () => Object.fromEntries(['needs.json','candidates.json','bindings.json','approvals.json'].map(f => [f, fs.readFileSync(path.join(dir,f),'utf8')]));
+  const before = snapshot();
+  await assert.rejects(W.updateMaterialNeeds(cfg,id,next,new Set(['B01','B02','B03','B04'])), /blocked/i);
+  assert.deepEqual(snapshot(), before, 'changed and deleted requests must not rewrite historical records');
+  assert.equal(fs.readFileSync(file,'utf8'),'original bytes');
+  await assert.rejects(W.updateMaterialNeeds(cfg,id,[old[0],old[0]],new Set(['B01'])), /duplicate/i);
+  assert.deepEqual(snapshot(), before, 'duplicate keys must not cause partial writes');
+  console.log('writer material needs consumer regression passed');
+} finally { fs.rmSync(root,{recursive:true,force:true}); }

@@ -1,0 +1,576 @@
+{
+ "contract": "A1TechStack/v1",
+ "asOf": "2026-11-04",
+ "about": "Shot problem first, tool second. ready = wired into the production line; installed = present but manual/not wired; candidate = available in the environment but not proven in the line; missing = not installed. Never mark a missing tool ready.",
+ "statusLegend": {
+  "ready": "wired and used by the line",
+  "installed": "installed app/package, manual or not wired",
+  "candidate": "available but no production proof",
+  "missing": "not installed"
+ },
+ "capabilities": [
+  {
+   "id": "webgl-three",
+   "name": "Three.js / WebGL2",
+   "category": "realtime-3d",
+   "status": "ready",
+   "files": [
+    "remotion-renderer/node_modules/three/package.json"
+   ],
+   "use": [
+    "real-time 3D world",
+    "camera/parallax",
+    "many instances",
+    "procedural screens",
+    "previz"
+   ],
+   "notFor": [
+    "hero asset lookdev alone",
+    "photoreal contact shadows alone"
+   ]
+  },
+  {
+   "id": "glsl-shader",
+   "name": "GLSL shaders / ShaderMaterial / post chain",
+   "category": "realtime-3d",
+   "status": "ready",
+   "files": [
+    "remotion-renderer/node_modules/three/examples/jsm/postprocessing/EffectComposer.js"
+   ],
+   "use": [
+    "material surface",
+    "screen distortion",
+    "print/halftone/CRT",
+    "bloom/DOF/GTAO"
+   ],
+   "notFor": [
+    "evidence or readable type"
+   ]
+  },
+  {
+   "id": "webgpu",
+   "name": "WebGPU",
+   "category": "realtime-3d",
+   "status": "candidate",
+   "use": [
+    "future compute/particles/heavy shaders"
+   ],
+   "notFor": [
+    "production until a test passes in Chromium"
+   ],
+   "note": "browser may support it; not wired in the line"
+  },
+  {
+   "id": "three-gpu-pathtracer",
+   "name": "three-gpu-pathtracer",
+   "category": "realtime-3d",
+   "status": "candidate",
+   "files": [
+    "remotion-renderer/node_modules/three-gpu-pathtracer/package.json"
+   ],
+   "use": [
+    "interactive path-traced look tests"
+   ],
+   "notFor": [
+    "final render without benchmark"
+   ]
+  },
+  {
+   "id": "babylon",
+   "name": "Babylon.js",
+   "category": "realtime-3d",
+   "status": "missing",
+   "use": [
+    "alternative WebGL engine"
+   ],
+   "notFor": [
+    "do not introduce without a task"
+   ]
+  },
+  {
+   "id": "r3f",
+   "name": "React Three Fiber",
+   "category": "realtime-3d",
+   "status": "missing",
+   "use": [
+    "React scene composition"
+   ],
+   "notFor": [
+    "do not rewrite the existing engine for it"
+   ]
+  },
+  {
+   "id": "blender",
+   "name": "Blender / Cycles / Eevee",
+   "category": "dcc",
+   "status": "ready",
+   "tool": "blender",
+   "use": [
+    "hero asset",
+    "PBR/lookdev",
+    "contact shadows",
+    "camera path",
+    "bake passes",
+    "still benchmark"
+   ],
+   "notFor": [
+    "instant interactive iteration"
+   ]
+  },
+  {
+   "id": "blender-geometry-nodes",
+   "name": "Blender Geometry Nodes",
+   "category": "dcc",
+   "status": "candidate",
+   "tool": "blender",
+   "use": [
+    "procedural field/array/fields",
+    "baked variants"
+   ],
+   "notFor": [
+    "a new dependency without a test"
+   ]
+  },
+  {
+   "id": "blender-simulation",
+   "name": "Blender rigid/soft/fluid sim",
+   "category": "dcc",
+   "status": "candidate",
+   "tool": "blender",
+   "use": [
+    "bake destruction/cloth/volumes"
+   ],
+   "notFor": [
+    "long sim without a render budget"
+   ]
+  },
+  {
+   "id": "houdini",
+   "name": "Houdini",
+   "category": "dcc",
+   "status": "missing",
+   "use": [
+    "complex procedural/sim"
+   ],
+   "notFor": [
+    "claiming as production"
+   ]
+  },
+  {
+   "id": "cavalry",
+   "name": "Cavalry",
+   "category": "motion-2d",
+   "status": "installed",
+   "app": "/Applications/Cavalry.app",
+   "use": [
+    "2D motion graphics",
+    "data-driven animation"
+   ],
+   "notFor": [
+    "automated pipeline until an export is wired"
+   ]
+  },
+  {
+   "id": "davinci",
+   "name": "DaVinci Resolve",
+   "category": "finishing",
+   "status": "installed",
+   "app": "/Applications/DaVinci Resolve",
+   "use": [
+    "grade",
+    "conform",
+    "finishing"
+   ],
+   "notFor": [
+    "shot generation"
+   ]
+  },
+  {
+   "id": "videofusion",
+   "name": "VideoFusion",
+   "category": "finishing",
+   "status": "installed",
+   "app": "/Applications/VideoFusion-macOS.app",
+   "use": [
+    "video utility/processing"
+   ],
+   "notFor": [
+    "unverified automation"
+   ]
+  },
+  {
+   "id": "after-effects",
+   "name": "After Effects",
+   "category": "motion-2d",
+   "status": "missing",
+   "use": [
+    "2D comp/motion"
+   ],
+   "notFor": [
+    "claiming as installed"
+   ]
+  },
+  {
+   "id": "nuke",
+   "name": "Nuke",
+   "category": "finishing",
+   "status": "missing",
+   "use": [
+    "high-end comp"
+   ],
+   "notFor": [
+    "claiming as installed"
+   ]
+  },
+  {
+   "id": "unreal",
+   "name": "Unreal Engine",
+   "category": "realtime-3d",
+   "status": "missing",
+   "use": [
+    "large realtime world"
+   ],
+   "notFor": [
+    "claiming as installed"
+   ]
+  },
+  {
+   "id": "unity",
+   "name": "Unity",
+   "category": "realtime-3d",
+   "status": "missing",
+   "use": [
+    "alternative realtime"
+   ],
+   "notFor": [
+    "claiming as installed"
+   ]
+  },
+  {
+   "id": "touchdesigner",
+   "name": "TouchDesigner",
+   "category": "realtime-3d",
+   "status": "missing",
+   "use": [
+    "generative AV"
+   ],
+   "notFor": [
+    "claiming as installed"
+   ]
+  },
+  {
+   "id": "dom-css",
+   "name": "DOM / CSS / Canvas2D",
+   "category": "2d-graphic",
+   "status": "ready",
+   "use": [
+    "type",
+    "layout",
+    "data cards",
+    "type-led scenes",
+    "UI/screens"
+   ],
+   "notFor": [
+    "fake 3D volume"
+   ]
+  },
+  {
+   "id": "svg-canvas",
+   "name": "SVG / Canvas / resvg",
+   "category": "2d-graphic",
+   "status": "ready",
+   "files": [
+    "node_modules/@resvg/resvg-js/package.json"
+   ],
+   "use": [
+    "vector diagrams",
+    "print shapes",
+    "type outlines"
+   ],
+   "notFor": [
+    "photoreal"
+   ]
+  },
+  {
+   "id": "gsap",
+   "name": "GSAP",
+   "category": "motion-2d",
+   "status": "installed",
+   "files": [
+    "node_modules/gsap/package.json"
+   ],
+   "use": [
+    "timeline/easing/DOM motion"
+   ],
+   "notFor": [
+    "a second motion runtime without proof"
+   ]
+  },
+  {
+   "id": "lottie",
+   "name": "Lottie / lottie-web",
+   "category": "motion-2d",
+   "status": "installed",
+   "files": [
+    "node_modules/lottie-web/build/player/lottie.js"
+   ],
+   "use": [
+    "vector micro-motion",
+    "UI loops"
+   ],
+   "notFor": [
+    "photoreal or 3D camera"
+   ]
+  },
+  {
+   "id": "ffmpeg",
+   "name": "FFmpeg",
+   "category": "post",
+   "status": "ready",
+   "tool": "ffmpeg",
+   "use": [
+    "encode",
+    "concat",
+    "contact sheet",
+    "SSIM",
+    "seam strip",
+    "audio"
+   ],
+   "notFor": [
+    "shot design"
+   ]
+  },
+  {
+   "id": "chromium-puppeteer",
+   "name": "Chromium / Puppeteer capture",
+   "category": "render",
+   "status": "ready",
+   "files": [
+    "node_modules/puppeteer-core/package.json"
+   ],
+   "use": [
+    "deterministic frame capture",
+    "web screen capture"
+   ],
+   "notFor": [
+    "real footage evidence"
+   ]
+  },
+  {
+   "id": "real-assets",
+   "name": "Real footage / archival assets",
+   "category": "evidence",
+   "status": "ready",
+   "use": [
+    "evidence",
+    "real people/places",
+    "news/page capture"
+   ],
+   "notFor": [
+    "AI replacement"
+   ]
+  },
+  {
+   "id": "ai-imagegen",
+   "name": "Codex/GPT image generation",
+   "category": "ai",
+   "status": "ready",
+   "files": [
+    "apps/studio-next/src/lib/recipe-board/imagegen.mjs"
+   ],
+   "use": [
+    "text-free art direction/reference",
+    "texture reference"
+   ],
+   "notFor": [
+    "final frame",
+    "readable text",
+    "evidence"
+   ]
+  },
+  {
+   "id": "ai-video",
+   "name": "MiniMax/Seedance/Kling fallback",
+   "category": "ai",
+   "status": "candidate",
+   "use": [
+    "5s non-evidence art fallback after triage"
+   ],
+   "notFor": [
+    "evidence",
+    "text",
+    "multi-shot continuity",
+    "without user approval"
+   ],
+   "note": "MiniMax key exists but balance 0; Seedance/Kling keys absent"
+  }
+ ],
+ "selectionRules": [
+  {
+   "when": "real evidence, real person, archival page, price/data",
+   "choose": [
+    "real-assets"
+   ],
+   "avoid": [
+    "ai-imagegen",
+    "ai-video"
+   ]
+  },
+  {
+   "when": "readable type, numbers, captions, data graphics",
+   "choose": [
+    "dom-css",
+    "svg-canvas"
+   ],
+   "avoid": [
+    "ai-imagegen",
+    "ai-video"
+   ]
+  },
+  {
+   "when": "one world with consistent camera/parallax/contact shadows",
+   "choose": [
+    "webgl-three",
+    "blender"
+   ],
+   "avoid": [
+    "ai-video",
+    "still+pan"
+   ]
+  },
+  {
+   "when": "hero object/PBR/contact shadow/lookdev",
+   "choose": [
+    "blender"
+   ],
+   "avoid": [
+    "webgl-three only"
+   ]
+  },
+  {
+   "when": "procedural surface, halftone/CRT/LED, screen media",
+   "choose": [
+    "glsl-shader",
+    "webgl-three"
+   ],
+   "avoid": [
+    "flat image overlay"
+   ]
+  },
+  {
+   "when": "2D motion graphics or vector loops",
+   "choose": [
+    "dom-css",
+    "svg-canvas",
+    "gsap",
+    "lottie",
+    "cavalry (manual)"
+   ],
+   "avoid": [
+    "3D for everything"
+   ]
+  },
+  {
+   "when": "complex sim/destruction/volumes",
+   "choose": [
+    "houdini if installed",
+    "blender-simulation bake"
+   ],
+   "avoid": [
+    "claiming Houdini ready"
+   ]
+  },
+  {
+   "when": "finishing/grade/conform",
+   "choose": [
+    "ffmpeg",
+    "davinci (manual)"
+   ],
+   "avoid": [
+    "re-render every shot to change grade"
+   ]
+  },
+  {
+   "when": "art shot too hard to reproduce",
+   "choose": [
+    "ai-video only after triage + user approval"
+   ],
+   "avoid": [
+    "using it as a whole world"
+   ]
+  }
+ ],
+ "pipeline": [
+  {
+   "stage": "intake",
+   "artifacts": [
+    "episode.md"
+   ],
+   "tech": [
+    "real-assets",
+    "dom-css"
+   ]
+  },
+  {
+   "stage": "design",
+   "artifacts": [
+    "design-board.json",
+    "six references",
+    "10s world test"
+   ],
+   "tech": [
+    "ai-imagegen",
+    "webgl-three",
+    "blender",
+    "dom-css"
+   ]
+  },
+  {
+   "stage": "asset",
+   "artifacts": [
+    "asset sheet",
+    "6 views",
+    "PBR",
+    "contact shadows"
+   ],
+   "tech": [
+    "blender"
+   ]
+  },
+  {
+   "stage": "previz",
+   "artifacts": [
+    "20s blockout",
+    "camera/seam score"
+   ],
+   "tech": [
+    "webgl-three",
+    "blender"
+   ]
+  },
+  {
+   "stage": "shots",
+   "artifacts": [
+    "shot cards",
+    "3s motion",
+    "seam strips"
+   ],
+   "tech": [
+    "webgl-three",
+    "glsl-shader",
+    "dom-css",
+    "ffmpeg"
+   ]
+  },
+  {
+   "stage": "final",
+   "artifacts": [
+    "151s/20 shots/19 seams/60fps"
+   ],
+   "tech": [
+    "ffmpeg",
+    "davinci (manual)"
+   ]
+  }
+ ]
+}

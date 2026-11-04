@@ -1,0 +1,208 @@
+{
+ "contract": "A1RecipeBoardSemanticActs/v1",
+ "about": "What a line of narration does (its act), how to recognise it, and the devices of routing/devices.json that show it. The storyboard of a six-stage film names each beat's act and the devices it shows it with, before any card is chosen (the user 2026-10-26: 导演有根据文案拆分好语义最好 想好怎么设计吗 … 先规范 梳理最优方式执行). storyboard.mjs semanticErrors checks the devices exist, fit the act or say why, answer the narration's cued devices or decline them, and do not repeat one device beat after beat.",
+ "acts": [
+  {
+   "id": "question",
+   "name": "提问",
+   "what": "抛出这部片要回答的问题：为什么、怎么、到底",
+   "cue": "…吗？ / 为什么 / 怎么 / 到底",
+   "devices": [
+    "term-biggest",
+    "product-hero",
+    "signal-break",
+    "black-pause"
+   ]
+  },
+  {
+   "id": "phenomenon",
+   "name": "指出现象",
+   "what": "说出一个大家看到却没想过的现象",
+   "cue": "几乎 / 都 / 一模一样 / 总是",
+   "devices": [
+    "copy-to-repeat",
+    "lineup-row",
+    "product-hero",
+    "pan-distance"
+   ]
+  },
+  {
+   "id": "name",
+   "name": "命名",
+   "what": "第一次说出一个名词、名字、品种、概念",
+   "cue": "叫做 / 也就是 / 被称为 / 所谓",
+   "devices": [
+    "term-biggest",
+    "label-swap",
+    "callout-line"
+   ]
+  },
+  {
+   "id": "ratio",
+   "name": "比例",
+   "what": "一部分占整体多少",
+   "cue": "% / 占 / 之一 / 几成",
+   "devices": [
+    "dots-as-people",
+    "bar-length-ratio",
+    "mark-in-red",
+    "shrink-to-reality"
+   ]
+  },
+  {
+   "id": "scale",
+   "name": "规模",
+   "what": "一个很大或很小的量",
+   "cue": "万 / 亿 / 公顷 / 高达 / 低至",
+   "devices": [
+    "number-grows",
+    "map-pin-count",
+    "dots-as-people",
+    "scale-jump"
+   ]
+  },
+  {
+   "id": "mechanism",
+   "name": "机制",
+   "what": "讲一个东西怎么运作、怎么繁殖、怎么测",
+   "cue": "通过 / 靠 / 把…插 / 每隔 / 再…就",
+   "devices": [
+    "exploded-view",
+    "zoom-into",
+    "letter-to-structure",
+    "trace-diagram",
+    "branch-out"
+   ]
+  },
+  {
+   "id": "compare",
+   "name": "比较",
+   "what": "两样东西放在一起比",
+   "cue": "比 / 而 / 相比 / 倍",
+   "devices": [
+    "symmetry",
+    "quadrant-compare",
+    "cycle-compare",
+    "bar-length-ratio"
+   ]
+  },
+  {
+   "id": "list",
+   "name": "列举",
+   "what": "一口气说出几样",
+   "cue": "、…、 / 以及 / 还有",
+   "devices": [
+    "table-grows",
+    "bracket-group",
+    "branch-out",
+    "clipping-stack"
+   ]
+  },
+  {
+   "id": "sequence",
+   "name": "推进",
+   "what": "按时间或地点一站站往前走",
+   "cue": "年 / 到 / 随后 / 又",
+   "devices": [
+    "evidence-on-timeline",
+    "mark-follows-line",
+    "map-pin-count",
+    "tilt-into-space"
+   ]
+  },
+  {
+   "id": "cause",
+   "name": "原因",
+   "what": "讲为什么会这样",
+   "cue": "因为 / 所以 / 由于 / 意味着",
+   "devices": [
+    "mark-in-red",
+    "dim-keep-red",
+    "zoom-into",
+    "literal-metaphor"
+   ]
+  },
+  {
+   "id": "turn",
+   "name": "转折",
+   "what": "事情变了方向",
+   "cue": "但 / 可是 / 于是 / 只能",
+   "devices": [
+    "subject-stays",
+    "matter-transition",
+    "glitch-cut",
+    "colour-mood"
+   ]
+  },
+  {
+   "id": "reversal",
+   "name": "反转",
+   "what": "推翻前面的预期",
+   "cue": "同样 / 其实 / 恰恰 / 不是…而是",
+   "devices": [
+    "callback",
+    "rhyme",
+    "label-swap",
+    "signal-break"
+   ]
+  },
+  {
+   "id": "evidence",
+   "name": "证据",
+   "what": "引报道、论文、文件、官方说法",
+   "cue": "研究 / 报告 / 声明 / 确认 / 据",
+   "devices": [
+    "real-doc-callout",
+    "real-in-frame",
+    "clipping-stack",
+    "screen-workflow"
+   ]
+  },
+  {
+   "id": "verdict",
+   "name": "定性",
+   "what": "给事情下结论或定性质",
+   "cue": "宣布 / 认定 / 具有 / 紧急",
+   "devices": [
+    "banner-verdict",
+    "tape-sweep",
+    "term-biggest"
+   ]
+  },
+  {
+   "id": "consequence",
+   "name": "后果",
+   "what": "讲造成了什么",
+   "cue": "毁 / 损失 / 导致 / 不堪一击",
+   "devices": [
+    "shrink-to-reality",
+    "dim-keep-red",
+    "colour-mood",
+    "signal-break"
+   ]
+  },
+  {
+   "id": "breath",
+   "name": "留白",
+   "what": "不加新信息，让人消化",
+   "cue": "（简报定的留白拍）",
+   "devices": [
+    "zoom-out-whole",
+    "dim-keep-red",
+    "black-pause"
+   ]
+  },
+  {
+   "id": "close",
+   "name": "收尾",
+   "what": "回到开头、给出带走的那句话",
+   "cue": "其实是 / 一段…的历史 / 最后",
+   "devices": [
+    "rhyme",
+    "callback",
+    "carrier",
+    "zoom-out-whole"
+   ]
+  }
+ ]
+}

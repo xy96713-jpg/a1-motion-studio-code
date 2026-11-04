@@ -1,0 +1,21 @@
+// Opt-in: reads/rechecks the real formal stills consumer in an isolated root.
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import {boardConfig} from '../apps/studio-next/src/lib/recipe-board/store.mjs';
+import {stepStills,stillReviewMaterialsStatus} from '../apps/studio-next/src/lib/recipe-board/stills.mjs';
+import {verifyStillReviewPack} from '../apps/studio-next/src/lib/recipe-board/still-review-pack.mjs';
+const cfg=boardConfig(),id='banana-design';
+assert(cfg.repoRoot.startsWith('/Users/a1/.hermes/cache/scratch/layout-final-consumer-'));
+const project=path.join(cfg.dataDir,'projects',id),read=p=>JSON.parse(fs.readFileSync(p));
+const result=await stepStills(cfg,id,{log:()=>{}});assert.equal(result.state,'review',JSON.stringify(result));
+const task=read(path.join(project,'tasks/stills-taste.task.json')),pack=task.input.stillReviewPack;
+assert.equal(verifyStillReviewPack(pack).ok,true);assert.equal(stillReviewMaterialsStatus(task).ok,true);
+const rows=pack.shots.map(s=>({beat:s.beat,version:s.version.status,status:s.layoutPreflight.status,coordinateSpace:s.layoutPreflight.coordinateSpace,finalOutput:s.layoutPreflight.finalOutput,frame:s.images['original-size'].path}));
+assert.deepEqual(rows.map(r=>r.status),['unknown','unknown','pass']);assert(rows.every(r=>r.version==='bound'));
+const b10=pack.shots.find(s=>s.beat==='B10');assert.equal(b10.layoutPreflight.contract.nodes.length,3);assert.deepEqual(b10.layoutPreflight.contract.safe,[120,96,1800,935]);
+assert.equal(b10.layoutPreflight.finalOutput.status,'unknown','inner geometry never validates outer display pixels');
+const original=read('/Users/a1/.hermes/cache/scratch/stills-mode-acceptance-20261030/work/recipe-board-v1/projects/banana-design/tasks/stills-taste.task.json');
+assert.notEqual(task.forCheck,original.forCheck,'old check must not carry');assert.notEqual(task.forAnswer,original.forAnswer,'old answer receipt must not carry');
+const receipt={scope:'Real stepStills -> runtimeCheck -> browser __layoutPreflight -> frame-bound telemetry -> review task. No aesthetic approval.',state:result.state,forCheck:task.forCheck,forAnswer:task.forAnswer,oldForCheck:original.forCheck,oldForAnswer:original.forAnswer,rows,reviewTask:path.join(project,'tasks/stills-taste.task.json'),pack:pack.checklist.path.replace('review-checklist.md','review-pack.json'),visualInspection:pack.visualInspection,aestheticVerdict:pack.aestheticVerdict,missingFilmBeats:task.input.filmCoverage.missing};
+fs.writeFileSync(path.join(cfg.repoRoot,'layout-consumer-evidence.json'),JSON.stringify(receipt,null,2)+'\n');console.log(JSON.stringify(receipt,null,2));

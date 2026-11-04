@@ -1,0 +1,373 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "A1 greybox rough",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "beats"
+  ],
+  "properties": {
+    "beats": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "beat",
+          "blocks",
+          "type",
+          "camera",
+          "note",
+          "out",
+          "device",
+          "kind",
+          "composition"
+        ],
+        "properties": {
+          "beat": {
+            "type": "string"
+          },
+          "blocks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "label",
+                "shape",
+                "role",
+                "x",
+                "y",
+                "w",
+                "h",
+                "model",
+                "view",
+                "image",
+                "in",
+                "enter",
+                "lit",
+                "gridMotion"
+              ],
+              "properties": {
+                "label": {
+                  "type": "string"
+                },
+                "shape": {
+                  "enum": [
+                    "rect",
+                    "ellipse",
+                    "line",
+                    "ship",
+                    "globe",
+                    "map",
+                    "photo",
+                    "screen",
+                    "people",
+                    "chart",
+                    "arrow",
+                    "grid"
+                  ]
+                },
+                "role": {
+                  "enum": [
+                    "subject",
+                    "context",
+                    "evidence",
+                    "mark"
+                  ]
+                },
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "w": {
+                  "type": "number"
+                },
+                "h": {
+                  "type": "number"
+                },
+                "model": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "view": {
+                  "enum": [
+                    "three-quarter",
+                    "top",
+                    "side",
+                    null
+                  ]
+                },
+                "image": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "in": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "enter": {
+                  "enum": [
+                    "cut",
+                    "fade",
+                    "rise",
+                    "scale",
+                    "wipe",
+                    "type-on",
+                    "draw",
+                    null
+                  ]
+                },
+                "lit": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "gridMotion": {
+                  "type": [
+                    "object",
+                    "null"
+                  ],
+                  "additionalProperties": false,
+                  "required": [
+                    "from",
+                    "to",
+                    "start",
+                    "end"
+                  ],
+                  "properties": {
+                    "from": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 100
+                    },
+                    "to": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 100
+                    },
+                    "start": {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "end": {
+                      "type": "number",
+                      "minimum": 0
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "type": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "text",
+                "role",
+                "x",
+                "y",
+                "size",
+                "align",
+                "accent",
+                "in",
+                "enter",
+                "near"
+              ],
+              "properties": {
+                "text": {
+                  "type": "string"
+                },
+                "role": {
+                  "enum": [
+                    "big",
+                    "small",
+                    "caption",
+                    "number"
+                  ]
+                },
+                "x": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "y": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "size": {
+                  "type": "number"
+                },
+                "align": {
+                  "enum": [
+                    "left",
+                    "center",
+                    "right"
+                  ]
+                },
+                "accent": {
+                  "type": "boolean"
+                },
+                "in": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "enter": {
+                  "enum": [
+                    "cut",
+                    "fade",
+                    "rise",
+                    "scale",
+                    "wipe",
+                    "type-on",
+                    "draw",
+                    null
+                  ]
+                },
+                "near": {
+                  "enum": [
+                    "top-left",
+                    "top",
+                    "top-right",
+                    "left",
+                    "center",
+                    "right",
+                    "bottom-left",
+                    "bottom",
+                    "bottom-right",
+                    "under",
+                    null
+                  ]
+                }
+              }
+            }
+          },
+          "camera": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "move",
+              "note",
+              "from",
+              "to"
+            ],
+            "properties": {
+              "move": {
+                "enum": [
+                  "static",
+                  "push",
+                  "pull",
+                  "pan",
+                  "orbit",
+                  "cut"
+                ]
+              },
+              "note": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "from": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "additionalProperties": false,
+                "required": [
+                  "s",
+                  "x",
+                  "y"
+                ],
+                "properties": {
+                  "s": {
+                    "type": "number"
+                  },
+                  "x": {
+                    "type": "number"
+                  },
+                  "y": {
+                    "type": "number"
+                  }
+                }
+              },
+              "to": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "additionalProperties": false,
+                "required": [
+                  "s",
+                  "x",
+                  "y"
+                ],
+                "properties": {
+                  "s": {
+                    "type": "number"
+                  },
+                  "x": {
+                    "type": "number"
+                  },
+                  "y": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          },
+          "note": {
+            "type": "string"
+          },
+          "out": {
+            "enum": [
+              "cut",
+              "match",
+              "whip",
+              "push",
+              "glitch",
+              "flash"
+            ]
+          },
+          "device": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "design-device id from routing/devices.json. When director-routes auto-pick selects ready devices for this beat, answer must eat one (路由选了但答案未吃). Opening must use WIRED lineup-row / copy-to-repeat / table-grows, or chapter path (map|globe|chart = mapPlane; block.model = subject; model+orbit = orbit). Unwired shells array-build / stagger-reveal / light-3d / presenter-close must not be kit.status:ready and do not clear the gate."
+          },
+          "kind": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Optional director-routes kind pinned from film/auto-pick; when set must match routeDefaults."
+          },
+          "composition": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Optional director-routes composition pinned from film/auto-pick."
+          }
+        }
+      }
+    }
+  }
+}

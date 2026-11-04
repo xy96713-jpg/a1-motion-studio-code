@@ -1,0 +1,126 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>brand</title>
+<style>
+html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: #000; }
+#photo { position: absolute; inset: 0; background-size: cover; background-position: center; transform-origin: 50% 50%; }
+#photo2 { position: absolute; inset: 0; background-size: cover; background-position: center; transform-origin: 50% 50%; opacity: 0; }
+#glitch { position: absolute; inset: 0; pointer-events: none; }
+#glitch div { position: absolute; inset: 0; background-repeat: no-repeat; }
+#static { position: absolute; inset: 0; pointer-events: none; z-index: 5; }
+#stage { position: absolute; inset: 0; background: radial-gradient(ellipse 70% 60% at 50% 48%, #1a1714 0%, #0c0a08 70%); display: none; }
+#mark { position: absolute; left: 27%; top: 50%; width: 46%; height: 36%; transform: translateY(-50%); background-size: contain; background-repeat: no-repeat; background-position: center; filter: drop-shadow(0 18px 30px rgba(0,0,0,.6)); }
+#glint { position: absolute; top: 0; height: 1080px; width: 220px; background: linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent); transform: skewX(-24deg); filter: blur(8px); mix-blend-mode: screen; opacity: 0; }
+#vig { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse 72% 72% at 50% 50%, transparent 40%, rgba(0,0,0,.72)); }
+#black { position: absolute; inset: 0; background: #000; pointer-events: none; }
+.paper { position: absolute; left: 150px; top: 150px; padding: 16px 40px 18px; font-family: "SourceHanSerif Heavy"; font-size: 72px; color: #1d1d1d; line-height: 1; white-space: nowrap; filter: drop-shadow(0 10px 14px rgba(0,0,0,.4)); }
+.paper .bg { position: absolute; inset: -10px -24px; background-size: 100% 100%; z-index: -1; filter: grayscale(1) contrast(1.15) brightness(.93); }
+.paper .q { font-family: "SourceHanSerif Heavy"; font-style: italic; font-size: 1.15em; vertical-align: -.08em; }
+.paper span.t { display: inline-block; transform: scaleX(.85); margin: 0 -.08em; }
+#sub { position: absolute; left: 0; right: 0; top: 930px; text-align: center; font-family: 'SourceHanSans Regular', 'PingFang SC'; font-size: 58px; color: #fff; text-shadow: 0 0 6px rgba(0,0,0,.55), 0 2px 3px rgba(0,0,0,.6); transform: scaleX(.86); z-index: 50; }
+</style></head>
+<body>
+<div id="photo"></div><div id="photo2"></div><div id="glitch"></div><div id="static" data-fixed></div>
+<div id="stage"><div id="mark"></div><div id="glint"></div><div id="bline" style="position:absolute;left:0;right:0;top:66%;text-align:center;font-family:'SourceHanSans Regular';font-weight:700;font-size:120px;color:#f2f2f2;letter-spacing:.02em;white-space:nowrap;opacity:0"></div></div>
+<div id="vig"></div><div id="lab" class="paper" style="display:none"></div><div id="black"></div><div id="sub"></div>
+<script>
+// 照片 / 实拍插入 and 品牌整屏亮相 (reference G13 at 176.8 s, measured at 4 fps: a hard cut to a photograph of the mark on a phone, filling the
+// frame, a slow push over 1.5 s, a dark vignette; then a hard cut on). The picture is real material: a photograph fills
+// the frame; a mark on transparency (logo / cutout) stands on the dark stage with one glint, since the reference never
+// shows a logo on white. Used as `insert` too (照片插入): the same cut, push and vignette on any photograph.
+const S = window.__spec, K = S.kit, $ = (q) => document.querySelector(q);
+const E = { out: (k) => 1 - Math.pow(1 - k, 3), inout: (k) => (k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2) };   // (inout: the dissolve to `then` called it and the page never got ready, opensrc-S10)
+const seg = (t, a, b) => Math.min(1, Math.max(0, (t - a) / (b - a)));
+const esc = (x) => String(x).replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+const onStage = S.srcKind === 'logo' || S.srcKind === 'cutout';
+// footage: the clip's frames, one per output frame (modules.mjs extracts them), shown in turn; the push runs on top
+const FR = S.frames || null, frameAt = (t) => FR[Math.min(FR.length - 1, Math.max(0, Math.floor((t - S.at) * (S.fps || 60))))];
+// a page (P34: 真实蓝色页面作为产品证据，略带透视与整体推进): the page tilted a little in perspective, pushing in
+const isPage = S.srcKind === 'page' && !S.figure && S.fit !== 'contain';   /* (a page set whole and flat, fit contain: a page card made from a capture, r1-S5) */   /* (a paper's figure is shown flat and whole, not tilted as a page: tilted it sat small in the top half, opensrc-S10) */
+if (isPage) { document.body.style.perspective = '2400px'; }
+// a dark mark (a navy wordmark, a black logo) on a light stage, lit the same way, with a soft vignette: on the dark stage
+// it disappeared (meta-S2, measured by framecheck); light marks keep the reference's dark stage
+if (onStage && S.markTone === 'dark') { $('#stage').style.background = 'radial-gradient(ellipse 70% 60% at 50% 48%, #f4f2ee 0%, #c9c4bb 75%)'; $('#mark').style.filter = 'drop-shadow(0 14px 24px rgba(0,0,0,.25))'; $('#vig').style.background = 'radial-gradient(ellipse 72% 72% at 50% 50%, transparent 45%, rgba(0,0,0,.35))'; }
+if (onStage) { $('#stage').style.display = 'block'; $('#photo').style.display = 'none'; $('#mark').style.backgroundImage = `url("${S.src}")`; }
+// invert: a dark mark turned light on the dark stage, as the reference shows OpenAI's black wordmark white on black (r1
+// R02); line: one line set by code under the mark (OpenAI - o1), coming in after it
+if (onStage && S.invert) { $('#stage').style.background = 'radial-gradient(ellipse 70% 60% at 50% 48%, #1c1c1c 0%, #050505 75%)'; $('#mark').style.filter = 'invert(1) brightness(1.1) drop-shadow(0 18px 30px rgba(0,0,0,.6))'; }
+if (S.line) { $('#bline').textContent = S.line; Object.assign($('#mark').style, { top: '38%', left: '16%', width: '68%', height: '38%' }); Object.assign($('#bline').style, { top: '62%', fontSize: '140px' }); }
+else { $('#photo').style.backgroundImage = `url("${S.src}")`;
+  // a portrait-shaped picture shown full frame is cut to its upper part, where the face is (centred, the hair and the
+  // top of the head were cut off: open-S12)
+  // (the face found on it, when there is one: modules.mjs focusY)
+  if (S.focusY != null) $('#photo').style.backgroundPosition = `center ${S.focusY}%`;
+  else { const im = new Image(); im.onload = () => { if (im.naturalHeight > im.naturalWidth * 1.05) $('#photo').style.backgroundPosition = 'center 22%'; }; im.src = S.src; } }
+// fit 'contain': a card or a cover shown whole, centred on the dark stage with a shadow (r1-S2: the reference's o1 card
+// on black; filling the frame cut its words off at the left)
+if (S.fit === 'contain' && !onStage) { $('#stage').style.display = 'block'; Object.assign($('#photo').style, { inset: S.srcKind === 'page' && !S.figure ? '0' : '7% 7%', backgroundSize: 'contain', backgroundRepeat: 'no-repeat', filter: 'drop-shadow(0 24px 40px rgba(0,0,0,.6))', zIndex: 1 }); }
+// a paper's figure on the dark stage turned dark itself, its lines glowing (the reference's training curves: yellow and
+// cyan on black, the white page inverted; ours a white sheet in a black frame, opensrc-S10)
+// (the frame and grid pressed down by the contrast and the lines bloomed: the reviewers read flat matplotlib, opensrc-S10;
+// the photo2 copy, blurred, is the bloom)
+if (S.fit === 'contain' && !onStage && S.srcKind === 'page' && !S.figure) { $('#vig').style.display = 'none'; }   /* (a page card set whole is a white page edge to edge: the photo vignette greyed its corners, r1-S5) */
+if (S.fit === 'contain' && !onStage && S.figure && S.invert) { Object.assign($('#photo2').style, { inset: '4% 3%', backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center', backgroundImage: `url("${S.src}")`, filter: 'invert(1) contrast(2.4) blur(14px) brightness(2.2) saturate(1.6)', mixBlendMode: 'screen', opacity: 1, zIndex: 2 }); }
+if (S.fit === 'contain' && !onStage && S.figure && S.invert) { $('#stage').style.background = '#030303'; Object.assign($('#photo').style, { inset: '4% 3%', filter: 'invert(1) contrast(1.7) brightness(1.05)'   /* (no drop-shadow: it outlined the picture's whole rectangle, a thin ring the review saw) */ }); }
+if (S.label) { $('#lab').style.display = 'block'; $('#lab').innerHTML = `<span class="q" style="color:${S.theme.accent}">“</span><span class="t">${esc(S.label)}</span><span class="q" style="color:${S.theme.accent}">”</span>`; }
+Promise.all([document.fonts.ready, ...(FR || []).map((src) => new Promise((ok) => { const i = new Image(); i.onload = i.onerror = ok; i.src = src; }))]).then(() => { window.__ready = true; render(S.at); });
+// then: a second picture dissolving in over the first at then.at (the reference's P? / open R11: Musk dissolving into the
+// White House); out 'glitch': the shot leaves on horizontal tearing (open R07: Jensen Huang's photo torn sideways in
+// its last frames), strips of the picture thrown sideways with colour fringes, the same on every render
+if (S.then) $('#photo2').style.backgroundImage = `url("${S.then.src}")`;
+// glitch 'through': the whole shot breaks up in bursts, a burst every third of a second (the reference's opensrc R01: code
+// under digital tearing, noise blocks and colour fringes; ours a quiet scroll, opensrc-S1)
+const THROUGH = S.glitch === 'through';
+// (the tearing shot's picture bright on black, as the reference's white code; ours read dim grey, opensrc-S1)
+if (THROUGH) $('#photo').style.filter = 'brightness(1.2) contrast(2.2) saturate(1.2)';   /* (black to black, code to white: a lift alone left the ground grey, opensrc-S1) */
+const GL = S.out === 'glitch' || THROUGH ? Array.from({ length: THROUGH ? 12 : 9 }, () => { const d = document.createElement('div'); $('#glitch').appendChild(d); return d; }) : [];
+const NB = THROUGH ? Array.from({ length: 300 }, () => { const d = document.createElement('div'); d.style.cssText = 'position:absolute;background-size:auto;filter:grayscale(1) brightness(.85) contrast(2.4);display:none'; $('#static').appendChild(d); return d; }) : [];
+const rnd = (a, b) => { const x = Math.sin(a * 12.9898 + b * 78.233) * 43758.5453; return x - Math.floor(x); };
+// a photograph or a clip cut in full frame takes the lens (camera.js): sharp on its subject, soft toward the edges; a
+// mark on the stage, a page and a card shown whole are read edge to edge and keep sharp
+if (S.module === 'insert' && !onStage && !isPage && S.fit !== 'contain') $('#photo').dataset.lens = '';
+window.render = (t) => {
+  if (S.line) { const k = Math.min(1, Math.max(0, (t - S.at - .45) / .35)); $('#bline').style.opacity = k; $('#bline').style.transform = `translateY(${(1 - k) * 18}px)`; }
+  if (FR) { const f = frameAt(t); if ($('#photo').dataset.f !== f) { $('#photo').dataset.f = f; $('#photo').style.backgroundImage = `url("${f}")`; } }
+  { const sb = (S.subs || []).find((x) => t >= x.at && t < x.end); $('#sub').textContent = sb ? sb.text : ''; }
+  // then the push: fast at first, drifting on to the end; a hard cut, as the reference's (G13): a 0.12 s rise from black read as a dropped second where the film was sampled
+  // (film review 0:18, Musk's insert opening dark)
+  $('#black').style.opacity = 0;
+  // measured on the reference (G13): it never holds, a push about twice ours at first, linear to the cut
+  // ... unless the director gives the shot its camera (spec.camera, modules/camera.js): then the picture holds still under
+  // it (its own push turned the director's pull-out into a push: open-S11, S12, measured on the animatic)
+  const own = !(S.camera || []).length, a = seg(t, S.at, S.end), push = own ? (S.push ?? .16) * (.3 * E.out(seg(t, S.at, S.at + 1)) + .7 * a) : 0;
+  // and a slow slide across, never only a zoom (the reference's camera slides over the phone: moving 84 % of the time;
+  // ours only zoomed and measured as still: motion check, h800-S9)
+  const slide = own ? 46 * (t - S.at) : 0;
+  $('#photo').style.transform = isPage ? `rotateY(${-9 + 4 * a}deg) rotateX(${3 - 2 * a}deg) scale(${.9 + push}) translateX(${-slide * .6}px)` : `${S.tilt ? `perspective(1800px) rotateX(${S.tilt[0]}deg) rotateY(${S.tilt[1]}deg) ` : ''}scale(${1.04 + push + (S.tilt && S.fit !== 'contain' ? .24 : 0)}) translateX(${-slide}px)`;   // (tilt [x, y]: a photograph laid at an angle on its surface, larger to keep the frame covered — the reference's bills lie tilted on a desk, ours a flat scan, opensrc S6 review)
+  if (S.then) { const k = E.inout(seg(t, S.then.at, S.then.at + .6)); $('#photo2').style.opacity = k; $('#photo2').style.transform = $('#photo').style.transform; }
+  else if (S.figure && S.invert) $('#photo2').style.transform = $('#photo').style.transform;
+  // (the static is on the screen, not under the camera: pushed with the picture, its edge blocks were cut by the frame,
+  // opensrc-S1)
+  // (every frame, as the reference's: small blocks of grey TV static on a grid, scattered over the whole frame (clusters
+  // covered the code, opensrc-S1), lines of the picture shifted sideways; white barcode bursts
+  // every third of a second read as a different effect, opensrc-S1)
+  const burst = THROUGH ? .55 + .45 * (((t - S.at) % .33) < .2 ? 1 : 0) : 0;
+  const noise = (seed) => `url("data:image/svg+xml;utf8,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='240' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='2.2' numOctaves='1' seed='${seed}'/></filter><rect width='100%' height='100%' filter='url(#n)'/></svg>`)}")`;
+  // (the reference's static is square cells in clumps over about two fifths of the frame: a few clumps thrown each
+  // group of a third of a second, each a ragged blob of cells, every cell's grain new each frame; sparse flat bars over
+  // the code read as another effect, opensrc-S1)
+  /* (cells in % of the frame: the animatic's page is 960 wide, px cells came out half size) */
+  const grp = Math.floor((t - S.at) / .33), f2 = Math.floor(t * 30);
+  NB.forEach((d, i) => { const c = i % 8, k = Math.floor(i / 8), cx = Math.floor(rnd(c + 300, grp) * 40), cy = Math.floor(rnd(c + 310, grp) * 22), r = 2 + rnd(c + 320, grp) * 3.5, a = rnd(i + 330, grp) * 6.283, q = Math.sqrt(rnd(i + 340, grp)) * r, x = cx + Math.round(Math.cos(a) * q * 1.3), y = cy + Math.round(Math.sin(a) * q);
+    if (!burst || c >= 6 + Math.floor(rnd(350, grp) * 3) || rnd(i + 40, f2) < .12 || x < 0 || y < 0 || x > 39 || y > 21) { d.style.display = 'none'; return; }
+    Object.assign(d.style, { display: 'block', backgroundImage: `url("${K.files.static}")`, backgroundSize: '450% 255%', backgroundPosition: `${Math.round(rnd(i + 90, f2) * 100)}% ${Math.round(rnd(i + 91, f2) * 100)}%`, left: `${x * 2.5}%`, top: `${(y * 100 / 22.5).toFixed(3)}%`, width: '2.5%', height: `${(100 / 22.5).toFixed(3)}%` }); });
+  if (GL.length) { const g = Math.max(S.out === 'glitch' ? seg(t, S.end - .25, S.end) : 0, burst), f = Math.floor(t * 30), cs = getComputedStyle($('#photo'));
+    GL.forEach((d, i) => { if (g <= 0) { d.style.display = 'none'; return; } const y0 = rnd(i, f) * 90, h = 2 + rnd(i + 9, f) * 9;
+      Object.assign(d.style, { display: 'block', backgroundImage: cs.backgroundImage, backgroundSize: cs.backgroundSize, backgroundPosition: cs.backgroundPosition, transform: `${cs.transform === 'none' ? '' : cs.transform} translateX(${((rnd(i + 3, f) - .5) * 260 * g).toFixed(1)}px)`, clipPath: `inset(${y0.toFixed(1)}% 0 ${(100 - y0 - h).toFixed(1)}% 0)`, filter: `drop-shadow(${(8 * g).toFixed(1)}px 0 0 rgba(255,0,60,.6)) drop-shadow(${(-8 * g).toFixed(1)}px 0 0 rgba(0,190,255,.6))` }); }); }
+  if (isPage) { $('#photo').style.backgroundSize = 'contain'; $('#photo').style.backgroundRepeat = 'no-repeat'; document.body.style.background = '#1b1b1d'; }
+  if (onStage) {
+    const g = seg(t, S.at + .15, S.at + .9);
+    $('#glint').style.opacity = g > 0 && g < 1 ? 1 : 0; $('#glint').style.left = `${300 + g * 1300}px`;
+    $('#mark').style.transform = `translateY(-50%) translateX(${-slide * .7}px) scale(${1 + push * .6})`;
+    $('#mark').style.opacity = E.out(seg(t, S.at, S.at + .35));
+  }
+  if (S.label) { const q = seg(t, S.label_at ?? S.at + .5, (S.label_at ?? S.at + .5) + .2); $('#lab').style.opacity = q > 0 ? 1 : 0; $('#lab').style.transform = `translateX(${(1 - E.out(q)) * -60}px)`; }
+};
+</script>
+</body></html>

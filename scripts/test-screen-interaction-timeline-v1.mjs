@@ -1,0 +1,40 @@
+#!/usr/bin/env node
+import assert from "node:assert/strict";
+import {compileScreenInteractionTimeline} from "../apps/studio-next/src/lib/a1-screen-interaction-timeline-v1.mjs";
+
+const fixtures = [
+  {id: "selection-replacement", genre: "rewrite", actionId: "causalRewrite", family: "SELECTION_REPLACEMENT", cameraCount: 1, event: "sentence_selected", result: "result_hold", target: {x: .18, y: .42, width: .56, height: .08}},
+  {id: "judgment-compare", genre: "preference", actionId: "preference", family: "JUDGMENT_STATE_COMPARE", cameraCount: 1, event: "like_click", result: "style_library_hold", target: {x: .68, y: .24, width: .18, height: .09}},
+  {id: "gap-expansion", genre: "paragraph", actionId: "paragraph", family: "GAP_EXPANSION", cameraCount: 1, event: "paragraph_slot_created", result: "paragraph_candidates_hold", target: {x: .2, y: .58, width: .52, height: .12}},
+  {id: "result-panel-reveal", genre: "review", actionId: "review", family: "RESULT_PANEL_REVEAL", cameraCount: 1, event: "review_click", result: "review_suggestion_hold", target: {x: .72, y: .72, width: .16, height: .08}},
+  {id: "state-switch", genre: "history", actionId: "historyIsolation", family: "STATE_SWITCH_HARD_CUT", cameraCount: 0, event: "topic_switched", result: "history_hold", target: {x: .12, y: .18, width: .22, height: .1}},
+  {id: "fullscreen-result", genre: "presentation", actionId: "presentation", family: "FULLSCREEN_RESULT_TRANSITION", cameraCount: 0, event: "presentation_open", result: "presentation_playing", target: {x: .72, y: .12, width: .16, height: .08}},
+  {id: "document-edit", genre: "document-edit", actionId: "saveHistory", family: "DOCUMENT_EDIT_HOLD", cameraCount: 1, event: "edit_started", result: "edit_applied", target: {x: .22, y: .66, width: .5, height: .08}, actionContract: {before: "正文保持未编辑状态", hold: "光标进入正文完成一次添加或修改", after: "修改后的文字留在原位，编辑光标仍然可见", handoff: "NEXT"}},
+];
+const results = fixtures.map((fixture) => compileScreenInteractionTimeline({durationMs: 4200, actionId: fixture.actionId, actionContract: fixture.actionContract || {before: "initial verified state", hold: "perform the verified action", after: "hold the verified result", handoff: "NEXT"}, events: [{name: "start", outputTimeMs: 0}, {name: fixture.event, outputTimeMs: 1400}, {name: fixture.result, outputTimeMs: 3100}, {name: "end", outputTimeMs: 4200}], cursorTelemetry: {moves: [{tMs: 0, x: .05, y: .9}, {tMs: 1320, x: fixture.target.x + .04, y: fixture.target.y + .04}, {tMs: 4200, x: fixture.target.x + .04, y: fixture.target.y + .04}], clicks: [{tMs: 1390, x: fixture.target.x + .04, y: fixture.target.y + .04, down: true, event: fixture.event}, {tMs: 1450, down: false, event: fixture.event}]}, domTargets: [{targetKey: "verified-target", event: fixture.event, capturedAtMs: 1400, sourceRect: fixture.target}], resultRegion: fixture.actionContract ? {x: .2, y: .62, width: .56, height: .16} : null, persistentResultRegion:["GAP_EXPANSION","RESULT_PANEL_REVEAL"].includes(fixture.family)?{x:.68,y:.28,width:.22,height:.24}:null}));
+assert.ok(results.every((result) => result.status === "PASS"), JSON.stringify(results.map((result, index) => ({id: fixtures[index].id, failures: result.audit.failures, coverage: result.coveragePlan})), null, 2));
+assert.ok(results.every((result, index) => result.camera.length === fixtures[index].cameraCount && result.directorFamily.id === fixtures[index].family));
+assert.deepEqual(results.map((result) => result.generatedActors.length), [0, 0, 1, 1, 0, 0, 0]);
+assert.deepEqual(results.filter((result)=>result.generatedActors.length).map((result)=>result.generatedActors[0].kind),["SOURCE_BOUND_FOCUS_WINDOW","SOURCE_BOUND_FOCUS_WINDOW"]);
+assert.ok(results.filter((result)=>result.generatedActors.length).every((result)=>result.generatedActors[0].phases.enterMs>=result.resultHold.startMs));
+const oversizedResultSuppressed=compileScreenInteractionTimeline({durationMs:4200,actionId:"review",actionContract:{before:"before",hold:"action",after:"result",handoff:"NEXT"},events:[{name:"start",outputTimeMs:0},{name:"review_click",outputTimeMs:1000},{name:"review_findings_hold",outputTimeMs:2800},{name:"end",outputTimeMs:4200}],cursorTelemetry:{moves:[{tMs:0,x:.9,y:.9},{tMs:1000,x:.4,y:.3}],clicks:[{tMs:1000,x:.4,y:.3,down:true,event:"review_click"}]},pointerTargets:[{event:"review_click",x:.4,y:.3}],persistentResultRegion:{x:0,y:.03,width:1,height:.97}});
+assert.equal(oversizedResultSuppressed.generatedActors.length,0);
+assert.deepEqual(oversizedResultSuppressed.emphasisPlan.suppressionReasons,["FOCUS_WINDOW_REGION_TOO_LARGE"]);
+assert.ok(results.flatMap((result) => result.generatedActors).every((actor) => actor.sourcePixelsPreserved === true && actor.fabricatedUiState === false && actor.decorative === false && actor.evidence));
+assert.equal(new Set(results.map((result) => result.directorFamily.canvas)).size, 5);
+assert.ok(results.every((result) => result.cursor.visibleInFinal === false && result.presentationPolicy.decorativeInteractionFramesAllowed === false));
+assert.ok(results.every((result) => result.audit.maximumSyncOffsetMs <= 10));
+assert.ok(results.every((result) => result.resultHold.durationMs >= 800));
+assert.ok(results.every((result) => result.cursor.bakedIntoSource === false));
+assert.ok(results.every((result) => result.camera.length === 0 || result.camera.every((camera) => camera.scale === 1.16)));
+assert.ok(results.every((result) => result.coveragePlan.status === "PASS" && result.coveragePlan.poses.length === 3));
+assert.ok(results.every((result) => result.coveragePlan.policy.continuousPanForbidden === true && result.coveragePlan.policy.motionBlurForbidden === true));
+assert.ok(results.every((result) => result.coveragePlan.poses.at(-1).atMs <= result.durationMs - 800));
+const sourceSelectionSuppressed = compileScreenInteractionTimeline({durationMs:4200,actionId:"causalRewrite",actionContract:{before:"真实正文",hold:"选择真实句子",after:"原生选区保持清晰",handoff:"NEXT"},events:[{name:"start",outputTimeMs:0},{name:"sentence_selected",outputTimeMs:1400},{name:"result_hold",outputTimeMs:3100},{name:"end",outputTimeMs:4200}],cursorTelemetry:{moves:[{tMs:0,x:.05,y:.9},{tMs:1400,x:.4,y:.45}],clicks:[{tMs:1400,x:.4,y:.45,down:true,event:"sentence_selected"},{tMs:1460,x:.4,y:.45,down:false,event:"sentence_selected"}]},domTargets:[{targetKey:"selected-text",event:"sentence_selected",capturedAtMs:1400,sourceRect:{x:.18,y:.42,width:.56,height:.08}}],textRangeEvidence:[{event:"sentence_selected",evidence:{observedAtMs:1400},qualification:{contract:"A1ScreenAnnotationQualification/v1",status:"ANNOTATION_SUPPRESSED",actor:"NONE",reasons:["SOURCE_NATIVE_SELECTION_ALREADY_EMPHATIC"]}}]});
+assert.equal(sourceSelectionSuppressed.generatedActors.length,0);
+assert.deepEqual(sourceSelectionSuppressed.emphasisPlan.suppressionReasons,["SOURCE_NATIVE_SELECTION_ALREADY_EMPHATIC"]);
+const stableHoldSurvivesLaterReviewState = compileScreenInteractionTimeline({durationMs:6980,actionId:"review",actionContract:{before:"正文",hold:"运行收稿",after:"结果保持",handoff:"NEXT"},events:[{name:"start",outputTimeMs:0},{name:"review_click",outputTimeMs:915},{name:"review_findings_hold",outputTimeMs:3500},{name:"review_suggestion_hold",outputTimeMs:6980},{name:"end",outputTimeMs:6980}],cursorTelemetry:{moves:[{tMs:0,x:.9,y:.9},{tMs:857,x:.37,y:.25}],clicks:[{tMs:857,x:.37,y:.25,down:true,event:"review_click"}]},pointerTargets:[{event:"review_click",x:.37,y:.25}]});
+assert.equal(stableHoldSurvivesLaterReviewState.resultHold.startMs,3500);
+assert.equal(stableHoldSurvivesLaterReviewState.resultHold.durationMs,3480);
+assert.equal(stableHoldSurvivesLaterReviewState.status,"PASS");
+console.log(JSON.stringify({status: "PASS", contract: "A1ScreenInteractionTimelineTest/v1", fixtures: fixtures.map((fixture, index) => ({id: fixture.id, genre: fixture.genre, directorFamily: results[index].directorFamily, cameraCount: results[index].camera.length, timelineSha256: results[index].timelineSha256, syncOffsetMs: results[index].audit.maximumSyncOffsetMs, actorCount: results[index].generatedActors.length}))}, null, 2));

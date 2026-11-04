@@ -1,0 +1,177 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "A1RecipeBoardSeamReview/v1 (agent answer)",
+  "description": "A seam between two chapters judged on real joined-seconds playback: what is handed over, which cut, the files and hashes, and a fresh reviewer's five scores. Rules: work/recipe-board-v1/prompts/seamreview.md. Checked by seamreview.mjs.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "sourceTaskInputHash",
+    "from",
+    "to",
+    "intent",
+    "renders",
+    "verdict",
+    "notes"
+  ],
+  "properties": {
+    "contract": {
+      "type": "string",
+      "enum": [
+        "A1RecipeBoardSeamReview/v1"
+      ]
+    },
+    "sourceTaskInputHash": {
+      "type": "string"
+    },
+    "from": {
+      "type": "string"
+    },
+    "to": {
+      "type": "string"
+    },
+    "intent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "carry",
+        "enter",
+        "exit",
+        "cut",
+        "why"
+      ],
+      "properties": {
+        "carry": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 3,
+          "items": {
+            "type": "string"
+          },
+          "description": "what the outgoing frame hands to the incoming one: subject, direction, brightness, reading focus"
+        },
+        "enter": {
+          "type": "string",
+          "description": "the outgoing frame's last moment: what is on screen and where the eye is"
+        },
+        "exit": {
+          "type": "string",
+          "description": "the incoming frame's first moment: what continues and what changes"
+        },
+        "cut": {
+          "type": "string",
+          "enum": [
+            "cut",
+            "match",
+            "whip",
+            "push",
+            "glitch",
+            "flash"
+          ]
+        },
+        "why": {
+          "type": "string",
+          "description": "why the cut is here and the viewer follows through it"
+        }
+      }
+    },
+    "renders": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "file",
+          "hash",
+          "seconds",
+          "fps"
+        ],
+        "properties": {
+          "file": {
+            "type": "string",
+            "description": "project-relative path of the joined-seconds playback (mp4), not a still"
+          },
+          "hash": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "seconds": {
+            "type": "number",
+            "minimum": 3.5
+          },
+          "fps": {
+            "type": "number",
+            "minimum": 24
+          }
+        }
+      }
+    },
+    "verdict": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reviewer",
+        "scores",
+        "passed"
+      ],
+      "properties": {
+        "reviewer": {
+          "type": "string",
+          "enum": [
+            "fresh"
+          ]
+        },
+        "scores": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "continuity",
+            "direction",
+            "brightness",
+            "reading",
+            "natural"
+          ],
+          "properties": {
+            "continuity": {
+              "type": "number",
+              "minimum": 4,
+              "maximum": 5
+            },
+            "direction": {
+              "type": "number",
+              "minimum": 4,
+              "maximum": 5
+            },
+            "brightness": {
+              "type": "number",
+              "minimum": 4,
+              "maximum": 5
+            },
+            "reading": {
+              "type": "number",
+              "minimum": 4,
+              "maximum": 5
+            },
+            "natural": {
+              "type": "number",
+              "minimum": 4,
+              "maximum": 5
+            }
+          }
+        },
+        "passed": {
+          "type": "boolean",
+          "enum": [
+            true
+          ]
+        }
+      }
+    },
+    "notes": {
+      "type": "string",
+      "description": "what the 1× playback showed"
+    }
+  }
+}

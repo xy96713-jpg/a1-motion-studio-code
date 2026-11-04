@@ -1,0 +1,78 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+import {chromium} from 'playwright';
+const out = path.resolve('work/frame-first-ui-verification');
+fs.mkdirSync(out,{recursive:true});
+const targets = ['apps/studio-next/public/generated/system-line/editorial-asset-workbench-v1/workspace.json','.codex-artifacts/system-progress-system-line/editorial-asset-workbench-v1/workspace.json','.codex-artifacts/system-progress-system-line/current-phase.json','.codex-artifacts/system-progress-system-line/system-line-current-authority-v2/audit-report.json'];
+const hashes = () => Object.fromEntries(targets.map(file => [file,createHash('sha256').update(fs.readFileSync(file)).digest('hex')]));
+const before = hashes();
+const browser = await chromium.launch({headless:true, channel:'chrome'});
+const page = await browser.newPage();
+const results = [], errors = [], writes = [];
+page.on('pageerror',error=>errors.push(error.message));
+await page.route('**/api/**',route=> {if(!['GET','HEAD'].includes(route.request().method())) {writes.push(route.request().url()); return route.abort();} return route.continue();});
+const button = name => page.getByRole('button',{name,exact:true});
+const frame = page.locator('[data-a1-main-frame]');
+const bounds = async selector => page.locator(selector).evaluate(el=>{const r=el.getBoundingClientRect(); return {x:r.x,y:r.y,width:r.width,height:r.height,bottom:r.bottom,right:r.right};});
+const inViewport = async (selector, size) => {const r=await bounds(selector); assert.ok(r.y>=0 && r.bottom<=size.height && r.right<=size.width && r.height>0,`${selector}: ${JSON.stringify(r)}`); return r;};
+try {
+ for(const size of [{width:1440,height:900},{width:1280,height:720}]) {
+  await page.setViewportSize(size);
+  await page.goto('http://127.0.0.1:4311/system-line-visual-workbench',{waitUntil:'domcontentloaded'});
+  await frame.waitFor({timeout:60000});
+  await page.waitForTimeout(600);
+  assert.equal(await button('展开详情').getAttribute('aria-expanded'),'false');
+  const shots=await page.locator('nav[aria-label="分镜缩略图导航"] button').evaluateAll(es=>es.map(e=>({label:e.getAttribute('aria-label'),text:e.textContent})));
+  assert.equal(shots.length,34);
+  const result={size, shots:shots.length};
+  result.frame=await inViewport('[data-a1-main-frame]',size);
+  result.controls=await inViewport('[data-a1-transport]',size);
+  result.navigation=await inViewport('nav[aria-label="分镜缩略图导航"]',size);
+  assert.equal(await frame.locator('img,video').evaluate(e=>getComputedStyle(e).objectFit),'contain');
+  await button('分镜总览').click();
+  const cards=page.locator('[data-a1-overview] button');
+  assert.equal(await cards.count(),34);
+  const geometry=await cards.evaluateAll(es=>es.map(e=>{const r=e.getBoundingClientRect();return {x:r.x,y:r.y};}));
+  assert.ok(new Set(geometry.map(g=>g.x)).size>1 && new Set(geometry.map(g=>g.y)).size>1,'overview must be a grid');
+  await page.screenshot({path:path.join(out,`overview-${size.width}.png`)});
+  // Exercise every card, not just first/last; return stays on the same route.
+  for(let i=0;i<34;i++) {const id=(await cards.nth(i).getAttribute('aria-label')).replace('审看 ',''); await cards.nth(i).click(); assert.equal(await frame.getAttribute('data-a1-main-frame'),id); await button('返回总览').click();}
+  result.overviewCardsClicked=34;
+  await cards.first().click();
+  const bound=shots.find(s=>s.text.includes('动态已绑定'));
+  await button(bound.label).click();
+  assert.equal(await frame.getAttribute('data-mode'),'motion');
+  const video=frame.locator('video');
+  await video.evaluate(v=>new Promise((resolve,reject)=>{if(v.readyState>=1)return resolve(); v.addEventListener('loadedmetadata',resolve,{once:true});v.addEventListener('error',()=>reject(new Error('decode failed')),{once:true});}));
+  await button('播放').click();
+  await page.waitForFunction(()=>document.querySelector('[data-a1-main-frame] video')?.currentTime>0.3);
+  result.playbackTime=await video.evaluate(v=>v.currentTime);
+  assert.ok(Number(await page.getByLabel('播放进度',{exact:true}).inputValue())>0);
+  await button('暂停').click(); assert.ok(await video.evaluate(v=>v.paused));
+  await page.getByLabel('音量',{exact:true}).fill('0.4'); assert.equal(await video.evaluate(v=>v.volume),0.4);
+  await page.getByLabel('播放进度',{exact:true}).fill('1');
+  await page.waitForFunction(()=>Math.abs(document.querySelector('[data-a1-main-frame] video').currentTime-1)<0.3);
+  await button('播放').click();
+  const old=await video.elementHandle();
+  const missing=shots.find(s=>s.text.includes('动态缺失'));
+  await button(missing.label).click();
+  assert.ok(await old.evaluate(v=>v.paused),'previous shot audio must stop');
+  await button('动态').click(); assert.equal(await frame.locator('video').count(),0); assert.match(await frame.innerText(),/不会猜配其他视频/);
+  assert.ok(await button('播放').isDisabled());
+  await button('静态').click();
+  await button('切换到 ED-02').click();
+  await button('展开详情').click();
+  result.details=await inViewport('aside[aria-label="ED-02 分镜详情"]',size);
+  assert.ok(await button('通过已绑定素材').isVisible()); assert.ok(await button('返修').isVisible()); assert.ok(await page.locator('label').filter({hasText:'本地上传'}).isVisible()); assert.ok(await button('保存全部').isVisible());
+  await page.locator('summary').filter({hasText:'源 SHA 与完整证据日志'}).click();
+  await inViewport('[data-a1-main-frame]',size); await inViewport('[data-a1-transport]',size); await inViewport('nav[aria-label="分镜缩略图导航"]',size);
+  await button('收起详情').click();
+  await page.screenshot({path:path.join(out,`single-${size.width}.png`)});
+  results.push(result);
+ }
+ assert.deepEqual(errors,[]); assert.deepEqual(writes,[]); assert.deepEqual(hashes(),before);
+ fs.writeFileSync(path.join(out,'browser-results.json'),JSON.stringify({status:'PASS',results,errors,writes,productionHashes:before},null,2));
+ console.log(JSON.stringify({status:'PASS',results,report:path.join(out,'browser-results.json')},null,2));
+} catch(error) {await page.screenshot({path:path.join(out,'failure.png')});fs.writeFileSync(path.join(out,'browser-failure.json'),JSON.stringify({error:String(error),results,errors,writes},null,2));throw error;} finally {await browser.close();}

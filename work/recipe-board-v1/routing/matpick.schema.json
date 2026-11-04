@@ -1,0 +1,46 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "type": "object",
+ "additionalProperties": false,
+ "required": ["needs"],
+ "properties": {
+  "needs": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["key", "order", "none", "why", "assessments"],
+    "properties": {
+     "key": { "type": "string" },
+     "order": { "type": "array", "items": { "type": "integer", "minimum": 1 } },
+     "none": { "type": "boolean" },
+     "why": { "type": ["string", "null"] },
+     "assessments": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": ["n", "identity", "moment", "packaging", "why", "segment"],
+       "properties": {
+        "n": { "type": "integer", "minimum": 1 },
+        "identity": { "enum": ["match", "weak", "wrong"] },
+        "moment": { "enum": ["match", "weak", "wrong", "not_applicable"] },
+        "packaging": { "enum": ["viable", "weak", "wrong"] },
+        "why": { "type": "string", "minLength": 1 },
+        "segment": {
+         "type": ["object", "null"],
+         "additionalProperties": false,
+         "required": ["start", "end"],
+         "properties": {
+          "start": { "type": "number", "minimum": 0 },
+          "end": { "type": "number", "exclusiveMinimum": 0 }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}

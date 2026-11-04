@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import {motionContractUneatenErrors as check} from '../apps/studio-next/src/lib/recipe-board/shotmotion.mjs';
+const intent={route:'custom',question:'觀眾辨認什麼字',start:'完整字組在畫面',change:'保持字組供閱讀',end:'完整字組在畫面',handoff:'停穩明確硬切下一拍',reason:'技術測試字形測量',layers:{evidence:'none',art:'none',type:'code'},assets:[{id:'type',use:'type',source:'code',file:'scene.mjs',operation:'hold',operability:'code'}]};
+const filmDesign={beats:[{beat:'B01',activeRevision:true,directorIntent:intent},{beat:'B02',activeRevision:true,directorIntent:intent}]};
+const code='const lateType=0; const keep=12345678;';
+const shot=shotId=>({shotId,directorIntent:intent});
+const implementation=shotId=>({shotId,start:'const keep=12345678',change:'const keep=12345678',end:'const keep=12345678',handoff:'const keep=12345678'});
+assert.match(check(code,{shots:[shot('B01')]},{filmDesign,shotIds:['B01','B02'],motionImplementation:[implementation('B01')]}).join(),/B02.*missing/,'partial contract must not silently skip scoped shot');
+assert.deepEqual(check(code,{shots:[shot('B01')]},{filmDesign,shotIds:['B01'],motionImplementation:[implementation('B01')]}),[],'another chapter is not this chapter scope');
+assert.match(check(code,{shots:[shot('B01')]},{filmDesign,shotIds:['B01']}).join(),/implementation/,'scoped contracts without global motionRules still require actual code anchors');
+console.log('scoped consumer coverage passed');

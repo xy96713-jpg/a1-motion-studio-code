@@ -1,0 +1,3796 @@
+{
+ "contract": "A1PackagingTaxonomy/v1",
+ "version": "2026-11-03",
+ "purpose": "把对标视频的包装效果拆成可复用、可检查、可选配的配方；不变量全片共用，变体只改受控参数。",
+ "invariants": {
+  "grid": {
+   "columns": 12,
+   "rows": 6,
+   "unitPx": 160,
+   "gutterPx": 24,
+   "marginPx": 120
+  },
+  "safeFrame": {
+   "left": 40,
+   "top": 60,
+   "right": 1880,
+   "bottom": 935,
+   "subtitleBand": 935
+  },
+  "typeLadder": [
+   300,
+   200,
+   128,
+   64,
+   48
+  ],
+  "roleRatioMin": 1.5,
+  "leadEm": 0.15,
+  "leadToleranceEm": 0.03,
+  "contrastMin": {
+   "large": 3,
+   "body": 4.5
+  },
+  "dressBans": [
+   "text-outline",
+   "text-shadow",
+   "text-glow",
+   "rule-under-type"
+  ],
+  "motionBudget": {
+   "maxMovePctPerSec": 0.12,
+   "maxCutsPerBeat": 3
+  },
+  "surfaceKinds": [
+   "page",
+   "map",
+   "object",
+   "screen",
+   "ground",
+   "none"
+  ],
+  "occlusionRules": [
+   "object-surface needs contactShadow or declared print",
+   "screen needs safe area inside frame"
+  ],
+  "variantRepeatWindowBeats": 4
+ },
+ "categories": [
+  {
+   "id": "type-surface",
+   "label": "字压真实表面",
+   "why": "参考片的字大多压在页/地图/物件/屏幕上，不是浮在底色上",
+   "variants": [
+    {
+     "id": "ts-page-margin",
+     "label": "页边压字",
+     "appliesTo": [
+      "title",
+      "concept"
+     ],
+     "surface": "page",
+     "params": {
+      "column": {
+       "type": "int",
+       "min": 1,
+       "max": 12
+      },
+      "side": {
+       "enum": [
+        "left",
+        "right"
+       ]
+      },
+      "inkSource": {
+       "enum": [
+        "plate",
+        "palette"
+       ]
+      },
+      "grain": {
+       "min": 0,
+       "max": 0.35
+      }
+     },
+     "defaults": {
+      "column": 1,
+      "side": "left",
+      "inkSource": "plate",
+      "grain": 0.16
+     },
+     "contract": {
+      "roles": [
+       "hero",
+       "title",
+       "sub"
+      ],
+      "sizesMin": {
+       "hero": 300
+      },
+      "leadEm": 0.15,
+      "contrastMin": 4.5,
+      "marginPx": 40,
+      "maxChars": 24,
+      "grainMin": 0.08
+     },
+     "refs": {
+      "ranges": {
+       "typePct": [
+        "0.16",
+        "0.42"
+       ],
+       "marginPx": [
+        "40",
+        "160"
+       ],
+       "contrast": [
+        4.5,
+        12
+       ]
+      },
+      "frames": [
+       "reference-hupo/aesthetics/sheet-by-kind.jpg#T",
+       "reference-hupo/aesthetics/sheet-by-kind.jpg#EN"
+      ],
+      "benchmarks": {
+       "films": [
+        "paperclip",
+        "hupo"
+       ],
+       "hupoLabels": [
+        "T",
+        "PT"
+       ],
+       "paperclipDevices": [
+        "title-to-texture",
+        "term-biggest"
+       ],
+       "file": "routing/packaging-benchmarks.json"
+      }
+     },
+     "failureModes": [
+      "字压到页内正文",
+      "页边缘被字切断",
+      "字比页标题还大",
+      "无颗粒像贴纸"
+     ],
+     "checks": [
+      "typedesign:quad-off-box",
+      "framecheck:floating-type",
+      "packaging:contract"
+     ]
+    },
+    {
+     "id": "ts-page-inset",
+     "label": "页内嵌块",
+     "appliesTo": [
+      "concept",
+      "data"
+     ],
+     "surface": "page",
+     "params": {
+      "paddingPx": {
+       "min": 24,
+       "max": 120
+      },
+      "scrimOpacity": {
+       "min": 0,
+       "max": 0.5
+      },
+      "anchor": {
+       "enum": [
+        "top-left",
+        "top-right",
+        "bottom-left",
+        "bottom-right"
+       ]
+      }
+     },
+     "defaults": {
+      "paddingPx": 48,
+      "scrimOpacity": 0.12,
+      "anchor": "top-left"
+     },
+     "contract": {
+      "roles": [
+       "figure",
+       "sub"
+      ],
+      "leadEm": 0.15,
+      "contrastMin": 4.5,
+      "maxChars": 30,
+      "marginPx": 24,
+      "scrimRequired": true
+     },
+     "refs": {
+      "ranges": {
+       "paddingPx": [
+        "24",
+        "120"
+       ],
+       "scrimOpacity": [
+        "0.06",
+        "0.3"
+       ]
+      },
+      "frames": [
+       "reference-hupo/aesthetics/sheet-by-kind.jpg#PT"
+      ],
+      "benchmarks": {
+       "films": [
+        "paperclip",
+        "hupo"
+       ],
+       "hupoLabels": [
+        "PT",
+        "EN"
+       ],
+       "paperclipDevices": [
+        "clipping-stack",
+        "bracket-group"
+       ],
+       "file": "routing/packaging-benchmarks.json"
+      }
+     },
+     "failureModes": [
+      "嵌块没有留白",
+      "字压到页内图",
+      "scrim 太重变灰块"
+     ],
+     "checks": [
+      "packaging:contract",
+      "framecheck:contrast"
+     ]
+    },
+    {
+     "id": "ts-map-band",
+     "label": "地图带压字",
+     "appliesTo": [
+      "data",
+      "concept"
+     ],
+     "surface": "map",
+     "params": {
+      "bandHeightPx": {
+       "min": 80,
+       "max": 280
+      },
+      "bandY": {
+       "enum": [
+        "top",
+        "middle",
+        "bottom"
+       ]
+      },
+      "pinCount": {
+       "min": 0,
+       "max": 6
+      },
+      "leaderLine": {
+       "type": "bool"
+      }
+     },
+     "defaults": {
+      "bandHeightPx": 160,
+      "bandY": "bottom",
+      "pinCount": 2,
+      "leaderLine": false
+     },
+     "contract": {
+      "roles": [
+       "hero",
+       "figure",
+       "sub"
+      ],
+      "sizesMin": {
+       "hero": 200
+      },
+      "leadEm": 0.15,
+      "contrastMin": 4.5,
+      "marginPx": 40,
+      "bandMustBeFlat": true
+     },
+     "refs": {
+      "ranges": {
+       "bandHeightPx": [
+        "80",
+        "280"
+       ],
+       "pinCount": [
+        0,
+        6
+       ]
+      },
+      "frames": [
+       "reference-hupo/aesthetics/sheet-by-kind.jpg#D"
+      ],
+      "benchmarks": {
+       "films": [
+        "paperclip",
+        "hupo"
+       ],
+       "hupoLabels": [
+        "D"
+       ],
+       "paperclipDevices": [
+        "map-pin-count",
+        "evidence-on-timeline"
+       ],
+       "file": "routing/packaging-benchmarks.json"
+      }
+     },
+     "failureModes": [
+      "带子横穿地图关键区域",
+      "数字与图例混淆",
+      "地点与 pin 不对应"
+     ],
+     "checks": [
+      "typedesign:light-mismatch-plan",
+      "packaging:contract"
+     ]
+    },
+    {
+     "id": "ts-skin-print",
+     "label": "物件/果身表面",
+     "appliesTo": [
+      "title",
+      "concept"
+     ],
+     "surface": "object",
+     "params": {
+      "anchor": {
+       "enum": [
+        "crown",
+        "stem",
+        "side"
+       ]
+      },
+      "contactShadow": {
+       "type": "bool"
+      },
+      "occlusion": {
+       "enum": [
+        "none",
+        "edge"
+       ]
+      },
+      "grain": {
+       "min": 0.1,
+       "max": 0.4
+      }
+     },
+     "defaults": {
+      "anchor": "crown",
+      "contactShadow": true,
+      "occlusion": "edge",
+      "grain": 0.2
+     },
+     "contract": {
+      "roles": [
+       "hero",
+       "figure"
+      ],
+      "leadEm": 0.15,
+      "contrastMin": 3,
+      "marginPx": 24,
+      "occlusionRequired": true
+     },
+     "refs": {
+      "ranges": {
+       "grain": [
+        "0.1",
+        "0.4"
+       ]
+      },
+      "frames": [
+       "workspace look /sheet-hero.jpg#fruit"
+      ],
+      "benchmarks": {
+       "films": [
+        "paperclip",
+        "hupo"
+       ],
+       "hupoLabels": [
+        "EP",
+        "T"
+       ],
+       "paperclipDevices": [
+        "real-in-frame"
+       ],
+       "file": "routing/packaging-benchmarks.json"
+      }
+     },
+     "failureModes": [
+      "字悬在果前不接触",
+      "果身穿过字形但没声明",
+      "用平面贴图假装 3D"
+     ],
+     "checks": [
+      "typedesign:occlusion",
+      "framecheck:cheap-3d",
+      "packaging:contract"
+     ]
+    },
+    {
+     "id": "ts-screen-scan",
+     "label": "屏幕/扫描线",
+     "appliesTo": [
+      "data",
+      "concept"
+     ],
+     "surface": "screen",
+     "params": {
+      "scanlineOpacity": {
+       "min": 0,
+       "max": 0.2
+      },
+      "safeInsetPx": {
+       "min": 16,
+       "max": 80
+      },
+      "glow": {
+       "type": "bool"
+      }
+     },
+     "defaults": {
+      "scanlineOpacity": 0.08,
+      "safeInsetPx": 32,
+      "glow": false
+     },
+     "contract": {
+      "roles": [
+       "hero",
+       "title",
+       "sub"
+      ],
+      "leadEm": 0.15,
+      "contrastMin": 4.5,
+      "marginPx": 32,
+      "screenSafe": true
+     },
+     "refs": {
+      "ranges": {
+       "scanlineOpacity": [
+        "0.04",
+        "0.16"
+       ]
+      },
+      "frames": [
+       "reference-hupo/aesthetics/sheet-by-kind.jpg#screen"
+      ],
+      "benchmarks": {
+       "films": [
+        "paperclip",
+        "hupo"
+       ],
+       "hupoLabels": [
+        "EN",
+        "C"
+       ],
+       "paperclipDevices": [
+        "screen-workflow",
+        "zoom-into"
+       ],
+       "file": "routing/packaging-benchmarks.json"
+      }
+     },
+     "failureModes": [
+      "扫描线切笔画",
+      "屏幕外的字没交代介质",
+      "发光过度"
+     ],
+     "checks": [
+      "typedesign:light-mismatch-plan",
+      "packaging:contract"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "evidence-card",
+   "label": "证据卡",
+   "why": "新闻/论文/页面必须卡式包装，不能全幅平铺",
+   "variants": [
+    {
+     "id": "ec-inset-page",
+     "label": "卡内嵌真页",
+     "appliesTo": [
+      "title",
+      "data",
+      "concept"
+     ],
+     "surface": "page",
+     "params": {
+      "cardInsetPx": {
+       "min": 40,
+       "max": 160
+      },
+      "pageScale": {
+       "min": 0.5,
+       "max": 0.9
+      },
+      "captionSize": {
+       "enum": [
+        48,
+        64
+       ]
+      },
+      "darken": {
+       "min": 0,
+       "max": 0.5
+      }
+     },
+     "defaults": {
+      "cardInsetPx": 80,
+      "pageScale": 0.72,
+      "captionSize": 48,
+      "darken": 0.2
+     },
+     "contract": {
+      "roles": [
+       "hero",
+       "title",
+       "sub",
+       "caption"
+      ],
+      "sizesMin": {
+       "hero": 200
+      },
+      "leadEm": 0.15,
+      "contrastMin": 4.5,
+      "marginPx": 40,
+      "cardRequired": true,
+      "captionRequired": true
+     },
+     "refs": {
+      "ranges": {
+       "cardInsetPx": [
+        "40",
+        "160"
+       ],
+       "pageScale": [
+        "0.5",
+        "0.9"
+       ]
+      },
+      "frames": [
+       "reference-hupo/aesthetics/sheet-by-kind.jpg#R"
+      ],
+      "benchmarks": {
+       "films": [
+        "paperclip",
+        "hupo"
+       ],
+       "hupoLabels": [
+        "EN",
+        "EO"
+       ],
+       "paperclipDevices": [
+        "real-doc-callout",
+        "real-in-frame"
+       ],
+       "file": "routing/packaging-benchmarks.json"
+      }
+     },
+     "failureModes": [
+      "全幅 Wiki 平铺",
+      "没有来源行",
+      "卡边被字压住"
+     ],
+     "checks": [
+      "mature:evidence-card",
+      "packaging:contract"
+     ]
+    },
+    {
+     "id": "ec-card-stack",
+     "label": "卡片堆",
+     "appliesTo": [
+      "concept",
+      "data"
+     ],
+     "surface": "page",
+     "params": {
+      "maxCards": {
+       "min": 2,
+       "max": 4
+      },
+      "offsetPx": {
+       "min": 8,
+       "max": 40
+      },
+      "frontDarken": {
+       "min": 0,
+       "max": 0.4
+      }
+     },
+     "defaults": {
+      "maxCards": 3,
+      "offsetPx": 16,
+      "frontDarken": 0.15
+     },
+     "contract": {
+      "roles": [
+       "title",
+       "sub"
+      ],
+      "leadEm": 0.15,
+      "contrastMin": 4.5,
+      "marginPx": 40,
+      "stackOrder": true
+     },
+     "refs": {
+      "ranges": {
+       "maxCards": [
+        2,
+        4
+       ],
+       "offsetPx": [
+        "8",
+        "40"
+       ]
+      },
+      "frames": [
+       "reference-hupo/aesthetics/sheet-by-kind.jpg#C"
+      ],
+      "benchmarks": {
+       "films": [
+        "paperclip",
+        "hupo"
+       ],
+       "hupoLabels": [
+        "C",
+        "PT"
+       ],
+       "paperclipDevices": [
+        "clipping-stack",
+        "bracket-group"
+       ],
+       "file": "routing/packaging-benchmarks.json"
+      }
+     },
+     "failureModes": [
+      "卡片数量超过 4",
+      "堆叠顺序读反",
+      "卡片盖住证据主体"
+     ],
+     "checks": [
+      "packaging:contract",
+      "framecheck:hierarchy-flat"
+     ]
+    },
+    {
+     "id": "ec-red-band",
+     "label": "红底证据带",
+     "appliesTo": [
+      "title",
+      "data"
+     ],
+     "surface": "page",
+     "params": {
+      "bandHeightPx": {
+       "min": 120,
+       "max": 360
+      },
+      "verdictSize": {
+       "enum": [
+        128,
+        200,
+        300
+       ]
+      },
+      "evidenceInsetPx": {
+       "min": 24,
+       "max": 120
+      }
+     },
+     "defaults": {
+      "bandHeightPx": 240,
+      "verdictSize": 200,
+      "evidenceInsetPx": 48
+     },
+     "contract": {
+      "roles": [
+       "hero",
+       "figure",
+       "caption"
+      ],
+      "sizesMin": {
+       "hero": 200
+      },
+      "leadEm": 0.15,
+      "contrastMin": 3,
+      "marginPx": 40,
+      "bandMustClearCard": true
+     },
+     "refs": {
+      "ranges": {
+       "bandHeightPx": [
+        "120",
+        "360"
+       ]
+      },
+      "frames": [
+       "project banana-design out/greybox/B17.png"
+      ],
+      "benchmarks": {
+       "films": [
+        "paperclip",
+        "hupo"
+       ],
+       "hupoLabels": [
+        "EN",
+        "T"
+       ],
+       "paperclipDevices": [
+        "banner-verdict",
+        "mark-in-red"
+       ],
+       "file": "routing/packaging-benchmarks.json"
+      }
+     },
+     "failureModes": [
+      "字压到白页角",
+      "红带与卡片边框相交",
+      "来源行跨底色"
+     ],
+     "checks": [
+      "typedesign:type-off-frame",
+      "packaging:contract"
+     ]
+    },
+    {
+     "id": "ec-callout",
+     "label": "页+引线标注",
+     "appliesTo": [
+      "concept",
+      "data"
+     ],
+     "surface": "page",
+     "params": {
+      "leaderWidthPx": {
+       "min": 1,
+       "max": 3
+      },
+      "labelSize": {
+       "enum": [
+        48,
+        64
+       ]
+      },
+      "marker": {
+       "enum": [
+        "red",
+        "accent"
+       ]
+      },
+      "labelGapPx": {
+       "min": 8,
+       "max": 40
+      }
+     },
+     "defaults": {
+      "leaderWidthPx": 2,
+      "labelSize": 64,
+      "marker": "red",
+      "labelGapPx": 16
+     },
+     "contract": {
+      "roles": [
+       "figure",
+       "sub",
+       "caption"
+      ],
+      "leadEm": 0.15,
+      "contrastMin": 4.5,
+      "marginPx": 24,
+      "leaderRequired": true
+     },
+     "refs": {
+      "ranges": {
+       "labelSize": [
+        48,
+        64
+       ]
+      },
+      "frames": [
+       "reference-hupo/aesthetics/sheet-by-kind.jpg#D"
+      ],
+      "benchmarks": {
+       "films": [
+        "paperclip",
+        "hupo"
+       ],
+       "hupoLabels": [
+        "D",
+        "EN"
+       ],
+       "paperclipDevices": [
+        "callout-line",
+        "mark-follows-line",
+        "mark-in-red"
+       ],
+       "file": "routing/packaging-benchmarks.json"
+      }
+     },
+     "failureModes": [
+      "引线指错词",
+      "标注压住被标注词",
+      "引线穿过其他字"
+     ],
+     "checks": [
+      "marks:label",
+      "packaging:contract"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "data-number",
+   "label": "数字与数据",
+   "why": "参考片的大数字有单位、有对照、有出处",
+   "variants": [
+    {
+     "id": "dn-hero-count",
+     "label": "单一大数字",
+     "appliesTo": [
+      "data"
+     ],
+     "surface": "ground",
+     "params": {
+      "countUpSec": {
+       "min": 0.3,
+       "max": 1.5
+      },
+      "unitSize": {
+       "enum": [
+        48,
+        64
+       ]
+      },
+      "tabular": {
+       "type": "bool"
+      }
+     },
+     "defaults": {
+      "countUpSec": 0.8,
+      "unitSize": 64,
+      "tabular": true
+     },
+     "contract": {
+      "roles": [
+       "hero",
+       "sub"
+      ],
+      "sizesMin": {
+       "hero": 300
+      },
+      "leadEm": 0.15,
+      "contrastMin": 3,
+      "marginPx": 40,
+      "unitRequired": true
+     },
+     "refs": {
+      "ranges": {
+       "heroSize": [
+        300,
+        300
+       ],
+       "unitSize": [
+        48,
+        64
+       ]
+      },
+      "frames": [
+       "reference-hupo/aesthetics/sheet-by-kind.jpg#numbers"
+      ],
+      "benchmarks": {
+       "films": [
+        "paperclip",
+        "hupo"
+       ],
+       "hupoLabels": [
+        "ED"
+       ],
+       "paperclipDevices": [
+        "number-grows"
+       ],
+       "file": "routing/packaging-benchmarks.json"
+      }
+     },
+     "failureModes": [
+      "裸数字没有口径",
+      "数字与单位不同字号层",
+      "数字压到主角"
+     ],
+     "checks": [
+      "typedesign:lead-mismatch",
+      "packaging:contract"
+     ]
+    },
+    {
+     "id": "dn-split-unit",
+     "label": "数字+单位分行",
+     "appliesTo": [
+      "data"
+     ],
+     "surface": "ground",
+     "params": {
+      "unitLeadEm": {
+       "min": 0.12,
+       "max": 0.18
+      },
+      "align": {
+       "enum": [
+        "left",
+        "center"
+       ]
+      }
+     },
+     "defaults": {
+      "unitLeadEm": 0.15,
+      "align": "left"
+     },
+     "contract": {
+      "roles": [
+       "figure",
+       "sub"
+      ],
+      "leadEm": 0.15,
+      "contrastMin": 4.5,
+      "marginPx": 40,
+      "unitRequired": true
+     },
+     "refs": {
+      "ranges": {
+       "unitLeadEm": [
+        "0.12",
+        "0.18"
+       ]
+      },
+      "frames": [
+       "reference-hupo/aesthetics/sheet-by-kind.jpg#numbers"
+      ],
+      "benchmarks": {
+       "films": [
+        "paperclip",
+        "hupo"
+       ],
+       "hupoLabels": [
+        "ED"
+       ],
+       "paperclipDevices": [
+        "number-grows",
+        "term-biggest"
+       ],
+       "file": "routing/packaging-benchmarks.json"
+      }
+     },
+     "failureModes": [
+      "单位离数字太远",
+      "单位掉到字幕带"
+     ],
+     "checks": [
+      "packaging:contract"
+     ]
+    },
+    {
+     "id": "dn-compare-pair",
+     "label": "对照双数",
+     "appliesTo": [
+      "data"
+     ],
+     "surface": "ground",
+     "params": {
+      "pairGapPx": {
+       "min": 40,
+       "max": 240
+      },
+      "deltaColor": {
+       "enum": [
+        "accent",
+        "palette"
+       ]
+      },
+      "compareAxis": {
+       "enum": [
+        "horizontal",
+        "vertical"
+       ]
+      }
+     },
+     "defaults": {
+      "pairGapPx": 120,
+      "deltaColor": "accent",
+      "compareAxis": "horizontal"
+     },
+     "contract": {
+      "roles": [
+       "hero",
+       "figure",
+       "sub"
+      ],
+      "leadEm": 0.15,
+      "contrastMin": 4.5,
+      "marginPx": 40,
+      "twoNumbersRequired": true
+     },
+     "refs": {
+      "ranges": {
+       "pairGapPx": [
+        "40",
+        "240"
+       ]
+      },
+      "frames": [
+       "reference-hupo/aesthetics/sheet-by-kind.jpg#compare"
+      ],
+      "benchmarks": {
+       "films": [
+        "paperclip",
+        "hupo"
+       ],
+       "hupoLabels": [
+        "ED"
+       ],
+       "paperclipDevices": [
+        "bar-length-ratio",
+        "quadrant-compare"
+       ],
+       "file": "routing/packaging-benchmarks.json"
+      }
+     },
+     "failureModes": [
+      "两个数像两个无关数字",
+      "差值没有颜色",
+      "单位只出现一次"
+     ],
+     "checks": [
+      "packaging:contract",
+      "framecheck:hierarchy-flat"
+     ]
+    },
+    {
+     "id": "dn-timeline",
+     "label": "数字沿时间轴",
+     "appliesTo": [
+      "data"
+     ],
+     "surface": "map",
+     "params": {
+      "axisY": {
+       "min": 60,
+       "max": 900
+      },
+      "tickCount": {
+       "min": 2,
+       "max": 6
+      },
+      "pinSize": {
+       "enum": [
+        8,
+        12,
+        16
+       ]
+      }
+     },
+     "defaults": {
+      "axisY": 800,
+      "tickCount": 4,
+      "pinSize": 12
+     },
+     "contract": {
+      "roles": [
+       "figure",
+       "sub",
+       "caption"
+      ],
+      "leadEm": 0.15,
+      "contrastMin": 4.5,
+      "marginPx": 40,
+      "axisRequired": true
+     },
+     "refs": {
+      "ranges": {
+       "tickCount": [
+        2,
+        6
+       ]
+      },
+      "frames": [
+       "reference-hupo/aesthetics/sheet-by-kind.jpg#timeline"
+      ],
+      "benchmarks": {
+       "films": [
+        "paperclip",
+        "hupo"
+       ],
+       "hupoLabels": [
+        "ED"
+       ],
+       "paperclipDevices": [
+        "table-grows",
+        "evidence-on-timeline"
+       ],
+       "file": "routing/packaging-benchmarks.json"
+      }
+     },
+     "failureModes": [
+      "时间轴刻度与数字不对应",
+      "数字浮在轴上"
+     ],
+     "checks": [
+      "packaging:contract"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "graphic-hero",
+   "label": "封面/收束大字",
+   "why": "只有封面和大收束用 graphic，片内不滥用",
+   "variants": [
+    {
+     "id": "gh-title-photo",
+     "label": "大字压照片",
+     "appliesTo": [
+      "title"
+     ],
+     "surface": "ground",
+     "params": {
+      "darken": {
+       "min": 0,
+       "max": 0.6
+      },
+      "typeSize": {
+       "enum": [
+        200,
+        300
+       ]
+      },
+      "align": {
+       "enum": [
+        "left",
+        "center"
+       ]
+      }
+     },
+     "defaults": {
+      "darken": 0.28,
+      "typeSize": 300,
+      "align": "left"
+     },
+     "contract": {
+      "roles": [
+       "hero"
+      ],
+      "sizesMin": {
+       "hero": 300
+      },
+      "leadEm": 0.15,
+      "contrastMin": 3,
+      "marginPx": 40,
+      "maxChars": 12
+     },
+     "refs": {
+      "ranges": {
+       "darken": [
+        "0.15",
+        "0.5"
+       ]
+      },
+      "frames": [
+       "reference-hupo/aesthetics/sheet-by-kind.jpg#cover"
+      ],
+      "benchmarks": {
+       "films": [
+        "paperclip",
+        "hupo"
+       ],
+       "hupoLabels": [
+        "T"
+       ],
+       "paperclipDevices": [
+        "title-to-texture",
+        "term-biggest"
+       ],
+       "file": "routing/packaging-benchmarks.json"
+      }
+     },
+     "failureModes": [
+      "字压到人脸",
+      "暗化过度",
+      "标题超过两行"
+     ],
+     "checks": [
+      "typedesign:anchor-generic",
+      "packaging:contract"
+     ]
+    },
+    {
+     "id": "gh-knockout",
+     "label": "挖空/透出",
+     "appliesTo": [
+      "title",
+      "concept"
+     ],
+     "surface": "object",
+     "params": {
+      "maskSoftnessPx": {
+       "min": 0,
+       "max": 8
+      },
+      "grain": {
+       "min": 0.1,
+       "max": 0.4
+      }
+     },
+     "defaults": {
+      "maskSoftnessPx": 2,
+      "grain": 0.2
+     },
+     "contract": {
+      "roles": [
+       "hero"
+      ],
+      "sizesMin": {
+       "hero": 300
+      },
+      "leadEm": 0.15,
+      "contrastMin": 3,
+      "marginPx": 40,
+      "knockout": true
+     },
+     "refs": {
+      "ranges": {
+       "grain": [
+        "0.1",
+        "0.4"
+       ]
+      },
+      "frames": [
+       "workspace look /sheet-hero.jpg#knockout"
+      ],
+      "benchmarks": {
+       "films": [
+        "paperclip",
+        "hupo"
+       ],
+       "hupoLabels": [
+        "T",
+        "Q"
+       ],
+       "paperclipDevices": [
+        "literal-metaphor",
+        "tape-sweep"
+       ],
+       "file": "routing/packaging-benchmarks.json"
+      }
+     },
+     "failureModes": [
+      "挖空没有底",
+      "挖空后不可读",
+      "挖空范围不贴合字形"
+     ],
+     "checks": [
+      "typedesign:film-line-missing",
+      "packaging:contract"
+     ]
+    },
+    {
+     "id": "gh-color-block",
+     "label": "色块大字",
+     "appliesTo": [
+      "title"
+     ],
+     "surface": "ground",
+     "params": {
+      "blockWidthPct": {
+       "min": 0.2,
+       "max": 0.6
+      },
+      "palette": {
+       "enum": [
+        "film",
+        "accent"
+       ]
+      },
+      "align": {
+       "enum": [
+        "left",
+        "right"
+       ]
+      }
+     },
+     "defaults": {
+      "blockWidthPct": 0.36,
+      "palette": "film",
+      "align": "left"
+     },
+     "contract": {
+      "roles": [
+       "hero"
+      ],
+      "sizesMin": {
+       "hero": 300
+      },
+      "leadEm": 0.15,
+      "contrastMin": 3,
+      "marginPx": 40
+     },
+     "refs": {
+      "ranges": {
+       "blockWidthPct": [
+        "0.2",
+        "0.6"
+       ]
+      },
+      "frames": [
+       "reference-hupo/aesthetics/sheet-by-kind.jpg#cover"
+      ],
+      "benchmarks": {
+       "films": [
+        "paperclip",
+        "hupo"
+       ],
+       "hupoLabels": [
+        "T",
+        "Q"
+       ],
+       "paperclipDevices": [
+        "title-to-texture",
+        "rhyme"
+       ],
+       "file": "routing/packaging-benchmarks.json"
+      }
+     },
+     "failureModes": [
+      "色块像字幕条",
+      "色块压过主体"
+     ],
+     "checks": [
+      "packaging:contract"
+     ]
+    },
+    {
+     "id": "gh-number-hero",
+     "label": "大数字当封面",
+     "appliesTo": [
+      "data",
+      "title"
+     ],
+     "surface": "ground",
+     "params": {
+      "digitHeightPct": {
+       "min": 0.25,
+       "max": 0.55
+      },
+      "unitlessOk": {
+       "type": "bool"
+      }
+     },
+     "defaults": {
+      "digitHeightPct": 0.36,
+      "unitlessOk": false
+     },
+     "contract": {
+      "roles": [
+       "hero"
+      ],
+      "sizesMin": {
+       "hero": 300
+      },
+      "leadEm": 0.15,
+      "contrastMin": 3,
+      "marginPx": 40,
+      "unitRequired": true
+     },
+     "refs": {
+      "ranges": {
+       "digitHeightPct": [
+        "0.25",
+        "0.55"
+       ]
+      },
+      "frames": [
+       "reference-hupo/aesthetics/sheet-by-kind.jpg#numbers"
+      ],
+      "benchmarks": {
+       "films": [
+        "paperclip",
+        "hupo"
+       ],
+       "hupoLabels": [
+        "T",
+        "ED"
+       ],
+       "paperclipDevices": [
+        "number-grows",
+        "countdown-object"
+       ],
+       "file": "routing/packaging-benchmarks.json"
+      }
+     },
+     "failureModes": [
+      "只有数字没有口径",
+      "数字太大占满画面"
+     ],
+     "checks": [
+      "packaging:contract"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "transition",
+   "label": "转场",
+   "why": "接缝是设计过的：切/甩/闪/匹配/推，不是默认硬切",
+   "variants": [
+    {
+     "id": "tr-cut",
+     "label": "硬切",
+     "appliesTo": [
+      "any"
+     ],
+     "surface": "none",
+     "params": {
+      "settleBoth": {
+       "type": "bool"
+      }
+     },
+     "defaults": {
+      "settleBoth": true
+     },
+     "contract": {
+      "maxDurSec": 0.05
+     },
+     "refs": {
+      "ranges": {
+       "maxDurSec": [
+        0,
+        0.05
+       ]
+      },
+      "frames": [
+       "reference-hupo/aesthetics/sheet-by-kind.jpg#seam"
+      ],
+      "benchmarks": {
+       "films": [
+        "paperclip",
+        "hupo"
+       ],
+       "hupoLabels": [
+        "B",
+        "R"
+       ],
+       "paperclipDevices": [
+        "black-pause"
+       ],
+       "file": "routing/packaging-benchmarks.json"
+      }
+     },
+     "failureModes": [
+      "两端都在动时硬切",
+      "跳轴硬切"
+     ],
+     "checks": [
+      "seams:seamJerks"
+     ]
+    },
+    {
+     "id": "tr-whip",
+     "label": "甩",
+     "appliesTo": [
+      "any"
+     ],
+     "surface": "none",
+     "params": {
+      "distancePx": {
+       "min": 120,
+       "max": 600
+      },
+      "durSec": {
+       "min": 0.12,
+       "max": 0.3
+      },
+      "blurPx": {
+       "min": 8,
+       "max": 64
+      }
+     },
+     "defaults": {
+      "distancePx": 320,
+      "durSec": 0.18,
+      "blurPx": 24
+     },
+     "contract": {
+      "maxDurSec": 0.3
+     },
+     "refs": {
+      "ranges": {
+       "durSec": [
+        "0.12",
+        "0.3"
+       ]
+      },
+      "frames": [
+       "reference-hupo/aesthetics/sheet-by-kind.jpg#seam"
+      ],
+      "benchmarks": {
+       "films": [
+        "paperclip",
+        "hupo"
+       ],
+       "hupoLabels": [
+        "B",
+        "R"
+       ],
+       "paperclipDevices": [
+        "scale-jump",
+        "pan-distance"
+       ],
+       "file": "routing/packaging-benchmarks.json"
+      }
+     },
+     "failureModes": [
+      "甩的方向不一致",
+      "甩后停不住"
+     ],
+     "checks": [
+      "seams:seamJerks"
+     ]
+    },
+    {
+     "id": "tr-flash",
+     "label": "闪",
+     "appliesTo": [
+      "any"
+     ],
+     "surface": "none",
+     "params": {
+      "durFrames": {
+       "min": 2,
+       "max": 5
+      },
+      "color": {
+       "enum": [
+        "palette-accent",
+        "white"
+       ]
+      }
+     },
+     "defaults": {
+      "durFrames": 2,
+      "color": "palette-accent"
+     },
+     "contract": {
+      "maxDurSec": 0.2
+     },
+     "refs": {
+      "ranges": {
+       "durFrames": [
+        2,
+        5
+       ]
+      },
+      "frames": [
+       "reference-hupo/aesthetics/sheet-by-kind.jpg#seam"
+      ],
+      "benchmarks": {
+       "films": [
+        "paperclip",
+        "hupo"
+       ],
+       "hupoLabels": [
+        "B",
+        "R"
+       ],
+       "paperclipDevices": [
+        "glitch-cut",
+        "signal-break"
+       ],
+       "file": "routing/packaging-benchmarks.json"
+      }
+     },
+     "failureModes": [
+      "闪白过久",
+      "闪色不在 palette"
+     ],
+     "checks": [
+      "seams:seamJerks"
+     ]
+    },
+    {
+     "id": "tr-match",
+     "label": "匹配",
+     "appliesTo": [
+      "any"
+     ],
+     "surface": "none",
+     "params": {
+      "anchorPair": {
+       "type": "string"
+      },
+      "durSec": {
+       "min": 0.15,
+       "max": 0.4
+      }
+     },
+     "defaults": {
+      "anchorPair": "subject",
+      "durSec": 0.24
+     },
+     "contract": {
+      "maxDurSec": 0.4
+     },
+     "refs": {
+      "ranges": {
+       "durSec": [
+        "0.15",
+        "0.4"
+       ]
+      },
+      "frames": [
+       "reference-hupo/aesthetics/sheet-by-kind.jpg#seam"
+      ],
+      "benchmarks": {
+       "films": [
+        "paperclip",
+        "hupo"
+       ],
+       "hupoLabels": [
+        "R",
+        "PT"
+       ],
+       "paperclipDevices": [
+        "callback",
+        "rhyme"
+       ],
+       "file": "routing/packaging-benchmarks.json"
+      }
+     },
+     "failureModes": [
+      "匹配点不在同一位置",
+      "匹配后比例跳变"
+     ],
+     "checks": [
+      "seams:seamJerks"
+     ]
+    },
+    {
+     "id": "tr-push",
+     "label": "推",
+     "appliesTo": [
+      "any"
+     ],
+     "surface": "none",
+     "params": {
+      "scaleFrom": {
+       "min": 0.9,
+       "max": 0.98
+      },
+      "durSec": {
+       "min": 0.2,
+       "max": 0.5
+      }
+     },
+     "defaults": {
+      "scaleFrom": 0.94,
+      "durSec": 0.3
+     },
+     "contract": {
+      "maxDurSec": 0.5
+     },
+     "refs": {
+      "ranges": {
+       "scaleFrom": [
+        "0.9",
+        "0.98"
+       ]
+      },
+      "frames": [
+       "reference-hupo/aesthetics/sheet-by-kind.jpg#seam"
+      ],
+      "benchmarks": {
+       "films": [
+        "paperclip",
+        "hupo"
+       ],
+       "hupoLabels": [
+        "B",
+        "T"
+       ],
+       "paperclipDevices": [
+        "zoom-into",
+        "zoom-out-whole"
+       ],
+       "file": "routing/packaging-benchmarks.json"
+      }
+     },
+     "failureModes": [
+      "推动过快",
+      "推后构图失衡"
+     ],
+     "checks": [
+      "camera:camPose"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "motion-type",
+   "label": "字的动效",
+   "why": "字按 0.8s 可读停顿进入，不抢口播",
+   "variants": [
+    {
+     "id": "mt-rise",
+     "label": "升起",
+     "appliesTo": [
+      "title",
+      "concept"
+     ],
+     "surface": "none",
+     "params": {
+      "fromPx": {
+       "min": 24,
+       "max": 80
+      },
+      "durSec": {
+       "min": 0.4,
+       "max": 0.8
+      }
+     },
+     "defaults": {
+      "fromPx": 48,
+      "durSec": 0.55
+     },
+     "contract": {
+      "maxDurSec": 0.8
+     },
+     "refs": {
+      "ranges": {
+       "fromPx": [
+        "24",
+        "80"
+       ],
+       "durSec": [
+        "0.4",
+        "0.8"
+       ]
+      },
+      "frames": [
+       "reference-hupo/aesthetics/sheet-by-kind.jpg#motion"
+      ],
+      "benchmarks": {
+       "films": [
+        "paperclip",
+        "hupo"
+       ],
+       "hupoLabels": [
+        "T",
+        "PT"
+       ],
+       "paperclipDevices": [
+        "zoom-into",
+        "scale-jump"
+       ],
+       "file": "routing/packaging-benchmarks.json"
+      }
+     },
+     "failureModes": [
+      "升起太快",
+      "停顿不足 0.8s"
+     ],
+     "checks": [
+      "morph:cueTimingErrors"
+     ]
+    },
+    {
+     "id": "mt-scale",
+     "label": "缩放进入",
+     "appliesTo": [
+      "title"
+     ],
+     "surface": "none",
+     "params": {
+      "fromScale": {
+       "min": 0.9,
+       "max": 0.98
+      },
+      "durSec": {
+       "min": 0.3,
+       "max": 0.7
+      }
+     },
+     "defaults": {
+      "fromScale": 0.94,
+      "durSec": 0.45
+     },
+     "contract": {
+      "maxDurSec": 0.7
+     },
+     "refs": {
+      "ranges": {
+       "fromScale": [
+        "0.9",
+        "0.98"
+       ]
+      },
+      "frames": [
+       "reference-hupo/aesthetics/sheet-by-kind.jpg#motion"
+      ],
+      "benchmarks": {
+       "films": [
+        "paperclip",
+        "hupo"
+       ],
+       "hupoLabels": [
+        "T",
+        "PT"
+       ],
+       "paperclipDevices": [
+        "zoom-into",
+        "zoom-out-whole"
+       ],
+       "file": "routing/packaging-benchmarks.json"
+      }
+     },
+     "failureModes": [
+      "缩放导致字框出画",
+      "与口播不同步"
+     ],
+     "checks": [
+      "morph:cueTimingErrors"
+     ]
+    },
+    {
+     "id": "mt-swap",
+     "label": "词替换",
+     "appliesTo": [
+      "title",
+      "data"
+     ],
+     "surface": "none",
+     "params": {
+      "oldOutMs": {
+       "min": 80,
+       "max": 240
+      },
+      "newInMs": {
+       "min": 80,
+       "max": 300
+      },
+      "holdMs": {
+       "min": 200,
+       "max": 600
+      }
+     },
+     "defaults": {
+      "oldOutMs": 140,
+      "newInMs": 180,
+      "holdMs": 320
+     },
+     "contract": {
+      "maxDurSec": 0.8
+     },
+     "refs": {
+      "ranges": {
+       "holdMs": [
+        "200",
+        "600"
+       ]
+      },
+      "frames": [
+       "reference-hupo/aesthetics/sheet-by-kind.jpg#motion"
+      ],
+      "benchmarks": {
+       "films": [
+        "paperclip",
+        "hupo"
+       ],
+       "hupoLabels": [
+        "T",
+        "PT"
+       ],
+       "paperclipDevices": [
+        "label-swap",
+        "term-biggest"
+       ],
+       "file": "routing/packaging-benchmarks.json"
+      }
+     },
+     "failureModes": [
+      "替换时两词重叠",
+      "替换后不落位"
+     ],
+     "checks": [
+      "morph:geometryErrors"
+     ]
+    },
+    {
+     "id": "mt-mask-wipe",
+     "label": "蒙版擦除",
+     "appliesTo": [
+      "title"
+     ],
+     "surface": "none",
+     "params": {
+      "angle": {
+       "min": 0,
+       "max": 90
+      },
+      "widthPx": {
+       "min": 40,
+       "max": 200
+      },
+      "durSec": {
+       "min": 0.3,
+       "max": 0.7
+      }
+     },
+     "defaults": {
+      "angle": 0,
+      "widthPx": 80,
+      "durSec": 0.45
+     },
+     "contract": {
+      "maxDurSec": 0.7
+     },
+     "refs": {
+      "ranges": {
+       "durSec": [
+        "0.3",
+        "0.7"
+       ]
+      },
+      "frames": [
+       "reference-hupo/aesthetics/sheet-by-kind.jpg#motion"
+      ],
+      "benchmarks": {
+       "films": [
+        "paperclip",
+        "hupo"
+       ],
+       "hupoLabels": [
+        "T",
+        "D"
+       ],
+       "paperclipDevices": [
+        "letter-to-structure",
+        "mark-follows-line"
+       ],
+       "file": "routing/packaging-benchmarks.json"
+      }
+     },
+     "failureModes": [
+      "擦除方向与构图冲突",
+      "擦除后字缺笔画"
+     ],
+     "checks": [
+      "morph:geometryErrors"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "material",
+   "label": "材质与表面",
+   "why": "所有字都要有印/写/投的材质，不是纯色叠加",
+   "variants": [
+    {
+     "id": "ma-ink-bite",
+     "label": "油墨咬合",
+     "appliesTo": [
+      "any"
+     ],
+     "surface": "any",
+     "params": {
+      "maskSizePx": {
+       "min": 4,
+       "max": 10
+      },
+      "alphaMin": {
+       "min": 0.7,
+       "max": 0.9
+      },
+      "density": {
+       "min": 0.1,
+       "max": 0.4
+      }
+     },
+     "defaults": {
+      "maskSizePx": 6,
+      "alphaMin": 0.82,
+      "density": 0.2
+     },
+     "contract": {
+      "grainMin": 0.08
+     },
+     "refs": {
+      "ranges": {
+       "maskSizePx": [
+        "4",
+        "10"
+       ]
+      },
+      "frames": [
+       "project banana-design out/greybox/B05.png"
+      ],
+      "benchmarks": {
+       "films": [
+        "paperclip",
+        "hupo"
+       ],
+       "hupoLabels": [
+        "T",
+        "PT",
+        "EN",
+        "Q"
+       ],
+       "paperclipDevices": [
+        "title-to-texture",
+        "tape-sweep"
+       ],
+       "file": "routing/packaging-benchmarks.json"
+      }
+     },
+     "failureModes": [
+      "颗粒太规则像噪点",
+      "颗粒压掉小字"
+     ],
+     "checks": [
+      "framecheck:contrast"
+     ]
+    },
+    {
+     "id": "ma-paper-tooth",
+     "label": "纸纹",
+     "appliesTo": [
+      "any"
+     ],
+     "surface": "page",
+     "params": {
+      "noiseScale": {
+       "min": 1,
+       "max": 4
+      },
+      "opacity": {
+       "min": 0.04,
+       "max": 0.14
+      }
+     },
+     "defaults": {
+      "noiseScale": 2,
+      "opacity": 0.08
+     },
+     "contract": {
+      "grainMin": 0.04
+     },
+     "refs": {
+      "ranges": {
+       "opacity": [
+        "0.04",
+        "0.14"
+       ]
+      },
+      "frames": [
+       "reference-hupo/aesthetics/sheet-by-kind.jpg#paper"
+      ],
+      "benchmarks": {
+       "films": [
+        "paperclip",
+        "hupo"
+       ],
+       "hupoLabels": [
+        "EN",
+        "PT"
+       ],
+       "paperclipDevices": [
+        "title-to-texture",
+        "clipping-stack"
+       ],
+       "file": "routing/packaging-benchmarks.json"
+      }
+     },
+     "failureModes": [
+      "纸纹变脏",
+      "纹理盖过字"
+     ],
+     "checks": [
+      "framecheck:contrast"
+     ]
+    },
+    {
+     "id": "ma-halftone",
+     "label": "半调",
+     "appliesTo": [
+      "any"
+     ],
+     "surface": "page",
+     "params": {
+      "dotPx": {
+       "min": 3,
+       "max": 6
+      },
+      "angle": {
+       "min": 0,
+       "max": 90
+      },
+      "opacity": {
+       "min": 0.05,
+       "max": 0.2
+      }
+     },
+     "defaults": {
+      "dotPx": 4,
+      "angle": 45,
+      "opacity": 0.1
+     },
+     "contract": {
+      "grainMin": 0.05
+     },
+     "refs": {
+      "ranges": {
+       "dotPx": [
+        "3",
+        "6"
+       ]
+      },
+      "frames": [
+       "reference-hupo/aesthetics/sheet-by-kind.jpg#paper"
+      ],
+      "benchmarks": {
+       "films": [
+        "paperclip",
+        "hupo"
+       ],
+       "hupoLabels": [
+        "EN",
+        "ED"
+       ],
+       "paperclipDevices": [
+        "title-to-texture",
+        "mark-in-red"
+       ],
+       "file": "routing/packaging-benchmarks.json"
+      }
+     },
+     "failureModes": [
+      "半调网纹太大",
+      "半调与屏幕扫描线混用"
+     ],
+     "checks": [
+      "framecheck:contrast"
+     ]
+    },
+    {
+     "id": "ma-scanline",
+     "label": "扫描线",
+     "appliesTo": [
+      "any"
+     ],
+     "surface": "screen",
+     "params": {
+      "linePx": {
+       "min": 2,
+       "max": 4
+      },
+      "gapPx": {
+       "min": 3,
+       "max": 6
+      },
+      "opacity": {
+       "min": 0.04,
+       "max": 0.16
+      }
+     },
+     "defaults": {
+      "linePx": 3,
+      "gapPx": 4,
+      "opacity": 0.08
+     },
+     "contract": {
+      "grainMin": 0.04
+     },
+     "refs": {
+      "ranges": {
+       "linePx": [
+        "2",
+        "4"
+       ]
+      },
+      "frames": [
+       "project banana-design out/greybox/B15.png"
+      ],
+      "benchmarks": {
+       "films": [
+        "paperclip",
+        "hupo"
+       ],
+       "hupoLabels": [
+        "EN",
+        "C"
+       ],
+       "paperclipDevices": [
+        "screen-workflow",
+        "signal-break"
+       ],
+       "file": "routing/packaging-benchmarks.json"
+      }
+     },
+     "failureModes": [
+      "扫描线切笔画",
+      "线距过密"
+     ],
+     "checks": [
+      "framecheck:contrast"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "gawx-layout",
+   "label": "Gawx 排版",
+   "why": "Gawx 四部片的字位/大小/行数/边距实测：左堆叠、居中英雄、下三分之一、松散单行",
+   "variants": [
+    {
+     "id": "gl-stack-left",
+     "label": "左对齐竖向堆叠",
+     "appliesTo": [
+      "title",
+      "concept"
+     ],
+     "surface": "ground",
+     "params": {
+      "x": {
+       "type": "number",
+       "min": 0.15,
+       "max": 0.35
+      },
+      "align": {
+       "enum": [
+        "left"
+       ]
+      },
+      "lines": {
+       "type": "number",
+       "min": 2,
+       "max": 6
+      },
+      "sizeFrac": {
+       "type": "number",
+       "min": 0.032,
+       "max": 0.139
+      },
+      "margin": {
+       "type": "number",
+       "min": 0.041,
+       "max": 0.286
+      },
+      "chars": {
+       "type": "number",
+       "min": 4,
+       "max": 12
+      }
+     },
+     "defaults": {
+      "x": 0.26,
+      "align": "left",
+      "lines": 3,
+      "sizeFrac": 0.073,
+      "margin": 0.08,
+      "chars": 9
+     },
+     "contract": {
+      "roles": [
+       "hero",
+       "title",
+       "sub",
+       "caption"
+      ],
+      "leadEm": 0.15,
+      "contrastMin": 4.5,
+      "marginPx": 40,
+      "sizePctOfHeight": [
+       0.032,
+       0.139
+      ],
+      "marginPct": [
+       0.041,
+       0.286
+      ],
+      "linesMax": 6,
+      "charsMax": 12,
+      "align": "left"
+     },
+     "refs": {
+      "ranges": {
+       "sizeFrac": [
+        0.032,
+        0.044,
+        0.073,
+        0.139
+       ],
+       "margin": [
+        0.041,
+        0.286
+       ],
+       "lines": [
+        2,
+        3,
+        6
+       ],
+       "chars": [
+        7,
+        12
+       ]
+      },
+      "frames": [
+       "style-lab/research-gawx-20261027/bigtype.jpg",
+       "style-lab/research-gawx-20261027/type-Ahoy.jpg",
+       "style-lab/research-gawx-20261027/type-Johnny_Harris.jpg",
+       "style-lab/research-gawx-20261027/type-Nerdwriter1.jpg"
+      ],
+      "benchmarks": {
+       "films": [
+        "gawx"
+       ],
+       "variantEvidence": "gl-stack-left",
+       "file": "routing/gawx-layout-colour.json"
+      }
+     },
+     "failureModes": [
+      "字位超出实测范围",
+      "行数超过 6",
+      "边距小于 4%"
+     ],
+     "checks": [
+      "packaging:gawx",
+      "framecheck:type-size"
+     ]
+    },
+    {
+     "id": "gl-centre-hero",
+     "label": "居中英雄字",
+     "appliesTo": [
+      "title"
+     ],
+     "surface": "ground",
+     "params": {
+      "x": {
+       "type": "number",
+       "min": 0.4,
+       "max": 0.55
+      },
+      "align": {
+       "enum": [
+        "centre"
+       ]
+      },
+      "lines": {
+       "type": "number",
+       "min": 1,
+       "max": 3
+      },
+      "sizeFrac": {
+       "type": "number",
+       "min": 0.073,
+       "max": 0.139
+      },
+      "chars": {
+       "type": "number",
+       "min": 4,
+       "max": 10
+      }
+     },
+     "defaults": {
+      "x": 0.47,
+      "align": "centre",
+      "lines": 2,
+      "sizeFrac": 0.103,
+      "chars": 7
+     },
+     "contract": {
+      "roles": [
+       "hero",
+       "title",
+       "sub",
+       "caption"
+      ],
+      "leadEm": 0.15,
+      "contrastMin": 4.5,
+      "marginPx": 40,
+      "sizePctOfHeight": [
+       0.073,
+       0.139
+      ],
+      "linesMax": 3,
+      "charsMax": 10,
+      "align": "centre"
+     },
+     "refs": {
+      "ranges": {
+       "sizeFrac": [
+        0.032,
+        0.044,
+        0.073,
+        0.139
+       ],
+       "margin": [
+        0.041,
+        0.286
+       ],
+       "lines": [
+        2,
+        3,
+        6
+       ],
+       "chars": [
+        7,
+        12
+       ]
+      },
+      "frames": [
+       "style-lab/research-gawx-20261027/bigtype.jpg",
+       "style-lab/research-gawx-20261027/type-Ahoy.jpg",
+       "style-lab/research-gawx-20261027/type-Johnny_Harris.jpg",
+       "style-lab/research-gawx-20261027/type-Nerdwriter1.jpg"
+      ],
+      "benchmarks": {
+       "films": [
+        "gawx"
+       ],
+       "variantEvidence": "gl-centre-hero",
+       "file": "routing/gawx-layout-colour.json"
+      }
+     },
+     "failureModes": [
+      "字位超出实测范围",
+      "行数超过 6",
+      "边距小于 4%"
+     ],
+     "checks": [
+      "packaging:gawx",
+      "framecheck:type-size"
+     ]
+    },
+    {
+     "id": "gl-lower-third",
+     "label": "下三分之一位",
+     "appliesTo": [
+      "concept",
+      "data"
+     ],
+     "surface": "ground",
+     "params": {
+      "y": {
+       "type": "number",
+       "min": 0.6,
+       "max": 0.85
+      },
+      "lines": {
+       "type": "number",
+       "min": 1,
+       "max": 4
+      },
+      "chars": {
+       "type": "number",
+       "min": 4,
+       "max": 14
+      }
+     },
+     "defaults": {
+      "y": 0.72,
+      "lines": 2,
+      "chars": 9
+     },
+     "contract": {
+      "roles": [
+       "hero",
+       "title",
+       "sub",
+       "caption"
+      ],
+      "leadEm": 0.15,
+      "contrastMin": 4.5,
+      "marginPx": 40,
+      "yPct": [
+       0.6,
+       0.85
+      ],
+      "linesMax": 4,
+      "charsMax": 14,
+      "align": "left",
+      "sizePctOfHeight": null
+     },
+     "refs": {
+      "ranges": {
+       "sizeFrac": [
+        0.032,
+        0.044,
+        0.073,
+        0.139
+       ],
+       "margin": [
+        0.041,
+        0.286
+       ],
+       "lines": [
+        2,
+        3,
+        6
+       ],
+       "chars": [
+        7,
+        12
+       ]
+      },
+      "frames": [
+       "style-lab/research-gawx-20261027/bigtype.jpg",
+       "style-lab/research-gawx-20261027/type-Ahoy.jpg",
+       "style-lab/research-gawx-20261027/type-Johnny_Harris.jpg",
+       "style-lab/research-gawx-20261027/type-Nerdwriter1.jpg"
+      ],
+      "benchmarks": {
+       "films": [
+        "gawx"
+       ],
+       "variantEvidence": "gl-lower-third",
+       "file": "routing/gawx-layout-colour.json"
+      }
+     },
+     "failureModes": [
+      "字位超出实测范围",
+      "行数超过 6",
+      "边距小于 4%"
+     ],
+     "checks": [
+      "packaging:gawx",
+      "framecheck:type-size"
+     ]
+    },
+    {
+     "id": "gl-loose-single",
+     "label": "松散单行",
+     "appliesTo": [
+      "title",
+      "concept"
+     ],
+     "surface": "ground",
+     "params": {
+      "align": {
+       "enum": [
+        "loose"
+       ]
+      },
+      "chars": {
+       "type": "number",
+       "min": 7,
+       "max": 17
+      },
+      "lines": {
+       "type": "number",
+       "min": 1,
+       "max": 3
+      }
+     },
+     "defaults": {
+      "align": "loose",
+      "chars": 12,
+      "lines": 2
+     },
+     "contract": {
+      "roles": [
+       "hero",
+       "title",
+       "sub",
+       "caption"
+      ],
+      "leadEm": 0.15,
+      "contrastMin": 4.5,
+      "marginPx": 40,
+      "charsMax": 17,
+      "linesMax": 3,
+      "align": "loose",
+      "sizePctOfHeight": null
+     },
+     "refs": {
+      "ranges": {
+       "sizeFrac": [
+        0.032,
+        0.044,
+        0.073,
+        0.139
+       ],
+       "margin": [
+        0.041,
+        0.286
+       ],
+       "lines": [
+        2,
+        3,
+        6
+       ],
+       "chars": [
+        7,
+        12
+       ]
+      },
+      "frames": [
+       "style-lab/research-gawx-20261027/bigtype.jpg",
+       "style-lab/research-gawx-20261027/type-Ahoy.jpg",
+       "style-lab/research-gawx-20261027/type-Johnny_Harris.jpg",
+       "style-lab/research-gawx-20261027/type-Nerdwriter1.jpg"
+      ],
+      "benchmarks": {
+       "films": [
+        "gawx"
+       ],
+       "variantEvidence": "gl-loose-single",
+       "file": "routing/gawx-layout-colour.json"
+      }
+     },
+     "failureModes": [
+      "字位超出实测范围",
+      "行数超过 6",
+      "边距小于 4%"
+     ],
+     "checks": [
+      "packaging:gawx",
+      "framecheck:type-size"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "colour-harmony",
+   "label": "Gawx 配色和谐",
+   "why": "Gawx 四部片的暗底/主色族/彩色底/冷暖和配对实测：6 个和谐变体，每个都带实测 hex 与关系",
+   "variants": [
+    {
+     "id": "ch-dark-analogous",
+     "label": "暗底+同族邻近色",
+     "appliesTo": [
+      "title",
+      "concept"
+     ],
+     "surface": "ground",
+     "params": {
+      "ground": {
+       "type": "string"
+      },
+      "ink": {
+       "type": "string"
+      },
+      "lead": {
+       "type": "string"
+      },
+      "second": {
+       "type": "string"
+      }
+     },
+     "defaults": {
+      "ground": "#100d0c",
+      "ink": "#f1f0ed",
+      "lead": "#623e1b",
+      "second": "#8c734c"
+     },
+     "contract": {
+      "roles": [
+       "hero",
+       "title",
+       "sub",
+       "caption"
+      ],
+      "leadEm": 0.15,
+      "contrastMin": 3,
+      "marginPx": 40,
+      "groundLMax": 0.03,
+      "maxColouredFamilies": 1,
+      "hueRule": "analogous",
+      "hueMaxDeg": 45,
+      "inkContrastMin": 4.5,
+      "leadGroundContrastMin": 2,
+      "accentCoverageMax": 0.12
+     },
+     "refs": {
+      "ranges": {
+       "groundL": [
+        0,
+        0.03
+       ],
+       "maxColouredFamilies": [
+        1,
+        2
+       ],
+       "hueRule": "analogous",
+       "inkContrast": [
+        4.5,
+        18
+       ]
+      },
+      "frames": [
+       "style-lab/research-gawx-20261027/palette-20210616.jpg",
+       "style-lab/research-gawx-20261027/palette-20231027.jpg",
+       "style-lab/research-gawx-20261027/palette-20241125.jpg",
+       "style-lab/research-gawx-20261027/palette-20260314.jpg"
+      ],
+      "benchmarks": {
+       "films": [
+        "gawx"
+       ],
+       "variantEvidence": "ch-dark-analogous",
+       "file": "routing/gawx-layout-colour.json",
+       "measured": {
+        "film": "20241125",
+        "relations": {
+         "hueLeadSecond": 7,
+         "inkContrast": 16.98,
+         "groundL": 0.0042
+        }
+       }
+      }
+     },
+     "failureModes": [
+      "同族色相差超过 45° 变成两族",
+      "暗底上再用暗色字",
+      "暖色低彩度读成脏棕"
+     ],
+     "checks": [
+      "packaging:gawx",
+      "packaging:contract"
+     ]
+    },
+    {
+     "id": "ch-dark-complementary",
+     "label": "暗底+冷暖互补",
+     "appliesTo": [
+      "title",
+      "data"
+     ],
+     "surface": "ground",
+     "params": {
+      "ground": {
+       "type": "string"
+      },
+      "ink": {
+       "type": "string"
+      },
+      "warm": {
+       "type": "string"
+      },
+      "cool": {
+       "type": "string"
+      }
+     },
+     "defaults": {
+      "ground": "#0f1113",
+      "ink": "#c2bb9f",
+      "warm": "#fd2828",
+      "cool": "#404d4c"
+     },
+     "contract": {
+      "roles": [
+       "hero",
+       "title",
+       "sub",
+       "caption"
+      ],
+      "leadEm": 0.15,
+      "contrastMin": 3,
+      "marginPx": 40,
+      "groundLMax": 0.03,
+      "maxColouredFamilies": 2,
+      "hueRule": "complementary",
+      "hueRangeDeg": [
+       150,
+       210
+      ],
+      "inkContrastMin": 4.5,
+      "warmGroundContrastMin": 3,
+      "coolGroundContrastMin": 2.5
+     },
+     "refs": {
+      "ranges": {
+       "groundL": [
+        0,
+        0.03
+       ],
+       "maxColouredFamilies": [
+        1,
+        2
+       ],
+       "hueRule": "complementary",
+       "inkContrast": [
+        4.5,
+        18
+       ]
+      },
+      "frames": [
+       "style-lab/research-gawx-20261027/palette-20210616.jpg",
+       "style-lab/research-gawx-20261027/palette-20231027.jpg",
+       "style-lab/research-gawx-20261027/palette-20241125.jpg",
+       "style-lab/research-gawx-20261027/palette-20260314.jpg"
+      ],
+      "benchmarks": {
+       "films": [
+        "gawx"
+       ],
+       "variantEvidence": "ch-dark-complementary",
+       "file": "routing/gawx-layout-colour.json",
+       "measured": {
+        "film": "20231027",
+        "relations": {
+         "hueWarmCool": 175.4,
+         "inkContrast": 9.82,
+         "groundL": 0.0055
+        }
+       }
+      }
+     },
+     "failureModes": [
+      "冷暖两端饱和度都拉满",
+      "互补色面积相等",
+      "把互补当三色用"
+     ],
+     "checks": [
+      "packaging:gawx",
+      "packaging:contract"
+     ]
+    },
+    {
+     "id": "ch-coloured-ground-turn",
+     "label": "彩色底转折",
+     "appliesTo": [
+      "title",
+      "concept"
+     ],
+     "surface": "ground",
+     "params": {
+      "ground": {
+       "type": "string"
+      },
+      "ink": {
+       "type": "string"
+      },
+      "lead": {
+       "type": "string"
+      },
+      "shareMin": {
+       "type": "string"
+      }
+     },
+     "defaults": {
+      "ground": "#8c734c",
+      "ink": "#0f1113",
+      "lead": "#fd2828",
+      "shareMin": 0.15
+     },
+     "contract": {
+      "roles": [
+       "hero",
+       "title",
+       "sub",
+       "caption"
+      ],
+      "leadEm": 0.15,
+      "contrastMin": 3,
+      "marginPx": 40,
+      "colouredGroundShareMin": 0.12,
+      "groundLMax": 0.35,
+      "inkContrastMin": 3,
+      "maxColouredFamilies": 2,
+      "hueRule": "analogous"
+     },
+     "refs": {
+      "ranges": {
+       "groundL": [
+        0,
+        0.03
+       ],
+       "maxColouredFamilies": [
+        1,
+        2
+       ],
+       "hueRule": "analogous",
+       "inkContrast": [
+        3,
+        18
+       ]
+      },
+      "frames": [
+       "style-lab/research-gawx-20261027/palette-20210616.jpg",
+       "style-lab/research-gawx-20261027/palette-20231027.jpg",
+       "style-lab/research-gawx-20261027/palette-20241125.jpg",
+       "style-lab/research-gawx-20261027/palette-20260314.jpg"
+      ],
+      "benchmarks": {
+       "films": [
+        "gawx"
+       ],
+       "variantEvidence": "ch-coloured-ground-turn",
+       "file": "routing/gawx-layout-colour.json",
+       "measured": {
+        "film": "20231027",
+        "relations": {
+         "colouredGround": 0.299,
+         "inkContrast": 4.21
+        }
+       }
+      }
+     },
+     "failureModes": [
+      "彩色底占满全片",
+      "彩色底上字仍用低对比"
+     ],
+     "checks": [
+      "packaging:gawx",
+      "packaging:contract"
+     ]
+    },
+    {
+     "id": "ch-neutral-accent",
+     "label": "中性底+单点色",
+     "appliesTo": [
+      "title",
+      "data"
+     ],
+     "surface": "ground",
+     "params": {
+      "ground": {
+       "type": "string"
+      },
+      "ink": {
+       "type": "string"
+      },
+      "accent": {
+       "type": "string"
+      }
+     },
+     "defaults": {
+      "ground": "#0f1113",
+      "ink": "#c2bb9f",
+      "accent": "#fd2828"
+     },
+     "contract": {
+      "roles": [
+       "hero",
+       "title",
+       "sub",
+       "caption"
+      ],
+      "leadEm": 0.15,
+      "contrastMin": 3,
+      "marginPx": 40,
+      "maxColouredFamilies": 1,
+      "accentCoverageMax": 0.08,
+      "inkContrastMin": 4.5,
+      "accentGroundContrastMin": 3
+     },
+     "refs": {
+      "ranges": {
+       "groundL": [
+        0,
+        0.03
+       ],
+       "maxColouredFamilies": [
+        1,
+        2
+       ],
+       "hueRule": "any",
+       "inkContrast": [
+        4.5,
+        18
+       ]
+      },
+      "frames": [
+       "style-lab/research-gawx-20261027/palette-20210616.jpg",
+       "style-lab/research-gawx-20261027/palette-20231027.jpg",
+       "style-lab/research-gawx-20261027/palette-20241125.jpg",
+       "style-lab/research-gawx-20261027/palette-20260314.jpg"
+      ],
+      "benchmarks": {
+       "films": [
+        "gawx"
+       ],
+       "variantEvidence": "ch-neutral-accent",
+       "file": "routing/gawx-layout-colour.json",
+       "measured": {
+        "film": "20231027",
+        "relations": {
+         "accentCoverage": 0.038,
+         "accentGroundContrast": 4.97
+        }
+       }
+      }
+     },
+     "failureModes": [
+      "点缀色超过两个",
+      "点缀色压过主体"
+     ],
+     "checks": [
+      "packaging:gawx",
+      "packaging:contract"
+     ]
+    },
+    {
+     "id": "ch-noir-single",
+     "label": "近黑+单一情绪色",
+     "appliesTo": [
+      "concept",
+      "data"
+     ],
+     "surface": "ground",
+     "params": {
+      "ground": {
+       "type": "string"
+      },
+      "ink": {
+       "type": "string"
+      },
+      "lead": {
+       "type": "string"
+      }
+     },
+     "defaults": {
+      "ground": "#111111",
+      "ink": "#87918d",
+      "lead": "#b0700b"
+     },
+     "contract": {
+      "roles": [
+       "hero",
+       "title",
+       "sub",
+       "caption"
+      ],
+      "leadEm": 0.15,
+      "contrastMin": 3,
+      "marginPx": 40,
+      "groundLMax": 0.02,
+      "maxColouredFamilies": 1,
+      "inkContrastMin": 4.5,
+      "leadGroundContrastMin": 2.5
+     },
+     "refs": {
+      "ranges": {
+       "groundL": [
+        0,
+        0.03
+       ],
+       "maxColouredFamilies": [
+        1,
+        2
+       ],
+       "hueRule": "any",
+       "inkContrast": [
+        4.5,
+        18
+       ]
+      },
+      "frames": [
+       "style-lab/research-gawx-20261027/palette-20210616.jpg",
+       "style-lab/research-gawx-20261027/palette-20231027.jpg",
+       "style-lab/research-gawx-20261027/palette-20241125.jpg",
+       "style-lab/research-gawx-20261027/palette-20260314.jpg"
+      ],
+      "benchmarks": {
+       "films": [
+        "gawx"
+       ],
+       "variantEvidence": "ch-noir-single",
+       "file": "routing/gawx-layout-colour.json",
+       "measured": {
+        "film": "20260314",
+        "relations": {
+         "colouredShare": 0.054,
+         "inkContrast": 5.81
+        }
+       }
+      }
+     },
+     "failureModes": [
+      "单一色也不给，全片灰",
+      "近黑上叠近黑字"
+     ],
+     "checks": [
+      "packaging:gawx",
+      "packaging:contract"
+     ]
+    },
+    {
+     "id": "ch-warm-cool-pair",
+     "label": "暖冷两族并置",
+     "appliesTo": [
+      "title",
+      "concept",
+      "data"
+     ],
+     "surface": "ground",
+     "params": {
+      "ground": {
+       "type": "string"
+      },
+      "ink": {
+       "type": "string"
+      },
+      "warm": {
+       "type": "string"
+      },
+      "cool": {
+       "type": "string"
+      }
+     },
+     "defaults": {
+      "ground": "#101116",
+      "ink": "#f6f5f2",
+      "warm": "#bc1014",
+      "cool": "#3d6f89"
+     },
+     "contract": {
+      "roles": [
+       "hero",
+       "title",
+       "sub",
+       "caption"
+      ],
+      "leadEm": 0.15,
+      "contrastMin": 3,
+      "marginPx": 40,
+      "maxColouredFamilies": 2,
+      "hueRule": "contrast",
+      "hueRangeDeg": [
+       90,
+       210
+      ],
+      "inkContrastMin": 4.5
+     },
+     "refs": {
+      "ranges": {
+       "groundL": [
+        0,
+        0.03
+       ],
+       "maxColouredFamilies": [
+        1,
+        2
+       ],
+       "hueRule": "contrast",
+       "inkContrast": [
+        4.5,
+        18
+       ]
+      },
+      "frames": [
+       "style-lab/research-gawx-20261027/palette-20210616.jpg",
+       "style-lab/research-gawx-20261027/palette-20231027.jpg",
+       "style-lab/research-gawx-20261027/palette-20241125.jpg",
+       "style-lab/research-gawx-20261027/palette-20260314.jpg"
+      ],
+      "benchmarks": {
+       "films": [
+        "gawx"
+       ],
+       "variantEvidence": "ch-warm-cool-pair",
+       "file": "routing/gawx-layout-colour.json",
+       "measured": {
+        "film": "20210616",
+        "relations": {
+         "hueWarmCool": 158.1,
+         "inkContrast": 17.29
+        }
+       }
+      }
+     },
+     "failureModes": [
+      "两族面积都大",
+      "暖冷之间夹第三族"
+     ],
+     "checks": [
+      "packaging:gawx",
+      "packaging:contract"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "type-effect",
+   "label": "大字效果/遮罩",
+   "why": "胡泊大量使用超大字号、渐变/图片灌字、挖空、竖排、出画与半调遮罩；这些是排版精髓，不是普通标题",
+   "variants": [
+    {
+     "id": "te-image-fill",
+     "label": "照片灌进字里",
+     "appliesTo": [
+      "title",
+      "concept"
+     ],
+     "surface": "any",
+     "params": {
+      "image": {
+       "type": "string"
+      },
+      "cropScale": {
+       "min": 0.8,
+       "max": 1.6
+      },
+      "sizePx": {
+       "min": 128,
+       "max": 300
+      }
+     },
+     "defaults": {
+      "image": "banana",
+      "cropScale": 1.1,
+      "sizePx": 200
+     },
+     "contract": {
+      "roles": [
+       "hero"
+      ],
+      "sizesMin": {
+       "hero": 300
+      },
+      "leadEm": 0.15,
+      "contrastMin": 3,
+      "marginPx": 0,
+      "sizeMinPx": 128,
+      "maxChars": 6,
+      "sizeMaxPx": 300,
+      "sceneRequired": true,
+      "maxEffects": 1,
+      "fillContrastMin": 4.5
+     },
+     "refs": {
+      "ranges": {
+       "sizePx": [
+        128,
+        300
+       ],
+       "cropScale": [
+        0.8,
+        1.6
+       ]
+      },
+      "frames": [
+       "style-lab/reference-hupo/aesthetics/sheet-by-kind.jpg#T",
+       "style-lab/reference-hupo/aesthetics/sheet-by-kind.jpg#EP",
+       "style-lab/reference-hupo/aesthetics/sheet-by-kind.jpg#R"
+      ],
+      "benchmarks": {
+       "films": [
+        "hupo"
+       ],
+       "examples": [
+        "T: DeepSeek 白字叠 logo",
+        "EP: 人脸旁超大年份"
+       ]
+      }
+     },
+     "failureModes": [
+      "照片太花导致字读不出",
+      "字内照片与底图重复",
+      "字太小失去冲击"
+     ],
+     "checks": [
+      "packaging:type-effect",
+      "framecheck:contrast"
+     ]
+    },
+    {
+     "id": "te-gradient-fill",
+     "label": "渐变灌字",
+     "appliesTo": [
+      "title",
+      "data"
+     ],
+     "surface": "any",
+     "params": {
+      "from": {
+       "type": "string"
+      },
+      "to": {
+       "type": "string"
+      },
+      "angle": {
+       "min": 0,
+       "max": 180
+      },
+      "sizePx": {
+       "min": 128,
+       "max": 300
+      }
+     },
+     "defaults": {
+      "from": "#f6f5f2",
+      "to": "#bc1014",
+      "angle": 90,
+      "sizePx": 200
+     },
+     "contract": {
+      "roles": [
+       "hero"
+      ],
+      "sizesMin": {
+       "hero": 300
+      },
+      "leadEm": 0.15,
+      "contrastMin": 3,
+      "marginPx": 0,
+      "sizeMinPx": 128,
+      "maxChars": 8,
+      "sizeMaxPx": 300,
+      "sceneRequired": true,
+      "maxEffects": 1
+     },
+     "refs": {
+      "ranges": {
+       "sizePx": [
+        128,
+        300
+       ],
+       "angle": [
+        0,
+        180
+       ]
+      },
+      "frames": [
+       "style-lab/reference-hupo/aesthetics/sheet-by-kind.jpg#T",
+       "style-lab/reference-hupo/aesthetics/sheet-by-kind.jpg#EP",
+       "style-lab/reference-hupo/aesthetics/sheet-by-kind.jpg#R"
+      ],
+      "benchmarks": {
+       "films": [
+        "hupo"
+       ],
+       "examples": [
+        "T: 深度求索白/红渐变字",
+        "R: 开源 巨字"
+       ]
+      }
+     },
+     "failureModes": [
+      "渐变两端都太亮",
+      "渐变让笔画断掉",
+      "字被框裁得读不出"
+     ],
+     "checks": [
+      "packaging:type-effect",
+      "framecheck:contrast"
+     ]
+    },
+    {
+     "id": "te-knockout-window",
+     "label": "字当窗口/挖空",
+     "appliesTo": [
+      "title",
+      "concept"
+     ],
+     "surface": "any",
+     "params": {
+      "holeImage": {
+       "type": "string"
+      },
+      "featherPx": {
+       "min": 0,
+       "max": 12
+      },
+      "sizePx": {
+       "min": 128,
+       "max": 300
+      }
+     },
+     "defaults": {
+      "holeImage": "banana",
+      "featherPx": 2,
+      "sizePx": 200
+     },
+     "contract": {
+      "roles": [
+       "hero"
+      ],
+      "sizesMin": {
+       "hero": 300
+      },
+      "leadEm": 0.15,
+      "contrastMin": 3,
+      "marginPx": 0,
+      "sizeMinPx": 128,
+      "knockout": true,
+      "sizeMaxPx": 300,
+      "sceneRequired": true,
+      "maxEffects": 1,
+      "fillContrastMin": 4.5
+     },
+     "refs": {
+      "ranges": {
+       "sizePx": [
+        128,
+        300
+       ]
+      },
+      "frames": [
+       "style-lab/reference-hupo/aesthetics/sheet-by-kind.jpg#T",
+       "style-lab/reference-hupo/aesthetics/sheet-by-kind.jpg#EP",
+       "style-lab/reference-hupo/aesthetics/sheet-by-kind.jpg#R"
+      ],
+      "benchmarks": {
+       "films": [
+        "hupo"
+       ],
+       "examples": [
+        "R: 人员/员工 大字透出画面",
+        "T: 大字压照片"
+       ]
+      }
+     },
+     "failureModes": [
+      "挖空后不可读",
+      "底图与字内图不一致",
+      "字边毛刺"
+     ],
+     "checks": [
+      "packaging:type-effect",
+      "framecheck:contrast"
+     ]
+    },
+    {
+     "id": "te-oversize-bleed",
+     "label": "超大出画",
+     "appliesTo": [
+      "title",
+      "data"
+     ],
+     "surface": "any",
+     "params": {
+      "sizePx": {
+       "min": 200,
+       "max": 300
+      },
+      "bleedPct": {
+       "min": 0.05,
+       "max": 0.3
+      },
+      "align": {
+       "enum": [
+        "left",
+        "right"
+       ]
+      }
+     },
+     "defaults": {
+      "sizePx": 300,
+      "bleedPct": 0.12,
+      "align": "left"
+     },
+     "contract": {
+      "roles": [
+       "hero"
+      ],
+      "sizesMin": {
+       "hero": 300
+      },
+      "leadEm": 0.15,
+      "contrastMin": 3,
+      "marginPx": 0,
+      "sizeMinPx": 200,
+      "bleed": true,
+      "sizeMaxPx": 300,
+      "sceneRequired": true,
+      "maxEffects": 1,
+      "bleedPct": {
+       "min": 0.1,
+       "max": 0.25
+      }
+     },
+     "refs": {
+      "ranges": {
+       "sizePx": [
+        200,
+        300
+       ],
+       "bleedPct": [
+        0.05,
+        0.3
+       ]
+      },
+      "frames": [
+       "style-lab/reference-hupo/aesthetics/sheet-by-kind.jpg#T",
+       "style-lab/reference-hupo/aesthetics/sheet-by-kind.jpg#EP",
+       "style-lab/reference-hupo/aesthetics/sheet-by-kind.jpg#R"
+      ],
+      "benchmarks": {
+       "films": [
+        "hupo"
+       ],
+       "examples": [
+        "EP: 2025年 竖排出画",
+        "ED: 526.5億美元 压满"
+       ]
+      }
+     },
+     "failureModes": [
+      "裁掉关键字",
+      "出画方向与构图冲突"
+     ],
+     "checks": [
+      "packaging:type-effect"
+     ]
+    },
+    {
+     "id": "te-vertical",
+     "label": "竖排出画",
+     "appliesTo": [
+      "title",
+      "concept"
+     ],
+     "surface": "any",
+     "params": {
+      "sizePx": {
+       "min": 128,
+       "max": 300
+      },
+      "column": {
+       "min": 1,
+       "max": 2
+      },
+      "top": {
+       "min": -80,
+       "max": 200
+      }
+     },
+     "defaults": {
+      "sizePx": 200,
+      "column": 1,
+      "top": 40
+     },
+     "contract": {
+      "roles": [
+       "hero",
+       "title"
+      ],
+      "sizesMin": {
+       "hero": 200
+      },
+      "leadEm": 0.15,
+      "contrastMin": 3,
+      "marginPx": 0,
+      "sizeMinPx": 128,
+      "vertical": true,
+      "sizeMaxPx": 300,
+      "sceneRequired": true,
+      "maxEffects": 1
+     },
+     "refs": {
+      "ranges": {
+       "sizePx": [
+        128,
+        300
+       ]
+      },
+      "frames": [
+       "style-lab/reference-hupo/aesthetics/sheet-by-kind.jpg#T",
+       "style-lab/reference-hupo/aesthetics/sheet-by-kind.jpg#EP",
+       "style-lab/reference-hupo/aesthetics/sheet-by-kind.jpg#R"
+      ],
+      "benchmarks": {
+       "films": [
+        "hupo"
+       ],
+       "examples": [
+        "PT: 2025年 竖排在主讲人旁"
+       ]
+      }
+     },
+     "failureModes": [
+      "竖排断句错",
+      "行距过挤"
+     ],
+     "checks": [
+      "packaging:type-effect"
+     ]
+    },
+    {
+     "id": "te-layer-depth",
+     "label": "错位叠层",
+     "appliesTo": [
+      "title",
+      "data"
+     ],
+     "surface": "any",
+     "params": {
+      "layers": {
+       "min": 2,
+       "max": 3
+      },
+      "offsetPx": {
+       "min": 8,
+       "max": 28
+      },
+      "backColor": {
+       "type": "string"
+      },
+      "sizePx": {
+       "min": 128,
+       "max": 300
+      }
+     },
+     "defaults": {
+      "layers": 2,
+      "offsetPx": 14,
+      "backColor": "#bc1014",
+      "sizePx": 200
+     },
+     "contract": {
+      "roles": [
+       "hero"
+      ],
+      "sizesMin": {
+       "hero": 300
+      },
+      "leadEm": 0.15,
+      "contrastMin": 3,
+      "marginPx": 0,
+      "sizeMinPx": 128,
+      "sizeMaxPx": 300,
+      "sceneRequired": true,
+      "maxEffects": 1
+     },
+     "refs": {
+      "ranges": {
+       "layers": [
+        2,
+        3
+       ],
+       "offsetPx": [
+        "8",
+        "28"
+       ],
+       "sizePx": [
+        128,
+        300
+       ]
+      },
+      "frames": [
+       "style-lab/reference-hupo/aesthetics/sheet-by-kind.jpg#T",
+       "style-lab/reference-hupo/aesthetics/sheet-by-kind.jpg#EP",
+       "style-lab/reference-hupo/aesthetics/sheet-by-kind.jpg#R"
+      ],
+      "benchmarks": {
+       "films": [
+        "hupo"
+       ],
+       "examples": [
+        "R: 思考/开源 多层巨字"
+       ]
+      }
+     },
+     "failureModes": [
+      "错位变阴影描边（house 禁止）",
+      "层数过多糊成一团"
+     ],
+     "checks": [
+      "packaging:type-effect"
+     ]
+    },
+    {
+     "id": "te-halftone-mask",
+     "label": "半调/颗粒遮罩字",
+     "appliesTo": [
+      "title",
+      "concept"
+     ],
+     "surface": "any",
+     "params": {
+      "dotPx": {
+       "min": 2,
+       "max": 6
+      },
+      "opacity": {
+       "min": 0.1,
+       "max": 0.5
+      },
+      "sizePx": {
+       "min": 128,
+       "max": 300
+      }
+     },
+     "defaults": {
+      "dotPx": 4,
+      "opacity": 0.28,
+      "sizePx": 200
+     },
+     "contract": {
+      "roles": [
+       "hero"
+      ],
+      "sizesMin": {
+       "hero": 300
+      },
+      "leadEm": 0.15,
+      "contrastMin": 3,
+      "marginPx": 0,
+      "sizeMinPx": 128,
+      "grainMin": 0.15,
+      "sizeMaxPx": 300,
+      "sceneRequired": true,
+      "maxEffects": 1
+     },
+     "refs": {
+      "ranges": {
+       "dotPx": [
+        "2",
+        "6"
+       ],
+       "opacity": [
+        "0.1",
+        "0.5"
+       ],
+       "sizePx": [
+        128,
+        300
+       ]
+      },
+      "frames": [
+       "style-lab/reference-hupo/aesthetics/sheet-by-kind.jpg#T",
+       "style-lab/reference-hupo/aesthetics/sheet-by-kind.jpg#EP",
+       "style-lab/reference-hupo/aesthetics/sheet-by-kind.jpg#R"
+      ],
+      "benchmarks": {
+       "films": [
+        "hupo"
+       ],
+       "examples": [
+        "T: 大字带印刷颗粒",
+        "ED: 数据图上的巨字"
+       ]
+      }
+     },
+     "failureModes": [
+      "颗粒压掉小字",
+      "半调与扫描线混用"
+     ],
+     "checks": [
+      "packaging:type-effect",
+      "framecheck:contrast"
+     ]
+    }
+   ]
+  }
+ ],
+ "selection": {
+  "intentToCategories": {
+   "title": [
+    "graphic-hero",
+    "type-surface",
+    "evidence-card",
+    "gawx-layout",
+    "colour-harmony",
+    "type-effect"
+   ],
+   "concept": [
+    "type-surface",
+    "evidence-card",
+    "gawx-layout",
+    "colour-harmony",
+    "type-effect"
+   ],
+   "data": [
+    "data-number",
+    "type-surface",
+    "evidence-card",
+    "colour-harmony",
+    "type-effect"
+   ]
+  },
+  "rules": [
+   "先按 intent 取候选分类",
+   "surface 与变体 surface 匹配 +2",
+   "palette 命中 +1",
+   "最近 4 拍用过 -3（≥2 次直接排除）",
+   "同分类最多选 2 个变体",
+   "分数相同取未用过的",
+   "gawx-layout 的 sizeFrac/margin/lines/chars 必须在 gawx-layout-colour.json 的 typography.gawx 实测内"
+  ]
+ }
+}

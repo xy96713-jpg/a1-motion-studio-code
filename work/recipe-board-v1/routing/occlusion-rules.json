@@ -1,0 +1,27 @@
+{
+ "contract": "A1OcclusionRules/v1",
+ "about": "遮挡不是审美词：它由 depth order、投影包围盒、owner、contact shadow 和穿插检查组成。",
+ "rules": [
+  "每个 buildPlan 写 layers：foreground / midground / background，以及每层允许遮住谁",
+  "主体投影 bbox、负空间比例、消失点必须在参考公差内；超差退回",
+  "字/数据不压在物上；若压在物上，必须写明 owner 和可读区域，并由 objectMask 检查",
+  "3D mesh 不得互穿；物体底部必须有接触阴影/接地",
+  "前景不能无理由遮住主体/字；遮挡必须服务第一阅读点",
+  "相机不得把主体切出画；起止帧都要检查投影 bbox",
+  "遮挡变化必须与运动/接缝一致；不能靠 crossfade 遮"
+ ],
+ "checks": [
+  "depth order",
+  "projected bbox",
+  "objectMask",
+  "contact shadow",
+  "mesh intersection",
+  "type owner",
+  "frame edge"
+ ],
+ "code": [
+  "apps/studio-next/src/lib/recipe-board/framecheck.mjs",
+  "apps/studio-next/src/lib/recipe-board/chapter.mjs",
+  "apps/studio-next/src/lib/recipe-board/geometry-track"
+ ]
+}

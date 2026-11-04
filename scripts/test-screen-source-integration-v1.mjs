@@ -1,0 +1,31 @@
+import assert from "node:assert/strict";
+import {auditScreenSourceCandidate, compileIntegratedScreenScene, compileWaitOnlyRetime} from "../apps/studio-next/src/lib/a1-screen-source-integration-v1.mjs";
+import {buildScreenGeometryFrame, compileScreenGeometryTruth} from "../apps/studio-next/src/lib/a1-screen-geometry-truth-v2.mjs";
+const shot = {shotId: "TEST-01", versionId: "current", semanticJob: "Read the resulting state", timeRange: {startMs: 0, endMs: 6000, durationMs: 6000}};
+const source = {exists: true, shaMatches: true, sha256: "a".repeat(64), versionId: "current", kind: "CLEAN_CAPTURE", width: 2560, height: 1440, durationMs: 6000, renderUri: "source.mp4"};
+const geometryFrame = buildScreenGeometryFrame({sourceWidth: source.width, sourceHeight: source.height, viewportCss: {x: 0, y: 0, width: source.width, height: source.height}, captureRectCss: {x: 0, y: 0, width: source.width, height: source.height}, devicePixelRatio: 1, pageZoom: 1, scroll: {x: 0, y: 0}, frameId: "test-frame-0"});
+const geometryTruth = compileScreenGeometryTruth({sourceSha256: source.sha256, source, frame: geometryFrame, targets: [{targetKey: "result_hold", kind: "UI", selector: "#result", identity: {id: "result"}, confidence: 1, rectCss: {x: 1700, y: 200, width: 700, height: 400}}]});
+assert.equal(geometryTruth.status, "PASS_REVIEW_ONLY");
+assert.equal(auditScreenSourceCandidate(shot, source).status, "SOURCE_ELIGIBLE");
+for (const patch of [{durationMs: 15000}, {kind: "PACKAGED"}, {versionId: "old"}, {height: 1050}, {shaMatches: false}]) assert.equal(auditScreenSourceCandidate(shot, {...source, ...patch}).status, "REJECTED_FOR_CURRENT_RENDER");
+for (const genre of ["document-edit", "preference-recall", "candidate-insertion"]) {
+  const result = compileIntegratedScreenScene(shot, source, {geometryTruth, persistentResultDom: {status: "PASS", targetKey: "result_hold", firstVisible: true, finalVisible: true, firstObservedAtMs: 1200, finalRect: {x: 1700, y: 200, width: 700, height: 400}, rectDrift: {status: "PASS"}}}, {sourceActionId: genre});
+  assert.equal(result.program.status, "READY_FOR_REAL_SOURCE_RENDER");
+  const samples = result.scene.screenDirection.samples;
+  assert.equal(samples[0].camera.scale, 1);
+  assert.equal(samples.at(-1).camera.scale, 1.16);
+  assert.deepEqual(samples.at(-1).camera, samples.at(-30).camera);
+  assert.ok(samples.every((s) => s.camera.x >= .5 / s.camera.scale && s.camera.x <= 1 - .5 / s.camera.scale));
+  assert.ok(samples.slice(1).every((s, i) => Math.abs(s.camera.scale - samples[i].camera.scale) < .02));
+}
+const missingGeometry = compileIntegratedScreenScene(shot, source, {persistentResultDom: {status: "PASS", targetKey: "result_hold", firstVisible: true, finalVisible: true, firstObservedAtMs: 1200, finalRect: {x: 1700, y: 200, width: 700, height: 400}, rectDrift: {status: "PASS"}}}, {sourceActionId: "missing-geometry"});
+assert.equal(missingGeometry.decision.effect, "SOURCE_ACTION_ONLY");
+const safe = compileIntegratedScreenScene(shot, {...source, width: 1280, height: 720}, {}, {sourceActionId: "edit"});
+assert.equal(safe.decision.effect, "SOURCE_ACTION_ONLY");
+assert.equal(safe.decision.caretFollowProven, false);
+const retime = compileWaitOnlyRetime({waitStartMs: 600, waitEndMs: 30000, sourceDurationMs: 31500, targetDurationMs: 7000});
+assert.equal(retime.segments[0].outputDurationMs, 600);
+assert.equal(retime.segments[2].outputDurationMs, 1500);
+assert.equal(retime.actionPlaybackRate, 1);
+assert.throws(() => compileWaitOnlyRetime({waitStartMs: 1000, waitEndMs: 30000, sourceDurationMs: 32000, targetDurationMs: 1987}), /ACTION_DURATION_EXCEEDS/);
+console.log(JSON.stringify({status: "PASS", genres: 3, checks: ["timing-version-bytes-canvas", "processed-source-rejected", "geometry-truth-required-for-camera", "smooth-projected-camera", "stable-result-hold", "low-resolution-fallback"]}));

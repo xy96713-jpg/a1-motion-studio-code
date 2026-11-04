@@ -1,0 +1,11 @@
+{
+ "contract": "A1SceneUnit/v1",
+ "about": "Before asset planning, the reference's recurring unit must be reviewed: single vs bunch/hand, fingers per crown, shared crown.",
+ "rules": [
+  "A scene reference with repeated fruit clusters must be labeled bunch/hand with fingersMin/Max and sharedCrown.",
+  "A single-banana asset is not allowed for a bunch scene; a bunch group must share one crown/stem.",
+  "The buildPlan must carry the scene-unit review and its source file.",
+  "Mismatch fails the plan; review is independent Codex visual review, not the session's guess."
+ ],
+ "script": "scripts/scene-unit-review.mjs"
+}

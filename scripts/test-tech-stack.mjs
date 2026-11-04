@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import { catalogErrors, boardTechErrors } from './tech-stack-check.mjs';
+const catalog = JSON.parse(fs.readFileSync('work/recipe-board-v1/routing/tech-stack.json','utf8'));
+assert.deepEqual(catalogErrors(catalog), []);
+const board = JSON.parse(fs.readFileSync('work/recipe-board-v1/projects/banana-design/design-board.json','utf8'));
+assert.deepEqual(boardTechErrors(board, catalog), []);
+assert.ok(catalog.capabilities.some((c) => c.id === 'webgl-three' && c.status === 'ready'));
+assert.ok(catalog.capabilities.some((c) => c.id === 'webgpu' && c.status === 'candidate'));
+assert.ok(catalog.capabilities.some((c) => c.id === 'houdini' && c.status === 'missing'));
+console.log('tech stack tests pass');

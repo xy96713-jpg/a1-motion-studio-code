@@ -1,0 +1,26 @@
+// Opt-in real browser fixture: never run against the production project.
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import { boardConfig } from '../apps/studio-next/src/lib/recipe-board/store.mjs';
+import { stepStills } from '../apps/studio-next/src/lib/recipe-board/stills.mjs';
+const cfg = boardConfig(), id = 'banana-design';
+assert(cfg.repoRoot.startsWith('/Users/a1/.hermes/cache/scratch/'), 'isolated scratch root required');
+const root = path.join(cfg.dataDir, 'projects', id);
+const result = await stepStills(cfg, id, { log: () => {} });
+fs.writeFileSync(path.join(cfg.repoRoot, 'stills-task-mode-result.json'), JSON.stringify(result, null, 2));
+assert.equal(result.state, 'review', JSON.stringify(result.errors));
+assert.equal(result.keyframes.length, 3);
+const { heroChapter } = await import('../apps/studio-next/src/lib/recipe-board/stills.mjs');
+const { filmBeats } = await import('../apps/studio-next/src/lib/recipe-board/chapter.mjs');
+assert.equal(heroChapter(cfg, id, filmBeats(cfg, id)), null, 'a still-only pass cannot be consumed as a motion-checked chapter');
+const task = JSON.parse(fs.readFileSync(path.join(root, 'tasks/stills-taste.task.json')));
+assert.equal(task.input.stillReviewPack?.contract, 'A1StillReviewMaterials/v1');
+assert.equal(task.input.stillReviewPack.shots.length, 3);
+assert.equal(task.input.stillReviewPack.shots.every(s => s.version.status === 'bound'), true);
+assert.equal(task.input.stillReviewPack.shots.every(s => s.images['layout-overlay'].status === 'available'), true);
+assert.equal(task.input.filmCoverage.missing.length, 17);
+const prior = fs.readFileSync(path.join(root, 'tasks/stills-taste.task.json'));
+await stepStills(cfg, id, { log: () => {} });
+assert.deepEqual(fs.readFileSync(path.join(root, 'tasks/stills-taste.task.json')), prior, 'unchanged task must not refresh');
+console.log('three real stills accepted technically; review/user approval remain pending', result.state);

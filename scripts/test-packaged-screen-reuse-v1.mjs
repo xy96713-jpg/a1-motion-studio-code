@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import {compilePackagedScreenReuse,assertPackagedScreenReuseReceipt} from '../apps/studio-next/src/lib/a1-packaged-screen-reuse-v1.mjs';
+import {UNIFIED_SCREEN_ENTRY,unifiedSelectionHash,completeUnifiedScreenSelection} from '../apps/studio-next/src/lib/a1-unified-screen-production-v1.mjs';
+const pkg={path:'work/pack.mp4',sha256:'a'.repeat(64)},raw={path:'work/raw.mp4',sha256:'b'.repeat(64)};
+const selection={contract:'A1UnifiedScreenProduction/v1',entry:UNIFIED_SCREEN_ENTRY,shotVersionId:'v',mode:'REUSE_EXISTING_PACKAGE',primaryCandidate:pkg,packagingBaseline:pkg,verifiedSource:raw,capProject:{sourceReceiptSha256:'c'.repeat(64)},productionAdmission:false};
+const shot={shotId:'S',route:'SCREEN_EVIDENCE',versionId:'v',timeRange:{durationMs:5000},motionReviewPlan:{productionBaseline:selection,capturedSource:raw}};
+const meta={sha256:pkg.sha256,width:1920,height:1050,durationMs:5000,frameCount:300,fps:60,hasAudio:true};
+const adaptation=compilePackagedScreenReuse(shot,meta);assert.equal(adaptation.status,'READY_FOR_FORMAT_ADAPTATION');assert.deepEqual(adaptation.fit,{x:0,y:8,width:960,height:525});assert.doesNotMatch(adaptation.filter,/crop|zoom|setpts/);assert.equal(adaptation.retiming,'NONE');
+assert.equal(compilePackagedScreenReuse(shot,{...meta,durationMs:5500}).status,'TIMING_REVIEW_REQUIRED');assert.equal(compilePackagedScreenReuse(shot,{...meta,hasAudio:false}).status,'NARRATION_SOURCE_REQUIRED');assert.throws(()=>compilePackagedScreenReuse(shot,{...meta,sha256:raw.sha256}),/source-changed/);
+const receipt={productionBaselineSha256:unifiedSelectionHash(selection),video:{path:'work/review.mp4',sha256:'d'.repeat(64)},upstreamPackage:{originalPath:pkg.path,path:'work/frozen.mp4',sha256:pkg.sha256},upstreamCapReceipt:{sha256:'c'.repeat(64)},adaptation,validation:{decoded:true,packagingRetained:true,currentStoryboardTiming:true,sourceBytesVerified:true}};
+assert.doesNotThrow(()=>assertPackagedScreenReuseReceipt(shot,receipt));assert.throws(()=>assertPackagedScreenReuseReceipt(shot,{...receipt,upstreamPackage:{...receipt.upstreamPackage,sha256:raw.sha256}}),/upstream/);assert.throws(()=>assertPackagedScreenReuseReceipt(shot,{...receipt,adaptation:{...adaptation,additionalCamera:true}}),/passthrough/);
+shot.motionReviewPlan.productionBaseline=completeUnifiedScreenSelection(selection,receipt.video);assert.doesNotThrow(()=>assertPackagedScreenReuseReceipt(shot,receipt));
+console.log('PASS: aspect-fit only, no retiming/camera, timing blocked, upstream binding and retained receipt validated');

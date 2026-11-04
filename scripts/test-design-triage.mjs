@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import { triageBoard, triageDirection } from './design-triage.mjs';
+import fs from 'node:fs';
+const policy = JSON.parse(fs.readFileSync('work/recipe-board-v1/routing/media-policy.json','utf8'));
+assert.equal(triageDirection({ id:'C', role:'optional-evidence', build:'real', triage:{ evidence:true, assetReady:false } }, policy).verdict, 'drop');
+assert.equal(triageDirection({ id:'E', role:'type-motif', build:'graphic', triage:{ text:true } }, policy).verdict, 'graphic');
+const f = triageDirection({ id:'F', role:'field-scale', build:'3d', triage:{ organicRandom:true, complexity:4, durationSec:5 } }, policy);
+assert.equal(f.verdict, '3d'); assert.equal(f.aiFallback, 'ai-video');
+const c = triageDirection({ id:'C', role:'optional-evidence', build:'real', triage:{ evidence:true, assetReady:true } }, policy);
+assert.equal(c.verdict, 'real');
+const ai = triageDirection({ id:'X', role:'main-spine', build:'3d', triage:{ organicRandom:true, complexity:5, tooHard:true, durationSec:5 } }, policy);
+assert.equal(ai.verdict, 'ai-video');
+console.log('design triage tests pass');

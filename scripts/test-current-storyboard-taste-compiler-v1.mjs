@@ -1,0 +1,28 @@
+import assert from "node:assert/strict";
+import fs from "node:fs";
+import path from "node:path";
+import {readProjectWorkspace} from "../apps/studio-next/src/lib/a1-editorial-project-store-v2.mjs";
+import {compileCurrentStoryboardTasteBriefs} from "../apps/studio-next/src/lib/a1-current-storyboard-taste-compiler-v1.mjs";
+
+const appRoot = path.resolve(import.meta.dirname, "../apps/studio-next");
+const workspace = readProjectWorkspace(appRoot);
+const result = compileCurrentStoryboardTasteBriefs(workspace, {appRoot, now: "2026-08-12T12:00:00.000Z"});
+const projectProfile = JSON.parse(fs.readFileSync(path.resolve(appRoot, "../..", "configs/system-line-projects", `${workspace.production.project.projectId}.json`), "utf8"));
+const expectedReviewShotIds = projectProfile.tasteReviewShotIds.filter((shotId) => result.compilation.shotIds.includes(shotId));
+assert.equal(result.compilation.status, "PASS");
+assert.equal(result.compilation.briefCount, result.compilation.shotIds.length);
+assert.equal(result.briefs.length, result.compilation.shotIds.length);
+assert.deepEqual(result.compilation.reviewShotIds, expectedReviewShotIds);
+assert.equal(result.compilation.source.projectProfile.status, "PROJECT_PROFILE_BOUND");
+assert(result.briefs.every((brief) => brief.tasteProfile?.referenceOnly === true && brief.tasteProfile?.productionAssetAllowed === false));
+assert(result.briefs.every((brief) => brief.typography.generatedFormalTextAllowed === false && brief.typography.exactCopyRequired === true));
+assert(result.compilation.sequenceWindowAudits.every((audit) => audit.status === "PASS"));
+assert(result.compilation.sequenceWindowAudits.every((audit) => audit.sampleCount === 6 && audit.diversity.primaryFamilies >= 4 && audit.diversity.surfaceFamilies >= 3 && audit.diversity.compositionFamilies >= 3 && audit.diversity.paletteRecipes >= 3));
+assert.equal(result.compilation.imageGenerationPerformed, false);
+assert.equal(result.compilation.generationDispatchAllowed, false);
+assert.equal(result.compilation.userVisualApproval, "NOT_APPROVED");
+assert.equal(result.compilation.source.directionAuthoritySha256, result.directionEnvelope.directionEnvelopeSha256);
+assert.equal(result.audit.directionAuthoritySha256, result.directionEnvelope.directionEnvelopeSha256);
+assert.equal(result.briefs.filter((brief) => brief.tasteDimensions.actorKind === "animal-or-invented-creature").length, 0);
+assert(result.briefs.filter((brief) => brief.tasteDimensions.crtFusion).every((brief) => String(brief.semanticAction || brief.semanticJob).trim()));
+console.log(JSON.stringify({status: "PASS", contract: result.compilation.contract, briefCount: result.briefs.length, reviewShotIds: result.compilation.reviewShotIds, sequenceWindowCount: result.compilation.sequenceWindowAudits.length, densityProfiles: [...new Set(result.briefs.map((brief) => brief.tasteDimensions.densityProfile))], actorKinds: [...new Set(result.briefs.map((brief) => brief.tasteDimensions.actorKind))], imageGenerationPerformed: false}, null, 2));

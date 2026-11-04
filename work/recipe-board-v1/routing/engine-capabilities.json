@@ -1,0 +1,571 @@
+{
+ "contract": "A1EngineCapabilities/v1",
+ "about": "Every ability of the style-lab engine and how a chapter (templates/morph.js, the film's main body since the 2026-10-26 convergence) reaches it. Written because the convergence left the image-to-3D line, the model library, the Blender bakes and the screen media reachable from the old card route only (the user 2026-10-27: 系统怎么能把这环节丢掉呢 是不是还有很多重要的没接上). status: chapter (a chapter calls it by `chapter`), card (only the card route's 3D plates, stage.mjs: to wire), retired (not for new films, with the user's reason). A test fails when an engine file is in none of the entries, or a `chapter` path is not in the chapter kit; `run` lists what is still card-only.",
+ "capabilities": [
+  {
+   "id": "visual-languages",
+   "files": [
+    "templates/visual-language.js"
+   ],
+   "what": "参数化抖色浮雕 / 扫描断层 / 千禧技术编辑；无文字与固定版式；示意非证据。clean 兼容、可不选。",
+   "status": "chapter",
+   "chapter": "type.dev.visualLanguage"
+  },
+  {
+   "id": "morph",
+   "files": [
+    "templates/morph.js",
+    "templates/moves.js",
+    "templates/timing.js"
+   ],
+   "what": "the chapter itself: one continuous diagram, camera keys, moves",
+   "status": "chapter",
+   "chapter": "module"
+  },
+  {
+   "id": "type",
+   "files": [
+    "templates/type.js",
+    "templates/historical-font-replay.js",
+    "lettering.js",
+    "templates/typematerial.js"
+   ],
+   "what": "type roles and type in the scene (surfaceType); historical-font-replay is an explicit SHA-bound approved-module reproduction only, never a new-film lettering choice; shelf bay back/fascia material type via type.bayBackType (not HUD, not box plate)",
+   "status": "chapter",
+   "chapter": "type"
+  },
+  {
+   "id": "flat-kit",
+   "files": [
+    "templates/kit2.js"
+   ],
+   "what": "the 2D evidence kit and the big-type moves (revealType, knockout, maskType, peakType, evidenceCard …)",
+   "status": "chapter",
+   "chapter": "type.flat"
+  },
+  {
+   "id": "figures-3d",
+   "files": [
+    "templates/kit3.js"
+   ],
+   "what": "3D figures on the table: dots, sequences, trees, maps, the land globe, halftone ground, practical lights",
+   "status": "chapter",
+   "chapter": "kit"
+  },
+  {
+   "id": "devices",
+   "files": [
+    "templates/kit4.js",
+    "templates/kit4.bench.js",
+    "templates/kit5.js",
+    "templates/typegrid.js"
+   ],
+   "what": "the reference's devices as parts; 光郡's display grammar and Gawx's poster type (kit5.js, 2026-10-28); the type bible's grid (type.grid: columns, the five sizes, pairs)",
+   "status": "chapter",
+   "chapter": "devices"
+  },
+  {
+   "id": "compositions",
+   "files": [
+    "templates/scenes.js"
+   ],
+   "what": "finished compositions: globeRoute, chartTable, countField, queueFleet, heroObject",
+   "status": "chapter",
+   "chapter": "kit.scene"
+  },
+  {
+   "id": "props",
+   "files": [
+    "templates/props.js",
+    "templates/formation.js"
+   ],
+   "what": "made models (kit.props.model: image-to-3D GLB, built by the line when missing, looked at before use: chapter.mjs modelCheck) and code stand-ins; helpers round a hull placed by rule (kit.props.formation: pushers at the sides, pullers off the ends, lines never across the hull)",
+   "status": "chapter",
+   "chapter": "kit.props.model"
+  },
+  {
+   "id": "image-to-3d",
+   "files": [
+    "blender/partset.mjs",
+    "blender/asset_review.mjs",
+    "blender/ref.mjs",
+    "blender/run.mjs",
+    "blender/part_mesh.py",
+    "blender/part_cut.py",
+    "blender/shape_mv.py",
+    "blender/model_sheet.py"
+   ],
+   "what": "any object as a textured model: reference views (GPT, text-free) -> Hunyuan3D-2mv -> GLB; views at one scale, proportions measured; reference views reviewed (asset_review) before Hunyuan",
+   "status": "chapter",
+   "chapter": "kit.props.model"
+  },
+  {
+   "id": "subject-library",
+   "files": [
+    "subjects/glb.js",
+    "subjects/h100.js",
+    "subjects/hdd.js",
+    "subjects/drill.js",
+    "blender/model_h100.py",
+    "blender/model_hdd.py",
+    "blender/model_drill.py",
+    "blender/kit.py",
+    "subjects/nixie.js"
+   ],
+   "what": "built subjects with named parts that take apart (H100, hard disk, drill)",
+   "status": "chapter",
+   "chapter": "kit.engine.subject"
+  },
+  {
+   "id": "auto-subject",
+   "files": [
+    "subjects/auto.js",
+    "build/subject.mjs",
+    "subjects/qc.mjs",
+    "subjects/inspect.mjs"
+   ],
+   "what": "an object the library lacks built automatically as 2-5 parts that take apart (plan task, then image-to-3D per part)",
+   "status": "card",
+   "card": "stage.mjs teardown-3d",
+   "todo": "a chapter naming kit.engine.subject('<id>') with no subject yet should start build/subject.mjs as prepareAssets does models",
+   "chapter": null
+  },
+  {
+   "id": "teardown",
+   "files": [
+    "templates/subject.js",
+    "three/outline.js",
+    "blender/render_subject.py"
+   ],
+   "what": "a subject looked at as solid, line drawing, x-ray, section, exploded",
+   "status": "card",
+   "card": "stage.mjs teardown-3d",
+   "todo": "the outline pass and the explode as chapter calls",
+   "chapter": null
+  },
+  {
+   "id": "blender-bakes",
+   "files": [
+    "three/baked.js",
+    "blender/bake_rigid.py",
+    "blender/campath.py",
+    "blender/bake_ao.py",
+    "templates/monolith.bake.mjs"
+   ],
+   "what": "physics computed offline (rigid bodies falling, colliding), long-take camera paths, floor occlusion",
+   "status": "chapter",
+   "chapter": "kit.engine.baked"
+  },
+  {
+   "id": "camera-path-bakes",
+   "files": [
+    "three/baked.js",
+    "blender/campath.py"
+   ],
+   "what": "long-take camera paths computed offline (OptFlowCam adapter, S-curve stop): A1CameraRequest/v1 in, A1CameraPath/v1 out",
+   "status": "chapter",
+   "chapter": "kit.engine.baked.camera"
+  },
+  {
+   "id": "screen-media",
+   "files": [
+    "display.js"
+   ],
+   "what": "the frame filmed off a screen: LED, LED2, CRT, mono, amber, VHS, screen print, halftone",
+   "status": "chapter",
+   "chapter": "kit.engine.screen"
+  },
+  {
+   "id": "stage-post",
+   "files": [
+    "three/stage.js",
+    "three/gpuParticles.js",
+    "three/hdri"
+   ],
+   "what": "the hero stage and its post chain, GPU particles, HDRI light",
+   "status": "card",
+   "card": "hero plates",
+   "todo": "gpuParticles as a chapter call (dust, a crowd of points)",
+   "chapter": null
+  },
+  {
+   "id": "hero-templates",
+   "files": [
+    "templates/monolith.js",
+    "templates/monolith.shot.js",
+    "templates/flipboard.js",
+    "templates/ledwall.js",
+    "templates/ticker.js",
+    "templates/nameplate.js",
+    "templates/nightcity.js",
+    "templates/river.js",
+    "templates/city.js",
+    "templates/tunnel.js",
+    "templates/flowmap.js",
+    "templates/trigger.js",
+    "templates/kit.js",
+    "templates/mount.js"
+   ],
+   "what": "frozen hero scenes: a number on a monolith, split-flap counter, LED wall and ticker, night city, river of time, data city, tunnel of time, flow map",
+   "status": "card",
+   "card": "stage.mjs hero-3d",
+   "todo": "each as a composition a chapter beat can take (as scenes.js)",
+   "chapter": null
+  },
+  {
+   "id": "diorama",
+   "files": [
+    "templates/diorama.js",
+    "templates/flat.js",
+    "treatments/index.js",
+    "blender/scene_ufo.py"
+   ],
+   "what": "a mood scene from generated layers with parallax; treatment layers",
+   "status": "card",
+   "card": "stage.mjs scene-3d",
+   "chapter": null
+  },
+  {
+   "id": "figure",
+   "files": [
+    "templates/figure.js",
+    "three/figure.js",
+    "three/toon.js"
+   ],
+   "what": "the signage figure performing, the toon look",
+   "status": "retired",
+   "why": "the user: 3D 卡通角色觉得怪; 质感优先于人物 (memory texture-over-characters)",
+   "chapter": null
+  },
+  {
+   "id": "engine-core",
+   "files": [
+    "motion.js",
+    "shoot.mjs",
+    "serve.mjs",
+    "director/shot.html",
+    "director/catalog.js",
+    "director/check.mjs",
+    "director/design.mjs",
+    "director/make.mjs",
+    "director/qc.mjs",
+    "director/recipes.js",
+    "build/scene.mjs"
+   ],
+   "what": "eases, the renderer, the shot page and the old shot director",
+   "status": "chapter",
+   "chapter": "module"
+  },
+  {
+   "id": "page-modules",
+   "files": [],
+   "outside": [
+    "modules/article.html",
+    "modules/marks.js",
+    "modules/chat.html",
+    "modules/market.html",
+    "modules/quote.html",
+    "modules/person.html",
+    "modules/screen.html",
+    "modules/table.html",
+    "modules/compare.html",
+    "modules/chart.html",
+    "modules/steps.html",
+    "modules/sidecard.html",
+    "modules/title.html",
+    "modules/brand.html"
+   ],
+   "what": "the card line's page modules: a captured article reflowed with its phrases marked on the words (OCR boxes, marks.js), a chat, a K-line drawn from archived real prices, a quote, a person card, a screen",
+   "status": "chapter",
+   "chapter": "answer.pages (chapter.mjs prepareAssets: renderModule, then images[key].frame(s))"
+  },
+  {
+   "id": "learning",
+   "files": [],
+   "outside": [
+    "apps/studio-next/src/lib/recipe-board/techniques.mjs",
+    "style-lab/techniques/library.json",
+    "routing/lessons.json"
+   ],
+   "what": "what the line learned: every reference sub-shot taken apart with how it was realized (technique library, nearest by picture), the user's corrections with when they apply; chapter beats done before are in it too (chapterTechniques)",
+   "status": "chapter",
+   "chapter": "task input guidance (techniques.mjs chapterGuidance)"
+  },
+  {
+   "id": "subject-models-b04-banana-lens",
+   "files": [
+    "subjects/b04.js",
+    "subjects/banana.js",
+    "subjects/lens.js"
+   ],
+   "what": "subject builders written in the 2026-11-02 session (b04 corm, banana, lens): they build the .glb the model library serves to kit.props.model / kit.engine.subject",
+   "status": "card",
+   "todo": "the built .glb reaches chapters through the model library; these builders are the experiment path — wire a named subject into a chapter, or retire them when the library owns the build"
+  }
+ ],
+ "lineTools": {
+  "about": "line modules nothing in the run calls, each with how it is used (a test fails on a line module neither imported nor listed here)",
+  "tools": [
+   {
+    "file": "typedesign.mjs",
+    "what": "字体方向：每字的 reason/anchor/material/light/integration，A1TypePlan/v1 机检（3D 必须有环境贴图+接触阴影+锚点），以及 type gate",
+    "use": "run.mjs stage typedesign（stepTypeDesign）； typedesign / type-review 命令；项目 typeGate 打开时章节前 typeGateState"
+   },
+   {
+    "file": "still-review-pack.mjs",
+    "what": "Read-only static review materials: hashed frame roles, reference declarations, objective measurements and whole-board inventory; never an aesthetic approval or submission receipt",
+    "use": "stills.mjs stepStills -> prepareStillReviewTasks before first taste task write; agenttask submission/dispatch and stillsReady recheck bytes. Standalone probe remains diagnostic only; no visual approval."
+   },
+   {
+    "file": "typepreflight-page.mjs",
+    "what": "Measured static-candidate typography before shoot: existing morph/kit2 ink, actual-font cmap and typeBibleErrors; visual judgment remains unknown",
+    "use": "node work/recipe-board-v1/projects/banana-design/materials/still-repair-20261030/render.mjs (scoped candidate adapter; not global chapter acceptance)"
+   },
+   {
+    "file": "p2docs.mjs",
+    "what": "checks documentation links and historical handoff markings against the current house rules",
+    "use": "imported by the P2 documentation regression checks in scripts/test-recipe-board.mjs"
+   },
+   {
+    "file": "parity.mjs",
+    "what": "how near a film comes to its reference, sub-shot by sub-shot",
+    "use": "node scripts/recipe-board.mjs parity --project <id>"
+   },
+   {
+    "file": "seamstudy.py",
+    "what": "what happens at every cut of a film (content, motion, carry-over): the study the seam rules came from",
+    "use": "python3 seamstudy.py <video> <out.json> — research"
+   },
+   {
+    "file": "refalign.py",
+    "what": "our beats to the original's seconds by its burned-in subtitles",
+    "use": "research, the reference studies"
+   },
+   {
+    "file": "ocrbatch.swift",
+    "what": "OCR a folder of pictures",
+    "use": "research"
+   },
+   {
+    "file": "harmony.mjs",
+    "what": "the card era's ink sets and print families (DESIGN-harmony.md)",
+    "use": "retired: the film's colour script (filmdesign colourScript) and designbrain harmony took its place"
+   },
+   {
+    "file": "layouts.mjs",
+    "what": "compositions taken from the user's Pinterest board (cut-out subject big, type with it, notes in corners)",
+    "use": "to wire: the routing/compositions.json templates are the chapter's compositions; these layouts are the next source of templates"
+   },
+   {
+    "file": "inkprint.mjs",
+    "what": "a picture put through a print process in the film's inks (screen print, halftone, dither, two-ink riso): takes the generated look out of a plate",
+    "use": "to wire: in chapters the halftone of kit2 (halftonePhoto) and the screen media (kit.engine.screen: print, paper) do this in the page; inkprint is the offline route for generated plates"
+   },
+   {
+    "file": "benchmark.mjs",
+    "what": "Objective benchmark of a film's frame design against the reference numbers (Hupo/Paperclip): hero share, median characters, light share, material share, composition/move variety; reports PASS/FAIL, used by the audit and the design brief."
+   },
+   {
+    "file": "packaging.mjs",
+    "what": "包装配方库：7 类 30 变体的参数/契约/对标区间/失败模式，load/validate/pick/contractErrors",
+    "use": "node scripts/packaging.mjs --check|--list|--variant|--pick；导演选包装配方；脚本/检查引用 packag ingErrors 与 contractErrors"
+   }
+  ]
+ },
+ "routes": [
+  {
+   "need": "一件实物（船、飞机、芯片、机器、产品）",
+   "route": "await kit.props.model(THREE, '<名字>', { what, length })；没有的系统渲染前做（图生 3D）",
+   "device": "made-model",
+   "never": "代码方块搭、网上低清图、玩具模型",
+   "kitPath": "routing/devices.json#made-model",
+   "codeSymbol": "kit.props.model"
+  },
+  {
+   "need": "把东西拆开看结构",
+   "route": "await kit.engine.subject(THREE, st, '<id>', { size }) → explode(k)；库里没有的先做拆件计划（build/subject.mjs）",
+   "device": "product-hero",
+   "never": "平面示意图代替",
+   "kitPath": "routing/devices.json#product-hero",
+   "codeSymbol": "kit.engine.subject"
+  },
+  {
+   "need": "真报道、论文、公告里的一句话或数字",
+   "route": "answer.pages: { key, spec: article }（原句 phrase，marks.js 画在字上）",
+   "device": "real-page-mark",
+   "never": "截图上自己画框、写一行字代替原文",
+   "kitPath": "routing/devices.json#real-page-mark",
+   "codeSymbol": "answer.pages"
+  },
+  {
+   "need": "股价、指数、市值的涨跌",
+   "route": "answer.pages: { key, spec: market }（存档真实价格）",
+   "device": "real-prices",
+   "never": "素材片段或示意曲线代替",
+   "kitPath": "routing/devices.json#real-prices",
+   "codeSymbol": "answer.pages"
+  },
+  {
+   "need": "聊天、帖子、引语",
+   "route": "answer.pages: { key, spec: chat | quote }",
+   "device": "real-page-mark",
+   "never": "手排对话框",
+   "kitPath": "routing/devices.json#real-page-mark",
+   "codeSymbol": "device:None"
+  },
+  {
+   "need": "一个地方、一段路线（区域）",
+   "route": "answer.maps → kit.mapPlane / kit.scene.chartTable（真海图，北朝上，box 取景）",
+   "device": "map-pin-count",
+   "never": "示意地图",
+   "kitPath": "routing/devices.json#map-pin-count",
+   "codeSymbol": "device:map-pin-count"
+  },
+  {
+   "need": "全球、几条航路",
+   "route": "kit.scene.globeRoute（data.world_land），一个红点",
+   "device": "zoom-out-whole",
+   "never": "贴图地球",
+   "kitPath": "routing/devices.json#zoom-out-whole",
+   "codeSymbol": "device:zoom-out-whole"
+  },
+  {
+   "need": "很多个（数量、人数）",
+   "route": "kit.scene.countField / type.flat.dataToPeople / type.flat.pinCount",
+   "device": "data-to-people",
+   "never": "一张图复制粘贴",
+   "kitPath": "routing/devices.json#data-to-people",
+   "codeSymbol": "device:data-to-people"
+  },
+  {
+   "need": "一个大数字、高潮",
+   "route": "type.flat.peakType；整片唯一亮底由色彩脚本给",
+   "device": "number-grows",
+   "never": "小字成对",
+   "kitPath": "routing/devices.json#number-grows",
+   "codeSymbol": "K2.counter"
+  },
+  {
+   "need": "真照片、真画面",
+   "route": "任务 assets 里的素材（images[key]）→ type.flat.evidenceCard({ print }) / titleOver；要介质感走 kit.engine.screen（film / print / crt）",
+   "device": "real-in-frame",
+   "never": "生图代替事实",
+   "kitPath": "routing/devices.json#real-in-frame",
+   "codeSymbol": "type.dev.onScreen"
+  },
+  {
+   "need": "落下、碰撞、堆起来",
+   "route": "answer.bakes [{ key, kind: 'rigid', request: JSON }] → prepareAssets → Blender → kit.engine.baked.rigid(data[key])",
+   "capability": "blender-bakes",
+   "device": "made-model",
+   "never": "手写抛物线",
+   "kitPath": "style-lab/engine/three/baked.js",
+   "codeSymbol": "kit.engine.baked.rigid"
+  },
+  {
+   "need": "长镜头运镜（离线算好的相机路径）",
+   "route": "answer.bakes [{ key, kind: 'camera', request: A1CameraRequest JSON }] → prepareAssets → Blender campath.py (OptFlowCam) → kit.engine.baked.camera(data[key])",
+   "capability": "camera-path-bakes",
+   "device": "product-hero",
+   "never": "手写贝塞尔路径冒充长镜头",
+   "kitPath": "style-lab/engine/three/baked.js",
+   "codeSymbol": "kit.engine.baked.camera"
+  },
+  {
+   "need": "长镜头运镜",
+   "route": "camera3 关键帧（camPose 连成一个动作）；复杂路径 kit.engine.baked.camera",
+   "device": "product-hero",
+   "never": "一拍一个硬切",
+   "kitPath": "routing/devices.json#product-hero",
+   "codeSymbol": "device:None"
+  },
+  {
+   "need": "屏幕、印刷、胶片的质感",
+   "route": "kit.engine.screen(id, { medium })",
+   "device": "filmed-screen",
+   "never": "滤镜叠噪点冒充",
+   "kitPath": "routing/devices.json#filmed-screen",
+   "codeSymbol": "device:None"
+  },
+  {
+   "need": "底（地方、纸、墙）",
+   "route": "answer.art（生图，无字）或 grounds 库；安静的深色加网点：kit.halftoneGround",
+   "device": "showa-poster",
+   "never": "花纹贴图、铁锈墙",
+   "kitPath": "routing/devices.json#showa-poster",
+   "codeSymbol": "device:None"
+  },
+  {
+   "need": "同类很多件道具",
+   "route": "props 族（images.prop_<族>_<名>，kit2 props）",
+   "device": "copy-to-repeat",
+   "never": "一张图复制、代码形状",
+   "kitPath": "routing/devices.json#copy-to-repeat",
+   "codeSymbol": "device:None"
+  },
+  {
+   "need": "大字、遮罩、镂空",
+   "route": "type.flat.revealType / stackType / knockout / maskType / zoomThrough；字立在场景里 type.surfaceType({ depth: true })",
+   "device": "copy-to-repeat",
+   "never": "描边、阴影、底板、红线",
+   "kitPath": "routing/devices.json#copy-to-repeat",
+   "codeSymbol": "device:None"
+  },
+  {
+   "need": "前面的东西回来、首尾呼应、对称、退暗留红、脸变老、3D 展平",
+   "route": "type.flat.callback / rhyme / symmetry / dimKeepRed / ageMorph；kit.flatten",
+   "device": "callback",
+   "never": "每章临时手写",
+   "kitPath": "routing/devices.json#callback",
+   "codeSymbol": "device:callback"
+  },
+  {
+   "need": "真网页、软件界面、录屏、证据照片（不要平贴满屏）",
+   "route": "kit.engine.filmedScreen(id, { image: images.<素材>, medium, tilt, scroll })：暗场里一块被摄像机斜着拍的屏，透视、景深、屏的介质；原句划线走 answer.pages article",
+   "device": "filmed-screen",
+   "never": "网页截图平贴满屏、自己画框代替原文",
+   "kitPath": "routing/devices.json#filmed-screen",
+   "codeSymbol": "kit.engine.filmedScreen"
+  },
+  {
+   "need": "光郡和 Gawx 的字和图：打字光标、坐标追踪、描边读数、双语标题、关键词塌缩、章节母题地图、闪白、越界巨字、拆字网格、纯色底海报、照片满屏压字",
+   "route": "type.dev.typeOn / coordTrack / hudLabel / bilingualTitle / keywordCollapse / chapterMap / flashCut / giantCrop / letterGrid / posterGround / photoOverType（kit5.js）",
+   "device": "coord-track",
+   "never": "代码拼的方框和像素字冒充界面",
+   "kitPath": "routing/devices.json#coord-track",
+   "codeSymbol": "device:None"
+  },
+  {
+   "need": "有限色阶、量化、从杂讯辨认结构的概念表达",
+   "route": "type.dev.visualLanguage(g, { id: 'dither-relief', purpose, palette, box, geometry, density, progress })；可选图形层，clean兼容，字交给type.flat",
+   "device": "dither-relief",
+   "kitPath": "routing/devices.json#dither-relief",
+   "codeSymbol": "type.dev.visualLanguage",
+   "never": "真实影像证据、精确数据读数、细小文字底；不代替开场主装置"
+  },
+  {
+   "need": "用逐层偏移与选中截面解释层次关系（示意）",
+   "route": "type.dev.visualLanguage(g, { id: 'scan-sections', purpose, palette, box, geometry, density, progress })；可选图形层，clean兼容，字交给type.flat",
+   "device": "scan-sections",
+   "kitPath": "routing/devices.json#scan-sections",
+   "codeSymbol": "type.dev.visualLanguage",
+   "never": "医学/科学成像证据、未绑定真实数据的测量结果；不代替开场主装置"
+  },
+  {
+   "need": "技术主题的章节分隔、方向性裁切与高密度线场",
+   "route": "type.dev.visualLanguage(g, { id: 'technical-editorial', purpose, palette, box, geometry, density, progress })；可选图形层，clean兼容，字交给type.flat",
+   "device": "technical-editorial",
+   "kitPath": "routing/devices.json#technical-editorial",
+   "codeSymbol": "type.dev.visualLanguage",
+   "never": "把装饰线场当图表、真假界面混淆、阅读密集证据；不代替开场主装置"
+  },
+  {
+   "need": "货架仓位背板/前挡板上的品种名、百分比、弱点句（材质字，非 HUD）",
+   "route": "type.bayBackType(THREE, st, { text, parent /* bay back mesh */, at, rot, height, color, kind: 'paint'|'stencil'|'print'|'chalk', align, opacity, sub })",
+   "device": "shelf-bay-back-type",
+   "kitPath": "routing/devices.json#shelf-bay-back-type",
+   "codeSymbol": "type.bayBackType",
+   "never": "cream/dark box plate placard；type.dev.hudLabel / hud-label；悬空底板字"
+  }
+ ]
+}

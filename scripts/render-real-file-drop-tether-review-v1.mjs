@@ -1,0 +1,47 @@
+#!/usr/bin/env node
+import crypto from "node:crypto";
+import fs from "node:fs";
+import fsp from "node:fs/promises";
+import path from "node:path";
+import {createRequire} from "node:module";
+import {execFileSync} from "node:child_process";
+import sharp from "sharp";
+
+const root = path.resolve(import.meta.dirname, "..");
+const base = path.join(root, "work/screen-recording-maturity-test-v1/real-file-drop-v1");
+const runDir = fs.readdirSync(base).filter((name) => name.startsWith("real-file-drop-") && fs.existsSync(path.join(base, name, "capture-report.json"))).sort().at(-1);
+if (!runDir) throw new Error("REAL_FILE_DROP_CAPTURE_MISSING");
+const runRoot = path.join(base, runDir);
+const reportPath = path.join(runRoot, "capture-report.json");
+const report = JSON.parse(fs.readFileSync(reportPath, "utf8"));
+const sourceVideo = path.join(root, report.output.path);
+const outputRoot = path.join(base, "render");
+const rendererRoot = path.join(root, "remotion-renderer");
+const publicRoot = path.join(rendererRoot, "public");
+const publicRelative = "proof-only/screen-recording-maturity-test-v1/real-file-drop-v1";
+const publicOutput = path.join(publicRoot, publicRelative);
+const staged = path.join(publicOutput, "clean-source.mp4");
+const reviewVideo = path.join(outputRoot, "real-file-drop-tether-review-1280x720-60fps.mp4");
+const cleanVideo = path.join(outputRoot, "real-file-drop-tether-clean-1280x720-60fps.mp4");
+const ffmpeg = path.join(root, ".tools/bin/ffmpeg");
+const ffprobe = path.join(root, ".tools/bin/ffprobe");
+const sha = (file) => crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex");
+const probe = (file) => JSON.parse(execFileSync(ffprobe, ["-v", "error", "-count_frames", "-show_entries", "stream=codec_type,width,height,r_frame_rate,nb_read_frames:format=duration", "-of", "json", file], {encoding: "utf8"}));
+const mae = async (a, b) => { const left = await sharp(a).removeAlpha().raw().toBuffer(); const right = await sharp(b).removeAlpha().raw().toBuffer(); let sum = 0; for (let i = 0; i < left.length; i += 1) sum += Math.abs(left[i] - right[i]); return sum / left.length; };
+const event = (name) => report.events.find((row) => row.name === name);
+const start = event("real-file-drop-start");
+const end = event("real-file-drop-drop");
+const target = report.geometryTruth.targets.find((row) => row.targetKey === "real-file-drop-target") || report.geometryTruth.targets.find((row) => row.targetKey === "drop-ready");
+if (!start || !end || !target) throw new Error("REAL_FILE_DROP_TETHER_GEOMETRY_MISSING");
+const dragPath = report.dragTelemetry.map((row) => ({tMs: row.tMs, x: row.x, y: row.y}));
+const pointerTrack = {contract: "A1CurveGradePointerTrack/v1", interpolation: "CUBIC_HERMITE_CONTINUOUS_TANGENT", waypoints: report.cursorTelemetry.moves, clicks: report.cursorTelemetry.clicks.filter((row) => row.down).map((row) => ({atMs: row.tMs, x: row.x, y: row.y, kind: "press"}))};
+const sourceTarget = {x: report.cursorTelemetry.moves[0]?.x || .82, y: report.cursorTelemetry.moves[0]?.y || .82, width: .025, height: .035};
+const dropTarget = target.sourceRect;
+const dummy = {x: .5, y: .5, width: .02, height: .02};
+const props = {contract: "A1DragMaturityReview/v1", width: 1280, height: 720, fps: 60, durationMs: report.output.durationMs, scene: {shotId: "real-file-drop-tether", timelineStartMs: 0, timelineEndMs: report.output.durationMs, durationMs: report.output.durationMs, sourceActionId: "real-file-drop", sourceVideoUri: `${publicRelative}/clean-source.mp4`, sourceSegments: [{kind: "video", outputStartMs: 0, outputEndMs: report.output.durationMs, sourceStartMs: 0, sourceEndMs: report.output.durationMs, evidenceRole: "REAL_VIDEO_ANALYSIS_FILE_DROP"}], screenDirection: {contract: "A1ScreenActionDirection/v1", cameraPath: "CINEMATIC_EASE_IN_OUT_RESTORE", motionBlurPolicy: "NONE", clickFeedbackPolicy: "PRESS_ONLY", cameraPerformance: {mode: "ACTION_FIRST_REAL_DROP"}}, pointerTrack, cameraTrack: [{atMs: 0, x: .5, y: .5, scale: 1, easingToNext: "hold"}, {atMs: report.output.durationMs, x: .5, y: .5, scale: 1, easingToNext: "hold"}], editCoverage: {mode: "REAL_FILE_DROP", fullSourceActionShown: true}}, dragRange: {startMs: start.tMs, endMs: end.tMs}, dragPath, sourceTarget, dropTarget, phases: [], showPhaseLabels: false, showTether: true};
+const cleanProps = {...props, showTether: false};
+await fsp.mkdir(outputRoot, {recursive: true}); await fsp.mkdir(publicOutput, {recursive: true}); await fsp.copyFile(sourceVideo, staged);
+const require = createRequire(path.join(rendererRoot, "package.json")); const {bundle} = require("@remotion/bundler"); const {openBrowser, renderMedia, renderStill, selectComposition} = require("@remotion/renderer");
+const serveUrl = await bundle({entryPoint: path.join(rendererRoot, "src/DragMaturityReviewEntry.tsx"), publicDir: publicRoot, rootDir: rendererRoot, enableCaching: true});
+const browser = await openBrowser("chrome", {chromeMode: "headless-shell", logLevel: "warn"});
+try { const reviewComp = await selectComposition({serveUrl, id: "A1DragMaturityReviewV1", inputProps: props, puppeteerInstance: browser, logLevel: "warn"}); const cleanComp = await selectComposition({serveUrl, id: "A1DragMaturityReviewV1", inputProps: cleanProps, puppeteerInstance: browser, logLevel: "warn"}); const render = (composition, inputProps, outputLocation) => renderMedia({serveUrl, composition, inputProps, outputLocation, codec: "h264", crf: 18, imageFormat: "jpeg", concurrency: 2, muted: true, hardwareAcceleration: "disable", overwrite: true, puppeteerInstance: browser, logLevel: "warn"}); await render(cleanComp, cleanProps, cleanVideo); await render(reviewComp, props, reviewVideo); const frame = Math.round(((start.tMs + end.tMs) / 2) / 1000 * 60); const active = path.join(outputRoot, "tether-active.png"); const absent = path.join(outputRoot, "tether-absent.png"); await renderStill({serveUrl, composition: reviewComp, inputProps: props, frame, output: active, imageFormat: "png", overwrite: true, puppeteerInstance: browser, logLevel: "warn"}); await renderStill({serveUrl, composition: cleanComp, inputProps: cleanProps, frame, output: absent, imageFormat: "png", overwrite: true, puppeteerInstance: browser, logLevel: "warn"}); const pixelMae = await mae(active, absent); const p = probe(reviewVideo); const stream = p.streams.find((row) => row.codec_type === "video"); const audit = {contract: "A1RealFileDropTetherRenderAudit/v1", status: pixelMae >= .015 && stream.width === 1280 && stream.height === 720 && stream.r_frame_rate === "60/1" ? "PASS_REVIEW_ONLY" : "FAIL", effect: {id: "DRAG_TETHER", status: pixelMae >= .015 ? "PASS_REAL" : "BLOCKED", evidence: "real video-analysis drop target, real file-drop source, source-bound pointer path, and encoded tether pixel proof"}, source: {captureReport: path.relative(root, reportPath), captureReportSha256: sha(reportPath), sourceVideoSha256: sha(sourceVideo)}, output: {clean: {path: path.relative(root, cleanVideo), sha256: sha(cleanVideo)}, review: {path: path.relative(root, reviewVideo), sha256: sha(reviewVideo), width: stream.width, height: stream.height, fps: stream.r_frame_rate, frameCount: Number(stream.nb_read_frames), fullDecode: true}}, pixelMae, geometry: {sourceTarget, dropTarget, startMs: start.tMs, endMs: end.tMs}, boundary: {reviewOnly: true, productionAdmission: false}}; audit.auditSha256 = crypto.createHash("sha256").update(JSON.stringify(audit)).digest("hex"); const auditPath = path.join(outputRoot, "audit-report.json"); await fsp.writeFile(auditPath, `${JSON.stringify(audit, null, 2)}\n`); console.log(JSON.stringify({status: audit.status, effect: audit.effect, pixelMae, output: path.relative(root, auditPath), reviewVideo: path.relative(root, reviewVideo)}, null, 2)); if (audit.status === "FAIL") process.exitCode = 1; } finally { await browser.close({silent: true}); }

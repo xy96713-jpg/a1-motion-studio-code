@@ -1,0 +1,118 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>steps</title>
+<style>
+#cam { position: absolute; inset: 0; transform-origin: 0 0; }
+#line { position: absolute; height: 0; border-top: 3px dashed rgba(0,0,0,.35); transform-origin: 0 50%; }
+.node { position: absolute; width: 380px; }
+.node .n { font-family: 'Times New Roman', serif; font-style: italic; font-weight: bold; font-size: 210px; color: #151515; line-height: 1; display: inline-block; vertical-align: bottom; }
+.node .t { font-family: 'SourceHanSerif Heavy'; font-size: 64px; color: #151515; display: inline-block; margin-left: 10px; vertical-align: 22px; white-space: nowrap; }
+.node .s { display: block; font-family: 'SourceHanSans Regular'; font-size: 42px; color: #2a2a2a; margin-top: 30px; white-space: nowrap; }   /* (30 px under the numbered line: at 6 its box met the line's, r1-S11) */   /* (#666 on the grey paper stood off it by 45 of 255, r1-S7) */
+.node.mark .n, .node.mark .t { color: #d42a24; }
+.node .ring { width: 260px; height: 260px; border-radius: 50%; background-size: cover; background-position: center; margin-bottom: 26px; box-shadow: 0 0 0 10px #1a1a1a, 0 0 0 14px #b8913f, 0 24px 40px rgba(0,0,0,.35); }
+#title { position: absolute; left: 0; right: 0; top: 70px; text-align: center; transform-origin: 50% 0; }
+#title .paper { position: relative; display: inline-block; }   /* (centred by the line, not by a measured width: with no paper under it the width read 0 and the heading opened half off the frame, r1 S1) */
+/* look 'ring' (the reference's r1 R02-R07): the step's words on its picture in a heavy yellow serif, a rounded box of
+   notes under it, a thin curve running through the rings */
+/* the word on a pictured step lies on a paper tag of its own (labels.mjs): set straight on the photo it sat on the
+   things the picture shows (r1-S1: 海量人工 on the crowd, cardgeometry busyErrors) */
+.ring .rl .tg { display: inline-block; padding: .1em .45em .18em; line-height: 1.1; filter: drop-shadow(0 6px 10px rgba(0,0,0,.45)); }
+.ring .rl { position: absolute; left: 0; right: 0; top: 0; bottom: 0; border-radius: 50%; background: radial-gradient(circle at 50% 62%, rgba(0,0,0,.62) 0%, rgba(0,0,0,.25) 45%, transparent 70%); display: flex; align-items: center; justify-content: center; padding-top: 70px; box-sizing: border-box; font-family: 'SourceHanSerif Heavy'; font-size: 58px; color: #f2c230; text-shadow: 0 2px 6px rgba(0,0,0,.8); white-space: nowrap; }
+.node .ring { position: relative; }
+.node .note { margin-top: 30px; width: 340px; margin-left: -20px; box-sizing: border-box; padding: 16px 20px; border: 2px solid rgba(40,40,40,.5); border-radius: 14px; background: rgba(255,255,255,.35); font-family: 'SourceHanSans Regular'; font-size: 34px; line-height: 1.3; color: #2a2a2a; }
+#curve { position: absolute; left: 0; top: 0; overflow: visible; }
+/* drop: a branch hanging off a step — a line falls from it to a box below the row (the reference's Wait box hung under
+   step 3, r1 R07; ours stopped at the row and the lower half stood empty, film review 5:00) */
+.node .drop { position: absolute; left: 40px; top: 100%; }
+.node .drop i { display: block; width: 3px; height: 110px; background: rgba(30,30,30,.6); transform-origin: 50% 0; }
+.node .drop .box { margin-left: -70px; padding: 24px 40px 26px; color: #f4f1ea; font-family: 'SourceHanSerif Heavy'; font-size: 66px; line-height: 1.1; white-space: nowrap; filter: drop-shadow(0 10px 16px rgba(0,0,0,.35)); }
+.node .drop .box span { display: block; font-family: 'SourceHanSans Regular'; font-size: 46px; margin-top: 12px; }   /* (at .88 and 42 px it read small and grey, r1-S9 review) */
+/* a film whose world is dark (filmworld.mjs, 2026-10-26 Vol.047): its own ink, its one colour on the rings and the marked step */
+:root[data-ground=dark] body, :root[data-ground=dark] #cam { background: var(--paper, #0e0e0e); }
+:root[data-ground=dark] .node .n, :root[data-ground=dark] .node .t { color: var(--ink, #f2efe8); }
+:root[data-ground=dark] .node .s, :root[data-ground=dark] .node .note { color: var(--ink, #f2efe8); opacity: .75; background: none; border-color: rgba(255,255,255,.18); }
+:root[data-ground=dark] .node.mark .n, :root[data-ground=dark] .node.mark .t { color: var(--accent, #c9a35a); }
+:root[data-ground=dark] .node .ring { box-shadow: 0 0 0 10px var(--paper, #0e0e0e), 0 0 0 13px var(--accent, #c9a35a); }
+:root[data-ground=dark] .node .drop i { background: rgba(255,255,255,.35); }
+:root[data-ground=dark] #title .paper, :root[data-ground=dark] #title .paper.ink-dark { color: var(--ink, #f2efe8); text-shadow: none; }   /* (the heading: the ground mark lands after the page's script, so CSS, not the script, sets it) */
+:root[data-ground=dark] #title .paper::before { display: none; }
+</style></head>
+<body>
+<div id="cam"><div id="line"></div><svg id="curve" width="1920" height="1080"><path fill="none" stroke="rgba(30,30,30,.55)" stroke-width="3"/></svg><div id="nodes"></div></div><div id="title"></div>
+<div id="vig"></div><div id="sub"></div>
+<script>window.__spec = window.__spec || {};</script>
+<script src="common.js"></script>
+<script>
+// 原理图 / 流程节点逐步展开 (reference P32, P35, P36): grey paper; a heading names the topic at the top; the steps
+// come one by one on their words along a dashed line, a big italic number and a heavy Song phrase each, a small line
+// under; a marked step in red; a step may carry a picture in a black-gold ring (P32), real or from image generation.
+// The camera drifts and leans toward the newest step. Words by code; pictures are material or art, never drawn shapes.
+const S = M.S, $ = M.$, N = S.nodes || [];
+M.paper(document.body);
+if (S.title) $('#title').innerHTML = M.torn(S.title, { size: 58, ink: 'dark' });   // (a dark world's heading is set light by the CSS above)
+if (S.title && S.treat) for (const t of $('#title').querySelectorAll('.t')) window.__treat(t, S.treat);   // (the heading takes the reference's treatment: treat.js)   // (at 40 it read small over the rings, r1 review)
+// laid out in what the camera shows while the steps are up (M.view): a 1.15 push cut the first step at the frame's edge,
+// and the notes under pictured steps fell into the subtitle band (r1-S7, r1-S9)
+const V = M.view(N[0]?.at ?? S.at), VH = V.h * 690 / 1080   /* (the steps framed in 210-900 of the frame: the band below 935 clear, the heading above them, the group centred; framed to the top it left the bottom empty, r1-S1/S9) */, RING = S.look === 'ring', hasImg = N.some((n) => n.img), gap = Math.min(520, 1560 / Math.max(1, N.length), (V.w - 160 - 380) / Math.max(1, N.length - 1)), x0 = V.L + (V.w - gap * (N.length - 1) - 380) / 2, y = hasImg ? Math.max(V.T + 150, 230) : N.some((n) => n.drop) ? 320 : 470;   /* (a row with a branch stands higher, the box below it: at a zoom near 1 the camera cannot go down to it, r1-S9) */
+$('#line').style.cssText += `left:${x0}px;top:${y + (hasImg ? 480 : 225)}px;width:${gap * (N.length - 1) + 300}px`;
+const els = N.map((n, i) => {
+  const el = document.createElement('div'); el.className = `node${n.mark ? ' mark' : ''}`; el.style.left = `${x0 + i * gap}px`; el.style.top = `${y}px`;
+  el.innerHTML = RING && n.img ? `<div class="ring" style="background-image:url('${n.img}')"><div class="rl"><span class="tg" style="${M.plate(i, '#151515') || 'background:#151515'}">${M.esc(n.text)}</span></div></div>${n.note ? `<div class="note">${M.esc(n.note)}</div>` : ''}`
+    : `${n.img ? `<div class="ring" style="background-image:url('${n.img}')"></div>` : ''}<span class="n">${M.esc(n.n ?? i + 1)}</span><span class="t">${M.esc(n.text)}</span>${n.sub ? `<span class="s">${M.esc(n.sub)}</span>` : ''}${n.drop ? `<div class="drop"><i></i><div class="box" style="${M.plate(i, '#1d1b19') || 'background:#1d1b19'}">${M.esc(n.drop.text)}${n.drop.sub ? `<span>${M.esc(n.drop.sub)}</span>` : ''}</div></div>` : ''}`;
+  if (RING) el.style.width = '300px';
+  $('#nodes').appendChild(el); return { el, n };
+});
+// the curve through the rings' centres, a gentle wave (look 'ring'); the dashed line is the other look's
+const path = $('#curve path');
+if (RING && hasImg) { $('#line').style.display = 'none'; const c = els.map((e, i) => [x0 + i * gap + 130, y + 130 + (i % 2 ? 30 : -30)]), st = [c[0][0] - 260, c[0][1] + 60], en = [c.at(-1)[0] + 260, c.at(-1)[1] - 40];
+  const pts = [st, ...c, en]; let d = `M${st[0]},${st[1]}`; for (let i = 1; i < pts.length; i++) { const [a, b] = [pts[i - 1], pts[i]], mx = (a[0] + b[0]) / 2; d += ` C${mx},${a[1]} ${mx},${b[1]} ${b[0]},${b[1]}`; }
+  path.setAttribute('d', d); } else $('#curve').style.display = 'none';
+const plen = RING && hasImg ? path.getTotalLength() : 0; if (plen) path.style.strokeDasharray = `${plen}`;
+// the heading's tape measured and centred (it has no width of its own: left 50% put its start at the middle, r1-S1)
+// (measured on every frame: the fonts load after the page is built, and the tape was measured in a wider face)
+const centreTitle = () => {};   // (the heading is centred by its line: #title)
+// a step's real width: its children's right edges (its numbered words run past its 380 px box, and scrollWidth did not
+// count them: the camera framed r1-S9's fourth step to the edge and cut its last words, film review 5:06)
+const inkW = (el) => Math.max(el.offsetWidth, ...[...el.querySelectorAll('*')].map((c) => c.offsetLeft + c.offsetWidth));
+window.render = (t) => {
+  M.subs(t);
+  const a = M.seg(t, S.at, S.end);
+  centreTitle();
+  if (S.title) M.fade($('#title .paper'), t, S.at, .3, -60);
+  $('#line').style.transform = `scaleX(${M.E.out(M.seg(t, N[0]?.at ?? S.at, (N.at(-1)?.at ?? S.end) + .4))})`;
+  if (plen) path.style.strokeDashoffset = `${plen * (1 - M.E.out(M.seg(t, N[0]?.at ?? S.at, (N.at(-1)?.at ?? S.end) + .4)))}`;
+  // (a pictured step's ring stands faint on the paper from the start, its words held to their cue: a heading alone on
+  // bare paper for 3 s read as an empty frame, film review 4:38 r1-S7; the pictures are not the narration's words)
+  els.forEach(({ el, n }) => { const k = M.E.back(M.seg(t, n.at, n.at + .35)), pre = !!n.img && t < n.at;
+    el.style.opacity = t >= n.at ? Math.min(1, k * 1.4) : pre ? .28 * M.E.out(M.seg(t, S.at, S.at + .6)) : 0; el.style.filter = pre ? 'grayscale(1) blur(1.5px)' : '';
+    el.querySelectorAll('.rl, .note, .n, .t, .s').forEach((w) => { w.style.visibility = t >= n.at ? '' : 'hidden'; });
+    el.style.transform = `translateY(${(1 - k) * 40}px) scale(${.9 + .1 * k})`;
+    // the branch: its line falls, then the box rises in under it
+    const d = el.querySelector('.drop'); if (d) { const da = n.drop.at ?? n.at + .5, kl = M.E.out(M.seg(t, da, da + .35)), kb = M.E.back(M.seg(t, da + .25, da + .6));
+      d.querySelector('i').style.transform = `scaleY(${kl})`; d.style.visibility = t >= da ? '' : 'hidden'; const b = d.querySelector('.box'); b.style.opacity = Math.min(1, kb * 1.3); b.style.transform = `translateY(${(1 - kb) * 30}px)`; } });
+  // the title opens the shot large in the middle (the reference's torn heading, r1 R01), then goes up to its place
+  // as the first step lands: the frame is never blank before the steps (r1-S7: 3 s of bare paper)
+  if (S.title) { const k = M.E.inout(M.seg(t, (N[0]?.at ?? S.end) - .5, N[0]?.at ?? S.end)); $('#title').style.transform = `translateY(${(1 - k) * 330}px) scale(${2.2 - 1.2 * k})`; }
+  // the camera frames the steps shown so far, close (a big canvas walked step by step, r1 R07), easing from the
+  // framing before the newest one; never wider than the frame, never cutting one (r1-S9: the first step slid off)
+  // (a branch is framed with its step from the step's own moment, before it falls: framed when it fell, the box hung
+  // below the frame's foot and the camera would jump to take it in, r1-S9)
+  const dropBottom = (el) => { const d = el.querySelector('.drop'); return d ? d.offsetTop + d.offsetHeight : 0; };
+  const shown = els.filter((e) => t >= e.n.at), fit = (list) => { if (!list.length) return { z: 1, cx: 960, cy: 540 };
+    const r = list.map((e) => ({ x0: e.el.offsetLeft, y0: e.el.offsetTop, x1: e.el.offsetLeft + inkW(e.el),   /* (its words, which do not wrap, may run past its box: the bench's longest words left the frame) */ y1: e.el.offsetTop + Math.max(e.el.offsetHeight, dropBottom(e.el)) })), x0 = Math.min(...r.map((q) => q.x0)) - 90, x1 = Math.max(...r.map((q) => q.x1)) + 90, y0 = Math.min(...r.map((q) => q.y0)) - 70, y1 = Math.max(...r.map((q) => q.y1)) + 70;
+    return { z: Math.max(.6, Math.min(1.7, V.w / (x1 - x0), VH / (y1 - y0))), zw: Math.min(V.w / (x1 - x0), VH / (y1 - y0)), cx: (x0 + x1) / 2, cy: (y0 + y1) / 2 }; };   // (into what the shared camera leaves in view, V: its push on top cut the first step, r1-S9)
+  let now = fit(shown), was = fit(shown.slice(0, -1)), k = M.E.inout(M.seg(t, shown.at(-1)?.n.at ?? S.at, (shown.at(-1)?.n.at ?? S.at) + .9)), z = (was.z + (now.z - was.z) * k) * (1 + .03 * a + (RING ? 0 : .07) * M.E.inout(M.seg(t, (N.at(-1)?.at ?? S.end) + .9, S.end))), zCap = shown.length ? Math.max(now.zw ?? 9, Math.min(was.zw ?? 9, now.zw ?? 9)) : 9;   /* (the push on the finished chain stops where the chain just fits: past it the first step and the last were cut, r1-S9 reviews 111, 112) */   // (once the last step lands the camera goes on in, never holding the finished chain: r1-S9 stood 6 s, the reference moves all the while; not the ring look, framed to its notes' edges already: r1-S1 pushed its notes off)
+  // the centre kept where the frame stays covered at this zoom
+  // (a chain as wide as the frame still moves: it settles a little wider and pushes back in to its fit, never past)
+  if (z > zCap) { const P = M.E.inout(M.seg(t, (N.at(-1)?.at ?? S.end) + .9, S.end)); z = zCap * (shown.length === N.length ? .93 + .07 * P : 1); }
+  const clamp = (c, half, size) => Math.min(size - half / z, Math.max(half / z, c)), cx = clamp(was.cx + (now.cx - was.cx) * k, 960, 1920), cy = clamp(was.cy + (now.cy - was.cy) * k, 540, 1080);
+  const vx = V.L + V.w / 2, vy = V.T + V.h * 555 / 1080; $('#cam').style.transform = `translate(${vx - cx * z}px, ${vy - cy * z}px) scale(${z})`;
+};
+// the chain measured once its type is in: when its last step's words run past what the camera shows, the steps close
+// up and the chain is centred again (a numbered step is wider than its 380 px box: r1-S9's fourth step ran off the right
+// edge, film review 5:06)
+M.settle(() => { if (RING || els.length < 2) return; const lastW = Math.max(...els.map(({ el }) => inkW(el))), room = V.w - 120;
+  if (gap * (els.length - 1) + lastW <= room) return; const g2 = Math.max(200, (room - lastW) / (els.length - 1)), x2 = V.L + (V.w - g2 * (els.length - 1) - lastW) / 2;
+  els.forEach(({ el }, i) => { el.style.left = `${x2 + i * g2}px`; }); const ln = $('#line'); ln.style.left = `${x2}px`; ln.style.width = `${g2 * (els.length - 1) + 300}px`; });
+M.ready(N.map((n) => n.img));
+</script>
+</body></html>

@@ -1,0 +1,35 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import { writeShots } from '../apps/studio-next/src/lib/recipe-board/writer.mjs';
+import { materialsLock } from '../apps/studio-next/src/lib/recipe-board/shotplan.mjs';
+globalThis.fetch = async () => { throw Error('network forbidden'); };
+process.env.A1_CODEX_BIN = '/usr/bin/true';
+const root = fs.mkdtempSync(path.join(process.env.TMPDIR, 'writer-preflight-'));
+const cfg = {dataDir:path.join(root,'data'),repoRoot:root,sourceRoot:root}, id='fixture', p=path.join(cfg.dataDir,'projects',id);
+const put=(f,v)=>{fs.mkdirSync(path.dirname(path.join(p,f)),{recursive:true});fs.writeFileSync(path.join(p,f),JSON.stringify(v,null,2)+'\n');};
+const hash=f=>fs.existsSync(path.join(p,f))?crypto.createHash('sha256').update(fs.readFileSync(path.join(p,f))).digest('hex'):null;
+try {
+ for(const n of ['recipes','routing','themes','worlds']) fs.cpSync(path.resolve('work/recipe-board-v1',n),path.join(cfg.dataDir,n),{recursive:true});
+ fs.writeFileSync(path.join(cfg.dataDir,'routing/exemplars.json'), JSON.stringify({cards:{}}));
+ put('project.json',{id,agents:{default:'manual'}});
+ const beat=id=>({id,text:'fixture',onScreen:{headline:'fixture',keywords:[]},route:{recipe:'footage-plate',intentLabel:'fixture'}});
+ put('plan.json',{beats:[beat('B01'),beat('B02')]}); put('shots/B01.json',{shotId:'B01',recipe:'footage-plate',slots:{marker:'historical'}});
+ const old={shotId:'B01',kind:'stock',bind:'background',original:'history'};
+ put('materials/needs.json',{needs:[old,old]}); for(const f of ['candidates','approvals','bindings']) put(`materials/${f}.json`,{historical:f});
+ const answer={shots:[{beatId:'B02',slotsJson:JSON.stringify({background:{gen:'fixture'}}),scenesJson:'[]',needs:[{slot:'background',scene:0,kind:'person',original:'subject',entity:'subject',queryEn:'subject',cutout:false}]}]};
+ assert.equal((await writeShots(cfg,id)).waiting,true);
+ put('tasks/write.answer.json',answer); const future=new Date(Date.now()+3000);fs.utimesSync(path.join(p,'tasks/write.answer.json'),future,future);
+ const files=['shots/B01.json','shots/B02.json','plan.json',...['needs','candidates','approvals','bindings'].map(x=>`materials/${x}.json`)];
+ const snap=()=>files.map(hash); const before=snap();
+ await assert.rejects(writeShots(cfg,id),/duplicate/i); assert.deepEqual(snap(),before,'guard must precede every shot and plan write');
+ await assert.rejects(writeShots(cfg,id,{rewrite:true}),/shot rewrite blocked/); assert.deepEqual(snap(),before,'rewrite conflict protects existing and new shots');
+ put('materials/needs.json',{needs:[old]});
+ put('tasks/write.answer.json',{shots:[answer.shots[0],answer.shots[0]]}); fs.utimesSync(path.join(p,'tasks/write.answer.json'),future,future);
+ const beforeDuplicate=snap(); await assert.rejects(writeShots(cfg,id),/duplicate/i); assert.deepEqual(snap(),beforeDuplicate,'duplicate answer must not write shots');
+ put('tasks/write.answer.json',answer); fs.utimesSync(path.join(p,'tasks/write.answer.json'),future,future);
+ const release=await materialsLock(cfg,id); const pending=writeShots(cfg,id); await new Promise(r=>setTimeout(r,150)); assert.equal(hash('shots/B02.json'),null,'writer must wait for material owner'); release();
+ const result=await pending; assert.equal(result.shots,1); assert.ok(hash('shots/B02.json')); assert.ok(JSON.parse(fs.readFileSync(path.join(p,'materials/needs.json'))).needs.some(n=>n.shotId==='B02'));
+ console.log('writer shot preflight and lock regression passed');
+} finally {fs.rmSync(root,{recursive:true,force:true});}

@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import {productionFrameGoalShaV1} from '../apps/studio-next/src/lib/a1-production-frame-identity-v1.mjs';
+import {referenceStateIntentDigestsV1} from '../apps/studio-next/src/lib/a1-reference-state-intent-v1.mjs';
+const plan={source:{videoSha256:'a'.repeat(64)}},shot={id:'unseen',exactCopy:['entry','hold'],sourceText:'unchanged'};
+const state={state:'ENTRY',visibleCopyIndices:[0],viewerNotice:'establish context'};
+const checked={sourceVideoSha256:plan.source.videoSha256,exactCopy:shot.exactCopy,states:[state]};
+const scoped={...shot,referenceStateIntents:{review:{path:'new',sha256:'b'.repeat(64)},intentSha256:'c'.repeat(64),stateIntentSha256ByState:referenceStateIntentDigestsV1(checked)}};
+assert.equal(productionFrameGoalShaV1(plan,shot,'HOLD'),productionFrameGoalShaV1(plan,scoped,'HOLD'));
+assert.notEqual(productionFrameGoalShaV1(plan,shot,'ENTRY'),productionFrameGoalShaV1(plan,scoped,'ENTRY'));
+const changed=structuredClone(scoped);changed.referenceStateIntents.stateIntentSha256ByState=referenceStateIntentDigestsV1({...checked,states:[{...state,viewerNotice:'different intent'}]});
+assert.notEqual(productionFrameGoalShaV1(plan,scoped,'ENTRY'),productionFrameGoalShaV1(plan,changed,'ENTRY'));
+assert.equal(productionFrameGoalShaV1(plan,scoped,'HOLD'),productionFrameGoalShaV1(plan,changed,'HOLD'));
+assert.notEqual(productionFrameGoalShaV1(plan,scoped),productionFrameGoalShaV1(plan,changed));
+const legacy={...shot,referenceStateIntents:{review:{path:'legacy'},intentSha256:'d'.repeat(64)}};
+assert.notEqual(productionFrameGoalShaV1(plan,shot,'HOLD'),productionFrameGoalShaV1(plan,legacy,'HOLD'));
+console.log('PASS new state intents preserve unrelated HOLD identity; changed state and legacy bindings remain strict.');

@@ -1,0 +1,9 @@
+#!/usr/bin/env node
+import fs from "node:fs"; import path from "node:path"; import {spawnSync} from "node:child_process";
+const root=path.resolve(import.meta.dirname,".."), failures=[];
+for(const relative of ["apps/studio-next/src/lib/a1-system-line-runtime-health-v1.mjs","scripts/test-system-line-runtime-health-v1.mjs","scripts/probe-system-line-runtime-health-v1.mjs","scripts/repair-stale-system-line-runtime-v1.mjs"])if(!fs.existsSync(path.join(root,relative)))failures.push(`MISSING:${relative}`);
+let results=[],live=null;if(!failures.length){const test=spawnSync(process.execPath,[path.join(root,"scripts/test-system-line-runtime-health-v1.mjs")],{cwd:root,encoding:"utf8",timeout:5000});if(test.status!==0)failures.push("HEALTH_FIXTURES_FAILED");else results=JSON.parse(test.stdout).results||[];const probe=spawnSync(process.execPath,[path.join(root,"scripts/probe-system-line-runtime-health-v1.mjs")],{cwd:root,encoding:"utf8",timeout:7000});if(probe.status!==0)failures.push("LIVE_HEALTH_PROBE_FAILED");else live=JSON.parse(probe.stdout);}
+const report={contract:"A1RuntimeHealthWatchdogAudit/v1",status:failures.length?"FAIL":"PASS",results,live,failures,checkedAt:new Date().toISOString()};
+if(process.argv.includes("--write-baseline"))fs.writeFileSync(path.join(root,"work/runtime-health-watchdog-v1-baseline.json"),`${JSON.stringify(report,null,2)}\n`);
+if(process.argv.includes("--write")){const out=path.join(root,"work/runtime-health-watchdog-v1");fs.mkdirSync(out,{recursive:true});fs.writeFileSync(path.join(out,"result.json"),`${JSON.stringify(report,null,2)}\n`);fs.writeFileSync(path.join(out,"REPORT.md"),`# Runtime health watchdog v1\n\n- Status: **${report.status}**\n- Live state: **${live?.status||"unavailable"}**\n- Probe time: **${live?.elapsedMs??"n/a"} ms**\n- Listener PID: **${live?.listener?.pid??"none"}**\n`);}
+console.log(JSON.stringify(report,null,2));if(failures.length)process.exitCode=1;

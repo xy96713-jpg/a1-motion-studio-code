@@ -1,0 +1,501 @@
+{
+ "contract": "A1RecipeBoardTaste/v1",
+ "about": "The user's verdicts on worlds, with their words (filmworld.mjs recordTaste: the look gate's pick approves one direction and passes the others over; gate --reject look turns them all down). Read back to the director as tasteSummary when it derives a new film's world: lean to what was approved, away from what was rejected. Seeded 2026-10-26 from the verdicts given before.",
+ "entries": [
+  {
+   "at": "2026-10-20",
+   "film": "hupo-auto2",
+   "direction": null,
+   "verdict": "rejected",
+   "said": "设计的怎么好烂（米色纸钴蓝印刷、复古、铬字几版）",
+   "traits": {
+    "tone": "light",
+    "main": "#2747a3",
+    "diagram": "line",
+    "photo": null,
+    "angle": null,
+    "precedent": null
+   }
+  },
+  {
+   "at": "2026-10-18",
+   "film": null,
+   "direction": null,
+   "verdict": "rejected",
+   "said": "越来越 ai 味（照片加网点滤镜）；没看出哪里 y2k 像我的 p 站风格（换皮）",
+   "traits": {
+    "tone": "light",
+    "main": "#ff5fb3",
+    "diagram": null,
+    "photo": null,
+    "angle": null,
+    "precedent": null
+   }
+  },
+  {
+   "at": "2026-10-26",
+   "film": "paperclip-047-six",
+   "direction": null,
+   "verdict": "rejected",
+   "said": "绝对不行 很ai这种（钴蓝印刷 + 生图整幅关键帧）",
+   "traits": {
+    "tone": "light",
+    "main": "#2747a3",
+    "diagram": "illustration",
+    "photo": null,
+    "angle": null,
+    "precedent": null
+   }
+  },
+  {
+   "at": "2026-10-20",
+   "film": "hupo-auto2",
+   "direction": null,
+   "verdict": "approved",
+   "said": "你就对着原片审美做吧（胡泊：冷灰纸、细高大字、真实网页划线）",
+   "traits": {
+    "tone": "light",
+    "main": "#e0281f",
+    "diagram": "flat",
+    "photo": "color",
+    "angle": "precedent",
+    "precedent": "hupo-deepseek"
+   }
+  },
+  {
+   "at": "2026-10-26",
+   "film": "paperclip-138-full",
+   "direction": null,
+   "verdict": "approved",
+   "said": "回形针 Vol.138 整片（法医暗场、红橙、连续图解）",
+   "traits": {
+    "tone": "dark",
+    "main": "#e8452c",
+    "diagram": "flat",
+    "photo": "mono",
+    "angle": "object",
+    "precedent": "pc-138"
+   }
+  },
+  {
+   "at": "2026-10-26",
+   "film": "paperclip-047-six",
+   "direction": "A",
+   "verdict": "approved",
+   "said": "对（黑底、白色香烟实物、烟盒烫金的金色、金色线稿）",
+   "traits": {
+    "tone": "dark",
+    "main": "#c9a35a",
+    "diagram": "line",
+    "photo": "color",
+    "angle": "object",
+    "precedent": "pc-047"
+   }
+  },
+  {
+   "at": "2026-10-26T12:22:32.814Z",
+   "film": "banana-tr4-blind",
+   "direction": "A",
+   "verdict": "passed-over",
+   "said": null,
+   "traits": {
+    "tone": "dark",
+    "main": "#f2c230",
+    "diagram": "photo-object",
+    "photo": "color",
+    "angle": "object",
+    "precedent": "pc-047"
+   }
+  },
+  {
+   "at": "2026-10-26T12:22:32.814Z",
+   "film": "banana-tr4-blind",
+   "direction": "B",
+   "verdict": "approved",
+   "said": "用户 2026-10-26：选 B（墨绿底红褐病斑）",
+   "traits": {
+    "tone": "dark",
+    "main": "#c4562e",
+    "diagram": "line",
+    "photo": "mono",
+    "angle": "metaphor",
+    "precedent": "pc-138"
+   }
+  },
+  {
+   "at": "2026-10-26T12:22:32.814Z",
+   "film": "banana-tr4-blind",
+   "direction": "C",
+   "verdict": "passed-over",
+   "said": null,
+   "traits": {
+    "tone": "light",
+    "main": "#d0202e",
+    "diagram": "flat",
+    "photo": "color",
+    "angle": "place-era",
+    "precedent": "hupo-deepseek"
+   }
+  },
+  {
+   "at": "2026-10-26T23:36:53.042Z",
+   "film": "suez-evergiven-blind",
+   "direction": "A",
+   "verdict": "approved",
+   "said": "Suez look: pick A (container steel)",
+   "traits": {
+    "tone": "dark",
+    "main": "#c8501e",
+    "diagram": "iso3d",
+    "photo": "mono",
+    "angle": "object",
+    "precedent": "pc-137"
+   }
+  },
+  {
+   "at": "2026-10-26T23:36:53.042Z",
+   "film": "suez-evergiven-blind",
+   "direction": "B",
+   "verdict": "passed-over",
+   "said": null,
+   "traits": {
+    "tone": "light",
+    "main": "#b8321e",
+    "diagram": "line",
+    "photo": "mono",
+    "angle": "place-era",
+    "precedent": "pc-141"
+   }
+  },
+  {
+   "at": "2026-10-26T23:36:53.042Z",
+   "film": "suez-evergiven-blind",
+   "direction": "C",
+   "verdict": "passed-over",
+   "said": null,
+   "traits": {
+    "tone": "dark",
+    "main": "#e09a2f",
+    "diagram": "flat",
+    "photo": "mono",
+    "angle": "metaphor",
+    "precedent": "pc-170"
+   }
+  },
+  {
+   "at": "2026-10-27T11:17:44.895Z",
+   "film": "suez-evergiven-blind",
+   "direction": "A",
+   "verdict": "approved",
+   "said": "用户 2026-10-27：可以",
+   "traits": {
+    "tone": "dark",
+    "main": "#c8501e",
+    "diagram": "iso3d",
+    "photo": "mono",
+    "angle": "object",
+    "precedent": "pc-137"
+   }
+  },
+  {
+   "at": "2026-10-27T11:17:44.895Z",
+   "film": "suez-evergiven-blind",
+   "direction": "B",
+   "verdict": "passed-over",
+   "said": null,
+   "traits": {
+    "tone": "light",
+    "main": "#b8321e",
+    "diagram": "line",
+    "photo": "mono",
+    "angle": "place-era",
+    "precedent": "pc-141"
+   }
+  },
+  {
+   "at": "2026-10-27T11:17:44.895Z",
+   "film": "suez-evergiven-blind",
+   "direction": "C",
+   "verdict": "passed-over",
+   "said": null,
+   "traits": {
+    "tone": "dark",
+    "main": "#e09a2f",
+    "diagram": "flat",
+    "photo": "mono",
+    "angle": "metaphor",
+    "precedent": "pc-170"
+   }
+  },
+  {
+   "at": "2026-10-27T12:26:08.203Z",
+   "film": "suez-evergiven-blind",
+   "direction": "A",
+   "verdict": "approved",
+   "said": "Claude 代批（用户 2026-10-27 授权：你可以批 猜我喜好 简单决策你来就好）：重头样张换成真脱困照片和中性配色后两位评审 3.375，船模质感停滞，放行理由见 stills-taste.waive.json",
+   "traits": {
+    "tone": "dark",
+    "main": "#c8501e",
+    "diagram": "iso3d",
+    "photo": "mono",
+    "angle": "object",
+    "precedent": "pc-137"
+   }
+  },
+  {
+   "at": "2026-10-27T12:26:08.203Z",
+   "film": "suez-evergiven-blind",
+   "direction": "B",
+   "verdict": "passed-over",
+   "said": null,
+   "traits": {
+    "tone": "light",
+    "main": "#b8321e",
+    "diagram": "line",
+    "photo": "mono",
+    "angle": "place-era",
+    "precedent": "pc-141"
+   }
+  },
+  {
+   "at": "2026-10-27T12:26:08.203Z",
+   "film": "suez-evergiven-blind",
+   "direction": "C",
+   "verdict": "passed-over",
+   "said": null,
+   "traits": {
+    "tone": "dark",
+    "main": "#e09a2f",
+    "diagram": "flat",
+    "photo": "mono",
+    "angle": "metaphor",
+    "precedent": "pc-170"
+   }
+  },
+  {
+   "at": "2026-10-27T13:18:02.994Z",
+   "film": "suez-evergiven-blind",
+   "direction": "A",
+   "verdict": "approved",
+   "said": "Claude 代批（用户 2026-10-27 授权）：重新绑定，不是新决定 —— 四张重头样张和整片设计与上次批的相同（样张按画面指纹逐张比对一致），只因定样子改为绑定样张答案本身、不再绑引擎代码哈希而失效",
+   "traits": {
+    "tone": "dark",
+    "main": "#c8501e",
+    "diagram": "iso3d",
+    "photo": "mono",
+    "angle": "object",
+    "precedent": "pc-137"
+   }
+  },
+  {
+   "at": "2026-10-27T13:18:02.994Z",
+   "film": "suez-evergiven-blind",
+   "direction": "B",
+   "verdict": "passed-over",
+   "said": null,
+   "traits": {
+    "tone": "light",
+    "main": "#b8321e",
+    "diagram": "line",
+    "photo": "mono",
+    "angle": "place-era",
+    "precedent": "pc-141"
+   }
+  },
+  {
+   "at": "2026-10-27T13:18:02.994Z",
+   "film": "suez-evergiven-blind",
+   "direction": "C",
+   "verdict": "passed-over",
+   "said": null,
+   "traits": {
+    "tone": "dark",
+    "main": "#e09a2f",
+    "diagram": "flat",
+    "photo": "mono",
+    "angle": "metaphor",
+    "precedent": "pc-170"
+   }
+  },
+  {
+   "at": "2026-10-28T02:05:14.230Z",
+   "film": "suez-evergiven-blind",
+   "direction": "A",
+   "verdict": "approved",
+   "said": "Claude 代批（用户 2026-10-27 授权）：整片设计按用户 10-28 的话换成每拍一套胶片配色（可以各种配色 但要和谐 比如 gawx 会用些胶片感的红 黄 蓝）：青海图、琥珀灯、钴蓝卡、靛蓝夜、米白高潮、中性暗收尾，6 套轮换；四张重头样张没有改",
+   "traits": {
+    "tone": "dark",
+    "main": "#c8501e",
+    "diagram": "iso3d",
+    "photo": "mono",
+    "angle": "object",
+    "precedent": "pc-137"
+   }
+  },
+  {
+   "at": "2026-10-28T02:05:14.230Z",
+   "film": "suez-evergiven-blind",
+   "direction": "B",
+   "verdict": "passed-over",
+   "said": null,
+   "traits": {
+    "tone": "light",
+    "main": "#b8321e",
+    "diagram": "line",
+    "photo": "mono",
+    "angle": "place-era",
+    "precedent": "pc-141"
+   }
+  },
+  {
+   "at": "2026-10-28T02:05:14.230Z",
+   "film": "suez-evergiven-blind",
+   "direction": "C",
+   "verdict": "passed-over",
+   "said": null,
+   "traits": {
+    "tone": "dark",
+    "main": "#e09a2f",
+    "diagram": "flat",
+    "photo": "mono",
+    "angle": "metaphor",
+    "precedent": "pc-170"
+   }
+  },
+  {
+   "at": "2026-10-28T02:10:49.782Z",
+   "film": "suez-evergiven-blind",
+   "direction": "A",
+   "verdict": "approved",
+   "said": "Claude 代批（用户 2026-10-27 授权）：同上一次的配色方案（用户 10-28：可以各种配色 但要和谐），只把 B02、B09 的明暗从暗改为中（青海图本身比中性暗亮一档）；重头样张没有改",
+   "traits": {
+    "tone": "dark",
+    "main": "#c8501e",
+    "diagram": "iso3d",
+    "photo": "mono",
+    "angle": "object",
+    "precedent": "pc-137"
+   }
+  },
+  {
+   "at": "2026-10-28T02:10:49.782Z",
+   "film": "suez-evergiven-blind",
+   "direction": "B",
+   "verdict": "passed-over",
+   "said": null,
+   "traits": {
+    "tone": "light",
+    "main": "#b8321e",
+    "diagram": "line",
+    "photo": "mono",
+    "angle": "place-era",
+    "precedent": "pc-141"
+   }
+  },
+  {
+   "at": "2026-10-28T02:10:49.783Z",
+   "film": "suez-evergiven-blind",
+   "direction": "C",
+   "verdict": "passed-over",
+   "said": null,
+   "traits": {
+    "tone": "dark",
+    "main": "#e09a2f",
+    "diagram": "flat",
+    "photo": "mono",
+    "angle": "metaphor",
+    "precedent": "pc-170"
+   }
+  },
+  {
+   "at": "2026-10-28T03:32:57.923Z",
+   "film": "suez-evergiven-blind",
+   "direction": "A",
+   "verdict": "approved",
+   "said": "Claude 代批（用户 2026-10-27 授权）：整片设计按用户 10-28 的话加了每拍的介质和理由（要合适 不要为了做而做 硬塞）：只有讲比例读数的 B06 上 LED、浮起来的真照片 B11 用胶片，其余讲实物和地理的拍不经屏；B02 的证据拍放真卫星照片；重头样张没有改",
+   "traits": {
+    "tone": "dark",
+    "main": "#c8501e",
+    "diagram": "iso3d",
+    "photo": "mono",
+    "angle": "object",
+    "precedent": "pc-137"
+   }
+  },
+  {
+   "at": "2026-10-28T03:32:57.923Z",
+   "film": "suez-evergiven-blind",
+   "direction": "B",
+   "verdict": "passed-over",
+   "said": null,
+   "traits": {
+    "tone": "light",
+    "main": "#b8321e",
+    "diagram": "line",
+    "photo": "mono",
+    "angle": "place-era",
+    "precedent": "pc-141"
+   }
+  },
+  {
+   "at": "2026-10-28T03:32:57.923Z",
+   "film": "suez-evergiven-blind",
+   "direction": "C",
+   "verdict": "passed-over",
+   "said": null,
+   "traits": {
+    "tone": "dark",
+    "main": "#e09a2f",
+    "diagram": "flat",
+    "photo": "mono",
+    "angle": "metaphor",
+    "precedent": "pc-170"
+   }
+  },
+  {
+   "at": "2026-10-29T01:24:26.356Z",
+   "film": "banana-design",
+   "direction": "A",
+   "verdict": "approved",
+   "said": "可以 执行吧",
+   "traits": {
+    "tone": "dark",
+    "main": "#f2c230",
+    "diagram": "photo-object",
+    "photo": "color",
+    "angle": "object",
+    "precedent": "pc-047"
+   }
+  },
+  {
+   "at": "2026-10-29T01:24:26.356Z",
+   "film": "banana-design",
+   "direction": "B",
+   "verdict": "passed-over",
+   "said": null,
+   "traits": {
+    "tone": "dark",
+    "main": "#c4562e",
+    "diagram": "line",
+    "photo": "mono",
+    "angle": "metaphor",
+    "precedent": "pc-138"
+   }
+  },
+  {
+   "at": "2026-10-29T01:24:26.356Z",
+   "film": "banana-design",
+   "direction": "C",
+   "verdict": "passed-over",
+   "said": null,
+   "traits": {
+    "tone": "light",
+    "main": "#d0202e",
+    "diagram": "flat",
+    "photo": "color",
+    "angle": "place-era",
+    "precedent": "hupo-deepseek"
+   }
+  }
+ ]
+}

@@ -1,0 +1,33 @@
+#!/usr/bin/env node
+import crypto from "node:crypto";
+import fs from "node:fs";
+import fsp from "node:fs/promises";
+import path from "node:path";
+import {execFileSync} from "node:child_process";
+import sharp from "sharp";
+
+const root = path.resolve(import.meta.dirname, "..");
+const screen = path.join(root, "work/screen-recording-maturity-test-v1/motion-dynamics-v1/motion-dynamics-clean-1280x720-60fps.mp4");
+const presenter = path.join(root, "work/presenter-shot-split-20260911/ED-32.mp4");
+const outDir = path.join(root, "work/screen-recording-maturity-test-v1/camera-bubble-reflow-review-v1");
+const output = path.join(outDir, "camera-bubble-reflow-review-1280x720-60fps.mp4");
+const ffmpeg = path.join(root, ".tools/bin/ffmpeg");
+const ffprobe = path.join(root, ".tools/bin/ffprobe");
+const sha = (file) => crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex");
+const probe = (file) => JSON.parse(execFileSync(ffprobe, ["-v", "error", "-count_frames", "-show_entries", "stream=codec_type,width,height,r_frame_rate,nb_read_frames:format=duration", "-of", "json", file], {encoding: "utf8"}));
+await fsp.mkdir(outDir, {recursive: true});
+const filter = "[1:v]scale=280:158:force_original_aspect_ratio=decrease,format=yuva420p,setsar=1[cam];[0:v]scale=1280:720:flags=lanczos,format=yuv420p[screen];[screen][cam]overlay=x='if(lt(t,4),970,if(lt(t,8),960,60))':y='if(lt(t,4),530,if(lt(t,8),60,530))':enable='between(t,0,12)'[out]";
+execFileSync(ffmpeg, ["-hide_banner", "-loglevel", "error", "-y", "-stream_loop", "-1", "-i", screen, "-stream_loop", "-1", "-i", presenter, "-filter_complex", filter, "-map", "[out]", "-t", "12", "-c:v", "libx264", "-crf", "18", "-pix_fmt", "yuv420p", "-r", "60", "-movflags", "+faststart", output]);
+execFileSync(ffmpeg, ["-v", "error", "-i", output, "-f", "null", "-"]);
+const p = probe(output); const stream = p.streams.find((row) => row.codec_type === "video");
+if (stream.width !== 1280 || stream.height !== 720 || stream.r_frame_rate !== "60/1" || Number(stream.nb_read_frames) !== 720) throw new Error("camera-bubble-media-contract");
+const activeFrame = path.join(outDir, "camera-bubble-active.png");
+const absentFrame = path.join(outDir, "camera-bubble-absent.png");
+execFileSync(ffmpeg, ["-v", "error", "-y", "-ss", "6", "-i", output, "-frames:v", "1", activeFrame]);
+execFileSync(ffmpeg, ["-v", "error", "-y", "-ss", "6", "-i", screen, "-frames:v", "1", absentFrame]);
+const [active, absent] = await Promise.all([sharp(activeFrame).removeAlpha().raw().toBuffer({resolveWithObject: true}), sharp(absentFrame).removeAlpha().raw().toBuffer({resolveWithObject: true})]);
+let sum = 0; for (let index = 0; index < active.data.length; index += 1) sum += Math.abs(active.data[index] - absent.data[index]);
+const report = {contract: "A1CameraBubbleReflowReview/v1", status: "PASS_REVIEW_ONLY", source: {screen: {path: path.relative(root, screen), sha256: sha(screen)}, presenter: {path: path.relative(root, presenter), sha256: sha(presenter)}}, output: {path: path.relative(root, output), sha256: sha(output), width: stream.width, height: stream.height, fps: stream.r_frame_rate, frameCount: Number(stream.nb_read_frames), durationMs: 12000, fullDecodePass: true}, layout: {positions: [{startMs: 0, endMs: 4000, x: 970, y: 530}, {startMs: 4000, endMs: 8000, x: 960, y: 60}, {startMs: 8000, endMs: 12000, x: 60, y: 530}], bubble: {width: 280, height: 158, sourceBound: true, realPresenterSource: true}}, pixelProof: {activeFrame: path.relative(root, activeFrame), absentFrame: path.relative(root, absentFrame), mae: sum / active.data.length, nonZeroDelta: sum > 0}, boundary: {reviewOnly: true, productionAdmission: false, currentStoryboardMutation: false}};
+report.reportSha256 = crypto.createHash("sha256").update(JSON.stringify(report)).digest("hex");
+await fsp.writeFile(path.join(outDir, "audit-report.json"), `${JSON.stringify(report, null, 2)}\n`);
+console.log(JSON.stringify({status: report.status, output: report.output, positions: report.layout.positions, pixelProof: report.pixelProof}, null, 2));

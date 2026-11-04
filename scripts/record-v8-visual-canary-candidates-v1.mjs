@@ -1,0 +1,13 @@
+#!/usr/bin/env node
+// Records candidate bindings only; it does not render, authorize, or mutate Resolve.
+import crypto from "node:crypto";
+import fs from "node:fs";
+import path from "node:path";
+import {assertEditorialAssetWorkbench, recalculateEditorialAssetWorkbench} from "../apps/studio-next/src/lib/a1-editorial-asset-workbench-v1.mjs";
+import {createProductionEvent} from "../apps/studio-next/src/lib/editorial-production/index.mjs";
+import {persistProjectState, readProjectWorkspace, withProjectLock} from "../apps/studio-next/src/lib/a1-editorial-project-store-v2.mjs";
+const root=path.resolve(import.meta.dirname,".."); const appRoot=path.join(root,"apps/studio-next");
+const file=path.join(appRoot,"public/generated/system-line/editorial-asset-workbench-v1/v8-visual-canary-candidates-v1/manifest.json");
+const bytes=fs.readFileSync(file); const manifest=JSON.parse(bytes.toString("utf8")); const manifestSha256=crypto.createHash("sha256").update(bytes).digest("hex"); const now=new Date().toISOString();
+const result=withProjectLock(appRoot,()=>{const current=assertEditorialAssetWorkbench(readProjectWorkspace(appRoot)); const next=structuredClone(current); next.production.staticPackageReview={...next.production.staticPackageReview,v8Canary:{contract:manifest.contract,status:"CANDIDATE_BINDING_RECORDED",manifestSha256,externalHardGate:manifest.externalHardGate,canaryShotIds:manifest.candidates.map((x)=>x.shotId),productionAdmitted:false,mediaRendered:false,reviewStatus:"PENDING_ACTUAL_PIXEL_AND_HOLD_FRAME_COMPOSITE"},status:"VISUAL_REPAIR_REQUIRED",current:true}; next.production.productionWired=false; next.production.aeLevelProven=false; const event=createProductionEvent({workspace:current,action:"record-v8-visual-canary-candidates",targetId:"V8_VISUAL_CANARY_CANDIDATE_SET",payload:{manifestSha256,canaryShotIds:manifest.candidates.map((x)=>x.shotId),mediaRendered:false,resolveProjectMutationPerformed:false}}); return {...persistProjectState(appRoot,recalculateEditorialAssetWorkbench(next,now),{event,expectedWorkspaceSha256:current.workspaceSha256,commitId:`record-v8-visual-canary-candidates-${now.replace(/[-:.TZ]/gu,"").slice(0,14)}`,files:{"static-package-review-v8/v8-canary-candidate-binding.json":{contract:"A1V8VisualCanaryCandidateBinding/v1",status:"CANDIDATE_BINDING_RECORDED",manifestSha256,canaryShotIds:manifest.candidates.map((x)=>x.shotId),externalHardGate:manifest.externalHardGate,productionAdmitted:false,mediaRendered:false}}}),manifestSha256};});
+console.log(JSON.stringify({status:"CANDIDATE_BINDING_RECORDED",manifestSha256:result.manifestSha256,workspaceSha256:result.workspaceSha256,transitionSha256:result.transitionSha256,mediaRendered:false,resolveProjectMutationPerformed:false},null,2));

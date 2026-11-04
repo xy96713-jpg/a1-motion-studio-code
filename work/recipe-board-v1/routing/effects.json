@@ -1,0 +1,356 @@
+{
+ "contract": "A1EffectCatalog/v1",
+ "asOf": "2026-11-04",
+ "about": "Effect is not a preset; it is a story job. Status: ready = wired into chapter path; installed = package/app present but not wired; candidate = code exists but not chapter-proven; missing = not available. Never claim missing as ready.",
+ "effects": [
+  {
+   "id": "camera-parallax",
+   "name": "Camera parallax / lens grammar",
+   "category": "camera",
+   "status": "ready",
+   "tool": "webgl-three",
+   "code": [
+    "work/recipe-board-v1/style-lab/engine/templates/morph.js",
+    "work/recipe-board-v1/style-lab/engine/three/stage.js"
+   ],
+   "storyJob": "make one world feel spatial and continuous",
+   "useWhen": [
+    "one continuous world",
+    "match cut through depth",
+    "shelf/field corridor"
+   ],
+   "avoidWhen": [
+    "no foreground/background separation",
+    "static poster"
+   ],
+   "canary": "10s camera move with foreground/background contact shadow",
+   "canaryVideo": "work/recipe-board-v1/projects/banana-design/canaries/A-camera/out/clean.mp4",
+   "canaryVerdict": "mechanical-pass (design not reviewed)"
+  },
+  {
+   "id": "instancing-array",
+   "name": "Instanced repetition / clone field",
+   "category": "3d",
+   "status": "ready",
+   "tool": "webgl-three",
+   "code": [
+    "work/recipe-board-v1/style-lab/engine/templates/kit3.js",
+    "work/recipe-board-v1/style-lab/engine/templates/formation.js"
+   ],
+   "storyJob": "show one-is-many as a physical field, not a metaphor card",
+   "useWhen": [
+    "clone shelf",
+    "field grid",
+    "one empty slot"
+   ],
+   "avoidWhen": [
+    "identical copy as a cheap array without a difference"
+   ],
+   "canary": "1000 instances, one outlier, camera move",
+   "canaryVideo": "work/recipe-board-v1/projects/banana-design/canaries/A-camera/out/clean.mp4",
+   "canaryVerdict": "mechanical-pass (design not reviewed)"
+  },
+  {
+   "id": "shader-material",
+   "name": "GLSL surface / print / peel / halftone",
+   "category": "shader",
+   "status": "ready",
+   "tool": "glsl-shader",
+   "code": [
+    "work/recipe-board-v1/style-lab/engine/templates/visual-language.js",
+    "work/recipe-board-v1/style-lab/engine/three/stage.js"
+   ],
+   "storyJob": "surface carries infection/material/time",
+   "useWhen": [
+    "peel lesion",
+    "paper/ink",
+    "CRT/LED",
+    "grain/misregistration"
+   ],
+   "avoidWhen": [
+    "a flat photo overlay already says it"
+   ],
+   "canary": "5s material close-up, 3 states",
+   "canaryVideo": "work/recipe-board-v1/projects/banana-design/canaries/D-shader/out/clean.mp4",
+   "canaryVerdict": "mechanical-pass (design not reviewed)"
+  },
+  {
+   "id": "post-chain",
+   "name": "DOF / bloom / GTAO / grain / vignette",
+   "category": "post",
+   "status": "ready",
+   "tool": "webgl-three",
+   "code": [
+    "work/recipe-board-v1/style-lab/engine/three/stage.js"
+   ],
+   "storyJob": "direct the eye and bind the world together",
+   "useWhen": [
+    "hero depth",
+    "light pool",
+    "film finish"
+   ],
+   "avoidWhen": [
+    "bloom hides weak material",
+    "flat frame with no focus"
+   ],
+   "canary": "same frame with/without post, focus test",
+   "canaryVideo": "work/recipe-board-v1/projects/banana-design/canaries/A-camera/out/clean.mp4",
+   "canaryVerdict": "mechanical-pass (design not reviewed)"
+  },
+  {
+   "id": "screen-media",
+   "name": "Filmed screen / LED / CRT / VHS / print",
+   "category": "screen",
+   "status": "ready",
+   "tool": "webgl-three",
+   "code": [
+    "work/recipe-board-v1/style-lab/engine/display.js"
+   ],
+   "storyJob": "make a screen a physical object in the world",
+   "useWhen": [
+    "evidence page",
+    "UI/scan",
+    "broadcast"
+   ],
+   "avoidWhen": [
+    "flat screenshot pasted on frame"
+   ],
+   "canary": "3s screen with camera angle and parallax"
+  },
+  {
+   "id": "kinetic-type",
+   "name": "Type as structure / crop / knockout / grid",
+   "category": "type",
+   "status": "ready",
+   "tool": "dom-css",
+   "code": [
+    "work/recipe-board-v1/style-lab/engine/templates/kit2.js",
+    "work/recipe-board-v1/style-lab/engine/templates/kit5.js",
+    "work/recipe-board-v1/modules/title.html"
+   ],
+   "storyJob": "type carries the argument, not decoration",
+   "useWhen": [
+    "hero word",
+    "numbers",
+    "chapter title"
+   ],
+   "avoidWhen": [
+    "left-top small title + red rule",
+    "text as caption only"
+   ],
+   "canary": "5s type-only beat, 3 levels, readable",
+   "canaryVideo": "work/recipe-board-v1/projects/banana-design/canaries/E-type/out/clean.mp4",
+   "canaryVerdict": "needs-type"
+  },
+  {
+   "id": "svg-type",
+   "name": "SVG/vector type + data graphics",
+   "category": "type",
+   "status": "ready",
+   "tool": "svg-canvas",
+   "code": [
+    "work/recipe-board-v1/modules/chart.html",
+    "work/recipe-board-v1/modules/table.html"
+   ],
+   "storyJob": "exact letterforms/data, reproducible",
+   "useWhen": [
+    "charts",
+    "maps",
+    "data labels"
+   ],
+   "avoidWhen": [
+    "generated text"
+   ],
+   "canary": "static vector sheet at 320px"
+  },
+  {
+   "id": "blender-bake",
+   "name": "Blender bake / camera path / contact shadow",
+   "category": "3d",
+   "status": "ready",
+   "tool": "blender",
+   "code": [
+    "work/recipe-board-v1/style-lab/engine/three/baked.js",
+    "work/recipe-board-v1/style-lab/engine/blender/bake_rigid.py",
+    "work/recipe-board-v1/style-lab/engine/blender/campath.py"
+   ],
+   "storyJob": "physical cause/contact the realtime engine cannot fake",
+   "useWhen": [
+    "hero asset",
+    "rigid fall",
+    "floor AO",
+    "long camera path"
+   ],
+   "avoidWhen": [
+    "a shader can do it cheaply"
+   ],
+   "canary": "one 6s bake, sample sync"
+  },
+  {
+   "id": "gpu-particles",
+   "name": "GPU particles / dust / crowd",
+   "category": "3d",
+   "status": "candidate",
+   "tool": "webgl-three",
+   "code": [
+    "work/recipe-board-v1/style-lab/engine/three/gpuParticles.js"
+   ],
+   "storyJob": "air, dust, scale, crowd pressure",
+   "useWhen": [
+    "archive dust",
+    "field haze",
+    "many small units"
+   ],
+   "avoidWhen": [
+    "particles are the subject without story"
+   ],
+   "canary": "3s particle test with depth/occlusion; chapter adapter required"
+  },
+  {
+   "id": "lottie-vector",
+   "name": "Lottie vector micro-motion",
+   "category": "2d",
+   "status": "installed",
+   "tool": "lottie",
+   "code": [
+    "node_modules/lottie-web/build/player/lottie.js"
+   ],
+   "storyJob": "vector loops/icons with exact timing",
+   "useWhen": [
+    "UI/icon loop",
+    "small explainer"
+   ],
+   "avoidWhen": [
+    "main hero shot",
+    "photoreal"
+   ],
+   "canary": "5s Lottie page + headless capture"
+  },
+  {
+   "id": "gsap-timeline",
+   "name": "GSAP timeline / DOM motion",
+   "category": "2d",
+   "status": "installed",
+   "tool": "gsap",
+   "code": [
+    "node_modules/gsap/package.json"
+   ],
+   "storyJob": "2D layout motion with precise easing",
+   "useWhen": [
+    "type layout",
+    "DOM cards",
+    "UI transitions"
+   ],
+   "avoidWhen": [
+    "replacing f(t) in the film engine"
+   ],
+   "canary": "5s DOM timeline, deterministic seek"
+  },
+  {
+   "id": "cavalry-motion",
+   "name": "Cavalry 2D motion system",
+   "category": "2d",
+   "status": "installed",
+   "tool": "cavalry",
+   "app": "/Applications/Cavalry.app",
+   "storyJob": "2D motion graphics/data animation",
+   "useWhen": [
+    "complex 2D motion not worth code"
+   ],
+   "avoidWhen": [
+    "headless pipeline without an export contract"
+   ],
+   "canary": "manual export + receipt; not automated"
+  },
+  {
+   "id": "geometry-nodes",
+   "name": "Blender Geometry Nodes",
+   "category": "3d",
+   "status": "candidate",
+   "tool": "blender",
+   "code": [
+    "blender"
+   ],
+   "storyJob": "procedural fields/arrays/variation",
+   "useWhen": [
+    "plant rows",
+    "peel cracks",
+    "variation"
+   ],
+   "avoidWhen": [
+    "no bake budget"
+   ],
+   "canary": "one GN field, 6s bake"
+  },
+  {
+   "id": "webgpu-compute",
+   "name": "WebGPU / WGSL",
+   "category": "3d",
+   "status": "candidate",
+   "tool": "webgpu",
+   "storyJob": "heavy particles/compute/shaders",
+   "useWhen": [
+    "GPU particle/field beyond WebGL"
+   ],
+   "avoidWhen": [
+    "no headless proof",
+    "browser support unknown"
+   ],
+   "canary": "5s canary in current Chromium; record GPU"
+  },
+  {
+   "id": "houdini-sim",
+   "name": "Houdini simulation",
+   "category": "3d",
+   "status": "missing",
+   "tool": "houdini",
+   "storyJob": "complex destruction/volumes",
+   "useWhen": [
+    "specific sim shot that two Blender canaries fail"
+   ],
+   "avoidWhen": [
+    "this film unless a shot proves it"
+   ],
+   "canary": "not installed"
+  },
+  {
+   "id": "unreal-cinematic",
+   "name": "Unreal cinematic",
+   "category": "3d",
+   "status": "missing",
+   "tool": "unreal",
+   "storyJob": "large real-time world/virtual production",
+   "useWhen": [
+    "large world beyond Three/Blender"
+   ],
+   "avoidWhen": [
+    "this film"
+   ],
+   "canary": "not installed"
+  },
+  {
+   "id": "ai-video",
+   "name": "AI video fallback",
+   "category": "ai",
+   "status": "candidate",
+   "tool": "ai-video",
+   "storyJob": "5s non-evidence art shot only",
+   "useWhen": [
+    "3D failed twice",
+    "organic/random surface"
+   ],
+   "avoidWhen": [
+    "evidence",
+    "text",
+    "multi-shot continuity",
+    "without user approval"
+   ],
+   "canary": "provider key + 5s test"
+  }
+ ],
+ "selection": {
+  "maxEffectsPerShot": 2,
+  "onePrimaryPerAct": true,
+  "rule": "effect must serve a motif; no effect stacking; candidate needs canary; missing never"
+ }
+}

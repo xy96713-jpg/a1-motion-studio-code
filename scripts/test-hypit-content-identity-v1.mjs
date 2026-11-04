@@ -1,0 +1,21 @@
+import assert from 'node:assert/strict';
+import {compileHypitPersonCardSceneV1,prepareHypitPersonCardRequestV1,validateHypitPersonCardRequestV1,validateHypitRenderSourceIdentityV1} from '../apps/studio-next/src/lib/a1-hypit-person-card-scene-v1.mjs';
+const config={width:1280,height:960,fps:24,frameCount:173,backgroundColor:'#f5f4ef',cards:[{id:'generic-card',personId:'verified-source',exactCopy:['合成排版测试，非人物事实'],assetId:'accepted-card',assetSha256:'a'.repeat(64),projectPath:'assets/card.png',startFrame:17,endFrameExclusive:151,rect:{left:0,top:0,width:1280,height:960},entrance:{kind:'wipe',frames:31,direction:'up',easing:'ease-out'}}]};
+const scene=compileHypitPersonCardSceneV1(config);
+const decision={shotVersionSha256:'b'.repeat(64),copyBindings:[{sourceKind:'VERIFIED_CONTENT_LAYOUT',contentInputSha256:'b'.repeat(64)}]};
+const base={contract:'A1HypitRenderRequest/v1',reviewOnly:true,productionAdmission:false,sourceContentSha256:'b'.repeat(64),exactCopy:scene.exactCopy,motionBeats:scene.decisionProjection.motionBeats,sourceFiles:[],assetBindings:[{assetId:'accepted-card',sha256:'a'.repeat(64),projectPath:'assets/card.png'}],timeline:{contentFrameStart:0,sourceContentSha256:'b'.repeat(64)}};
+const {request}=prepareHypitPersonCardRequestV1(base,config);
+assert.equal(validateHypitRenderSourceIdentityV1(request,decision).kind,'VERIFIED_CONTENT_LAYOUT');
+assert(scene.sources.find(s=>s.path.endsWith('.svs')).content.includes('background: #f5f4ef;'));
+assert.equal(request.timeline.contentFrameEndExclusive,173);assert.equal(request.timeline.sourceFrameStart,undefined);
+let count=0;
+for(const mutate of [r=>{r.sourceContentSha256='c'.repeat(64);},r=>{r.sourceVideoSha256=r.sourceContentSha256;},r=>{r.timeline.sourceContentSha256='c'.repeat(64);},r=>{r.timeline.contentFrameEndExclusive=172;},r=>{r.timeline.contentFrameStart=1;r.timeline.contentFrameEndExclusive=174;},r=>{r.timeline.sourceFrameStart=0;},r=>{r.productionAdmission=true;}]){let r=structuredClone(request);mutate(r);assert.throws(()=>validateHypitRenderSourceIdentityV1(r,decision));count++;}
+assert.throws(()=>validateHypitRenderSourceIdentityV1(request,{...decision,copyBindings:[{sourceKind:'SOURCE_FRAME_EXACT'}]}));count++;
+assert.throws(()=>compileHypitPersonCardSceneV1({...config,backgroundColor:'#fff;url(x)'}),/BACKGROUND_INVALID/);count++;
+let stale=structuredClone(request);stale.personCardScene.config.backgroundColor='#ffffff';assert.throws(()=>validateHypitPersonCardRequestV1(stale),/COMPILER_BINDING_MISMATCH/);count++;
+let wrong=structuredClone(request);wrong.expectedOutput.frameCount=172;assert.throws(()=>validateHypitPersonCardRequestV1(wrong),/REQUEST_BINDING_MISMATCH/);count++;
+const legacyBase={...base,sourceVideoSha256:'b'.repeat(64),timeline:{sourceFrameStart:0,sourceVideoSha256:'b'.repeat(64)}};delete legacyBase.sourceContentSha256;
+const legacy=prepareHypitPersonCardRequestV1(legacyBase,{...config,backgroundColor:undefined}).request;
+assert.equal(validateHypitRenderSourceIdentityV1(legacy,{shotVersionSha256:'b'.repeat(64)}).kind,'SOURCE_VIDEO');
+assert(compileHypitPersonCardSceneV1({...config,backgroundColor:undefined}).sources.find(s=>s.path.endsWith('.svs')).content.includes('background: #00000000;'));
+console.log(JSON.stringify({status:'PASS',negativeChecks:count,oldVideoIdentityAndTimelineCompatible:true,backgroundBoundIntoConfigAndSourceSHA:true,renderBrowserProviderCalls:0}));

@@ -1,0 +1,41 @@
+{
+ "contract": "A1WorldBoard/v1",
+ "purpose": "一次生图产出同一世界的多帧，切成面板；不是九张无关图。",
+ "minPanels": 6,
+ "maxPanels": 9,
+ "generation": {
+  "oneCallPreferred": true,
+  "sheetPrompt": "contact sheet / grid, same world, same material, same light logic, different beats or camera",
+  "textFree": true
+ },
+ "required": [
+  "same palette family",
+  "same material/objects",
+  "same light logic",
+  "same camera grammar",
+  "panel metadata",
+  "coherence report"
+ ],
+ "browser": {
+  "mode": "headless",
+  "persistentProfile": ".cache/chatgpt-profile",
+  "popup": false,
+  "login": "once in persistent profile",
+  "network": "may fail; report, do not fake"
+ },
+ "tooling": {
+  "crop": "scripts/world-sheet.py",
+  "qa": "scripts/design-image-qa.py",
+  "headless": "scripts/gpt-worldgen-headless.mjs"
+ },
+ "delivery": {
+  "accept": "world sheet + cropped panels + metadata + review",
+  "reject": [
+   "nine unrelated images",
+   "visible browser popups",
+   "generated readable text",
+   "logo/watermark"
+  ]
+ },
+ "note": "coherence color distance is a warning, not a hard kill: same world can change light (yellow top / cream bottom). Design review confirms geometry/material."
+}

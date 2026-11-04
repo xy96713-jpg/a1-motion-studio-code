@@ -1,0 +1,370 @@
+{
+ "contract": "A1RecipeBoardWorldPrecedents/v1",
+ "about": "The worlds the reference films took from their subjects (style-lab/RESEARCH-paperclip-variants-20261026.md; DESIGN-LANGUAGE.md for 胡泊): the director's reference board when it derives a new film's world (filmworld.mjs precedentsFor). Each row: what kind of subject, its ground and its one colour and where they came from, texture, how its diagrams are drawn, its props, and the devices it showed its facts with. The quality bar: a new film's world is held to these (as full, as readable, as much real material); its look may differ.",
+ "precedents": [
+  {
+   "id": "pc-047",
+   "film": "回形针 Vol.047 低焦油香烟的骗局",
+   "kind": "consumer-science",
+   "tags": [
+    "烟草",
+    "检测",
+    "标准",
+    "健康",
+    "骗局"
+   ],
+   "ground": "黑（棚拍黑底）",
+   "main": "金（烟盒烫金）",
+   "texture": "几乎无颗粒，四周压暗",
+   "diagram": "金色线稿（描自国标文件）",
+   "props": "白色香烟和自制烟盒道具、吸烟机、滤片、空气罐",
+   "devices": "真文件原文金色划线配中文译文；同一版式左右对照；数字随动作一起变",
+   "source": "本地原片，逐秒量过"
+  },
+  {
+   "id": "pc-138",
+   "film": "回形针 Vol.138 如何用 DNA 追捕真凶",
+   "kind": "crime-science",
+   "tags": [
+    "刑侦",
+    "案件",
+    "DNA",
+    "法医",
+    "调查"
+   ],
+   "ground": "深灰网点",
+   "main": "红橙（法医标签）",
+   "texture": "细网点加重颗粒",
+   "diagram": "字母和点阵的平面图解，地图斜放",
+   "props": "证据卡、档案照、老电视",
+   "devices": "连续图解一章一镜；案卷式红签；去色人像",
+   "source": "本地原片，逐秒量过"
+  },
+  {
+   "id": "pc-177",
+   "film": "回形针 Vol.177 地震预报为什么这么难",
+   "kind": "earth-science",
+   "tags": [
+    "地震",
+    "地质",
+    "预报",
+    "自然灾害"
+   ],
+   "ground": "夜景卫星图",
+   "main": "白点 + 岩浆橙",
+   "texture": "卫星影像",
+   "diagram": "地震点云、岩层 3D、断层发光",
+   "props": "地球、岩层、秒表、日本地图",
+   "devices": "论文页贴黄签；老电视里的新闻",
+   "source": "YouTube 预览小图"
+  },
+  {
+   "id": "pc-176",
+   "film": "回形针 Vol.176 你喝的牛奶从哪来",
+   "kind": "food-industry",
+   "tags": [
+    "牛奶",
+    "乳业",
+    "农业",
+    "食品"
+   ],
+   "ground": "天蓝（牧场的天）",
+   "main": "青 + 橙 + 奶牛黑白斑",
+   "texture": "平涂",
+   "diagram": "像素云、奶牛抠图、日历版式",
+   "props": "奶牛、奶桶、牧场",
+   "devices": "实拍牧场；表格和论文页做卡",
+   "source": "YouTube 预览小图"
+  },
+  {
+   "id": "pc-172",
+   "film": "回形针 Vol.172 麻醉医生如何让你活着醒来",
+   "kind": "medicine",
+   "tags": [
+    "医学",
+    "麻醉",
+    "手术",
+    "医院"
+   ],
+   "ground": "深灰石纹",
+   "main": "白 + 监护仪绿",
+   "texture": "X 光片感",
+   "diagram": "透明玻璃质感的骨骼器官 3D，白线标注",
+   "props": "监护仪、喉镜、器官",
+   "devices": "手术实拍压在画框里；化学式",
+   "source": "YouTube 预览小图"
+  },
+  {
+   "id": "pc-174",
+   "film": "回形针 Vol.174 抓娃娃机如何伤透你的心",
+   "kind": "consumer",
+   "tags": [
+    "游戏厅",
+    "消费",
+    "概率",
+    "娱乐"
+   ],
+   "ground": "黑",
+   "main": "荧光黄绿 + 粉",
+   "texture": "霓虹发光",
+   "diagram": "发光线稿的爪子和电路",
+   "props": "娃娃机、玩偶、手机",
+   "devices": "专利文件荧光划线；街头采访",
+   "source": "YouTube 预览小图"
+  },
+  {
+   "id": "pc-171",
+   "film": "回形针 Vol.171 F1 赛车如何靠作弊夺冠",
+   "kind": "sport-engineering",
+   "tags": [
+    "赛车",
+    "体育",
+    "工程",
+    "规则"
+   ],
+   "ground": "沥青灰",
+   "main": "车队色 + 青",
+   "texture": "赛事转播画面",
+   "diagram": "赛车部件 3D 青色高亮",
+   "props": "赛车、引擎",
+   "devices": "年份大字压实拍；成绩表",
+   "source": "YouTube 预览小图"
+  },
+  {
+   "id": "pc-170",
+   "film": "回形针 Vol.170 基金经理对你的钱做了什么",
+   "kind": "finance",
+   "tags": [
+    "基金",
+    "金融",
+    "股票",
+    "投资"
+   ],
+   "ground": "墨绿",
+   "main": "涨绿跌红",
+   "texture": "行情终端",
+   "diagram": "K 线、收益曲线",
+   "props": "老显示器、手机 App",
+   "devices": "行情屏；新闻主播画中画",
+   "source": "YouTube 预览小图"
+  },
+  {
+   "id": "pc-168",
+   "film": "回形针 Vol.168 夜视仪如何看透黑夜",
+   "kind": "military-tech",
+   "tags": [
+    "夜视",
+    "光学",
+    "军事",
+    "设备"
+   ],
+   "ground": "黑",
+   "main": "荧光绿（夜视镜里）",
+   "texture": "夜视颗粒",
+   "diagram": "设备灰色线稿 3D，圆形视场",
+   "props": "夜视仪、步枪、光电阴极",
+   "devices": "夜视实拍；年份型号大字",
+   "source": "YouTube 预览小图"
+  },
+  {
+   "id": "pc-167",
+   "film": "回形针 Vol.167 可控核聚变",
+   "kind": "physics-energy",
+   "tags": [
+    "核聚变",
+    "能源",
+    "物理",
+    "等离子"
+   ],
+   "ground": "黑红",
+   "main": "等离子红橙",
+   "texture": "太阳表面",
+   "diagram": "发光线框环（托卡马克）",
+   "props": "托卡马克、太阳",
+   "devices": "历史影像；专家采访",
+   "source": "YouTube 预览小图"
+  },
+  {
+   "id": "pc-165",
+   "film": "回形针 Vol.165 电信网络诈骗",
+   "kind": "crime-society",
+   "tags": [
+    "诈骗",
+    "犯罪",
+    "手机",
+    "社会"
+   ],
+   "ground": "蓝黑",
+   "main": "紫",
+   "texture": "屏幕光",
+   "diagram": "悬浮的玻璃窗口",
+   "props": "手机、聊天界面、头像格",
+   "devices": "背景英文大字 SCAM GANG；损失金额大字",
+   "source": "YouTube 预览小图"
+  },
+  {
+   "id": "pc-162",
+   "film": "回形针 Vol.162 赌场为什么稳赚不赔",
+   "kind": "gambling",
+   "tags": [
+    "赌场",
+    "概率",
+    "澳门",
+    "赌博"
+   ],
+   "ground": "金箔 + 赌桌绿绒",
+   "main": "金",
+   "texture": "金属反光",
+   "diagram": "筹码、牌面花纹",
+   "props": "筹码、扑克、赌桌",
+   "devices": "公式大字；法规文件页",
+   "source": "YouTube 预览小图"
+  },
+  {
+   "id": "pc-157",
+   "film": "回形针 Vol.157 速冻水饺",
+   "kind": "food",
+   "tags": [
+    "食品",
+    "饺子",
+    "冷冻",
+    "年节"
+   ],
+   "ground": "暖米色纸",
+   "main": "红 + 祥云",
+   "texture": "纸纹",
+   "diagram": "美食实拍、红标签拼音",
+   "props": "饺子、面粉、速冻机",
+   "devices": "论文页；产品包装",
+   "source": "YouTube 预览小图"
+  },
+  {
+   "id": "pc-150",
+   "film": "回形针 Vol.150 狙击手如何一枪毙命",
+   "kind": "military",
+   "tags": [
+    "狙击",
+    "弹道",
+    "军事",
+    "武器"
+   ],
+   "ground": "枪灰",
+   "main": "军绿 + 荧光黄",
+   "texture": "瞄准镜",
+   "diagram": "分划线、弹孔、公式",
+   "props": "狙击枪、瞄准镜、子弹",
+   "devices": "影视片段；计算公式",
+   "source": "YouTube 预览小图"
+  },
+  {
+   "id": "pc-147",
+   "film": "回形针 Vol.147 长租公寓是如何爆雷的",
+   "kind": "economy-news",
+   "tags": [
+    "租房",
+    "暴雷",
+    "经济",
+    "资金"
+   ],
+   "ground": "黑",
+   "main": "绿色数据屏 + 红",
+   "texture": "屏幕",
+   "diagram": "科幻式数据面板、资金流",
+   "props": "楼、合同、钱",
+   "devices": "合同文件页；采访实拍",
+   "source": "YouTube 预览小图"
+  },
+  {
+   "id": "pc-141",
+   "film": "回形针 Vol.141 氢弹制造指南",
+   "kind": "history-physics",
+   "tags": [
+    "氢弹",
+    "核武器",
+    "冷战",
+    "历史"
+   ],
+   "ground": "旧纸 / 黑",
+   "main": "火光橙",
+   "texture": "旧报纸、档案",
+   "diagram": "原子示意、弹体剖面",
+   "props": "蘑菇云、报纸",
+   "devices": "纽约时报原版；历史影像",
+   "source": "YouTube 预览小图"
+  },
+  {
+   "id": "pc-137",
+   "film": "回形针 Vol.137 如何在纳米尺度雕刻芯片",
+   "kind": "semiconductor",
+   "tags": [
+    "芯片",
+    "半导体",
+    "光刻",
+    "工业"
+   ],
+   "ground": "黑",
+   "main": "洁净室紫粉 + 橙",
+   "texture": "洁净室黄光",
+   "diagram": "等距视角的芯片层 3D，网格地面",
+   "props": "晶圆、刻蚀机",
+   "devices": "工厂实拍；地图公里数",
+   "source": "YouTube 预览小图"
+  },
+  {
+   "id": "pc-135",
+   "film": "回形针 Vol.135 养蜂致富指南",
+   "kind": "agriculture-nature",
+   "tags": [
+    "蜜蜂",
+    "养殖",
+    "农业",
+    "自然"
+   ],
+   "ground": "蜂蜜米黄",
+   "main": "琥珀 + 橙",
+   "texture": "纸纹",
+   "diagram": "植物插画、蜂箱 3D",
+   "props": "蜜蜂、蜂箱、花",
+   "devices": "蜜蜂微距；地图",
+   "source": "YouTube 预览小图"
+  },
+  {
+   "id": "pc-175",
+   "film": "回形针 Vol.175 血糖监测对糖尿病人到底有多重要",
+   "kind": "medicine-device",
+   "tags": [
+    "糖尿病",
+    "血糖",
+    "医疗器械",
+    "健康"
+   ],
+   "ground": "炭黑纹理",
+   "main": "紫 + 黄",
+   "texture": "纹理",
+   "diagram": "分子 3D、圆形剖面放大",
+   "props": "血糖仪、传感器",
+   "devices": "背景英文大字；病人生活实拍",
+   "source": "YouTube 预览小图"
+  },
+  {
+   "id": "hupo-deepseek",
+   "film": "胡泊 BV1a63d6CEBa DeepSeek（hupo-auto2 对标，已交付）",
+   "kind": "tech-business-commentary",
+   "tags": [
+    "科技",
+    "商业",
+    "公司",
+    "AI",
+    "评论",
+    "新闻"
+   ],
+   "ground": "冷灰纸压暗角（编辑部报刊）",
+   "main": "红 + 黄色划线",
+   "texture": "纸纹、轻颗粒",
+   "diagram": "卡片：表格、对比卡、步骤、侧卡",
+   "props": "讲者、网页、产品、人物照",
+   "devices": "网页重排推到那一句加黑条黄条；讲者旁侧卡；标题压实拍；人物名牌；数据表",
+   "source": "逐镜拆解 129 个小镜头（DESIGN-LANGUAGE.md）"
+  }
+ ]
+}

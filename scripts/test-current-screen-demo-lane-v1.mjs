@@ -1,0 +1,44 @@
+#!/usr/bin/env node
+
+import assert from "node:assert/strict";
+import fs from "node:fs";
+import path from "node:path";
+import {fileURLToPath} from "node:url";
+import {compileCurrentScreenDemoLane} from "../apps/studio-next/src/lib/a1-current-screen-demo-lane-v1.mjs";
+
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const workspace = JSON.parse(fs.readFileSync(path.join(root, "apps/studio-next/public/generated/system-line/editorial-asset-workbench-v1/workspace.json"), "utf8"));
+const canary = JSON.parse(fs.readFileSync(path.join(root, "apps/studio-next/public/generated/system-line/editorial-asset-workbench-v1/current-screen-demo-lane-v1/ed-02-operation-canary.json"), "utf8"));
+const lane = compileCurrentScreenDemoLane(workspace, {generatedAt: "2026-08-15T00:00:00.000Z", reviewProofs: [canary]});
+assert.equal(lane.status, "BLOCKED");
+assert.equal(lane.screenShotCount, 16);
+assert.equal(lane.sourceBoundCount, 16);
+assert.equal(lane.semanticMatchCount, 15);
+assert.equal(lane.actionPlanReadyCount, 16);
+assert.equal(lane.packagedProofCount, 1);
+assert.equal(lane.remainingPerformanceIrCount, 14);
+assert.deepEqual(lane.bindings.map((binding) => binding.shotId), ["ED-02", "ED-03", "ED-04", "ED-05", "ED-06", "ED-20", "ED-21", "ED-22", "ED-23", "ED-24", "ED-25", "ED-26", "ED-27", "ED-28", "ED-29", "ED-30"]);
+assert.ok(lane.bindings.every((binding) => binding.responsibility === "SYSTEM_SIMULATED_FROM_VERIFIED_SOURCE"));
+assert.ok(lane.bindings.every((binding) => binding.screenActions.length >= 2));
+assert.ok(lane.bindings.every((binding) => binding.performanceDesign.decorativeMotionAllowed === false));
+assert.ok(lane.bindings.every((binding) => binding.staticReview?.presentationRoute === "SOURCE_COLLAGE"));
+assert.ok(lane.bindings.every((binding) => binding.staticReview?.annotationRoute === "CROP_ANNOTATION"));
+assert.ok(lane.bindings.every((binding) => binding.staticReview?.sourceWindowRoute === "SOURCE_WINDOW"));
+assert.ok(lane.bindings.every((binding) => binding.staticReview?.reviewOnly === true && binding.staticReview?.productionAdmission === false));
+assert.equal(lane.bindings.find((binding) => binding.shotId === "ED-04").sourceAssetId, "source-documentary-paragraph-action");
+assert.equal(lane.bindings.find((binding) => binding.shotId === "ED-05").sourceAssetId, "source-documentary-review-action");
+assert.equal(lane.bindings.find((binding) => binding.shotId === "ED-21").sourceAssetId, "source-documentary-save-history-action");
+assert.equal(lane.bindings.find((binding) => binding.shotId === "ED-24").sourceAssetId, "source-documentary-negative-preference-record-action");
+assert.equal(lane.bindings.find((binding) => binding.shotId === "ED-26").sourceAssetId, "source-documentary-preference-generation-action");
+assert.equal(lane.bindings.find((binding) => binding.shotId === "ED-28").sourceAssetId, "source-documentary-paragraph-action");
+assert.equal(lane.bindings.find((binding) => binding.shotId === "ED-29").sourceAssetId, "source-documentary-review-action");
+assert.deepEqual(lane.failures, ["ED-20:source-evidence-coverage-partial:codexMaterialToWorkbench:review"]);
+const ed20 = lane.bindings.find((binding) => binding.shotId === "ED-20");
+assert.equal(ed20.actionBinding.status, "PARTIAL_COMPATIBLE");
+assert.equal(ed20.sourceActionCompatible, true);
+assert.equal(ed20.evidenceCoverageComplete, false);
+assert.equal(lane.userVisualApproval, "NOT_APPROVED");
+assert.equal(lane.productionAdmission, false);
+assert.equal(canary.sourceSha256, lane.bindings.find((binding) => binding.shotId === "ED-02").sourceVideo.sha256);
+assert.equal(canary.userVisualApproval, "NOT_APPROVED");
+console.log(JSON.stringify({status: "PASS", contract: lane.contract, laneStatus: lane.status, screenShotCount: lane.screenShotCount, sourceBoundCount: lane.sourceBoundCount, semanticMatchCount: lane.semanticMatchCount, packagedProofCount: lane.packagedProofCount, remainingPerformanceIrCount: lane.remainingPerformanceIrCount, failures: lane.failures}, null, 2));

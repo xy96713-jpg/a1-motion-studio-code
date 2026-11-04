@@ -1,0 +1,54 @@
+{
+ "contract": "A1StageLibrary/v1",
+ "about": "What the two 3D routes can stage today (stage.mjs). teardown: a subject model built in style-lab (engine/subjects/<id>.js, engine/blender/model_*.py), filmed by the style-lab subject template; scene: a mood scene, a diorama of generated layers (engine/templates/diorama.js). A beat whose object or scene is not here gets a need ('build the model' / 'build the scene') and renders a TODO plate until one is added. Shots are presets: keys are the camera, look and explode over the shot, labels are code type. Every 3D picture is a model, captioned 示意.",
+ "engine": "work/recipe-board-v1/style-lab/engine",
+ "teardown": {
+  "h100": {
+   "label": "H100 计算卡",
+   "aliases": ["H100", "H800", "A100", "GPU", "显卡", "计算卡", "加速卡", "HBM", "显存"],
+   "parts": { "die": ["芯片", "核心", "die", "裸片"], "hbm": ["HBM", "显存", "内存"], "cooling": ["散热", "散热器"], "power": ["供电", "电源"], "fan": ["风扇"] },
+   "shots": {
+    "whole": { "keys": [{ "t": 0, "yaw": 24, "pitch": 24, "dist": 26, "mode": "render" }, { "t": 1, "yaw": 52, "pitch": 30, "dist": 21, "mode": "render" }] },
+    "open": { "keys": [{ "t": 0, "yaw": 36, "pitch": 26, "dist": 26, "lift": 0, "mode": "line", "explode": 0 }, { "t": 0.45, "yaw": 42, "pitch": 22, "dist": 38, "lift": 4.2, "mode": "line", "explode": 1 }, { "t": 1, "yaw": 50, "pitch": 22, "dist": 39, "lift": 4.2, "mode": "line", "explode": 1 }], "labels": [{ "group": "cooling", "text": "散热器", "t": 0.5 }, { "group": "die", "text": "GPU 芯片", "t": 0.6 }, { "group": "hbm", "text": "HBM 显存", "t": 0.7 }] },
+    "inside": { "keys": [{ "t": 0, "yaw": 70, "pitch": 24, "dist": 14, "lift": 0.3, "mode": "line", "hide": ["cooling"] }, { "t": 1, "yaw": 80, "pitch": 18, "dist": 12, "lift": 0.8, "mode": "line", "hide": ["cooling"] }] }
+   }
+  },
+  "hdd": {
+   "label": "机械硬盘",
+   "aliases": ["硬盘", "机械硬盘", "HDD", "磁盘", "盘片", "磁头"],
+   "parts": { "platter": ["盘片"], "head": ["磁头"], "arm": ["磁头臂", "摇臂"], "cover": ["外壳", "盖板"] },
+   "shots": {
+    "whole": { "keys": [{ "t": 0, "yaw": 28, "pitch": 30, "dist": 30, "lift": 0, "mode": "render" }, { "t": 1, "yaw": 52, "pitch": 34, "dist": 29, "lift": 0, "mode": "render" }] },
+    "open": { "keys": [{ "t": 0, "yaw": 34, "pitch": 26, "dist": 30, "lift": 0, "mode": "line", "explode": 0 }, { "t": 0.45, "yaw": 40, "pitch": 22, "dist": 42, "lift": 3.4, "mode": "line", "explode": 1 }, { "t": 1, "yaw": 46, "pitch": 22, "dist": 43, "lift": 3.4, "mode": "line", "explode": 1 }], "labels": [{ "group": "platter", "text": "盘片", "t": 0.5 }, { "group": "arm", "text": "磁头臂", "t": 0.6 }] },
+    "inside": { "keys": [{ "t": 0, "yaw": 40, "pitch": 42, "dist": 25, "lift": 0, "mode": "line", "hide": ["cover"] }, { "t": 1, "yaw": 58, "pitch": 48, "dist": 25, "lift": 0, "mode": "line", "hide": ["cover"] }], "spin": [{ "group": "platter", "rps": 1.2 }] }
+   }
+  },
+  "drill": {
+   "label": "电钻",
+   "aliases": ["电钻", "钻", "行星齿轮", "齿轮箱", "电动工具"],
+   "parts": { "motor": ["电机", "马达"], "sun": ["太阳轮"], "planet": ["行星轮", "行星齿轮"], "ring": ["齿圈", "齿轮箱"], "chuck": ["夹头"] },
+   "shots": {
+    "whole": { "keys": [{ "t": 0, "yaw": -30, "pitch": 18, "mode": "render" }, { "t": 1, "yaw": -8, "pitch": 22, "mode": "render" }], "drive": { "rps": 1.2, "t0": 0.4, "ramp": 0.8 } },
+    "open": { "keys": [{ "t": 0, "yaw": -20, "pitch": 24, "mode": "line", "explode": 0 }, { "t": 0.55, "yaw": -12, "pitch": 30, "mode": "line", "explode": 0.45, "hide": ["shellNear"] }, { "t": 1, "yaw": -6, "pitch": 32, "mode": "line", "explode": 0.45, "hide": ["shellNear"] }], "labels": [{ "group": "motor", "text": "电机", "t": 0.55 }, { "group": "ring", "text": "齿轮箱", "t": 0.6 }, { "group": "chuck", "text": "夹头", "t": 0.65 }], "stagger": 0.6, "arc": 0.12 },
+    "inside": { "keys": [{ "t": 0, "yaw": -70, "pitch": 14, "mode": "line", "hide": ["shellNear", "shellFar", "chuck", "bit", "clutch", "carrier", "trigger", "switch", "battery"], "frame": ["sun", "planet", "ring"] }, { "t": 1, "yaw": -84, "pitch": 8, "mode": "line", "hide": ["shellNear", "shellFar", "chuck", "bit", "clutch", "carrier", "trigger", "switch", "battery"], "frame": ["sun", "planet", "ring"] }], "drive": { "rps": 1.1, "t0": 0.2, "ramp": 0.8 } }
+   }
+  }
+ },
+ "shotWords": {
+  "open": ["拆开", "打开", "拆解", "爆炸", "组成", "由", "构成", "零件", "部件", "结构"],
+  "inside": ["里面", "内部", "核心", "怎么转", "怎么动", "工作原理", "驱动", "转起来", "带动"]
+ },
+ "scene": {
+  "ufo-night": {
+   "label": "夜里山坡上的房子和飞碟",
+   "tags": ["夜", "夜里", "外星", "飞碟", "不明", "神秘", "孤独", "乡村", "山坡", "光束", "超现实", "那天晚上"],
+   "template": "diorama",
+   "params": {
+    "cards": [{ "src": "/work/recipe-board-v1/style-lab/engine/templates/demos/diorama/art/sky.png", "z": 400 }, { "src": "/work/recipe-board-v1/style-lab/engine/templates/demos/diorama/art/saucer-cut.png", "z": 120, "bob": 0.9 }, { "src": "/work/recipe-board-v1/style-lab/engine/templates/demos/diorama/art/house-cut.png", "stand": [810, 858], "relief": 0.6 }, { "src": "/work/recipe-board-v1/style-lab/engine/templates/demos/diorama/art/hill-cut.png", "ground": 9 }],
+    "depth": "/work/recipe-board-v1/style-lab/engine/templates/demos/diorama/art/depth.png",
+    "push": 3, "drift": 0.4, "mist": 0.035,
+    "beam": { "fromCard": 1, "from": [830, 318], "toCard": 2, "to": [813, 818], "top": 34, "bottom": 230, "on": 1.2, "glow": 2, "color": "255,244,212" }
+   }
+  }
+ }
+}

@@ -1,0 +1,180 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "A1MorphChapter/v2 (agent answer)",
+  "description": "A scene module for one chapter of a continuous diagram, and what it asks the line to fetch or draw first: real maps (OpenStreetMap) and 示意 pictures (text-free generated art). Rules: work/recipe-board-v1/prompts/morph.md. Checked by chapter.mjs before it is accepted.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "sourceTaskInputHash",
+    "motionImplementation",
+    "code",
+    "patches",
+    "maps",
+    "art",
+    "glyphs",
+    "pages",
+    "bakes",
+    "subjects"
+  ],
+  "properties": {
+    "motionImplementation": {"type": ["array", "null"], "description": "For motionRules contracts, one implementation index per shotId: exact uncommented excerpts of current code. Scoped beats also compare their bound reference at start/change/end; the existing blind review judges the actual poses. Legacy answers may use null.", "items": {"type": "object", "additionalProperties": false, "required": ["shotId", "start", "change", "end", "handoff", "motionRules", "referenceComparison"], "properties": {"shotId": {"type": "string", "minLength": 1}, "start": {"type": "string", "minLength": 8}, "change": {"type": "string", "minLength": 8}, "end": {"type": "string", "minLength": 8}, "handoff": {"type": "string", "minLength": 8}, "motionRules": {"type": "string", "minLength": 8}, "referenceComparison": {"type": ["object", "null"], "additionalProperties": false, "required": ["reference", "start", "change", "end"], "properties": {"reference": {"type": "object", "additionalProperties": false, "required": ["file", "hash"], "properties": {"file": {"type": "string", "minLength": 1}, "hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}}, "start": {"type": "string", "minLength": 8}, "change": {"type": "string", "minLength": 8}, "end": {"type": "string", "minLength": 8}}}}}},
+    "sourceTaskInputHash": {
+      "type": "string",
+      "description": "Copy input.sourceTaskInputHash from the current task; answers for a different task version are rejected."
+    },
+    "code": {
+      "type": "string"
+    },
+    "patches": {
+      "type": "array",
+      "description": "revision rounds: exact edits to previousAnswer.code (find must occur once); code is then left empty",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "find",
+          "replace"
+        ],
+        "properties": {
+          "find": {
+            "type": "string"
+          },
+          "replace": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "maps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "key",
+          "place",
+          "pins",
+          "radiusKm"
+        ],
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "place": {
+            "type": "string"
+          },
+          "pins": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "radiusKm": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "art": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "key",
+          "prompt",
+          "transparent",
+          "file"
+        ],
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "prompt": {
+            "type": "string"
+          },
+          "transparent": {
+            "type": "boolean"
+          },
+          "file": {
+            "type": "string",
+            "description": "Existing project-relative art file to reuse instead of generating again."
+          }
+        }
+      }
+    },
+    "glyphs": {
+      "description": "a word's outlines from a house font, for letters built in 3D (kit.blockType): data[key]; [] when none",
+      "type": "array",
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "key",
+          "text",
+          "face"
+        ],
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "face": {
+            "type": "string",
+            "description": "a house font family: House Sumikaku, House Kaiso, House Kikai, House Kokka, House Soukou, House Kinkaku"
+          }
+        }
+      }
+    },
+    "bakes": {
+      "type": ["array", "null"],
+      "description": "Offline Blender requests; null preserves previous requests on a patch, [] clears them. Legacy answers may omit this field. rigid → A1RigidBakeRequest/v1 JSON text, consumed by kit.engine.baked.rigid(data[key]); camera → A1CameraRequest/v1 JSON text (OptFlowCam long take with an S-curve stop), consumed by kit.engine.baked.camera(data[key]). A requested bake must be read by the module (bakeUseErrors).",
+      "maxItems": 4,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["key", "kind", "request"],
+        "properties": {
+          "key": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]{0,63}$"},
+          "kind": {"type": "string", "enum": ["rigid", "camera"]},
+          "request": {"type": "string"}
+        }
+      }
+    },
+    "pages": {
+      "type": "array",
+      "description": "pages drawn by the card line's modules and shown in the chapter as moving pictures (images[key], images[key].frame(s)): a captured article with its sentences marked (module article), real prices (market), a chat, a quote; spec is the module's spec as JSON text, checked and rendered by the card renderer (modules.mjs renderModule) with its checks",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "key",
+          "spec"
+        ],
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "spec": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "subjects": {
+      "type": ["array", "null"],
+      "description": "Whole-object descriptions for automatic subjects the library does not have (kit.engine.subject '<id>' outside h100/hdd/drill, when engine/subjects/auto/<id>.json is absent): id + what the whole object is, in English, no text or logos. The line writes tasks/subject-<id>.task.json (parts plan, prompts/subject.md) and builds the parts by multi-view image-to-3D; until the plan is answered the chapter waits and does not render. null/[] = the chapter needs no automatic subject.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "what"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]{1,40}$"},
+          "what": {"type": "string", "minLength": 8}
+        }
+      }
+    }
+  }
+}

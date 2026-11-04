@@ -1,0 +1,10 @@
+#!/usr/bin/env node
+import assert from "node:assert/strict";import {directRichScreenSequence,RICH_SCREEN_TREATMENTS} from "../apps/studio-next/src/lib/a1-rich-screen-packaging-director-v1.mjs";
+const beats=[
+{id:"form",function:"action",kind:"click",viewerQuestion:"where to submit",evidence:{click:true,target:true,highDpi:true}},
+{id:"editor",function:"action",kind:"typing",viewerQuestion:"what is being entered",evidence:{caretLine:true,typingBurst:true,highDpi:true}},
+{id:"dashboard",function:"result",kind:"inspect",density:"dense",semantic:"evidence",viewerQuestion:"which metric changed",evidence:{target:true,highDpi:true,exactTextRects:true,resultState:true}},
+{id:"command",function:"reveal",kind:"pointer-journey",viewerQuestion:"how command reaches result",evidence:{cursorPath:true,highDpi:true,beforeState:true,afterState:true}},
+{id:"comparison",function:"comparison",kind:"state",viewerQuestion:"what improved",evidence:{beforeState:true,afterState:true,resultState:true}},
+{id:"scroll",function:"result",kind:"scroll",viewerQuestion:"where is the final section",evidence:{scrollPath:true,resultTarget:true,target:true,resultState:true}}
+];const result=directRichScreenSequence({sequenceId:"blind-six-genres",beats});assert.equal(result.status,"PASS");assert.ok(RICH_SCREEN_TREATMENTS.length>=55);assert.ok(result.coverage.distinctFamilies.length>=4);assert.ok(result.coverage.distinctTreatments.includes("LINE_READING_TRACK"));assert.ok(result.coverage.distinctTreatments.includes("BEFORE_AFTER_SPLIT"));assert.ok(result.coverage.distinctTreatments.includes("SCROLL_ANCHOR_FOLLOW"));assert.ok(result.programs.every((row)=>row.chosen.filter((id)=>["CAMERA","COMPARISON","EDIT"].includes(RICH_SCREEN_TREATMENTS.find((item)=>item.id===id)?.family)).length<=1));console.log(JSON.stringify({contract:"A1RichScreenPackagingDirectorTest/v1",status:"PASS",registeredTreatments:RICH_SCREEN_TREATMENTS.length,coverage:result.coverage,programs:result.programs.map((row)=>({beatId:row.beatId,chosen:row.chosen})),directionSha256:result.directionSha256},null,2));

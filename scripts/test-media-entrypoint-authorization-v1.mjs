@@ -1,0 +1,17 @@
+import assert from "node:assert/strict";
+import path from "node:path";
+import {auditMediaEntrypointAuthorization, assertMediaEntrypointAuthorizationAudit} from "../apps/studio-next/src/lib/a1-media-entrypoint-authorization-v1.mjs";
+const projectRoot = path.resolve(import.meta.dirname,"..");
+const audit = assertMediaEntrypointAuthorizationAudit(auditMediaEntrypointAuthorization({projectRoot}));
+assert.equal(audit.contract,"A1MediaEntrypointRegistry/v2");
+assert.equal(audit.status,"STATIC_REVIEW_APPROVED_PACKAGE_EXPORT_IMPLEMENTED");
+assert.equal(audit.activeProductionWriterCount,1);
+assert.equal(audit.reviewOnlyWriterCount,1);
+assert.ok(audit.currentAuthorityReachableEntries.includes("system-line-canonical-package-export-v1"));
+assert.ok(audit.currentAuthorityReachableEntries.includes("system-line-package-static-review-v1"));
+assert.equal(audit.entries.find((entry)=>entry.id==="system-line-canonical-package-export-v1")?.implementationStatus,"IMPLEMENTED_HASH_BOUND_V8_EXPORT");
+assert.equal(audit.entries.find((entry)=>entry.id==="representative-motion-v4-history-preview")?.classification,"HISTORY_ONLY");
+assert.equal(audit.entries.find((entry)=>entry.id==="ed01-legacy-resolve-layout-export")?.classification,"HISTORY_ONLY");
+assert.equal(audit.entries.find((entry)=>entry.id==="system-line-workbench-media-actions")?.classification,"QUARANTINED");
+assert.equal(audit.productionAdmissionAllowed,false);
+console.log(JSON.stringify({status:"PASS",contract:audit.contract,classificationCounts:audit.classificationCounts,currentAuthorityReachableEntries:audit.currentAuthorityReachableEntries,activeProductionWriterCount:audit.activeProductionWriterCount,reviewOnlyWriterCount:audit.reviewOnlyWriterCount,productionStatus:audit.status}));

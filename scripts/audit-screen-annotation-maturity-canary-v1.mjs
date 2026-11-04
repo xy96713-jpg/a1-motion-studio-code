@@ -1,0 +1,33 @@
+#!/usr/bin/env node
+import assert from "node:assert/strict";
+import crypto from "node:crypto";
+import fs from "node:fs";
+import path from "node:path";
+import {spawnSync} from "node:child_process";
+import sharp from "sharp";
+
+const root=path.resolve(import.meta.dirname,".."),parent=path.join(root,"work/screen-annotation-maturity-v1"),explicit=process.argv[2],reportPath=explicit?path.resolve(root,explicit):fs.readdirSync(parent).sort().reverse().map((name)=>path.join(parent,name,"report.json")).find(fs.existsSync),report=JSON.parse(fs.readFileSync(reportPath,"utf8")),ffmpeg=path.join(root,".tools/bin/ffmpeg"),sha=(file)=>crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex"),failures=[],checks=[];
+const check=(condition,id,details={})=>{checks.push({id,status:condition?"PASS":"FAIL",...details});if(!condition)failures.push(id);};
+check(report.contract==="A1ScreenAnnotationMaturityCanary/v1"&&report.status==="PASS","REPORT_CONTRACT");
+check(report.sourceSystem==="REAL_WRITING_WORKBENCH_HEADLESS_DOM","REAL_BROWSER_SOURCE");
+check(report.fixtures?.length===3&&new Set(report.fixtures.map((item)=>item.genre)).size===3,"THREE_GENRE_COVERAGE");
+check(JSON.stringify(report.fixtures.map((item)=>item.expectedActor))===JSON.stringify(["NONE","UNDERLINE","CIRCLE"]),"ACTOR_COVERAGE");
+for(const fixture of report.fixtures||[]){
+  const prefix=fixture.id.toUpperCase().replaceAll("-","_"),paths=["source","base","overlay","peak","video"];
+  check(paths.every((key)=>fs.existsSync(path.join(root,fixture[key].path))&&sha(path.join(root,fixture[key].path))===fixture[key].sha256),`${prefix}_HASH_AND_EXISTENCE`);
+  check(fixture.evidence?.status==="PASS"&&fixture.evidence.exactMatch&&fixture.evidence.sourceTextSha256===fixture.evidence.matchedTextSha256,`${prefix}_EXACT_TEXT_IDENTITY`);
+  check(fixture.evidence?.narrationBinding?.status==="PASS"&&fixture.evidence.narrationBinding.policy?.fuzzyBindingForbidden===true&&fixture.evidence.narrationBinding.policy?.uniqueDomTargetRequired===true,`${prefix}_NARRATION_DOM_BINDING`);
+  check(fixture.qualification?.actor===fixture.expectedActor&&fixture.renderPlan?.actor===fixture.expectedActor,`${prefix}_QUALIFICATION_RENDER_PARITY`);
+  check(fixture.renderPlan?.projectedVisibilityRatio>=.72&&fixture.renderPlan?.policy?.rectangularFallbackForbidden===true,`${prefix}_FINAL_CAMERA_VISIBILITY`);
+  const overlayFile=path.join(root,fixture.overlay.path),{data,info}=await sharp(overlayFile).ensureAlpha().raw().toBuffer({resolveWithObject:true});let count=0,minX=info.width,minY=info.height,maxX=-1,maxY=-1;const alphaAt=(x,y)=>data[(y*info.width+x)*4+3];for(let y=0;y<info.height;y+=1)for(let x=0;x<info.width;x+=1)if(alphaAt(x,y)>12){count+=1;minX=Math.min(minX,x);minY=Math.min(minY,y);maxX=Math.max(maxX,x);maxY=Math.max(maxY,y);}
+  if(fixture.expectedActor==="NONE"){check(count===0&&fixture.base.sha256===fixture.peak.sha256,`${prefix}_ZERO_OVERLAY`);continue;}
+  check(count>=500,`${prefix}_VISIBLE_OVERLAY`,{markedPixels:count});
+  const rects=fixture.renderPlan.lineRects,inside=rects.reduce((sum,rect)=>{const left=Math.max(0,Math.floor(rect.x)),right=Math.min(info.width,Math.ceil(rect.x+rect.width)),top=Math.max(0,Math.floor(rect.y)),bottom=Math.min(info.height,Math.ceil(rect.y+rect.height));let marked=0,total=0;for(let y=top;y<bottom;y+=1)for(let x=left;x<right;x+=1){total+=1;if(alphaAt(x,y)>24)marked+=1;}return{marked:sum.marked+marked,total:sum.total+total};},{marked:0,total:0}),occlusionRatio=inside.marked/Math.max(1,inside.total);check(occlusionRatio<=.06,`${prefix}_TEXT_OCCLUSION`,{occlusionRatio});
+  const left=Math.min(...rects.map((rect)=>rect.x)),right=Math.max(...rects.map((rect)=>rect.x+rect.width)),top=Math.min(...rects.map((rect)=>rect.y)),bottom=Math.max(...rects.map((rect)=>rect.y+rect.height));
+  if(fixture.expectedActor==="UNDERLINE"){const expectedBands=rects.every((rect)=>{const y=Math.round(rect.y+rect.height+Math.min(5,rect.height*.2));let marked=0;for(let yy=Math.max(0,y-5);yy<=Math.min(info.height-1,y+5);yy+=1)for(let x=Math.max(0,Math.floor(rect.x));x<Math.min(info.width,Math.ceil(rect.x+rect.width));x+=1)if(alphaAt(x,yy)>12)marked+=1;return marked>=rect.width*.55;});check(expectedBands&&minX<=left+5&&maxX>=right-5,`${prefix}_LINE_RANGE_ALIGNMENT`,{overlayBounds:{minX,minY,maxX,maxY},textBounds:{left,top,right,bottom}});}
+  if(fixture.expectedActor==="CIRCLE"){const overlayCenter={x:(minX+maxX)/2,y:(minY+maxY)/2},textCenter={x:(left+right)/2,y:(top+bottom)/2},aligned=minX<left&&maxX>right&&minY<top&&maxY>bottom&&Math.abs(overlayCenter.x-textCenter.x)<=4&&Math.abs(overlayCenter.y-textCenter.y)<=4;check(aligned,`${prefix}_ELLIPSE_RANGE_ALIGNMENT`,{overlayBounds:{minX,minY,maxX,maxY},textBounds:{left,top,right,bottom}});}
+}
+const contact=path.join(root,report.visibleArtifact.path),contactMeta=await sharp(contact).metadata();check(contactMeta.width===1920&&contactMeta.height===1830&&sha(contact)===report.visibleArtifact.sha256,"CONTACT_SHEET_CONTRACT");
+const reel=path.join(root,report.reviewReel.path),decode=spawnSync(ffmpeg,["-v","error","-i",reel,"-f","null","-"],{encoding:"utf8"});check(fs.existsSync(reel)&&sha(reel)===report.reviewReel.sha256&&decode.status===0&&report.reviewReel.width===960&&report.reviewReel.height===540&&report.reviewReel.fps==="60/1","REVIEW_REEL_CONTRACT");
+const runtimeFiles=["apps/studio-next/src/lib/a1-screen-annotation-qualification-v1.mjs","apps/studio-next/src/lib/a1-screen-annotation-renderer-v1.mjs","apps/studio-next/src/lib/a1-screen-emphasis-director-v1.mjs"],fixtureIds=report.fixtures.map((item)=>item.id),runtimeClean=runtimeFiles.every((file)=>{const text=fs.readFileSync(path.join(root,file),"utf8");return fixtureIds.every((id)=>!text.includes(id));});check(runtimeClean,"NO_FIXTURE_IDS_IN_RUNTIME");
+const audit={contract:"A1ScreenAnnotationMaturityAudit/v1",status:failures.length?"FAIL":"PASS",sourceReport:path.relative(root,reportPath),fixtures:report.fixtures.map((item)=>({id:item.id,genre:item.genre,actor:item.expectedActor,qualificationSha256:item.qualification.qualificationSha256,renderPlanSha256:item.renderPlan.renderPlanSha256,visualAudit:item.visualAudit.status})),checks,failures,boundaries:{productionWorkspaceMutation:false,currentStoryboardMutation:false,userVisualApproval:"NOT_APPROVED",productionAdmission:false},generatedAt:new Date().toISOString()},out=path.join(path.dirname(reportPath),"audit-report.json");fs.writeFileSync(out,`${JSON.stringify(audit,null,2)}\n`);console.log(JSON.stringify({...audit,auditPath:path.relative(root,out)},null,2));assert.equal(audit.status,"PASS",failures.join(","));

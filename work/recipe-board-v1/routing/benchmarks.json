@@ -1,0 +1,60 @@
+{
+ "contract": "A1Benchmarks/v1",
+ "asOf": "2026-11-04",
+ "about": "A design direction is not ready for shot expansion until it beats/meets the benchmark on the same six dimensions, blind.",
+ "benchmarks": [
+  {
+   "id": "B12-old-card",
+   "film": "banana-design",
+   "path": "work/recipe-board-v1/projects/banana-design/out/film/hero-B12.jpg",
+   "dimensions": [
+    "composition",
+    "subject",
+    "material",
+    "typeLayout",
+    "light",
+    "texture"
+   ],
+   "scores": {
+    "composition": 4,
+    "subject": 4,
+    "material": 4,
+    "typeLayout": 4,
+    "light": 4,
+    "texture": 4
+   },
+   "report": "work/recipe-board-v1/BENCHMARK-B12-20261102.md",
+   "status": "baseline"
+  },
+  {
+   "id": "paperclip-138",
+   "film": "paperclip-138-full",
+   "role": "reference",
+   "dimensions": [
+    "composition",
+    "subject",
+    "material",
+    "typeLayout",
+    "light",
+    "texture"
+   ],
+   "status": "reference"
+  },
+  {
+   "id": "hupo-69",
+   "film": "hupo-69",
+   "role": "reference",
+   "dimensions": [
+    "composition",
+    "subject",
+    "material",
+    "typeLayout",
+    "light",
+    "texture"
+   ],
+   "status": "reference"
+  }
+ ],
+ "rule": "A selected direction needs benchmark: {id:'B12-old-card', status:'pass', scores six dims, no dim <4} before 20-shot expansion; old card still stronger = fail.",
+ "evidence": "BENCHMARK-B12 old card 4/4/4/4/4/4 vs new chain 2/2/2/3/2/2; not a controlled A/B, but enough to block expansion."
+}

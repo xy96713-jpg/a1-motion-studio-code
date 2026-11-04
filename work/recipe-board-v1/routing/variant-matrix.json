@@ -1,0 +1,670 @@
+{
+  "contract": "A1VariantMatrix/v1",
+  "updated": "2026-11-02",
+  "about": "三大家族变体矩阵：把 12 种叙事动作（routing/semantic-acts.json）映射到 3 套可执行的美学变体家族（A: paperclip-terminal 回形针·终端/图解, B: hupo-evidence 胡泊·证据/档案, C: gawx-editorial Gawx·色块/实物），每套绑定构图、装置、配色、介质、TYPE字组、对标参考帧与三状态分镜时间谱（T0 起 / T1 变 / T2 落），配合整片防重求解器（Adjacent Family Guard + Carrier Budget ≤ 2）彻底解决新片套单一模板和静态海报PPT问题。",
+  "families": {
+    "paperclip-terminal": {
+      "id": "paperclip-terminal",
+      "label": "回形针·终端图解族",
+      "precedent": "paperclip-138-full",
+      "groundTone": "dark",
+      "palettes": ["noir", "amber-lamp", "teal-chart", "indigo-night"],
+      "screens": ["led2", "mono", "crt", "clean"],
+      "typeStyle": "left-pair-or-grid-label",
+      "traits": "暗底细网格或网点、等宽数字与黒華明朝组合、环形/矩阵/扫描线/圈层关系图、红/黄单点高光、一镜到底停—动—停"
+    },
+    "hupo-evidence": {
+      "id": "hupo-evidence",
+      "label": "胡泊·档案证据族",
+      "precedent": "hupo-69",
+      "groundTone": "mixed",
+      "palettes": ["cream-print", "noir", "cobalt"],
+      "screens": ["film", "clean", "halftone", "vhs"],
+      "typeStyle": "editorial-pair-with-callout",
+      "traits": "真实网页/论文/档案照斜拍或装裱、推近原句红框/荧光划线、出处名牌、圈层人物/概念网"
+    },
+    "gawx-editorial": {
+      "id": "gawx-editorial",
+      "label": "Gawx·色块实物族",
+      "precedent": "paperclip-047",
+      "groundTone": "color-or-paper",
+      "palettes": ["mustard", "film-red", "cream-print", "amber-lamp"],
+      "screens": ["film", "clean"],
+      "typeStyle": "vertical-display-or-hero-block",
+      "traits": "高饱和色块底（芥黄/胶片红/档案纸）或蚀刻双色调、黒華明朝×0.72竖排/巨字压场、3D标本/丝网印剪影阵列"
+    }
+  },
+  "budgetRules": {
+    "maxSameCarrierPerFilm": 2,
+    "maxConsecutiveSameFamily": 2,
+    "maxConsecutiveSameGroundTone": 3,
+    "requireThreeStateScore": true,
+    "note": "同一视觉载体（如 botanical-plate, grid-100, banana-silhouette-row）全片最多 2 拍，第 2 次必须声明 callback/rhyme 状态变化；相邻两拍优先切换家族或底色明暗。"
+  },
+  "acts": [
+    {
+      "act": "phenomenon",
+      "name": "现象/开场",
+      "routeKind": "opening",
+      "variants": {
+        "A": {
+          "family": "paperclip-terminal",
+          "carrier": "specimen-scan-grid",
+          "composition": "hero-object",
+          "device": "lineup-row",
+          "palette": "noir",
+          "screen": "led2",
+          "typeLayout": "left-col-1-5-title-128",
+          "exemplar": "paperclip-138-full/B01",
+          "motionScore": {
+            "t0": "0.0-1.5s: 暗场网格亮起，单个3D主体/标本出现并带测量框",
+            "t1": "1.5-3.2s: 沿网格复制展开成整齐阵列，扫描线掠过",
+            "t2": "3.2-5.0s: 左侧或顶部大字按词落定，红点锁住唯一锚点"
+          }
+        },
+        "B": {
+          "family": "hupo-evidence",
+          "carrier": "footage-split-card",
+          "composition": "title-footage",
+          "device": "real-in-frame",
+          "palette": "noir",
+          "screen": "film",
+          "typeLayout": "center-hero-300",
+          "exemplar": "hupo-replica/R00",
+          "motionScore": {
+            "t0": "0.0-1.6s: 真实场景画面A（货架/现场）入画并轻推",
+            "t1": "1.6-3.2s: 快切真实场景画面B（航拍/全局），画面压暗去色",
+            "t2": "3.2-5.0s: 300px 巨型标题字块在留白处砸下"
+          }
+        },
+        "C": {
+          "family": "gawx-editorial",
+          "carrier": "duotone-photo-yellow-slab",
+          "composition": "title-footage",
+          "device": "copy-to-repeat",
+          "palette": "mustard",
+          "screen": "film",
+          "typeLayout": "right-slab-vertical-display",
+          "exemplar": "banana-mature-20261102/B01",
+          "motionScore": {
+            "t0": "0.0-1.6s: 左侧64%双色调蚀刻感实拍画面横移入场",
+            "t1": "1.6-3.0s: 右侧36%纯芥黄/胶片色板像闸门一样切入，接缝打红点",
+            "t2": "3.0-5.0s: 色板上黒華明朝×0.72竖排大字逐字落下"
+          }
+        }
+      }
+    },
+    {
+      "act": "name",
+      "name": "命名/定义",
+      "routeKind": "opening",
+      "variants": {
+        "A": {
+          "family": "paperclip-terminal",
+          "carrier": "specimen-cad-frame",
+          "composition": "hero-object",
+          "device": "term-biggest",
+          "palette": "noir",
+          "screen": "clean",
+          "typeLayout": "left-vertical-display-right-cad",
+          "exemplar": "banana-mature-20261102/B02",
+          "motionScore": {
+            "t0": "0.0-2.0s: 主体3D模型带克隆残影入场，四周无字",
+            "t1": "2.0-4.5s: 细线测量框与刻度尺画出，引线标出特征部位",
+            "t2": "4.5-7.0s: 左侧竖排新名词大字与底部拉丁学名落定"
+          }
+        },
+        "B": {
+          "family": "hupo-evidence",
+          "carrier": "archive-print-card",
+          "composition": "evidence-card",
+          "device": "real-in-frame",
+          "palette": "noir",
+          "screen": "film",
+          "typeLayout": "right-vertical-display-left-print",
+          "exemplar": "banana-mature-20261102/B07",
+          "motionScore": {
+            "t0": "0.0-2.0s: 历史档案照片装裱在暗场左侧落下，右上角亮起红色年份",
+            "t1": "2.0-4.5s: 照片下方红线划出，特征关键词随台词浮现",
+            "t2": "4.5-7.0s: 右侧竖排230px大字压住全幅"
+          }
+        },
+        "C": {
+          "family": "gawx-editorial",
+          "carrier": "full-color-hero-object",
+          "composition": "hero-object",
+          "device": "product-hero",
+          "palette": "mustard",
+          "screen": "clean",
+          "typeLayout": "top-left-hero-300",
+          "exemplar": "paperclip-047/B01",
+          "motionScore": {
+            "t0": "0.0-2.0s: 满幅主题色底，单个高精度3D实物特写旋转落位",
+            "t1": "2.0-4.5s: 镜头轻推，接触阴影加深",
+            "t2": "4.5-7.0s: 左上角巨型名称与副标成对切入"
+          }
+        }
+      }
+    },
+    {
+      "act": "ratio",
+      "name": "比例/数字",
+      "routeKind": "numbers",
+      "variants": {
+        "A": {
+          "family": "paperclip-terminal",
+          "carrier": "terminal-ring-gauge",
+          "composition": "count-field",
+          "device": "number-grows",
+          "palette": "amber-lamp",
+          "screen": "led2",
+          "typeLayout": "left-figure-200-right-ring",
+          "exemplar": "banana-screen-variants/B03-ring",
+          "motionScore": {
+            "t0": "0.0-2.0s: 暗底细网格与顶部等宽英文标头出现，空环待命",
+            "t1": "2.0-5.0s: 圆环刻度从0%顺时针点亮到目标比例，左侧数字同步滚动长出",
+            "t2": "5.0-8.0s: 环心亮起品种名，左下角出处caption落定"
+          }
+        },
+        "B": {
+          "family": "hupo-evidence",
+          "carrier": "evidence-page-callout",
+          "composition": "figure-card",
+          "device": "real-doc-callout",
+          "palette": "cream-print",
+          "screen": "clean",
+          "typeLayout": "left-figure-300-right-doc",
+          "exemplar": "banana-mature-20261102/B10",
+          "motionScore": {
+            "t0": "0.0-2.2s: 米纸底上真实报告/论文页带阴影从右侧滑入",
+            "t1": "2.2-5.0s: 红色方括号在原文段落旁画出，拎出关键数字",
+            "t2": "5.0-8.0s: 左侧300px等宽大数字与单位砸下，底部写明一句话含义"
+          }
+        },
+        "C": {
+          "family": "gawx-editorial",
+          "carrier": "icon-matrix-100",
+          "composition": "count-field",
+          "device": "table-grows",
+          "palette": "noir",
+          "screen": "clean",
+          "typeLayout": "left-figure-300-right-10x10",
+          "exemplar": "banana-mature-20261102/B03",
+          "motionScore": {
+            "t0": "0.0-2.0s: 右侧10×10共100个暗色剪影阵列就位",
+            "t1": "2.0-5.0s: 其中N个剪影逐行染成亮芥黄/红，红线从矩阵连向左侧",
+            "t2": "5.0-8.0s: 左侧巨型数字与百分比符号定格"
+          }
+        }
+      }
+    },
+    {
+      "act": "mechanism",
+      "name": "机制/原理",
+      "routeKind": "custom",
+      "variants": {
+        "A": {
+          "family": "paperclip-terminal",
+          "carrier": "specimen-scan-ui",
+          "composition": "hero-object",
+          "device": "zoom-into",
+          "palette": "noir",
+          "screen": "crt",
+          "typeLayout": "scan-window-with-left-title",
+          "exemplar": "banana-screen-variants/B04-scan",
+          "motionScore": {
+            "t0": "0.0-2.2s: 扫描UI框打开，扫描线从上往下揭示主体局部剖面",
+            "t1": "2.2-5.5s: 镜头推近核心连接处（如地下茎），红色轨迹线从母体画向分支",
+            "t2": "5.5-8.5s: 部位标签贴点出现，左侧主标题落定"
+          }
+        },
+        "B": {
+          "family": "hupo-evidence",
+          "carrier": "concentric-ring-diagram",
+          "composition": "sequence-line",
+          "device": "branch-out",
+          "palette": "noir",
+          "screen": "clean",
+          "typeLayout": "left-title-128-right-rings",
+          "exemplar": "banana-screen-variants/B04-ring",
+          "motionScore": {
+            "t0": "0.0-2.0s: 暗场中心亮起黄色母体节点，同心圆轨道浮现",
+            "t1": "2.0-5.5s: 红色放射线向外连出多个子节点（吸芽/分支），节点逐个亮起",
+            "t2": "5.5-8.5s: 左上角大字标题与规律说明落定"
+          }
+        },
+        "C": {
+          "family": "gawx-editorial",
+          "carrier": "botanical-plate-ink",
+          "composition": "hero-object",
+          "device": "mark-follows-line",
+          "palette": "cream-print",
+          "screen": "film",
+          "typeLayout": "left-vertical-display-192",
+          "exemplar": "banana-mature-20261102/B04",
+          "motionScore": {
+            "t0": "0.0-2.2s: 米纸科学图版整幅站稳，右上角打图版编号",
+            "t1": "2.2-5.5s: 粗红线沿结构路径动态画出，两端打实心红锚点",
+            "t2": "5.5-8.5s: 左侧竖排大字与底部一句话结论落定"
+          }
+        }
+      }
+    },
+    {
+      "act": "cause",
+      "name": "原因/弱点",
+      "routeKind": "custom",
+      "variants": {
+        "A": {
+          "family": "paperclip-terminal",
+          "carrier": "mycelium-invasion-trace",
+          "composition": "hero-object",
+          "device": "dim-keep-red",
+          "palette": "noir",
+          "screen": "clean",
+          "typeLayout": "left-vertical-display-168",
+          "exemplar": "banana-mature-20261102/B08",
+          "motionScore": {
+            "t0": "0.0-2.0s: 画面压暗，底部土壤层浮现",
+            "t1": "2.0-5.5s: 红色分形菌丝从土壤向上攀爬侵入根系，红圈锁定侵入点",
+            "t2": "5.5-8.0s: 左侧竖排病害名与拉丁菌名落定"
+          }
+        },
+        "B": {
+          "family": "hupo-evidence",
+          "carrier": "shared-gene-bracket",
+          "composition": "split-compare",
+          "device": "bracket-group",
+          "palette": "noir",
+          "screen": "clean",
+          "typeLayout": "left-vertical-display-top-bracket",
+          "exemplar": "banana-mature-20261102/B05",
+          "motionScore": {
+            "t0": "0.0-2.0s: 多株同构个体并排站立，背景压暗",
+            "t1": "2.0-5.0s: 顶部红色括线横跨所有个体收紧，标出『同一套基因』",
+            "t2": "5.0-8.0s: 左侧大字『一样的弱点』与底部因果链落定"
+          }
+        },
+        "C": {
+          "family": "gawx-editorial",
+          "carrier": "code-strip-mutation",
+          "composition": "sequence-line",
+          "device": "mark-in-red",
+          "palette": "film-red",
+          "screen": "led2",
+          "typeLayout": "center-hero-over-strip",
+          "exemplar": "paperclip-138-full/B07",
+          "motionScore": {
+            "t0": "0.0-2.0s: 基因/结构序列条横贯画面滚动",
+            "t1": "2.0-5.0s: 序列完全一致处同时爆红闪烁，其余压暗",
+            "t2": "5.0-8.0s: 大字结论压在序列上方"
+          }
+        }
+      }
+    },
+    {
+      "act": "evidence",
+      "name": "证据/报道",
+      "routeKind": "evidence",
+      "variants": {
+        "A": {
+          "family": "hupo-evidence",
+          "carrier": "headline-redbox-page",
+          "composition": "evidence-card",
+          "device": "real-page-mark",
+          "palette": "noir",
+          "screen": "film",
+          "typeLayout": "left-red-vertical-right-page",
+          "exemplar": "banana-mature-20261102/B17",
+          "motionScore": {
+            "t0": "0.0-2.0s: 真实新闻/公告网页在暗场右侧展开，镜头轻推",
+            "t1": "2.0-4.5s: 红色粗框在标题句外围收紧锁定",
+            "t2": "4.5-7.5s: 左侧红色竖排大字与底部日期出处落定"
+          }
+        },
+        "B": {
+          "family": "gawx-editorial",
+          "carrier": "paper-archive-stacked-type",
+          "composition": "evidence-card",
+          "device": "real-in-frame",
+          "palette": "cream-print",
+          "screen": "halftone",
+          "typeLayout": "left-3line-stack-right-plate",
+          "exemplar": "banana-mature-20261102/B06",
+          "motionScore": {
+            "t0": "0.0-2.0s: 米纸右上角落下历史装运档案照，加细黑框与图注",
+            "t1": "2.0-4.5s: 左侧竖向红线拉下，三行大字逐行打出",
+            "t2": "4.5-7.5s: 底部历史事件说明与年份落定"
+          }
+        },
+        "C": {
+          "family": "paperclip-terminal",
+          "carrier": "filmed-screen-dossier",
+          "composition": "evidence-card",
+          "device": "filmed-screen",
+          "palette": "indigo-night",
+          "screen": "crt",
+          "typeLayout": "left-title-128-right-tilted-screen",
+          "exemplar": "paperclip-138-full/B18",
+          "motionScore": {
+            "t0": "0.0-2.0s: 暗场中斜拍屏幕亮起档案文献",
+            "t1": "2.0-4.5s: 屏幕内推近关键段落并高亮划线",
+            "t2": "4.5-7.5s: 屏幕外左侧网格浮现标题与出处"
+          }
+        }
+      }
+    },
+    {
+      "act": "sequence",
+      "name": "推进/地图时间线",
+      "routeKind": "map",
+      "variants": {
+        "A": {
+          "family": "paperclip-terminal",
+          "carrier": "grid-map-parcels",
+          "composition": "map-table",
+          "device": "map-pin-count",
+          "palette": "teal-chart",
+          "screen": "clean",
+          "typeLayout": "left-figure-300-right-map",
+          "exemplar": "banana-mature-20261102/B09",
+          "motionScore": {
+            "t0": "0.0-2.0s: 深青色海图与细亮海岸线展开，叠加经纬网格",
+            "t1": "2.0-5.0s: 河谷/产区内的受灾田块逐片点亮为芥黄与红色",
+            "t2": "5.0-8.0s: 左侧巨型公顷数字与河谷地名落定"
+          }
+        },
+        "B": {
+          "family": "paperclip-terminal",
+          "carrier": "radar-rings-map",
+          "composition": "map-table",
+          "device": "chapter-map",
+          "palette": "noir",
+          "screen": "led2",
+          "typeLayout": "left-vertical-display-plus-code",
+          "exemplar": "banana-mature-20261102/B13",
+          "motionScore": {
+            "t0": "0.0-2.0s: 暗绿区域地图全幅铺开，左侧压暗渐变",
+            "t1": "2.0-5.0s: 首发地亮起红点，同心红色警戒圆环向外扩散",
+            "t2": "5.0-8.0s: 左侧竖排大字与红色代号（如TR4）砸下"
+          }
+        },
+        "C": {
+          "family": "hupo-evidence",
+          "carrier": "date-hero-map-timeline",
+          "composition": "sequence-line",
+          "device": "evidence-on-timeline",
+          "palette": "indigo-night",
+          "screen": "clean",
+          "typeLayout": "left-date-200-bottom-timeline",
+          "exemplar": "banana-mature-20261102/B15",
+          "motionScore": {
+            "t0": "0.0-2.0s: 左上角等宽巨型日期（2019 / 08.08）先砸下",
+            "t1": "2.0-5.0s: 右侧地图推近目标省份并打双层红圈，底部时间轴游标滑到位",
+            "t2": "5.0-8.0s: 首次确认结论句与出处落定"
+          }
+        }
+      }
+    },
+    {
+      "act": "compare",
+      "name": "比较/对照",
+      "routeKind": "compare",
+      "variants": {
+        "A": {
+          "family": "gawx-editorial",
+          "carrier": "diptych-photo-screenprint",
+          "composition": "split-compare",
+          "device": "symmetry",
+          "palette": "mustard",
+          "screen": "film",
+          "typeLayout": "split-headers-bottom-title-140",
+          "exemplar": "banana-mature-20261102/B14",
+          "motionScore": {
+            "t0": "0.0-2.0s: 左半幅1921历史黑白档案照切入，顶部标年代与旧品种",
+            "t1": "2.0-4.5s: 右半幅芥黄底+红色错位丝网印剪影切入，中缝红线劈开",
+            "t2": "4.5-7.5s: 左下暗带浮现大字『不堪一击』，两边底部对称标出『同一个剧本』"
+          }
+        },
+        "B": {
+          "family": "hupo-evidence",
+          "carrier": "split-quarantine-breeding",
+          "composition": "split-compare",
+          "device": "quadrant-compare",
+          "palette": "cream-print",
+          "screen": "clean",
+          "typeLayout": "left-vertical-right-editorial",
+          "exemplar": "banana-mature-20261102/B18",
+          "motionScore": {
+            "t0": "0.0-2.2s: 左半幅种植园实拍压暗，三条红色隔离封条斜向扫过",
+            "t1": "2.2-5.0s: 右半幅米纸育种图版滑入，中缝红线立起",
+            "t2": "5.0-8.0s: 左『隔离』竖排大字与右『育种』标题及红字结论同时落定"
+          }
+        },
+        "C": {
+          "family": "paperclip-terminal",
+          "carrier": "field-mosaic-flip",
+          "composition": "split-compare",
+          "device": "label-swap",
+          "palette": "noir",
+          "screen": "clean",
+          "typeLayout": "top-title-128-center-mosaic",
+          "exemplar": "banana-mature-20261102/B11",
+          "motionScore": {
+            "t0": "0.0-2.0s: 6×3种植园田块矩阵铺开，全部为旧品种暗绿色调",
+            "t1": "2.0-5.0s: 右半3列田块逐列翻转为卡文迪什金黄色调，中间红线划界",
+            "t2": "5.0-8.0s: 左上角『原地换种』大字与底部左右品种对照标签落定"
+          }
+        }
+      }
+    },
+    {
+      "act": "turn",
+      "name": "转折/反转",
+      "routeKind": "compare",
+      "variants": {
+        "A": {
+          "family": "gawx-editorial",
+          "carrier": "yellow-silhouette-row",
+          "composition": "figure-card",
+          "device": "rhyme",
+          "palette": "mustard",
+          "screen": "clean",
+          "typeLayout": "top-left-hero-208-bottom-row",
+          "exemplar": "banana-mature-20261102/B12",
+          "motionScore": {
+            "t0": "0.0-1.8s: 画面瞬间翻转为满幅芥黄底，底部8根黑色剪影逐根排开",
+            "t1": "1.8-3.8s: 左上角红点亮起，208px近黑大字『同样是克隆』硬切压场",
+            "t2": "3.8-6.0s: 副标『品种换了，复制的方式没变』出现并停稳"
+          }
+        },
+        "B": {
+          "family": "paperclip-terminal",
+          "carrier": "signal-break-flip",
+          "composition": "sequence-line",
+          "device": "signal-break",
+          "palette": "film-red",
+          "screen": "crt",
+          "typeLayout": "center-hero-300",
+          "exemplar": "paperclip-138-full/B26",
+          "motionScore": {
+            "t0": "0.0-1.5s: 前一拍画面出现信号错位与扫描线闪烁",
+            "t1": "1.5-3.5s: 胶片红底切入，核心转折词居中放大",
+            "t2": "3.5-6.0s: 补充说明小字在下方对齐落定"
+          }
+        },
+        "C": {
+          "family": "hupo-evidence",
+          "carrier": "callback-card-swap",
+          "composition": "evidence-card",
+          "device": "callback",
+          "palette": "noir",
+          "screen": "film",
+          "typeLayout": "left-title-128-right-card",
+          "exemplar": "hupo-replica/R44",
+          "motionScore": {
+            "t0": "0.0-2.0s: 调回前文出现过的主体卡片",
+            "t1": "2.0-4.0s: 原标签被红线划掉，换上反转后的新标签",
+            "t2": "4.0-6.0s: 左侧大字点明反转结论"
+          }
+        }
+      }
+    },
+    {
+      "act": "consequence",
+      "name": "后果/冲击",
+      "routeKind": "numbers",
+      "variants": {
+        "A": {
+          "family": "paperclip-terminal",
+          "carrier": "field-grid-96-red",
+          "composition": "count-field",
+          "device": "shrink-to-reality",
+          "palette": "noir",
+          "screen": "clean",
+          "typeLayout": "left-figure-300-right-field-grid",
+          "exemplar": "banana-mature-20261102/B16",
+          "motionScore": {
+            "t0": "0.0-2.0s: 真实种植园底图铺开，右侧叠上10×10透明网格",
+            "t1": "2.0-5.0s: 100格中96格迅速染红（已毁），仅剩4格暗绿，红框锁住单格",
+            "t2": "5.0-8.0s: 左侧300px等宽大数字（168.5公顷）与受损比例落定"
+          }
+        },
+        "B": {
+          "family": "gawx-editorial",
+          "carrier": "red-emergency-slab",
+          "composition": "figure-card",
+          "device": "banner-verdict",
+          "palette": "film-red",
+          "screen": "film",
+          "typeLayout": "center-hero-300",
+          "exemplar": "paperclip-138-full/B32",
+          "motionScore": {
+            "t0": "0.0-2.0s: 画面压入深胶片红底",
+            "t1": "2.0-4.5s: 损失数字或后果词逐级放大占满画面",
+            "t2": "4.5-7.5s: 底部出处与时间落定"
+          }
+        },
+        "C": {
+          "family": "hupo-evidence",
+          "carrier": "clipping-stack-losses",
+          "composition": "evidence-card",
+          "device": "clipping-stack",
+          "palette": "noir",
+          "screen": "halftone",
+          "typeLayout": "left-title-128-right-stack",
+          "exemplar": "hupo-replica/R58",
+          "motionScore": {
+            "t0": "0.0-2.0s: 第一张受灾报道剪报落下",
+            "t1": "2.0-5.0s: 第二、三张剪报叠压上来，红框依次圈出损失数字",
+            "t2": "5.0-7.5s: 左侧汇总数字与标题落定"
+          }
+        }
+      }
+    },
+    {
+      "act": "breath",
+      "name": "留白/拉远",
+      "routeKind": "custom",
+      "variants": {
+        "A": {
+          "family": "paperclip-terminal",
+          "carrier": "wide-field-faint-grid",
+          "composition": "map-table",
+          "device": "zoom-out-whole",
+          "palette": "noir",
+          "screen": "film",
+          "typeLayout": "top-left-title-170-wide-empty",
+          "exemplar": "banana-mature-20261102/B19",
+          "motionScore": {
+            "t0": "0.0-2.5s: 从单格红框缓慢拉远到整片广袤种植园，细网格渐渐淡出",
+            "t1": "2.5-5.0s: 仅留远处一小格红框，画面大面积留给暗绿蕉林呼吸",
+            "t2": "5.0-8.0s: 左上角『再来一次』与左下角时间跨度安静浮现"
+          }
+        },
+        "B": {
+          "family": "gawx-editorial",
+          "carrier": "quiet-paper-single-line",
+          "composition": "figure-card",
+          "device": "black-pause",
+          "palette": "cream-print",
+          "screen": "clean",
+          "typeLayout": "center-sub-64",
+          "exemplar": "paperclip-047/B12",
+          "motionScore": {
+            "t0": "0.0-2.0s: 前一拍复杂元素退去，只留安静纸面与中心单件小道具",
+            "t1": "2.0-4.5s: 镜头极慢拉远",
+            "t2": "4.5-7.0s: 一行克制的小字浮现"
+          }
+        },
+        "C": {
+          "family": "hupo-evidence",
+          "carrier": "dim-room-screen-idle",
+          "composition": "hero-object",
+          "device": "dim-keep-red",
+          "palette": "amber-lamp",
+          "screen": "film",
+          "typeLayout": "bottom-left-title-128",
+          "exemplar": "hupo-replica/R80",
+          "motionScore": {
+            "t0": "0.0-2.5s: 暗室中台灯或屏幕微光，主体静置",
+            "t1": "2.5-5.0s: 光影缓慢推移，不加新图表",
+            "t2": "5.0-7.5s: 左下角留白处浮现过渡句"
+          }
+        }
+      }
+    },
+    {
+      "act": "close",
+      "name": "收尾/回声",
+      "routeKind": "opening",
+      "variants": {
+        "A": {
+          "family": "gawx-editorial",
+          "carrier": "yellow-silhouette-echo",
+          "composition": "figure-card",
+          "device": "rhyme",
+          "palette": "mustard",
+          "screen": "clean",
+          "typeLayout": "left-hero-380-bottom-row",
+          "exemplar": "banana-mature-20261102/B20",
+          "motionScore": {
+            "t0": "0.0-2.0s: 呼应B01/B12的芥黄底与底部8根黑色香蕉剪影回归",
+            "t1": "2.0-4.5s: 380px巨字『单一』在左上角砸下，右上角一枚红点封口",
+            "t2": "4.5-7.5s: 底部收尾金句『一根香蕉长成什么样，其实是一段关于单一的故事』落定静止"
+          }
+        },
+        "B": {
+          "family": "paperclip-terminal",
+          "carrier": "pullback-to-single-object",
+          "composition": "hero-object",
+          "device": "callback",
+          "palette": "noir",
+          "screen": "clean",
+          "typeLayout": "left-col-1-5-hero-300",
+          "exemplar": "paperclip-138-full/B51",
+          "motionScore": {
+            "t0": "0.0-2.5s: 所有数据网格收拢退回开场的那一个3D实物",
+            "t1": "2.5-5.0s: 侧光亮起，主体缓慢定格",
+            "t2": "5.0-7.5s: 左侧大字落定收尾"
+          }
+        },
+        "C": {
+          "family": "hupo-evidence",
+          "carrier": "evidence-wall-pullback",
+          "composition": "count-field",
+          "device": "zoom-out-whole",
+          "palette": "noir",
+          "screen": "film",
+          "typeLayout": "center-hero-300",
+          "exemplar": "hupo-replica/R68",
+          "motionScore": {
+            "t0": "0.0-2.5s: 镜头从最后一张证据卡向后拉远，露出全片所有证据与节点",
+            "t1": "2.5-5.0s: 背景压暗，红线连成完整闭环",
+            "t2": "5.0-7.5s: 中心升起全片主题词"
+          }
+        }
+      }
+    }
+  ]
+}

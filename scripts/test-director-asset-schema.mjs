@@ -1,0 +1,12 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+import {createRequire} from 'node:module';
+import {test} from 'node:test';
+const Ajv=createRequire(new URL('../apps/studio-next/package.json',import.meta.url))('ajv');
+const schema=JSON.parse(fs.readFileSync(new URL('../work/recipe-board-v1/routing/filmdesign.schema.json',import.meta.url)));
+const validate=new Ajv({allErrors:true}).compile(schema.properties.beats.items.properties.directorIntent.properties.assets.items);
+const base={id:'subject',use:'art',source:'generated',file:'art.png',operation:'hold',operability:'whole-image',provenance:null,targets:[],sha256:'a'.repeat(64)};
+test('director asset schema accepts full byte pin',()=>assert.ok(validate(base),JSON.stringify(validate.errors)));
+for(const [name,sha256] of [['missing',undefined],['short','a'.repeat(16)],['long','a'.repeat(65)],['nonhex','g'.repeat(64)],['uppercase','A'.repeat(64)]]) test(`director asset schema rejects ${name} hash`,()=>assert.equal(validate({...base,sha256}),false));
+test('director per-object schema accepts named layers',()=>assert.ok(validate({...base,operation:'per-object',operability:'layers',targets:['banana']}),JSON.stringify(validate.errors)));
+for(const [name,extra] of [['missing targets',{targets:undefined}],['empty targets',{targets:[]}],['non-string target',{targets:[3]}],['empty target',{targets:['']}],['whole image',{operability:'whole-image',targets:['banana']}],['code',{operability:'code',targets:['banana']}]]) test(`director per-object schema rejects ${name}`,()=>assert.equal(validate({...base,operation:'per-object',operability:'layers',...extra}),false));

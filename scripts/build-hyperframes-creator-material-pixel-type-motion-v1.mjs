@@ -1,0 +1,42 @@
+#!/usr/bin/env node
+import fs from "node:fs";
+import path from "node:path";
+
+const root = process.cwd();
+const phaseId = "creator-material-pixel-type-motion-v1";
+const compositionId = "a1-creator-material-pixel-type-motion-v1";
+const projectDir = path.join(root, "hyperframes", phaseId);
+const assetDir = path.join(projectDir, "assets");
+const planPath = path.join(root, "apps/studio-next/public/generated/system-line", phaseId, "render-plan.json");
+if (!fs.existsSync(planPath)) throw new Error("creator-material-hyperframes-plan-missing");
+const plan = JSON.parse(fs.readFileSync(planPath, "utf8"));
+if (plan.sourceOfTruth !== "A1MotionIRScene/v2" || plan.hyperframesPlan?.sourceSceneId !== plan.motionIrScene?.sceneId) throw new Error("creator-material-hyperframes-source-mismatch");
+fs.mkdirSync(assetDir, {recursive: true});
+
+const copy = (source, targetName) => { const target = path.join(assetDir, targetName); fs.copyFileSync(source, target); return `assets/${targetName}`; };
+const environment = plan.materials.find((item) => item.route === "generated-environment");
+const evidence = plan.materials.find((item) => item.route === "real-evidence");
+if (!environment || !evidence) throw new Error("creator-material-hyperframes-material-missing");
+const environmentUrl = copy(path.join(root, "remotion-renderer/public", environment.assetUri), "creator-desk-close.png");
+const evidenceUrl = copy(path.join(root, "remotion-renderer/public", evidence.assetUri), "selection-action.png");
+const gsapUrl = copy(path.join(root, "apps/studio-next/public/vendor/gsap/gsap.min.js"), "gsap.min.js");
+copy(path.join(root, "remotion-renderer/public/creator-material-pixel-type-v1/fonts/fusion-pixel.ttf"), "fusion-pixel.ttf");
+copy(path.join(root, "remotion-renderer/public/creator-material-pixel-type-v1/fonts/Handjet-Variable.ttf"), "Handjet-Variable.ttf");
+copy(path.join(root, "remotion-renderer/public/creator-material-pixel-type-v1/fonts/ChillPixels-Mono.otf"), "ChillPixels-Mono.otf");
+
+const embeddedPlan = JSON.stringify(plan.hyperframesPlan).replace(/</gu, "\\u003c");
+const html = `<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"/><meta name="viewport" content="width=1920,height=1080"/><script src="${gsapUrl}"></script><style>
+@font-face{font-family:A1Fusion;src:url('assets/fusion-pixel.ttf')}@font-face{font-family:A1Handjet;src:url('assets/Handjet-Variable.ttf')}@font-face{font-family:A1Chill;src:url('assets/ChillPixels-Mono.otf')}*{box-sizing:border-box}html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#06090b}.root,.scene{position:absolute;inset:0;overflow:hidden}.scene{background:#06090b}.env{position:absolute;inset:-28px}.env img{width:100%;height:100%;object-fit:cover;filter:brightness(.9) contrast(1.08) saturate(.72)}.screen-focus{position:absolute;left:688px;top:10px;width:1136px;height:748px}.screen-actor{position:absolute;inset:0}.screen-shape{position:absolute;inset:0;overflow:hidden;clip-path:polygon(1.5% 0,99% 0,94% 91%,2% 69%);background:#0b0d0e;box-shadow:inset 0 0 0 2px #f0e9db44,0 0 45px #00000055}.screen-shape img{width:100%;height:100%;object-fit:cover;transform:scale(1.08);transform-origin:58% 42%;filter:brightness(.76) contrast(1.1) saturate(.75)}.screen-wash{position:absolute;inset:0;background:linear-gradient(100deg,#0c284218,transparent 50%,#f0e9db0e)}.selection-focus{position:absolute;left:22%;top:37%;width:54%;height:7%;background:#244ec566;mix-blend-mode:multiply;transform-origin:left center}.phrase{position:absolute;left:420px;top:132px;width:700px;color:#0a0d0e}.glyphs{display:flex;align-items:baseline;gap:5px;color:#0a0d0e;font:132px/.88 A1Fusion;letter-spacing:-.07em;text-shadow:0 9px 30px #00000066}.glyphs span{display:inline-block;padding-right:4px;transform-origin:left bottom}.glyphs span[data-motion-actor-id='glyph-gai']{color:#f0e9db}
+</style></head><body><main id="root" class="root" data-composition-id="${compositionId}" data-start="0" data-duration="4" data-width="1920" data-height="1080" data-a1-source-of-truth="A1MotionIRScene/v2"><section id="local-edit-motion" class="clip scene" data-start="0" data-duration="4" data-track-index="1" data-layout-allow-overlap data-layout-allow-occlusion><div class="env" data-motion-actor-id="environment-camera" data-layout-allow-overflow><img src="${environmentUrl}"/></div><div class="screen-focus" data-motion-actor-id="evidence-focus" data-layout-allow-overflow><div class="screen-actor" data-motion-actor-id="evidence-screen" data-layout-allow-overflow><div class="screen-shape"><img src="${evidenceUrl}"/><div class="screen-wash"></div><div class="selection-focus" data-motion-actor-id="selection-focus"></div></div></div></div><div class="phrase" data-motion-actor-id="phrase-settle"><div class="glyphs"><span data-motion-actor-id="glyph-gai">改</span><span data-motion-actor-id="glyph-yi">一</span><span data-motion-actor-id="glyph-ju">句</span></div><div class="phrase-rule"></div></div></section></main><script>
+window.__A1_MOTION_PLAN__=${embeddedPlan};window.__timelines=window.__timelines||{};const motionPlan=window.__A1_MOTION_PLAN__;const clamp=v=>Math.max(0,Math.min(1,v));const bezierAt=(progress,easing)=>{const x=clamp(progress);if(x===0||x===1)return x;const[x1,y1,x2,y2]=easing,cx=3*x1,bx=3*(x2-x1)-cx,ax=1-cx-bx,cy=3*y1,by=3*(y2-y1)-cy,ay=1-cy-by,sx=t=>((ax*t+bx)*t+cx)*t,sy=t=>((ay*t+by)*t+cy)*t,sd=t=>(3*ax*t+2*bx)*t+cx;let t=x;for(let i=0;i<8;i+=1){const error=sx(t)-x;if(Math.abs(error)<1e-7)break;const derivative=sd(t);if(Math.abs(derivative)<1e-7)break;t=clamp(t-error/derivative)}return sy(t)};const cssState=values=>{const out={};for(const[key,value]of Object.entries(values)){if(key==='translateX'||key==='x')out.x=value;else if(key==='translateY'||key==='y')out.y=value;else if(key==='translateZ')out.z=value;else if(key==='clip')out.clipPath='inset(0 '+value+'% 0 0)';else if(key==='blur')out.filter='blur('+value+'px)';else out[key]=value}return out};const tl=gsap.timeline({paused:true});motionPlan.tweens.forEach(tween=>{const target=document.querySelector(tween.selector);if(!target)throw new Error('motion-actor-missing:'+tween.actorId);gsap.set(target,cssState(tween.from));tl.fromTo(target,cssState(tween.from),{...cssState(tween.to),duration:tween.durationSeconds,ease:p=>bezierAt(p,tween.easing),immediateRender:false},tween.startSeconds)});window.__timelines['${compositionId}']=tl;tl.progress(0).pause();
+</script></body></html>`;
+
+fs.writeFileSync(path.join(projectDir, "index.html"), html);
+fs.writeFileSync(path.join(projectDir, "index.motion.json"), `${JSON.stringify({duration: 4, maxStaticSec: .85, assertions: [{kind: "appearsBy", selector: "[data-motion-actor-id='evidence-screen']", bySec: .25}, {kind: "staysInFrame", selector: ".glyphs"}, {kind: "staysInFrame", selector: ".selection-focus"}, {kind: "keepsMoving", withinSelector: "#root"}]}, null, 2)}\n`);
+fs.writeFileSync(path.join(projectDir, "package.json"), `${JSON.stringify({name: phaseId, private: true, type: "module", scripts: {dev: "npx --yes hyperframes@0.7.83 preview", check: "npx --yes hyperframes@0.7.83 check", render: "npx --yes hyperframes@0.7.83 render"}}, null, 2)}\n`);
+fs.writeFileSync(path.join(projectDir, "hyperframes.json"), `${JSON.stringify({$schema: "https://hyperframes.heygen.com/schema/hyperframes.json", registry: "https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry", paths: {blocks: "compositions", components: "compositions/components", assets: "assets"}, media: {autoProxy: true}}, null, 2)}\n`);
+fs.writeFileSync(path.join(projectDir, "meta.json"), `${JSON.stringify({id: phaseId, name: phaseId, createdAt: "2026-07-30T08:00:00.000Z"}, null, 2)}\n`);
+fs.writeFileSync(path.join(projectDir, "frame.md"), `# Creator material pixel type motion v1\n\n- Contract: ${plan.contract}\n- Source of truth: ${plan.sourceOfTruth}\n- Same IR actors: ${plan.motionIrScene.actors.length}\n- Duration: 4 seconds at 30fps\n- Review only: family adoption, renderer adoption, and H47 expansion remain locked.\n`);
+const agentTemplate = path.join(root, "hyperframes/editorial-kinetic-sequence-v2/AGENTS.md");
+if (fs.existsSync(agentTemplate)) fs.copyFileSync(agentTemplate, path.join(projectDir, "AGENTS.md"));
+console.log(JSON.stringify({status: "PASS", phaseId, compositionId, projectDir: path.relative(root, projectDir), sourceOfTruth: plan.sourceOfTruth, tweenCount: plan.hyperframesPlan.tweens.length, cliVersion: "0.7.83"}, null, 2));

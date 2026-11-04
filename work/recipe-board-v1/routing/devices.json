@@ -1,0 +1,1389 @@
+{
+ "contract": "A1RecipeBoardDevices/v1",
+ "about": "设计巧思的手法库：从对标片细拆（projects/<ref>/breakdowns/）里归纳出来、可以复用的做法。每条写清是什么（what）、文章里出现什么情况时用（when）、怎么做（how）、出处（from）。分镜和章节按 id 引用，按 when 对着文章选。用户 2026-10-21：拆得不够细，包括设计的巧思；系统要学会对标，换文章也能做好。",
+ "devices": [
+  {
+   "id": "carrier",
+   "kit": {
+    "status": "ready",
+    "use": "morph 引擎：一个 item 跨拍存在，pose(item, beat) 给每拍的形态和位置",
+    "kind": "narrative"
+   },
+   "name": "一个物件贯穿全段",
+   "what": "整段跟着同一个物件走，它一路变形、移动、缩放，但不消失（例：血样管→DNA卡→家谱里的方块→排查队列里的人；字母ATCG→碱基对→螺旋；一个白点→框里剩下的那个→星空中心）。",
+   "when": "几乎每一段。文章在讲一条追查链、一个推理过程、一个概念如何一步步展开时。",
+   "how": "选最早出现、和主题绑定的那个东西；每拍写清它这一拍的形态和位置；转场时它只变形或换背景。",
+   "from": "paperclip-138 191-231, 37-64, 96-134, 162-191, 296-330, 330-368",
+   "cue": null,
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "rhyme",
+   "kit": {
+    "status": "ready",
+    "use": "type.flat.rhyme(g, t, { at, dur, draw: (g, k) => … })：同一版式画两次，k 0→1 换一样东西",
+    "kind": "narrative"
+   },
+   "name": "首尾呼应",
+   "what": "后面的画面用前面的同一个构图、同一个物件，换一种状态（剪影→真人；\"如果他没出现\"回到同一面身高墙）。",
+   "when": "文章回到前面的人/物/问题时；从怀疑到确认、从有到无的转折。",
+   "how": "把前面那一帧的版式原样复用，只换里面的一样东西（人、颜色、状态）。",
+   "from": "paperclip-138 191-231, 262-296",
+   "cue": "回到|再次|又一次|最后|如果|理想",
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "callback",
+   "kit": {
+    "status": "ready",
+    "use": "type.flat.callback(g, t, { img, from, to, at })：前面的画面回到新位置",
+    "kind": "narrative"
+   },
+   "name": "前面的素材回来",
+   "what": "开场出现过的证据、阴影、地点在后面的段落里再出现，并被放到新的关系里（开场的指纹卡被放进坐标象限比较；证据卡贴到地图上）。",
+   "when": "文章用新知识重新解释前面的事实时。",
+   "how": "从前面的章节导入同一张图/同一个元件，不重画；放在新的坐标、地图或表格里。",
+   "from": "paperclip-138 96-134, 134-162",
+   "cue": "回到|再次|同样|前面|开头|还是",
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "title-to-texture",
+   "kit": {
+    "status": "ready",
+    "use": "S.mod.look2.words（巨字 5-15% 亮度，网点）；标题先由 type.serif 立起再交给 look2",
+    "kind": "narrative"
+   },
+   "name": "标题变底纹",
+   "what": "大标题或关键词出现后不消失，而是变成巨大的半透明背景字（BAIYIN、SPERM、AUTO、Y、IBD、FORENSIC GENEALOGY），或缩到角落当标签。",
+   "when": "每出现一个新名词、新地名、新章节时。",
+   "how": "标题先大字正常出现，然后放大到超出画面、降到 5-15% 亮度、加网点，留在后面几拍；或缩到左下当角标。",
+   "from": "paperclip-138 0-37, 162-191, 191-231, 262-296, 296-330",
+   "cue": "成分|功效|口味|作用",
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "term-biggest",
+   "kit": {
+    "status": "ready",
+    "use": "type.serif / K.label 设在 refType 字高，where.place 定位；字按 house letterRoles 选",
+    "kind": "narrative"
+   },
+   "name": "新名词最大",
+   "what": "新术语出现的那一刻，它是画面上最大的字：中文大字+红色英文全称+一行定义小字（STR 短串联重复 / 法医系谱刻画 Forensic genealogy / IBD Identity-By-Descent）。",
+   "when": "文章第一次给一个现象命名（\"这种现象被称为…\"\"被称为…\"）。",
+   "how": "名词落在说出它的那个字上；大字用最粗的家用字，英文用红色细字，定义用小字一行；停 1-3 秒后退成底纹或缩成标签。",
+   "from": "paperclip-138 64-96, 162-191, 262-296",
+   "cue": "被称为|称为|叫做|又叫|这种现象|这种做法|代表了|自己的办法|案为例|也就是(?!说)|即所谓|所谓|学名|简称|英文|这种(现象|结构|方法|做法|物质)",
+   "required": true,
+   "alt": [
+    "label-swap"
+   ]
+  },
+  {
+   "id": "scale-jump",
+   "kit": {
+    "status": "ready",
+    "use": "beats[].cam 关键帧 + moves.push；camPose 让连续关键帧成一个动作",
+    "kind": "narrative"
+   },
+   "name": "尺度跳变",
+   "what": "说到结论或强调时，镜头一下冲进数据或冲出全景（冲进1998那一列、冲进精子核、从一个点拉远成星空）。",
+   "when": "结论句、\"完全一致\"\"只剩1个\"这类强调；从局部到整体、从整体到局部的转换。",
+   "how": "镜头连续推/拉（不硬切），0.5-1 秒完成；冲进时目标留在画面中心。",
+   "from": "paperclip-138 0-37, 96-134, 162-191, 191-231",
+   "cue": "完全一致|关键|突破|比对|只剩|达到|高达|甚至|仅仅|倍",
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "zoom-into",
+   "kit": {
+    "status": "ready",
+    "use": "beats[].cam 推进 + type.dev.irisInto（圆形取景框扫过，里面一层在框内淡入）",
+    "kind": "type"
+   },
+   "name": "穿进物体内部",
+   "what": "镜头推进一个物体的某一点，穿过它的边缘进入里面一层（精子→精子核→23 条染色体）。",
+   "when": "文章从外到里讲结构：细胞→细胞核→染色体，城市→街道，网页→段落。",
+   "how": "目标点先标红；镜头推进时边缘变成圆形取景框扫过，里面一层在框里淡入。",
+   "from": "paperclip-138 162-191",
+   "cue": "细胞核|内部|里有|内部|里面|上有|表面|之中|中的",
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "zoom-out-whole",
+   "kit": {
+    "status": "ready",
+    "use": "beats[].cam 拉远，红标记由 pose 保留",
+    "kind": "narrative"
+   },
+   "name": "拉远看整体",
+   "what": "镜头拉远，刚才的局部变成整体里的一小块，周围出现更多同类（螺旋拉远，更多红点；一个点拉远成星空和 15 个位点）。",
+   "when": "\"以小窥大\"\"从局部推出整体\"\"当比对达到15个位点\"。",
+   "how": "拉远时保留刚才的红色标记，新出现的同类用同一种标记，数量随语速增加。",
+   "from": "paperclip-138 37-64, 96-134",
+   "cue": "整体|以小窥大|全局|达到.{0,6}个",
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "symmetry",
+   "kit": {
+    "status": "ready",
+    "use": "type.flat.symmetry(g, t, { left, right, at, words, red })：两边等大等距",
+    "kind": "narrative"
+   },
+   "name": "对称",
+   "what": "左右两张同样的卡（他的 / 凶手的），中间同一张表；或四列同样的数：对称本身在说\"两边一样\"。",
+   "when": "比对、一致、同一个人。",
+   "how": "两边用同一版式、同一大小，只有颜色或标签不同（白=他，红=现场）；对得上的地方同时亮。",
+   "from": "paperclip-138 134-162, 191-231, 231-262",
+   "cue": "完全一致|一模一样|吻合|相同|同一个人|只可能属于一个人|很可能就是|族亲|对比|相比|比起|前者|后者|而.{0,12}(则|却|只|仅)|两种|分别|和.{1,10}(一样|不同|无异)|与.{1,10}(一样|不同|无异)",
+   "required": true,
+   "alt": [
+    "table-grows",
+    "banner-verdict",
+    "tape-sweep"
+   ]
+  },
+  {
+   "id": "subject-stays",
+   "kit": {
+    "status": "ready",
+    "use": "type.flat.subjectStays(g, t, { subject, grounds: [{ img, at }] })",
+    "kind": "narrative"
+   },
+   "name": "主体不动背景换",
+   "what": "主体（卡、人）停在原位，背后换场景（地图、祠堂），说明人还是那个人，地方变了。",
+   "when": "同一个对象换了时间或地点。",
+   "how": "主体层不动，背景层交叉淡化或滑动；主体可以轻微缩放保持焦点。",
+   "from": "paperclip-138 191-231",
+   "cue": "出发|找到了.{0,10}(镇|村|市|家族)|这份|连带|这些|同一|仍然|依然|仍有",
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "word-cue",
+   "kit": {
+    "status": "ready",
+    "use": "系统 cueGate：台词原话的字压到说出前 0.3 s；where.said 取词时间",
+    "kind": "narrative"
+   },
+   "name": "对字",
+   "what": "每个新元素出现在说到它的那个字上。",
+   "when": "每一拍。",
+   "how": "用字幕时间轴：元素 in 落在对应词开始前 0.1-0.3 秒。",
+   "from": "paperclip-138 全片",
+   "cue": null,
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "narrowing-frames",
+   "kit": {
+    "status": "ready",
+    "use": "type.dev.narrowingFrames（框一层层收、框外的点退暗、最后一点变红）",
+    "kind": "type"
+   },
+   "name": "层层收框",
+   "what": "很多点里，一个个红框一层层往里收，每层框角钉一个条件标签，最后只剩一个。",
+   "when": "从大量里筛选：\"1000个人里只剩1个\"\"确定9名嫌疑人\"。",
+   "how": "每加一个条件，框缩一层、点灭一批，镜头跟着框推进；最后一点发光。",
+   "from": "paperclip-138 96-134",
+   "cue": "只剩|剩下.{0,4}[0-9一二三四五六七八九十]+\\s*个|确定.{0,8}[0-9一二三四五六七八九十]+\\s*名|锁定|筛选|排查|缩小范围|最长的|只有\\s*[0-9]+\\s*(个人|个|人|名)",
+   "required": true,
+   "alt": [
+    "dots-as-people",
+    "climb-tree",
+    "screen-workflow"
+   ]
+  },
+  {
+   "id": "dots-as-people",
+   "kit": {
+    "status": "ready",
+    "use": "kit3 dots / K2.dotTree",
+    "kind": "narrative"
+   },
+   "name": "一点一个人",
+   "what": "把人群抽象成点阵（1000 个白点、家谱的圆点），点的数量就是人数。",
+   "when": "文章出现\"在多少人中\"\"多少人\"。",
+   "how": "点用同一个小圆点，按数随机或网格铺满；被选中的变红或发光。",
+   "from": "paperclip-138 96-134, 330-368",
+   "cue": "[0-9]+\\s*个人|[0-9]+\\s*人中|在.{0,8}个人中|万枚|万人",
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "mark-in-red",
+   "kit": {
+    "status": "ready",
+    "use": "COL.red 只给被讲的东西；redPlateErrors、decoErrors 管住红的用法",
+    "kind": "narrative"
+   },
+   "name": "只红被讲的部分",
+   "what": "全片只有一种强调色（红）；画面上只有正在被讲的那一段/那个数/那条线是红的，其他都是黑白灰。",
+   "when": "每一拍：确定这一拍说的是哪一样东西，只给它红。",
+   "how": "黑白灰做底，红只占 0.5-5% 画面；换话题时红移到下一个东西，旧的退回灰。",
+   "from": "paperclip-138 全片",
+   "cue": "尤其|特别是|重点|唯一|才能|只有|最",
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "dim-keep-red",
+   "kit": {
+    "status": "ready",
+    "use": "type.flat.dimKeepRed(g, t, { at, amount })：画完这层后调用，除红以外压暗",
+    "kind": "narrative"
+   },
+   "name": "退暗留红",
+   "what": "整张图（家谱、表格）一起退暗到 20-30%，只剩红色的那一条还亮着。",
+   "when": "\"通过比对这个特征\"\"这些由血亲共享的片段\"：从整张图里拎出一条规律。",
+   "how": "整层降亮度，红色元素加辉光。",
+   "from": "paperclip-138 162-191, 262-296",
+   "cue": null,
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "mark-follows-line",
+   "kit": {
+    "status": "ready",
+    "use": "K2.redPath 沿线逐段画红",
+    "kind": "narrative"
+   },
+   "name": "标记沿一条线传",
+   "what": "一个红色标记沿着关系图的一条线往下传（Y 只沿男性一支传下去）。",
+   "when": "遗传、传承、谁继承了什么。",
+   "how": "先画全图（灰），再让红标记一代一代沿线落下，每落一个停 0.2 秒。",
+   "from": "paperclip-138 162-191",
+   "cue": "遗传|父系|传给|男性后代",
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "letter-to-structure",
+   "kit": {
+    "status": "ready",
+    "use": "kit3 seq / dna / helix：字母→碱基对→螺旋",
+    "kind": "narrative"
+   },
+   "name": "符号搭成结构",
+   "what": "字母/符号一个个出现，再配对、复制、缩小、扭转，搭成一个结构（A T C G→碱基对→序列→双螺旋）。",
+   "when": "文章从基本单位讲到整体结构。",
+   "how": "先给每个单位一个大字和名字；再缩小、排列、变形，单位一直可辨。",
+   "from": "paperclip-138 37-64",
+   "cue": null,
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "unwind-3d-to-flat",
+   "kit": {
+    "status": "ready",
+    "use": "kit.flatten(obj, k, { axis })：3D 压成平面，镜头关键帧转正",
+    "kind": "narrative"
+   },
+   "name": "3D 展平",
+   "what": "3D 双螺旋转着、压平成梯子，接上平面的字母梯讲细节。",
+   "when": "从结构讲到序列细节；从立体模型进入可读的平面。",
+   "how": "3D 物体转到侧面时与平面图对齐，交叉淡化。",
+   "from": "paperclip-138 64-96",
+   "cue": null,
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "copy-to-repeat",
+   "kit": {
+    "status": "ready",
+    "use": "type.dev.copyRepeat（红框带着内容平移复制，每份 every 秒）",
+    "kind": "build"
+   },
+   "name": "复制=重复",
+   "what": "一个单元的红框向右复制出几份（TCAT TCAT TCAT）。",
+   "when": "\"重复若干次\"\"一次又一次\"。",
+   "how": "原单元标红框后，红框带着内容平移复制，每份 0.3 秒。",
+   "from": "paperclip-138 64-96",
+   "cue": "重复",
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "label-swap",
+   "kit": {
+    "status": "ready",
+    "use": "type.dev.labelSwap（前半不动，后半个词擦掉重打，新词红）",
+    "kind": "type"
+   },
+   "name": "同位换说法",
+   "what": "同一个位置的标签换词（STR 基因座 → STR 位点），版式不动。",
+   "when": "\"又叫\"\"也称为\"。",
+   "how": "标签左对齐不动，后半个词擦掉重打。",
+   "from": "paperclip-138 64-96",
+   "cue": "又叫|也称|也叫|又称|到\\s*[0-9]{4}\\s*年|今天|如今|现在|后来|此后|变成",
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "pan-distance",
+   "kit": {
+    "status": "ready",
+    "use": "beats[].cam 横移",
+    "kind": "narrative"
+   },
+   "name": "横移=距离/还有很多",
+   "what": "镜头沿序列、染色体排横移，旧的出左边，新的从右边进（每隔6000~10000个碱基对；更多染色体）。",
+   "when": "距离、间隔、\"还有很多\"。",
+   "how": "匀速横移 1-2 秒；移动方向和阅读方向一致（向右看=往后）。",
+   "from": "paperclip-138 64-96, 96-134",
+   "cue": "每隔|相隔|之间的距离|分布",
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "callout-line",
+   "kit": {
+    "status": "ready",
+    "use": "type.hairline（引线避开字）/ K2.labelOn",
+    "kind": "narrative"
+   },
+   "name": "引线放大",
+   "what": "从图上一点拉出一根细引线，引到一个放大的细节条或标签上。",
+   "when": "\"以…为例\"\"这里\"。",
+   "how": "引线从点出发 0.3 秒画完，放大条随后展开。",
+   "from": "paperclip-138 64-96, 96-134, 162-191",
+   "cue": "为例|比如|例如|在这里|其中|包括|含有|成分|由.{0,10}组成|分别是|[、，].{1,8}[、，].{1,8}(等|以及)",
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "number-grows",
+   "kit": {
+    "status": "ready",
+    "use": "K2.counter（老虎机滚动，readout 不算事实数字）",
+    "kind": "narrative"
+   },
+   "name": "数字长出来",
+   "what": "一个很小的概率或很大的数一位位往外长（0.000000000000000002），数字的长度本身就是信息；或像计数器滚动后定格（80000000）。",
+   "when": "极小概率、极大数量、库容量。",
+   "how": "等宽字；每 0.1 秒加一位；滚动用老虎机式错位。",
+   "from": "paperclip-138 96-134, 231-262",
+   "cue": "概率|0\\.0|亿个|库容量|突破.{0,6}万|(?<![0-9])[0-9]{4,}(?![0-9]|\\s*年)|次数|[0-9]+(\\.[0-9]+)?\\s*(倍|%|％|mg|ml|万|亿|次|口|包|种|支|个|名|起|位|°C|秒|分钟)|高达|低至|提升到|增加到|降到|降低到|翻了|涨到",
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "quadrant-compare",
+   "kit": {
+    "status": "ready",
+    "use": "type.dev.quadrant（先两轴和四个端点词，再逐个落位，主角最后、红）",
+    "kind": "type"
+   },
+   "name": "象限比较",
+   "what": "把几种东西放到两个维度的坐标里比较（共有性/独特性 × 可信度：DNA 在右上，指纹鞋印在别处）。",
+   "when": "比较几种方法、证据、方案的优劣。",
+   "how": "先画两根轴和四个端点词，再把每样东西的图标落到位置上，主角最后落、用红。",
+   "from": "paperclip-138 96-134",
+   "cue": "可靠|相比|优势|比起",
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "table-grows",
+   "kit": {
+    "status": "ready",
+    "use": "type.dev.tableGrows（表头先到，每行 0.15 秒，超出一屏上滚，hot 行变红）",
+    "kind": "build"
+   },
+   "name": "表格逐行长出",
+   "what": "对照表一行行长出来、往上滚（位点名 + 四列数）。",
+   "when": "\"信息一致\"\"27个位点\"：很多条同样的比较。",
+   "how": "表头先到位；每行 0.15 秒；超过一屏就整体上滚。",
+   "from": "paperclip-138 134-162, 191-231",
+   "cue": "位点|指标|参数",
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "evidence-on-timeline",
+   "kit": {
+    "status": "ready",
+    "use": "K2.layoutTimeline",
+    "kind": "narrative"
+   },
+   "name": "证据挂在时间上",
+   "what": "证据卡片（指纹、鞋印、手印）按日期落到时间轴的年份下面，日期是红签。",
+   "when": "一串事件、一串案件、跨很多年的事实。",
+   "how": "先拉出时间轴与年份，再按年份顺序落卡；同一年的叠成一列。",
+   "from": "paperclip-138 0-37",
+   "cue": "[0-9]{4}\\s*年.{0,4}[0-9]{4}\\s*年|年间|指纹|鞋印|证据",
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "map-pin-count",
+   "kit": {
+    "status": "ready",
+    "use": "type.flat.pinCount(g, t, { pins, at, every, count })：一针一个，计数跟着针",
+    "kind": "narrative"
+   },
+   "name": "一针一个",
+   "what": "地图上一个个落下红色定位针（地名+日期），针的数量就是叙述里的数（9 名女性 = 9 根针）。",
+   "when": "文章说\"多少起\"\"散落在各个角落\"。",
+   "how": "针按时间顺序落，每根 0.3-0.6 秒；镜头慢推；针上的日期后面会被复用。",
+   "from": "paperclip-138 0-37",
+   "cue": "散落|各个角落|分布在|发生在|[0-9]+\\s*名.{0,4}(女性|男子|人)|[0-9]+\\s*起",
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "tilt-into-space",
+   "kit": {
+    "status": "ready",
+    "use": "K2.onPlane / planePoint（平面转进空间）",
+    "kind": "narrative"
+   },
+   "name": "平面倾斜成空间",
+   "what": "俯视的平面地图慢慢倾斜成透视，像镜头低下来进入这个城市。",
+   "when": "开场介绍地点。",
+   "how": "2D 平面在 3D 中绕 x 轴转 30-50°，同时推近。",
+   "from": "paperclip-138 0-37",
+   "cue": "这是.{1,8}(省|市|县|镇)",
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "colour-mood",
+   "kit": {
+    "status": "ready",
+    "use": "moves.wash；注意：不拿变色当转场（规则 26）",
+    "kind": "narrative"
+   },
+   "name": "颜色表达情绪",
+   "what": "红光从画面一角漫开、整张图沉到黑（恐慌、死亡）。",
+   "when": "情绪句：\"带来了更大的恐慌\"。",
+   "how": "2 秒内红色叠加由透明到 60%，再整体压到黑，黑停 1 秒。",
+   "from": "paperclip-138 0-37",
+   "cue": "恐慌|恐惧|绝望|不安",
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "literal-metaphor",
+   "kit": {
+    "status": "ready",
+    "use": "K2.plate：生图美术层（无字）压在主体后面",
+    "kind": "narrative"
+   },
+   "name": "把修辞做成画",
+   "what": "把文字里的比喻直接画出来：阴影盘旋＝半调黑影爬进画面；身份未知＝撕成三条的画像；判决＝监狱栏杆。",
+   "when": "文章用比喻、形容词描述一个状态时。",
+   "how": "比喻物做成半调或剪影的大图层，压在主体后面，慢慢进出；不抢主体。",
+   "from": "paperclip-138 0-37, 134-162, 330-368",
+   "cue": "阴影|笼罩|盘旋|迷雾|监禁|撕|深藏|未能散开|只可能属于|没有出现|堵住|吞|燃烧|烟消云散|骗局|陷阱|作弊",
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "cycle-compare",
+   "kit": {
+    "status": "ready",
+    "use": "type.dev.cycleCompare（同一框里快速轮换，停在 keep 那张、框变红）",
+    "kind": "type"
+   },
+   "name": "轮换=比对",
+   "what": "一张证据卡里的图快速轮换闪烁（指纹一张张换），表示在一个个比。",
+   "when": "\"比对了23万枚\"。",
+   "how": "同一框里每 0.1-0.2 秒换一张图，带轻微闪白。",
+   "from": "paperclip-138 0-37",
+   "cue": "等[0-9]*\\s*种|多种|各种|还有|以及|[、].{1,8}[、]",
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "banner-verdict",
+   "kit": {
+    "status": "ready",
+    "use": "type.dev.banner（背景压暗一半，白色大字左对齐，年份红色小字在上；不加底）+ K2.stamp",
+    "kind": "type"
+   },
+   "name": "结论横幅/盖章",
+   "what": "结论用大字横幅压在暗下去的画面上（甘蒙8·05系列…案），或一枚斜印章盖在卡上（STR比对一致）。",
+   "when": "定案、定性、\"完全一致\"。",
+   "how": "背景整体压暗 50%；横幅白色大字左对齐，年份红色小字在上；印章转 -8°，0.15 秒砸下。",
+   "from": "paperclip-138 134-162, 231-262",
+   "cue": "列入|定性|判处|确定为|定案|完全一致",
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "tape-sweep",
+   "kit": {
+    "status": "ready",
+    "use": "K2.tape（2026-10-26 起只有红字，没有底和线）",
+    "kind": "narrative"
+   },
+   "name": "标签做成警戒带",
+   "what": "一条条印满位点名的红色带子斜着横扫满屏，像警戒线。",
+   "when": "\"完全一致\"、案子封了。",
+   "how": "3-5 条带子不同角度从画外扫进，0.5 秒内铺满。",
+   "from": "paperclip-138 231-262",
+   "cue": null,
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "clipping-stack",
+   "kit": {
+    "status": "ready",
+    "use": "K2.pageCard + K2.props（同族不同成员）",
+    "kind": "narrative"
+   },
+   "name": "剪报斜着堆",
+   "what": "真实旧报纸的剪报一张张斜着滑进来叠成堆。",
+   "when": "讲当年舆论、案件的社会影响。",
+   "how": "每张旋转 ±5-10°、带投影；最多 4-5 张；镜头慢推。",
+   "from": "paperclip-138 134-162",
+   "cue": null,
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "real-doc-callout",
+   "kit": {
+    "status": "ready",
+    "use": "answer.pages：{ key, spec } 写卡片线 article 模块的 spec（真报道重排、beats 里 phrase 定位原句、highlight/mark 画在字上，marks.js 量过）；章节里 images[key].frame(s) 播放；market 模块画存档真实价格",
+    "kind": "narrative"
+   },
+   "name": "真文献拎数字",
+   "what": "真书封面滑进来翻开成内页，镜头贴着内页走，关键数字（1998、2003）用红色大字压在原文对应位置旁。",
+   "when": "文章引用文献、历史年份。",
+   "how": "真页面截图；红数字对齐原文那一行；其他段落压暗。",
+   "from": "paperclip-138 231-262",
+   "cue": "《|论文|书中|文献|研究表明|报告|声明|规定|标准|专利|通知|发表|指出|研究中心|研究所|组织|根据.{0,10}研究|实验中",
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "real-in-frame",
+   "kit": {
+    "status": "ready",
+    "use": "type.dev.onScreen（屏幕道具 images.prop_screen_<crt|monitor|laptop|phone> 是生图美术，屏幕纯白由系统找到，真实画面贴进去，带扫描线）；或 K2.screen + K2.picture",
+    "kind": "type"
+   },
+   "name": "真素材进实物框",
+   "what": "真实新闻片、网页、操作界面放进一个实物框里（复古电视、显示器、Finder 窗口），框里可以换多段。",
+   "when": "引用新闻、数据库、网站、调查过程。",
+   "how": "实物框是生成的美术层（无字）；真素材贴进屏幕区域，带轻微扫描线。",
+   "from": "paperclip-138 231-262, 262-296, 330-368",
+   "cue": "新闻|报道|央视|数据库|网站|网页|官网|发布|实验|视频|录像|采访",
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "screen-workflow",
+   "kit": {
+    "status": "ready",
+    "use": "K2.form / K2.folders 重绘界面（字由代码写）+ type.dev.cursor（光标沿路径移动、点击时一圈红环）",
+    "kind": "type"
+   },
+   "name": "真实操作界面",
+   "what": "把调查过程做成真实电脑操作：右键 New Folder、SUSPECT_1…9 文件夹、Facebook 资料文件。",
+   "when": "\"确定了9名嫌疑人\"\"建立档案\"。",
+   "how": "界面截图/重绘（字由代码写），光标真的在点；选中项变蓝。",
+   "from": "paperclip-138 330-368",
+   "cue": "文件夹|档案|建档|建立.{0,6}(谱系|档案)|确定.{0,4}[0-9]+\\s*名",
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "signal-break",
+   "kit": {
+    "status": "ready",
+    "use": "moves.glitch / look2.glitch",
+    "kind": "narrative"
+   },
+   "name": "信号坏掉=没有",
+   "what": "画面被雪花、扫描线撕碎抹掉（剪影被抹掉）。",
+   "when": "\"如果他没有出现\"\"如果没有\"。",
+   "how": "0.3-0.6 秒横向撕裂+噪点，然后留灰底。",
+   "from": "paperclip-138 262-296",
+   "cue": "如果.{0,16}没有|消失",
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "glitch-cut",
+   "kit": {
+    "status": "ready",
+    "use": "moves.glitch / look2.glitch",
+    "kind": "seam"
+   },
+   "name": "错位色条切换",
+   "what": "换场景时几道错位的色条撕过画面 0.3 秒。",
+   "when": "两个场景之间要硬转换时（从表格到地图）。",
+   "how": "RGB 分离 + 横条位移，0.2-0.4 秒。",
+   "from": "paperclip-138 134-162, 191-231",
+   "cue": null,
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "black-pause",
+   "kit": {
+    "status": "ready",
+    "use": "引擎：空帧即黑场",
+    "kind": "narrative"
+   },
+   "name": "留黑",
+   "what": "问题或死亡之后留 1.5-4.5 秒纯黑，只有字幕。",
+   "when": "\"他到底是谁？他现在又在哪里？\"之后；\"已被执行死刑\"。",
+   "how": "画面全黑，不放任何东西；下一段从黑里出来。",
+   "from": "paperclip-138 0-37, 162-191, 330-368",
+   "cue": "死刑|去世|遇害|[？?]\\s*$|[？?]|无法确定|未能|[？?]",
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "bracket-group",
+   "kit": {
+    "status": "ready",
+    "use": "type.dev.bracketGroup（括线 0.3 秒画出，名字落在括线中间留出的缺口）",
+    "kind": "type"
+   },
+   "name": "括线分组",
+   "what": "一根括线把一组东西括起来标上名（22 条常染色体），剩下的单独标。",
+   "when": "分类：其中多少是 A，多少是 B。",
+   "how": "括线 0.3 秒画完，名字落在括线中间。",
+   "from": "paperclip-138 162-191",
+   "cue": "其中.{0,6}[0-9一二三四五六七八九十]+\\s*(条|个|种)",
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "letter-as-set",
+   "kit": {
+    "status": "ready",
+    "use": "kit3 blockType（字做成 3D 体块）",
+    "kind": "narrative"
+   },
+   "name": "字母做布景",
+   "what": "把一个字母本身做成巨大的布景（Y 形光柱、立体的 DNA 字块当数据库）。",
+   "when": "主题词本身就能当空间时（Y 染色体、DNA 数据库）。",
+   "how": "字母放大到超出画面，做成光、体块或材质；内容在它里面或前面进行。",
+   "from": "paperclip-138 162-191, 296-330",
+   "cue": "数据库|Y 染色体|Y染色体",
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "bar-length-ratio",
+   "kit": {
+    "status": "ready",
+    "use": "type.dev.ratioBars（一行一根条，长度是保留的比例，括线把上一代连到下一代，hot 行红）",
+    "kind": "type"
+   },
+   "name": "横条长度=比例",
+   "what": "用横条长度表示份额（父亲的一段到儿子只剩三分之一、孙子十分之一）。",
+   "when": "比例、遗传份额、多少。",
+   "how": "同一根红条在下一代缩短；用括线把上一代连到下一代，代数向右。",
+   "from": "paperclip-138 262-296",
+   "cue": "分之|百分之|%|比例|分离|重组|继承|[0-9]+\\s*(%|％)|分之",
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "sort-to-rank",
+   "kit": {
+    "status": "ready",
+    "use": "type.dev.sortToRank（先散后排 0.8 秒，再一档一档框红）",
+    "kind": "type"
+   },
+   "name": "排序=关系",
+   "what": "乱飞的横条按长短排整齐，再用红框分档并在左边标档名和数值范围。",
+   "when": "\"越长越近\"\"第一长、第二长、以此类推\"。",
+   "how": "先散后排（0.8 秒），再一档一档框。",
+   "from": "paperclip-138 296-330",
+   "cue": "越长|越短|越近|越远|第二长|以此类推",
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "data-to-people",
+   "kit": {
+    "status": "ready",
+    "use": "type.flat.dataToPeople(g, t, { n, img, at, cols, mark })：img 用道具族里的人",
+    "kind": "narrative"
+   },
+   "name": "数据变成人",
+   "what": "一组数字（cM）一个个变成人的称谓，连成以\"我\"为中心的家谱。",
+   "when": "从数据得出人物关系。",
+   "how": "每个数旁弹出称谓，中间的\"我\"红色；连线最后画。",
+   "from": "paperclip-138 296-330",
+   "cue": "构建家谱|亲属|表亲",
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "shrink-to-reality",
+   "kit": {
+    "status": "ready",
+    "use": "pose 里删掉大半元素、剩下的变短变暗",
+    "kind": "narrative"
+   },
+   "name": "同图变少=现实",
+   "what": "同一张理想图里把数据变少、变短，家谱变暗（\"这只是理想情况\"）。",
+   "when": "从理想到现实的转折。",
+   "how": "不换图，只把元素删掉一大半、剩下的变短变暗。",
+   "from": "paperclip-138 296-330",
+   "cue": "理想情况|还很小|只能",
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "climb-tree",
+   "kit": {
+    "status": "ready",
+    "use": "K2.dotTree + K2.redPath",
+    "kind": "narrative"
+   },
+   "name": "沿家谱爬上再长下",
+   "what": "从找到的表亲沿家谱红线一层层往上爬到共同祖先，再从祖先往下重新长出整棵家谱。",
+   "when": "逆向推理：先往上找源头，再往下穷举。",
+   "how": "上爬用红线逐级点亮；到顶的点变白，下长用白点逐层出现。",
+   "from": "paperclip-138 330-368",
+   "cue": "逆向|共同祖先|高祖",
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "age-morph",
+   "kit": {
+    "status": "ready",
+    "use": "type.flat.ageMorph(g, t, { a, b, eyesA, eyesB, at })：两张照片眼睛对齐叠化",
+    "kind": "narrative"
+   },
+   "name": "一张脸变老",
+   "what": "年轻时的证件照叠化成老年照片。",
+   "when": "同一个人跨越几十年。",
+   "how": "两张照片眼睛对齐，1 秒叠化。",
+   "from": "paperclip-138 330-368",
+   "cue": "多年后|几十年|当年|就在其中",
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "lineup-row",
+   "kit": {
+    "status": "ready",
+    "use": "K2.lineup / K2.layoutLineup",
+    "kind": "build"
+   },
+   "name": "一排人并列",
+   "what": "一排凶手证件照+年份+案名横排，慢慢横移。",
+   "when": "总结同类案例。",
+   "how": "证件照同高同间距，下面两行小字（年份红、案名白）。",
+   "from": "paperclip-138 330-368, 368-412",
+   "cue": "从.{1,8}到.{1,8}(杀手|案)|无数",
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "countdown-object",
+   "kit": {
+    "status": "ready",
+    "use": "K2.plate（实物美术）+ K2.readout（数码管）",
+    "kind": "narrative"
+   },
+   "name": "倒计时实物",
+   "what": "真实质感的定时炸弹，红色数码管在倒数。",
+   "when": "结尾警句：\"DNA都会找到你\"\"抓住你\"。",
+   "how": "美术生成的实物（无字），数码管数字由代码写在上面并倒数。",
+   "from": "paperclip-138 368-412",
+   "cue": "找到你|抓住你|逃不掉",
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "array-build",
+   "kit": {
+    "status": "none",
+    "use": "未接线不得标 ready。开场硬门不认此空壳；同图×N / CSS clone 假阵列不算真装置",
+    "kind": "build"
+   },
+   "name": "阵列搭建（空壳）",
+   "what": "把同一单元复制成阵列的假装置名；系统未接线。",
+   "when": "导演想要阵列感时——改走已接线 lineup-row / copy-to-repeat / table-grows，或真模型阵列。",
+   "how": "未接线。禁止 kit.status ready；禁止当开场。",
+   "from": "director-routes opening.gaps / HOUSE 未接线空壳",
+   "cue": null,
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "stagger-reveal",
+   "kit": {
+    "status": "none",
+    "use": "未接线不得标 ready。开场硬门不认此空壳；错开 CSS rise 不算真装置",
+    "kind": "build"
+   },
+   "name": "错开揭示（空壳）",
+   "what": "多个块错开出现的假装置名；系统未接线。",
+   "when": "导演想要逐个出现——用真块 `in`/`enter` 错开，或已接线装置，不要点此空壳。",
+   "how": "未接线。禁止 kit.status ready；禁止当开场。",
+   "from": "director-routes opening.gaps / HOUSE 未接线空壳",
+   "cue": null,
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "light-3d",
+   "kit": {
+    "status": "none",
+    "use": "未接线不得标 ready。开场硬门不认此空壳；无 model/orbit 的灯效名不算真装置",
+    "kind": "build"
+   },
+   "name": "三维灯光（空壳）",
+   "what": "灯光/三维氛围的假装置名；系统未接线。",
+   "when": "要三维主体——走 kit.props.model / subject / orbit 章节路径，不要点此空壳。",
+   "how": "未接线。禁止 kit.status ready；禁止当开场。",
+   "from": "director-routes opening.gaps / HOUSE 未接线空壳",
+   "cue": null,
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "presenter-close",
+   "kit": {
+    "status": "none",
+    "use": "未接线不得标 ready。开场硬门不认此空壳；作者素材由作者提供，系统不做",
+    "kind": "narrative"
+   },
+   "name": "作者出镜收尾",
+   "what": "作者出镜说结尾，右侧制作名单、品牌、关注方式。",
+   "when": "片尾。",
+   "how": "作者素材来自作者；名单字由代码写。",
+   "from": "paperclip-138 368-412",
+   "cue": null,
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "product-hero",
+   "kit": {
+    "status": "ready",
+    "use": "kit.props.model / kit.engine.subject：做好的模型、可拆主体",
+    "kind": "narrative"
+   },
+   "name": "物件特写开场",
+   "what": "一件实物（烟盒、香烟、打火机）的微距特写：慢推、开盒、抽出一支、点火，质感接近广告片。",
+   "when": "文章讲的是一样日常东西，开场先让观众看清这样东西本身。",
+   "how": "实物级 3D 或实拍，浅景深、黑底、硬光；每个镜头一个动作，0.5-2 秒一切；品牌换成片子自己的虚构品牌。",
+   "from": "paperclip-047 0-11",
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "matter-transition",
+   "kit": {
+    "status": "ready",
+    "use": "type.dev.matterTransition（一张无字物质图从一侧涌进盖满再散开；物质图走生图美术层）",
+    "kind": "type"
+   },
+   "name": "物质本身当转场",
+   "what": "画面里的物质（烟、火、液体）漫过画面，散开时露出下一个画面（烟雾散开露出片名）。",
+   "when": "两个场景之间，主题本身就有一种会流动、会弥漫的东西。",
+   "how": "物质从一角涌进来盖满，再散开；下一画面在它后面淡出。",
+   "from": "paperclip-047 11-17",
+   "required": false,
+   "alt": []
+  },
+  {
+   "id": "trace-diagram",
+   "kit": {
+    "status": "ready",
+    "use": "type.dev.traceDiagram（真原图在先，同位线稿叠上、原图退掉，标签按词出现）",
+    "kind": "type"
+   },
+   "name": "把文献里的图描成线稿",
+   "what": "真文献（国标、论文）里的示意图先原样出现，再变成片子自己颜色的线稿，零件逐个标上名字。",
+   "when": "讲一个标准、方法或装置是怎么规定的，而文献里正好有它的图。",
+   "how": "先放原文页面和原图（可信），再叠一层同位置的单色线稿，原图退掉；标签沿引线一个个出现，落在说到的字上。",
+   "from": "paperclip-047 74-82",
+   "required": false,
+   "alt": [
+    "real-doc-callout"
+   ],
+   "cue": "方法|装置|机器|原理|标准"
+  },
+  {
+   "id": "branch-out",
+   "kit": {
+    "status": "ready",
+    "use": "type.dev.branchOut（一根线分叉，几样东西按说到的顺序落在线端，focus 时其他移出）",
+    "kind": "type"
+   },
+   "name": "一个东西分出几支",
+   "what": "一件东西（一瓶原料）下面拉出分叉的线，连到它能变成的几样东西（贴片、口香糖、电子烟），每样上面再放一段真实画面。",
+   "when": "文章说一种东西\"可以用于 A、B 以及 C\"。",
+   "how": "原料在上，线往下分叉，几样东西按说到的顺序落在线端；需要时每样上方加一个实拍小框；讲到其中一样时其他的移出画面。",
+   "from": "paperclip-047 182-195",
+   "required": false,
+   "alt": [
+    "bracket-group"
+   ],
+   "cue": "可用于|用于.{0,10}(以及|和|、)|分为"
+  },
+  {
+   "id": "exploded-view",
+   "kit": {
+    "status": "ready",
+    "use": "type.dev.explodedView（零件图沿轴拉开，引线标签按词出现，hot 那层名字红）",
+    "kind": "type"
+   },
+   "name": "拆开看里面",
+   "what": "一件器物沿轴线拆开成几层（烟弹、雾化芯、加热器），每层用引线标名，讲完再合上。",
+   "when": "讲一个东西内部怎么工作、由哪几部分组成。",
+   "how": "沿一根轴把零件拉开，零件之间留空；引线标签一个个出现，落在说到的字上；讲到的那一层用强调色标签（温度）。",
+   "from": "paperclip-047 207-215",
+   "required": false,
+   "alt": [
+    "zoom-into"
+   ],
+   "cue": "由.{0,10}组成|部件|零件|结构|发热丝|内部"
+  },
+  {
+   "id": "made-model",
+   "name": "物件用做好的模型",
+   "what": "片里讲到的一件实物（船、飞机、芯片、机器、产品）以做好的 3D 模型出现：图生 3D 做成、按全片配色压色，可拆的主体能爆炸拆开。",
+   "when": "口播讲到一件具体的东西，画面要让人看到它的样子或结构时。",
+   "how": "await kit.props.model(THREE, '<名字>', { what, length }) 或 await kit.engine.subject(THREE, st, '<id>', { size })；没有的模型系统渲染前自己做。",
+   "from": "用户 2026-10-27：任意需要的模型都能转换很好的模型给打通了",
+   "cue": "(貨櫃船|輪船|郵輪|拖船|飛機|火箭|晶片|芯片|顯卡|手機|汽車|機器人|發動機|引擎|衛星|潛艇|硬碟|電鑽|伺服器)",
+   "required": false,
+   "alt": [
+    "product-hero"
+   ],
+   "kit": {
+    "status": "ready",
+    "use": "kit.props.model / kit.engine.subject",
+    "kind": "narrative"
+   },
+   "route": {
+    "code": "props\\.model\\(|engine\\.subject\\(",
+    "say": "a beat naming made-model draws its thing with kit.props.model(THREE, '<name>', { what }) or kit.engine.subject — not code boxes, not a web photo"
+   }
+  },
+  {
+   "id": "real-page-mark",
+   "name": "真报道拎原句",
+   "what": "真报道、论文、公告截下来重排，原句上划线或标记，镜头推到那一句。",
+   "when": "口播引用或转述一篇报道、研究、公告里的话或数字时。",
+   "how": "答案 pages 里写 article 模块的 spec（src 是素材里截下的页面，beats 的 phrase 是原句），章节里 images[key].frame(秒) 播放。",
+   "from": "paperclip-138 / hupo-auto2 的读报镜头",
+   "cue": "(報道|報導|新聞稿|論文|研究報告|研究指出|公告|判決書|聲明|文件(中|裡)寫)",
+   "required": false,
+   "alt": [
+    "real-doc-callout"
+   ],
+   "kit": {
+    "status": "ready",
+    "use": "answer.pages: { key, spec: article }",
+    "kind": "narrative"
+   },
+   "route": {
+    "pages": "article",
+    "say": "a beat naming real-page-mark shows the page through answer.pages with an article spec (its sentence marked by marks.js), not a picture with boxes drawn on it"
+   }
+  },
+  {
+   "id": "real-prices",
+   "name": "真实价格画出来",
+   "what": "股价、指数、市值的走势用存档的真实价格由代码画成 K 线或曲线，不用素材片段或示意图代替。",
+   "when": "口播讲到股价、市值、指数的涨跌时。",
+   "how": "答案 pages 里写 market 模块的 spec（存档的真实价格），章节里播放。",
+   "from": "AGENTS.md：A picture of data … is drawn by code from archived real prices (market module)",
+   "cue": "(股價|市值|K線|漲停|跌停|指數|收盤|開盤|蒸發了?.{0,4}億)",
+   "required": false,
+   "alt": [],
+   "kit": {
+    "status": "ready",
+    "use": "answer.pages: { key, spec: market }",
+    "kind": "narrative"
+   },
+   "route": {
+    "pages": "market",
+    "say": "a beat naming real-prices draws the archived real prices through answer.pages with a market spec"
+   }
+  },
+  {
+   "id": "filmed-screen",
+   "name": "屏幕被摄像机拍",
+   "what": "真网页、软件界面、录屏、证据照片放在暗场里的一块屏上，摄像机斜着拍：透视、轻微倾斜、景深，屏的介质（LED、CRT、clean），滚到读的那一句。",
+   "when": "证据拍、讲软件网站平台、讲屏幕上发生的事；页面不要平贴满屏时。",
+   "how": "kit.engine.filmedScreen(id, { image: images.<素材>, medium, tilt, scroll: (t) => 像素 })，draw 里 shot.draw(g, t, 0, 0, 1920, 1080)；原句划线仍走 answer.pages article。",
+   "from": "光郡第 29 集（style-lab/REFERENCE-guangjun-ep29.md；用户 2026-10-28：光郡那种也是我喜欢的美学风格画风）",
+   "cue": "",
+   "required": false,
+   "alt": [],
+   "kit": {
+    "status": "ready",
+    "use": "kit.engine.filmedScreen",
+    "kind": "narrative"
+   }
+  },
+  {
+   "id": "type-cursor",
+   "name": "打字加斜线块光标",
+   "what": "字逐个打出（汉字 2 帧一个），前面推着一块斜线填充的方块，打完后细光标闪。",
+   "when": "新名词、标题、一句关键的话第一次出现。",
+   "how": "type.dev.typeOn(g, t, { at, text, x, y, size, color, hatch: 配色的点缀 })",
+   "from": "光郡第 29 集（style-lab/REFERENCE-guangjun-ep29.md；用户 2026-10-28：光郡那种也是我喜欢的美学风格画风）",
+   "cue": "",
+   "required": false,
+   "alt": [],
+   "kit": {
+    "status": "ready",
+    "use": "type.dev.typeOn",
+    "kind": "type"
+   }
+  },
+  {
+   "id": "coord-track",
+   "name": "坐标追踪标签",
+   "what": "一根细引线从主体拉出，末端是名字和跳动的坐标，像在追踪它。",
+   "when": "指出画面里的一样东西、一个地点、一个人。",
+   "how": "type.dev.coordTrack(g, t, { at, from: [x, y], to: [x, y], name, color, accent })",
+   "from": "光郡第 29 集（style-lab/REFERENCE-guangjun-ep29.md；用户 2026-10-28：光郡那种也是我喜欢的美学风格画风）",
+   "cue": "",
+   "required": false,
+   "alt": [],
+   "kit": {
+    "status": "ready",
+    "use": "type.dev.coordTrack",
+    "kind": "type"
+   }
+  },
+  {
+   "id": "hud-label",
+   "name": "描边读数标签",
+   "what": "小方框描边里的大写读数：步骤、时间、层号；可以是实时读数。",
+   "when": "流程讲到第几步、时间在走、一个读数在变。",
+   "how": "type.dev.hudLabel(g, t, { at, text, value: (t) => …, x, y, color })",
+   "from": "光郡第 29 集（style-lab/REFERENCE-guangjun-ep29.md；用户 2026-10-28：光郡那种也是我喜欢的美学风格画风）",
+   "cue": "",
+   "required": false,
+   "alt": [],
+   "kit": {
+    "status": "ready",
+    "use": "type.dev.hudLabel",
+    "kind": "type"
+   }
+  },
+  {
+   "id": "bilingual-title",
+   "name": "双语标题",
+   "what": "中文标题下面一行拉丁字（家用的機械彫刻），同一条边，跟着打出来。",
+   "when": "章节标题、术语、一个概念的名字。",
+   "how": "type.dev.bilingualTitle(g, t, { at, zh, en, x, y, size, color, sub })",
+   "from": "光郡第 29 集（style-lab/REFERENCE-guangjun-ep29.md；用户 2026-10-28：光郡那种也是我喜欢的美学风格画风）",
+   "cue": "",
+   "required": false,
+   "alt": [],
+   "kit": {
+    "status": "ready",
+    "use": "type.dev.bilingualTitle",
+    "kind": "type"
+   }
+  },
+  {
+   "id": "keyword-collapse",
+   "name": "关键词塌缩成一点",
+   "what": "一圈关键词连线到中心，突然塌缩成一个发光点，外面一圈点阵扩开，标出它们共同的那个词。",
+   "when": "「大家都一样」「都指向同一个」「平均」「收拢成一件事」。",
+   "how": "type.dev.keywordCollapse(g, t, { at, collapseAt, words, cx, cy, point, accent })",
+   "from": "光郡第 29 集（style-lab/REFERENCE-guangjun-ep29.md；用户 2026-10-28：光郡那种也是我喜欢的美学风格画风）",
+   "cue": "",
+   "required": false,
+   "alt": [],
+   "kit": {
+    "status": "ready",
+    "use": "type.dev.keywordCollapse",
+    "kind": "type"
+   }
+  },
+  {
+   "id": "chapter-map",
+   "name": "章节母题地图",
+   "what": "线框网格地面上一排方块，一步一块：做过的填色、这一步发亮、后面的是线框；每章开头回到这里，亮下一块。",
+   "when": "全片有几个步骤、几个阶段、几个原因时，每章开头。",
+   "how": "type.dev.chapterMap(g, t, { at, steps, now })",
+   "from": "光郡第 29 集（style-lab/REFERENCE-guangjun-ep29.md；用户 2026-10-28：光郡那种也是我喜欢的美学风格画风）",
+   "cue": "",
+   "required": false,
+   "alt": [],
+   "kit": {
+    "status": "ready",
+    "use": "type.dev.chapterMap",
+    "kind": "type"
+   }
+  },
+  {
+   "id": "flash-cut",
+   "name": "闪白一帧硬切",
+   "what": "换场时一帧白闪，克制地用。",
+   "when": "换章、换介质、一个转折。",
+   "how": "type.dev.flashCut(g, t, { at })",
+   "from": "光郡第 29 集（style-lab/REFERENCE-guangjun-ep29.md；用户 2026-10-28：光郡那种也是我喜欢的美学风格画风）",
+   "cue": "",
+   "required": false,
+   "alt": [],
+   "kit": {
+    "status": "ready",
+    "use": "type.dev.flashCut",
+    "kind": "seam"
+   }
+  },
+  {
+   "id": "whip-pan",
+   "name": "快摇带拖影",
+   "what": "镜头在两个取景之间 0.25–0.35 秒甩过去，精渲的子帧运动模糊拖出影子。",
+   "when": "从一处甩到另一处、比较两样东西、节奏要快时。",
+   "how": "camera3 两个关键帧之间 dur 0.25–0.35（精渲的运动模糊自带拖影）",
+   "from": "光郡第 29 集（style-lab/REFERENCE-guangjun-ep29.md；用户 2026-10-28：光郡那种也是我喜欢的美学风格画风）",
+   "cue": "",
+   "required": false,
+   "alt": [],
+   "kit": {
+    "status": "ready",
+    "use": "camera3 key dur 0.3",
+    "kind": "seam"
+   }
+  },
+  {
+   "id": "giant-crop",
+   "name": "越界裁切的巨字",
+   "what": "一个两到四字的词放得比画面还大，被画框裁掉一截，慢慢滑动；词仍读得出。",
+   "when": "全片的关键词、章节名、一个情绪最强的词。",
+   "how": "type.dev.giantCrop(g, t, { at, text, size, x, y, color })（自动标成故意出画）",
+   "from": "Gawx Art（用户 2026-10-27 喜欢 Gawx；标题机制轮换，2026-10-28 审计 AUDIT-aesthetics-20261028.md）",
+   "cue": "",
+   "required": false,
+   "alt": [],
+   "kit": {
+    "status": "ready",
+    "use": "type.dev.giantCrop",
+    "kind": "type"
+   }
+  },
+  {
+   "id": "letter-grid",
+   "name": "拆字网格",
+   "what": "一个词拆成网格，一格一个字，乱序填满。",
+   "when": "一个词被拆开讲、一个名字、一个概念的组成。",
+   "how": "type.dev.letterGrid(g, t, { at, text, cols, cell, x, y })",
+   "from": "Gawx Art（用户 2026-10-27 喜欢 Gawx；标题机制轮换，2026-10-28 审计 AUDIT-aesthetics-20261028.md）",
+   "cue": "",
+   "required": false,
+   "alt": [],
+   "kit": {
+    "status": "ready",
+    "use": "type.dev.letterGrid",
+    "kind": "type"
+   }
+  },
+  {
+   "id": "poster-ground",
+   "name": "纯色底海报版式",
+   "what": "整幅纯色底（这一拍配色的底：芥黄、胶片红、钴蓝），几行整块大字每行同宽，下面一行小字。",
+   "when": "一句结论、一个大数字、高潮、证据卡的标题。",
+   "how": "type.dev.posterGround(g, t, { at, ground: 配色的底, lines, small, color: 配色的字色 })",
+   "from": "Gawx Art（用户 2026-10-27 喜欢 Gawx；标题机制轮换，2026-10-28 审计 AUDIT-aesthetics-20261028.md）",
+   "cue": "",
+   "required": false,
+   "alt": [],
+   "kit": {
+    "status": "ready",
+    "use": "type.dev.posterGround",
+    "kind": "type"
+   }
+  },
+  {
+   "id": "photo-over-type",
+   "name": "照片满屏压字",
+   "what": "真照片满屏、调成低调，米白字直接压在上面，不垫底板。",
+   "when": "真画面的拍、一个人一个地方出场、证据照片配一句话。",
+   "how": "type.dev.photoOverType(g, t, { at, im: images.<素材>, big, small, color })",
+   "from": "Gawx Art（用户 2026-10-27 喜欢 Gawx；标题机制轮换，2026-10-28 审计 AUDIT-aesthetics-20261028.md）",
+   "cue": "",
+   "required": false,
+   "alt": [],
+   "kit": {
+    "status": "ready",
+    "use": "type.dev.photoOverType",
+    "kind": "type"
+   }
+  },
+  {
+   "id": "vhs-osd",
+   "name": "录像带角标",
+   "what": "真画面走录像带介质，四角是 PLAY、日期、走动的时间码。",
+   "when": "只在讲回忆、旧新闻录像、「那天早上」这类过去的一段影像时；不拿来装饰别的拍。",
+   "how": "整片设计 screen: 'vhs'；type.dev.osd(g, t, { at, bl: 'MAR.23 2021', start: 秒 })",
+   "from": "复古界面样张（style-lab/samples-20261028；用户 2026-10-20：比较喜欢复古的感觉；2026-10-28 看过样张，收进库，要合适才用）",
+   "cue": "",
+   "required": false,
+   "alt": [],
+   "kit": {
+    "status": "ready",
+    "use": "type.dev.osd",
+    "kind": "type"
+   }
+  },
+  {
+   "id": "lcd-readout",
+   "name": "液晶读数",
+   "what": "琥珀终端上一个大数字，旁边描边读数标签。",
+   "when": "只在这一拍讲的就是一个读数、一个计数、一个在跳的数时。",
+   "how": "整片设计 screen: 'amber'；type.flat.label 大数字（機械彫刻）＋ type.dev.hudLabel",
+   "from": "复古界面样张（style-lab/samples-20261028；用户 2026-10-20：比较喜欢复古的感觉；2026-10-28 看过样张，收进库，要合适才用）",
+   "cue": "",
+   "required": false,
+   "alt": [],
+   "kit": {
+    "status": "ready",
+    "use": "type.dev.hudLabel",
+    "kind": "type"
+   }
+  },
+  {
+   "id": "retro-window",
+   "name": "旧视窗",
+   "what": "一扇旧窗口（标题栏、灰框）里放真截图或真照片，走 CRT 介质。",
+   "when": "只在讲软件、系统、数据库、「打开来看」时；窗口里放真东西，不画假界面。",
+   "how": "整片设计 screen: 'crt'；type.dev.retroWindow(g, t, { at, title, im: images.<素材> })",
+   "from": "复古界面样张（style-lab/samples-20261028；用户 2026-10-20：比较喜欢复古的感觉；2026-10-28 看过样张，收进库，要合适才用）",
+   "cue": "",
+   "required": false,
+   "alt": [],
+   "kit": {
+    "status": "ready",
+    "use": "type.dev.retroWindow",
+    "kind": "type"
+   }
+  },
+  {
+   "id": "pixel-dialog",
+   "name": "像素对话框",
+   "what": "画面底部的对话框，名牌写说话人，原话逐字打出，走 LED 介质。",
+   "when": "只在引用某个人真说过的一句话时（有出处的原话）。",
+   "how": "整片设计 screen: 'led2'；type.dev.dialogBox(g, t, { at, name, text })",
+   "from": "复古界面样张（style-lab/samples-20261028；用户 2026-10-20：比较喜欢复古的感觉；2026-10-28 看过样张，收进库，要合适才用）",
+   "cue": "",
+   "required": false,
+   "alt": [],
+   "kit": {
+    "status": "ready",
+    "use": "type.dev.dialogBox",
+    "kind": "type"
+   }
+  },
+  {
+   "id": "showa-poster",
+   "name": "昭和海报",
+   "what": "红黄黑的纯色底海报：整块大字每行同宽，黑条上一个大数字。",
+   "when": "一句结论、一个标题、高潮这种要「喊出来」的拍；一部片至多一两次。",
+   "how": "type.dev.posterGround({ ground: '#c8241b', color: '#f6c72b', … })，screen: 'clean'（不用 print 介质：会变成钴蓝）",
+   "from": "复古界面样张（style-lab/samples-20261028；用户 2026-10-20：比较喜欢复古的感觉；2026-10-28 看过样张，收进库，要合适才用）",
+   "cue": "",
+   "required": false,
+   "alt": [],
+   "kit": {
+    "status": "ready",
+    "use": "type.dev.posterGround",
+    "kind": "type"
+   }
+  },
+  {
+   "id": "dither-relief",
+   "name": "抖色干涉浮雕",
+   "what": "有限色阶、量化、从杂讯辨认结构的概念表达",
+   "when": "有限色阶、量化、从杂讯辨认结构的概念表达；不适合：真实影像证据、精确数据读数、细小文字底",
+   "how": "type.dev.visualLanguage(g, { id: 'dither-relief', purpose, palette, box, geometry, density, progress })",
+   "required": false,
+   "cue": "",
+   "alt": [],
+   "kit": {
+    "status": "ready",
+    "use": "type.dev.visualLanguage",
+    "kind": "graphic",
+    "params": {
+     "id": "dither-relief"
+    }
+   },
+   "source": "style-lab/samples/visual-language-comparison-20261030/scene.mjs"
+  },
+  {
+   "id": "scan-sections",
+   "name": "扫描断层",
+   "what": "用逐层偏移与选中截面解释层次关系（示意）",
+   "when": "用逐层偏移与选中截面解释层次关系（示意）；不适合：医学/科学成像证据、未绑定真实数据的测量结果",
+   "how": "type.dev.visualLanguage(g, { id: 'scan-sections', purpose, palette, box, geometry, density, progress })",
+   "required": false,
+   "cue": "",
+   "alt": [],
+   "kit": {
+    "status": "ready",
+    "use": "type.dev.visualLanguage",
+    "kind": "graphic",
+    "params": {
+     "id": "scan-sections"
+    }
+   },
+   "source": "style-lab/samples/visual-language-comparison-20261030/scene.mjs"
+  },
+  {
+   "id": "technical-editorial",
+   "name": "千禧技术编辑",
+   "what": "技术主题的章节分隔、方向性裁切与高密度线场",
+   "when": "技术主题的章节分隔、方向性裁切与高密度线场；不适合：把装饰线场当图表、真假界面混淆、阅读密集证据",
+   "how": "type.dev.visualLanguage(g, { id: 'technical-editorial', purpose, palette, box, geometry, density, progress })",
+   "required": false,
+   "cue": "",
+   "alt": [],
+   "kit": {
+    "status": "ready",
+    "use": "type.dev.visualLanguage",
+    "kind": "graphic",
+    "params": {
+     "id": "technical-editorial"
+    }
+   },
+   "source": "style-lab/samples/visual-language-comparison-20261030/scene.mjs"
+  },
+  {
+   "id": "shelf-bay-back-type",
+   "name": "货架仓位背板材质字",
+   "what": "品种名、百分比、弱点句等写在货架仓位背板或前挡板材质上的字（漆/镂印/印刷/粉笔感），跟着货架动、吃场景光。",
+   "when": "货架仓位需要可读的品种/占比/弱点标签；字应是背板材质上的墨迹，不是悬空 HUD、也不是奶油底板牌。",
+   "how": "type.bayBackType(THREE, st, { text, parent /* bay back mesh */, at, rot, height, color, kind: 'paint'|'stencil'|'print'|'chalk', align, opacity, sub })",
+   "from": "Neo→系统引擎 2026-11-03：Banana B02 货架 bay 可读字；禁 box plate / cream placard（rules-11）",
+   "cue": "货架|仓位|背板|品种|弱点",
+   "required": false,
+   "alt": [],
+   "kit": {
+    "status": "ready",
+    "use": "type.bayBackType",
+    "kind": "type"
+   }
+  }
+ ]
+}

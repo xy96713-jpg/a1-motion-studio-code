@@ -1,0 +1,20 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+const base = 'apps/studio-next/src/app/system-line-visual-workbench/';
+const original = fs.readFileSync(base + 'GlobalStoryboardReviewPanel.tsx', 'utf8');
+const research = fs.readFileSync(base + 'ResearchProductionBoard.tsx', 'utf8');
+const shared = fs.readFileSync(base + 'FrameFirstStoryboard.tsx', 'utf8');
+assert.match(original, /from "\.\/FrameFirstStoryboard"/);
+assert.match(research, /from '\.\/FrameFirstStoryboard'/);
+assert.match(original, /<FrameFirstStoryboard/);
+assert.match(research, /<FrameFirstStoryboard/);
+assert.doesNotMatch(research, /function Preview|data-a1-large-static-comparison|data-a1-production-shot=|<main|localStorage|method:\s*['"]POST/);
+assert.match(shared, /renderFrame\?:/);
+assert.match(shared, /captionLabel =/);
+assert.match(shared, /!staticOnly/);
+assert.match(shared, /data-a1-frame-first="true"/);
+assert.match(shared, /a1-storyboard-overview/);
+assert.match(research, /route: 'RESEARCH_TASK'/);
+assert.match(research, /整镜未批准/);
+console.log(JSON.stringify({status: 'PASS', checks: ['same-original-frame-component', 'shared-css-and-navigation', 'research-is-data-binding',
+  'no-second-store-or-service', 'no-research-writes-to-formal-api', 'legacy-defaults-preserved', 'explicit-research-boundary']}));

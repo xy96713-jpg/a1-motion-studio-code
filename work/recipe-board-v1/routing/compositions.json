@@ -1,0 +1,254 @@
+{
+ "contract": "A1CompositionGrammar/v1",
+ "said": "2026-10-27 用户：背景铁锈不好 梳理一下为什么做那么不成熟 之后系统怎么做才行 导演如何更智能 设计如何更好呢；然后：先做设计先行（每拍设计简报+样张+品味评审）、构图语法库、背景和主体分离的量尺",
+ "why": "每拍不再从零摆坐标：从成熟片子拆出的构图里挑一种，再填内容。底是干净的、属于故事世界的一个地方；画面一个焦点；主体和底分得开；字按 Gawx 的排法；动效按回形针。范例：回形针 Vol.138（work/recipe-board-v1/projects/paperclip-138/reference/vol138.mp4 的秒数）、Gawx（work/style-research/gawx-frame-study-2026-09-18/frames/）、胡泊（style-lab/reference-hupo/）。",
+ "grounds": {
+  "rule": "底是安静的：一种深的中性色加细颗粒或网点（回形针），或者故事世界里的一个地方被压暗、虚化（Gawx 的房间）。底的细节比主体少，明暗和主体拉开。不用花纹贴图（铁锈墙、毛毡、木纹）当底，除非它就是这一拍讲的东西本身，而且主体放在它前面时要压暗、虚化到读不出纹理。",
+  "kinds": [
+   "halftone-dark: 深灰底，细网点和颗粒，四角暗（回形针全片；代码里 kit.halftoneGround(THREE, { color, at }) 给 scene.background）",
+   "place-dark: 故事里的地方，压暗虚化，只剩大形（Gawx）",
+   "chart-table: 一张图或地图平放，镜头俯看，图外是同色的纸（地图章节）",
+   "paper-light: 亮的纸面（只在 paperclip 档案，或一拍的翻底）"
+  ]
+ },
+ "compositions": [
+  {
+   "id": "hero-object",
+   "name": "一样东西站在中间",
+   "from": "回形针 56s 双螺旋、312s 立体 DNA 字；Gawx 台灯下的桌面",
+   "when": [
+    "一个东西本身是主角：船、地球、芯片、产品"
+   ],
+   "picture": "主体居中或在三分线上，占画面三到五成；四周是安静的底",
+   "focus": "主体上被光照到的那一面；点缀色只给主体上要看的那一处",
+   "ground": "halftone-dark 或 place-dark；底比主体暗 0.15 以上，没有纹理",
+   "light": "一侧来的主光，主体有亮面和影子，轮廓光把它从底里分出来",
+   "type": "一对字（大小两级）放在主体旁边的空处，或长在主体上",
+   "exemplars": [
+    "paperclip-138@56",
+    "paperclip-138@312",
+    "paperclip-138@376",
+    "gawx:2024-0303-small-italic.jpg"
+   ],
+   "template": "kit.scene.heroObject(THREE, st, { object: kit.props.containerShip(THREE).group, at, yaw, radius }) → set({ on })；镜头 { frame: 'hero', side, fill, elev: 8 }"
+  },
+  {
+   "id": "map-table",
+   "name": "俯看桌上的图",
+   "from": "回形针 0-16s 白银地图、144s 地图上的证据；Johnny Harris 的地图（旁证）",
+   "when": [
+    "在哪里、从哪到哪、两头",
+    "一条路线、一片区域"
+   ],
+   "picture": "图铺满画面，图外是同色的纸，看不到图的边；路线或区域用点缀色",
+   "focus": "这一拍说到的那一点或那一条线",
+   "ground": "chart-table：图本身就是底，压暗到中性，地名小而立在点上",
+   "light": "均匀偏暗，点缀色的线和点是最亮的东西",
+   "type": "地名立在点旁；结论是一对字放在图的空处",
+   "exemplars": [
+    "paperclip-138@8",
+    "paperclip-138@144",
+    "paperclip-138@216"
+   ],
+   "palette": "mono",
+   "template": "kit.scene.chartTable(THREE, st, { map: data.<key>, images, key: '<key>', lines: [{ path: [[lat, lon], …] }], ways }) → set({ on, tone, draw })，toWorld(lat, lon)；北朝上，镜头 { frame: 'chart', box: [S, W, N, E], elev, azim: 0 }"
+  },
+  {
+   "id": "count-field",
+   "name": "一片同样的东西，几个亮起",
+   "from": "回形针 112-120s 点阵里亮起的 323 人、240s 一排人",
+   "when": [
+    "比例、几分之几、多少个里的几个",
+    "数量涨到一个数"
+   ],
+   "picture": "同类的东西排成一片，铺满画面一大半，中性色；被说到的那几个用点缀色",
+   "focus": "亮起的那几个",
+   "ground": "halftone-dark",
+   "light": "平，均匀",
+   "type": "数字加它的一行小字，成对，放在亮起的那几个旁边",
+   "exemplars": [
+    "paperclip-138@112",
+    "paperclip-138@120"
+   ],
+   "template": "kit.scene.countField(THREE, st, { cols, rows, lit: [序号…] }) → set({ on, lit })；镜头 { frame: 'field', elev }"
+  },
+  {
+   "id": "figure-card",
+   "name": "一个数字压住画面",
+   "from": "回形针 48s 的 3160000000 背景大字；Nerdwriter 的数字卡（旁证）；Gawx 片名整块字",
+   "when": [
+    "一个数字或一个词是这一拍的全部",
+    "结论"
+   ],
+   "picture": "数字或词成块，占画面宽的一半以上；后面是这一拍的东西压暗做底",
+   "focus": "数字",
+   "ground": "halftone-dark，或上一拍的画面压到很暗",
+   "light": "底暗，字亮",
+   "type": "大字一块加一行小字说明（Gawx block / column）",
+   "exemplars": [
+    "paperclip-138@48",
+    "gawx:2024-0030-didone-grid.jpg"
+   ],
+   "template": "type.flat.peakType(g, t, { at, end, big, small }) — 整片唯一的亮底，大字整幅升起（filmdesign 的高潮拍）"
+  },
+  {
+   "id": "sequence-line",
+   "name": "一条横贯画面的序列",
+   "from": "回形针 72-88s 碱基序列、264-304s 片段条",
+   "when": [
+    "一步一步、先后、时间线、长度"
+   ],
+   "picture": "一条带子或一排东西横贯画面，镜头沿着它走",
+   "focus": "说到的那一段，点缀色",
+   "ground": "halftone-dark",
+   "light": "平",
+   "type": "标签立在那一段上方",
+   "exemplars": [
+    "paperclip-138@72",
+    "paperclip-138@88",
+    "paperclip-138@296"
+   ]
+  },
+  {
+   "id": "evidence-card",
+   "name": "一张真东西拎出来",
+   "from": "胡泊的网页、报道、人物名牌；回形针 248s 档案页、256s 老电视",
+   "when": [
+    "报道、文件、照片、人物"
+   ],
+   "picture": "真素材做成一张卡片（圆角、阴影），占画面四到六成，四周是片子的暗底",
+   "focus": "卡上划出的那一句或那个人",
+   "ground": "halftone-dark",
+   "light": "卡片亮，底暗",
+   "type": "出处一行小字；名牌或标题一对",
+   "exemplars": [
+    "paperclip-138@248",
+    "paperclip-138@256",
+    "hupo:reference-hupo"
+   ],
+   "template": "kit2 type.flat.evidenceCard(g, t, { at, end, img: images.<key>, crop, source, big, small }) — 真来源的页面截图（materials 步骤抓的）"
+  },
+  {
+   "id": "split-compare",
+   "name": "左右对照",
+   "from": "回形针 24s 两个案件、232s 两张 DNA 卡",
+   "when": [
+    "两样东西比较、前后、这边那边"
+   ],
+   "picture": "两半对称，各一个主体",
+   "focus": "不同的那一处，点缀色",
+   "ground": "halftone-dark",
+   "light": "两边一样",
+   "type": "各自一对标签，对齐同一条线",
+   "exemplars": [
+    "paperclip-138@24",
+    "paperclip-138@232"
+   ]
+  },
+  {
+   "id": "globe-route",
+   "name": "地球上的一条路",
+   "from": "回形针的立体地球做法；Johnny Harris 的世界航线（旁证）",
+   "when": [
+    "跨洲、绕行、全球"
+   ],
+   "picture": "地球占画面高的六到八成，偏一侧；另一侧留给字",
+   "focus": "那条路线，点缀色、够粗",
+   "ground": "halftone-dark（不是贴图墙）；地球的海比底亮或暗 0.15 以上，陆地是中性的浅色",
+   "light": "一侧主光，地球有明暗交界和轮廓光",
+   "type": "地名立在点旁；结论一对字放在留白一侧，完整在画面里",
+   "exemplars": [
+    "paperclip-138@176"
+   ],
+   "palette": "mono",
+   "template": "kit.scene.globeRoute(THREE, st, { mask: data.world_land, routes: [{ path: [[lat, lon], …] }], marks: [{ at, to }] }) → set({ on, draw, lit })；镜头 { frame: 'globe', side: -0.3, fill: 0.72, elev, azim }"
+  },
+  {
+   "id": "queue",
+   "name": "两头排队的船（锚地的船队）",
+   "from": "Suez 的盲审：方块药丸被画框切掉读成纹理",
+   "when": [
+    "数量涨起来、排队、等",
+    "堵在两头"
+   ],
+   "picture": "海图上一两片锚地的小船，一行一行，完整在画面里",
+   "focus": "放行的那几艘（点缀色）或涨到的那个数",
+   "ground": "chart-table",
+   "light": "中性白光压低，船队灰，红的最亮",
+   "type": "数字加一行小字成对，放在船队旁的空处",
+   "exemplars": [
+    "paperclip-138@112"
+   ],
+   "template": "kit.scene.queueFleet(THREE, st, { at: chart.toWorld(lat, lon), n, cols }) → set({ count, red(i), move(i) })；镜头 { frame: 'fleet' }",
+   "palette": "mono"
+  },
+  {
+   "id": "title-footage",
+   "name": "真画面上压大字",
+   "from": "Suez 开场「一艘船」、收尾前「浮起來」（整片盲审：重头画面要有设计感）",
+   "when": [
+    "开场、转折、松开的重头画面",
+    "有真画面（素材步骤找到的）"
+   ],
+   "picture": "真画面压暗铺满，一块大字（一词一行，两边齐）在主体旁边升起",
+   "focus": "大字",
+   "ground": "place-dark",
+   "light": "画面压暗、去色",
+   "type": "stackType 整块大字",
+   "exemplars": [
+    "gawx:2024-0030-didone-grid.jpg"
+   ],
+   "template": "type.flat.titleOver(g, t, { at, end, img: images.<key>, lines: ['浮', '起來'] })"
+  }
+ ],
+ "turnedDown": [
+  {
+   "at": "2026-10-27",
+   "said": "背景铁锈不好",
+   "what": "地球浮在铁锈集装箱墙前：墙的纹理和颜色抢过主体，墙在这里没有意义",
+   "id": "td-0"
+  },
+  {
+   "at": "2026-10-27",
+   "said": "这黄光有点廉价的感觉",
+   "what": "一块叠加的橙色圆形光斑贴在地图上，没有光源、没有影子",
+   "id": "td-1"
+  },
+  {
+   "at": "2026-10-27",
+   "said": "怎么还漏蓝边 正常的成熟的不会这么设计的吧",
+   "what": "地图平面的边和外面的深蓝底入画，像一块斜放的纸板",
+   "id": "td-2"
+  },
+  {
+   "at": "2026-10-27",
+   "said": "黑阴影不行",
+   "what": "字后面垫一条压暗带",
+   "id": "td-3"
+  },
+  {
+   "at": "2026-10-27",
+   "said": "图二棕色的图片感觉和照片也不太好",
+   "what": "一张小灰照片浮在脏棕色渐变底上",
+   "id": "td-4"
+  },
+  {
+   "at": "2026-10-26",
+   "said": "不要加字描边阴影 下面或者侧面的红线",
+   "what": "字加描边、阴影、红线红条",
+   "id": "td-5"
+  },
+  {
+   "at": "2026-10-26",
+   "said": "很ai",
+   "what": "生图整幅插画当画面",
+   "id": "td-6"
+  }
+ ],
+ "palettes": {
+  "said": "2026-10-27 用户：地图章节按回形针做：中性灰的干净海图，只有一处点缀红；颜色族不要求铺满画面，放宽 colourErrors 对这类章节的要求",
+  "mono": "一章的拍过半是 palette: mono 的构图（地图、地球上的路）或站在海图桌上（ground chart-table）时，这一章是单色章：中性灰的干净图，点缀色只在一处；不要求一族颜色铺在画面上（Gawx 的配色规则只管其他章），颜色族至多一族（点缀色本身），强色照样封顶。不靠暖光染色。"
+ },
+ "templates": "有 template 的构图是做好的成品（style-lab/engine/templates/scenes.js，盲审 4 分的做法）：照它搭，只填数据、地点、文字和时间；不要再自己摆坐标、配色、打光。镜头用 frame 按名字取景，主体整个、在要的那一侧。",
+ "typeMoves": "大字的做法（kit2 type.flat）：revealType 字从基线后升起（可逐字）；stackType 一词一行两边齐的字块；knockout 满屏一块底、字镂空见后面的画面；maskType 画面只在巨大的字里；zoomThrough 推进一个字的空心穿到下一个画面；surfaceType({ depth: true }) 字立在场景里、主体从字前经过。都不描边、不加阴影、不垫底板。重头画面（filmdesign hero）至少用其中一种。"
+}

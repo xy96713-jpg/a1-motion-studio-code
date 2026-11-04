@@ -1,0 +1,20 @@
+import assert from 'node:assert/strict';
+import {assertUnifiedScreenSelection,assertUnifiedScreenRender,deriveUnifiedScreenProduction,completeUnifiedScreenSelection,unifiedSelectionHash,UNIFIED_SCREEN_ENTRY} from '../apps/studio-next/src/lib/a1-unified-screen-production-v1.mjs';
+import {mergeMotionReviewPlan} from '../apps/studio-next/src/lib/a1-shot-motion-review-v1.mjs';
+const media={path:'work/baseline.mp4',sha256:'a'.repeat(64)},source={path:'work/source.mp4',sha256:'b'.repeat(64)};
+const selection={contract:'A1UnifiedScreenProduction/v1',entry:UNIFIED_SCREEN_ENTRY,shotVersionId:'v1',mode:'REUSE_EXISTING_PACKAGE',primaryCandidate:media,packagingBaseline:media,verifiedSource:source,productionAdmission:false};
+const shot={shotId:'S1',versionId:'v1',route:'SCREEN_EVIDENCE',motionReviewPlan:{productionBaseline:selection}};
+assert.doesNotThrow(()=>assertUnifiedScreenSelection(shot,selection));
+assert.throws(()=>assertUnifiedScreenRender(shot,unifiedSelectionHash(selection)),/do-not-rerender/);
+assert.throws(()=>assertUnifiedScreenSelection(shot,{...selection,primaryCandidate:source}),/reuse-must-use-baseline/);
+assert.throws(()=>assertUnifiedScreenSelection(shot,{...selection,primaryCandidate:[media,source]}),/one-primary/);
+const repair={...selection,mode:'REPAIR_ON_VERIFIED_SOURCE',primaryCandidate:source};shot.motionReviewPlan.productionBaseline=repair;
+assert.throws(()=>assertUnifiedScreenRender(shot),/must-bind/);assert.doesNotThrow(()=>assertUnifiedScreenRender(shot,unifiedSelectionHash(repair),source.sha256));
+assert.throws(()=>assertUnifiedScreenRender(shot,'c'.repeat(64)),/must-bind/);
+assert.throws(()=>assertUnifiedScreenSelection({...shot,versionId:'v2'},repair),/stale/);
+const old={source:{versionId:'v1'},productionBaseline:repair};assert.equal(mergeMotionReviewPlan(old,{source:{versionId:'v1'}}).productionBaseline,repair);assert.equal(mergeMotionReviewPlan(old,{source:{versionId:'v2'}}).productionBaseline.bindingStale,true);
+const waiting={...selection,mode:'WAIT_FOR_BASELINE_EXPORT',primaryCandidate:null,pendingExport:{path:media.path},partialFileMustNotBeAdmitted:true};assert.doesNotThrow(()=>assertUnifiedScreenSelection(shot,waiting));assert.throws(()=>assertUnifiedScreenSelection(shot,{...waiting,primaryCandidate:media}),/inflight/);
+const summary=deriveUnifiedScreenProduction([shot]);assert.equal(summary.status,'ONE_PLAN_BOUND');assert.deepEqual(summary.repairOnVerifiedSource,['S1']);assert.equal(summary.productionAdmission,false);
+console.log('PASS: one primary candidate, reuse without rerender, bound repairs, stale-source rejection, existing plan inheritance');
+
+const completed=completeUnifiedScreenSelection(repair,media);assert.equal(completed.mode,'KEEP_VERIFIED_SEQUENCE');assert.equal(completed.primaryCandidate.sha256,media.sha256);assert.equal(completed.packagingBaseline,repair.packagingBaseline);assert.equal(completed.productionAdmission,false);

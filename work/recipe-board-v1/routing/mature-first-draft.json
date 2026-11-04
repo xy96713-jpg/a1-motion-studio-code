@@ -1,0 +1,143 @@
+{
+ "contract": "A1MatureFirstDraft/v1",
+ "about": "HOUSE「成熟第一稿检查清单」的机读表。人读合同以 HOUSE.md 为准；session-brief 注入同六条 + 对标两期。不是 banana 单片清单；空壳 kit 不得标 ready。与 mature.mjs 四条硬合同叠加，不替代。",
+ "houseSection": "成熟第一稿检查清单",
+ "updated": "2026-10-29",
+ "bars": [
+  {
+   "id": "motion",
+   "label": "动效",
+   "require": "每镜有镜内运动；开场只走 ready 装置或章节 mapPlane/subject/orbit；停—动—停",
+   "gates": [
+    "opening-static-poster-no-build",
+    "openingMotionErrors",
+    "cameraMotionErrors",
+    "greyboxDeviceKitErrors"
+   ],
+   "refs": [
+    "HOUSE.md#动效和衔接",
+    "routing/house-style.json#fixed.motion"
+   ]
+  },
+  {
+   "id": "material-packaging",
+   "label": "材料包装",
+   "require": "证据卡式包装 + 来源 caption；filmed 斜拍屏；真素材",
+   "gates": [
+    "evidence-not-card",
+    "evidenceErrors",
+    "filmScreenErrors"
+   ],
+   "refs": [
+    "HOUSE.md#成熟",
+    "routing/house-style.json#fixed.evidence"
+   ]
+  },
+  {
+   "id": "type-layout",
+   "label": "字体排版",
+   "require": "家用字 + TYPE 五档；每字有 reason/anchor/材质/光向；3D 必须有 plate 环境贴图 + 接触阴影 + 锚点；先设计后渲染",
+   "gates": [
+    "title-press-weak",
+    "typebible",
+    "typedesignErrors",
+    "typeReview"
+   ],
+   "refs": [
+    "HOUSE.md#字",
+    "HOUSE.md#排版",
+    "TYPE.md",
+    "prompts/typedesign.md"
+   ]
+  },
+  {
+   "id": "real-mesh",
+   "label": "低模真 mesh",
+   "require": "主体为 model/subject/真 mesh；禁止 Plane+照片冒充 3D；有机主体须 QA 通过的 partset/Hunyuan glb（禁 Tube/未QA 填料）",
+   "gates": [
+    "photo-plane-as-subject",
+    "photoPlaneSubjectErrors",
+    "subject-pipeline-filler",
+    "subjectPipelineErrors"
+   ],
+   "refs": [
+    "HOUSE.md#画面分工"
+   ]
+  },
+  {
+   "id": "shot-core",
+   "label": "一镜戏核",
+   "require": "先定镜头戏再铺字；一章一镜戏核清楚",
+   "gates": [
+    "openingMotionErrors"
+   ],
+   "refs": [
+    "HOUSE.md#动效和衔接",
+    "routing/house-style.json#fixed.motion"
+   ]
+  },
+  {
+   "id": "seam-transition",
+   "label": "接缝转场",
+   "require": "进出拍衔接有设计；硬切两边停稳；换世界用 whip/glitch/flash",
+   "gates": [
+    "seamErrors",
+    "cutErrors",
+    "hardCutSettleErrors",
+    "greyboxSeamErrors"
+   ],
+   "refs": [
+    "HOUSE.md#动效和衔接"
+   ]
+  }
+ ],
+ "benchmarks": [
+  {
+   "id": "paperclip-138-full",
+   "label": "回形针 Vol.138",
+   "role": "motion-texture-gold",
+   "project": "work/recipe-board-v1/projects/paperclip-138-full",
+   "why": "house-style 认可变体；taste.json approved「回形针 Vol.138 整片」；director-routes opening/evidence gold",
+   "evidence": [
+    "work/recipe-board-v1/routing/house-style.json",
+    "work/recipe-board-v1/routing/taste.json",
+    "work/recipe-board-v1/routing/director-routes.json",
+    "work/recipe-board-v1/routing/taste-inventory.json#paperclip-motion"
+   ]
+  },
+  {
+   "id": "hupo-69",
+   "label": "胡泊",
+   "role": "evidence-packaging-gold",
+   "project": "work/recipe-board-v1/projects/hupo-69",
+   "why": "house-style 证据包装变体；taste 胡泊审美 approved（hupo-auto2）；director-routes 证据注胡泊线；exemplars hupo-replica",
+   "evidence": [
+    "work/recipe-board-v1/routing/house-style.json",
+    "work/recipe-board-v1/routing/taste.json",
+    "work/recipe-board-v1/routing/director-routes.json",
+    "work/recipe-board-v1/routing/exemplars.json",
+    "work/recipe-board-v1/routing/taste-inventory.json#evidence-shown"
+   ]
+  }
+ ],
+ "not": [
+  "banana-only rewrite list",
+  "mark kit.status ready for unwired shells",
+  "replace HOUSE mature four hard contracts"
+ ],
+ "runtimeGate": {
+  "fn": "matureFirstDraftErrors",
+  "module": "apps/studio-next/src/lib/recipe-board/mature.mjs",
+  "code": "mature-first-draft-incomplete",
+  "triggers": [
+   "answer.matureFirstDraft === true",
+   "project.matureFirstDraft === true",
+   "opts.claim === true"
+  ],
+  "wired": [
+   "greyboxErrors",
+   "chapter check (morph)"
+  ],
+  "about": "Fails only when mature first draft is claimed; lists missing bars. Docs/inject alone are not enough."
+ }
+}

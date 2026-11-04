@@ -1,0 +1,132 @@
+{
+  "contract": "A1TypeBible/v1",
+  "said": "2026-10-28 用户：字体设计的不好 你没什么排版规则和圣经吗 很多位置都怪怪的；做",
+  "frame": {
+    "w": 1920,
+    "h": 1080
+  },
+  "grid": {
+    "cols": 12,
+    "margin": {
+      "left": 120,
+      "right": 120,
+      "top": 96
+    },
+    "gutter": 24,
+    "colWidth": 118,
+    "band": 935,
+    "tolerance": 24,
+    "lefts": [
+      120,
+      262,
+      404,
+      546,
+      688,
+      830,
+      972,
+      1114,
+      1256,
+      1398,
+      1540,
+      1682
+    ],
+    "rights": [
+      238,
+      380,
+      522,
+      664,
+      806,
+      948,
+      1090,
+      1232,
+      1374,
+      1516,
+      1658,
+      1800
+    ],
+    "centre": 960,
+    "toleranceWhy": "optical: a glyph inks a little inside its box (大風 set on the 120 line inks at 140)"
+  },
+  "scale": {
+    "hero": 300,
+    "figure": 200,
+    "title": 128,
+    "sub": 64,
+    "caption": 48,
+    "tolerance": 0.06
+  },
+  "roles": {
+    "hero": "重头拍的大字，一拍一个",
+    "figure": "关键数字（数字加单位），全片同一档；重头拍可用 hero",
+    "title": "一拍的主句、事件名",
+    "sub": "配在大字下面的小字：说明、出处、单位的展开",
+    "caption": "日期、地点、说明标签；最小一档，仍要读得清"
+  },
+  "pair": {
+    "order": "the small line under the big one; over it only as its kicker, when the narration says it first",
+    "align": "same left edge (centre only on a type-only card)",
+    "gap": [
+      0.08,
+      0.4
+    ],
+    "edgeTol": 6,
+    "edgeTolWhy": "a pair is set on one edge by construction (kit2 pair): a few px only — the grid tolerance of 24 hid two lines drifting 13 px apart (Suez reel, 2026-10-28)",
+    "inkGap": 0.15,
+    "inkGapTol": 0.03,
+    "inkGapWhy": "one gap between a pair's lines as the eye sees it, ink to ink, a share of the big size (the user 2026-10-28: 间隔什么的是不是也怪 应该可以更规范的); the box range stays for a greybox, which has no ink"
+  },
+  "slots": {
+    "title-left": {
+      "col": 0,
+      "span": 5,
+      "y": "top third",
+      "align": "left"
+    },
+    "figure-right": {
+      "col": 7,
+      "span": 5,
+      "y": "middle",
+      "align": "left"
+    },
+    "figure-left": {
+      "col": 0,
+      "span": 5,
+      "y": "middle",
+      "align": "left"
+    },
+    "caption-top-left": {
+      "col": 0,
+      "span": 4,
+      "y": "top margin",
+      "align": "left"
+    },
+    "caption-low-left": {
+      "col": 0,
+      "span": 5,
+      "y": "above the band",
+      "align": "left"
+    },
+    "hero-centre": {
+      "col": 0,
+      "span": 12,
+      "y": "middle",
+      "align": "centre"
+    }
+  },
+  "labels": "贴在东西上的标签（地名、船名）可以钉在物体上随镜头走，字号在阶梯里、不小于 caption；关键数字和标题不钉在物体上，放在屏幕网格上",
+  "accent": "一帧一处：关键的那个数字或词",
+  "figure": {
+    "heightTol": 0.05,
+    "why": "a figure line: its figures and its words one height, inks top and foot within 5 % of its size (the user 2026-10-28: 数字和文字为什么对齐不了)"
+  },
+  "design": {
+    "axisTol": 6,
+    "levelsMax": 3,
+    "levelContrast": 1.5,
+    "apart": 0.5,
+    "readCps": 9,
+    "readPad": 0.3,
+    "why": "成熟规范（TYPE.md）：层级——每帧一个先读的、最多三级、相邻两级至少 1.5 倍；接近——不同组之间至少大字的一半，组内是 0.15；字组一条轴；读速每秒 9 字（Netflix 中文）；安全区 EBU R95 / SMPTE ST 2046-1 字幕安全 90%（我们的页边 120/120/96 在其内）",
+    "labelNear": 1.5
+  }
+}

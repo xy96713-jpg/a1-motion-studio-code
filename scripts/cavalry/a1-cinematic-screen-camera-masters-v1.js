@@ -1,0 +1,21 @@
+// High-energy screen-camera masters executed in Cavalry 2.7.2.
+(function(){
+  var receiptPath="/Users/a1/Documents/ChatGPT/a1-motion-studio-system-line/work/cinematic-screen-camera-v1/cavalry-receipt.json";
+  function clamp(t){return Math.max(0,Math.min(1,t));}
+  function quintOut(t){t=clamp(t);return 1-Math.pow(1-t,5);}
+  function quintInOut(t){t=clamp(t);return t<.5?16*Math.pow(t,5):1-Math.pow(-2*t+2,5)/2;}
+  function minimumJerk(t){t=clamp(t);return t*t*t*(10-15*t+6*t*t);}
+  function rect(name,x,y,w,h,color){var id=api.primitive("rectangle",name);api.set(id,{"generator.dimensions":[w,h],"position.x":x,"position.y":y});api.setFill(id,true);api.setStroke(id,false);try{api.set(id,{"material.materialColor":color});}catch(error){}return id;}
+  var root=api.create("group","A1 Cinematic Screen Camera Masters v1");
+  var dolly=api.create("group","MASTER 01 CINEMATIC_DOLLY_PUSH"),dollyScreen=rect("Dolly Screen",-520,250,720,405,"#F4F7F7");api.parent(dollyScreen,dolly);api.parent(dolly,root);
+  var whip=api.create("group","MASTER 02 WHIP_REFRAME"),whipA=rect("Whip Region A",240,290,320,220,"#DDE7E5"),whipB=rect("Whip Region B",620,60,320,220,"#79AAB0");api.parent(whipA,whip);api.parent(whipB,whip);api.parent(whip,root);
+  var oblique=api.create("group","MASTER 03 OBLIQUE_2_5D"),obliqueScreen=rect("Oblique Screen",0,-260,820,460,"#F4F7F7");api.parent(obliqueScreen,oblique);api.parent(oblique,root);
+  var camera=api.create("camera","A1 Oblique Camera");
+  try{api.set(obliqueScreen,{"shape.2_5d":true});api.set(camera,{"position.z":-900,"rotation.x":7,"rotation.y":-19});}catch(error){}
+  var dollySamples=[];for(var frame=0;frame<=18;frame+=1){var p=quintOut(frame/18),scale=Math.exp(Math.log(2.2)*p);api.keyframe(dolly,24+frame,{"scale.x":scale,"scale.y":scale,"position.x":-220*p,"position.y":80*p});dollySamples.push({frame:frame,progress:p,scale:scale});}api.keyframe(dolly,150,{"scale.x":2.2,"scale.y":2.2,"position.x":-220,"position.y":80});
+  var whipSamples=[];for(var whipFrame=0;whipFrame<=12;whipFrame+=1){var wp=quintInOut(whipFrame/12),x=260+(620-260)*wp,scale=Math.exp(Math.log(1.72)+(Math.log(1.92)-Math.log(1.72))*wp);api.keyframe(whip,28+whipFrame,{"position.x":-x,"scale.x":scale,"scale.y":scale});whipSamples.push({frame:whipFrame,progress:wp,x:x,scale:scale});}api.keyframe(whip,150,{"position.x":-620,"scale.x":1.92,"scale.y":1.92});
+  var obliqueSamples=[];for(var obliqueFrame=0;obliqueFrame<=28;obliqueFrame+=1){var op=minimumJerk(obliqueFrame/28),rotateX=7+(1-7)*op,rotateY=-19+(-3+19)*op,scale=Math.exp(Math.log(.82)+(Math.log(1.14)-Math.log(.82))*op),z=-90+(20+90)*op;try{api.keyframe(camera,14+obliqueFrame,{"rotation.x":rotateX,"rotation.y":rotateY,"position.z":-900+z});}catch(error){}api.keyframe(oblique,14+obliqueFrame,{"scale.x":scale,"scale.y":scale,"skew.x":rotateY*.22,"skew.y":rotateX*.14});obliqueSamples.push({frame:obliqueFrame,progress:op,rotateX:rotateX,rotateY:rotateY,scale:scale,translateZ:z});}api.keyframe(oblique,150,{"scale.x":1.14,"scale.y":1.14,"skew.x":-.66,"skew.y":.14});
+  api.setFrame(36);
+  var receipt={contract:"A1CavalryCinematicScreenCameraMasters/v1",status:"EXECUTED",cavalryVersion:"2.7.2",scene:"A1 Cinematic Screen Camera Masters v1",cameraNodeCreated:camera!==null&&typeof camera!=="undefined",cameraNodeId:String(camera),masters:[{id:"CINEMATIC_DOLLY_PUSH",moveStartFrame:24,moveFrames:18,maximumScale:2.2,easing:"QUINT_OUT_5",motionBlur:{type:"TRANSFORM_ONLY",shutterAngle:210,samples:8},samples:dollySamples},{id:"WHIP_REFRAME",moveStartFrame:28,moveFrames:12,fromScale:1.72,toScale:1.92,easing:"QUINT_IN_OUT_5",motionBlur:{type:"TRANSFORM_ONLY",shutterAngle:250,samples:10},samples:whipSamples},{id:"OBLIQUE_2_5D",moveStartFrame:14,moveFrames:28,fromRotateY:-19,toRotateY:-3,fromRotateX:7,toRotateX:1,easing:"MINIMUM_JERK_5",motionBlur:{type:"CAMERA_TRANSFORM",shutterAngle:170,samples:8},samples:obliqueSamples}],policy:{cavalryOwnsCameraDesign:true,remotionOwnsVerifiedSourcePixels:true,highDpiSourceRequired:true,whiteFocusWindowForbidden:true,finalHoldSharp:true,productionAdmission:false,userVisualApproval:"NOT_APPROVED"}};
+  api.writeToFile(receiptPath,JSON.stringify(receipt,null,2),true);console.log("A1 cinematic screen camera receipt: "+receiptPath);
+})();

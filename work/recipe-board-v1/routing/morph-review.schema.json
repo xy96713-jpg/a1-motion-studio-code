@@ -1,0 +1,74 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "title": "A1MorphReview/v2",
+ "type": "object",
+ "additionalProperties": false,
+ "required": [
+  "frames"
+ ],
+ "properties": {
+  "frames": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "beat",
+     "score",
+     "issue",
+     "toFour",
+     "checked",
+     "hard"
+    ],
+    "properties": {
+     "beat": {
+      "type": "string"
+     },
+     "score": {
+      "type": "integer"
+     },
+     "issue": {
+      "type": "string"
+     },
+     "toFour": {
+      "type": "array",
+      "maxItems": 3,
+      "items": {
+       "type": "string"
+      }
+     },
+     "checked": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "item",
+        "done",
+        "why"
+       ],
+       "properties": {
+        "item": {
+         "type": "integer",
+         "minimum": 1
+        },
+        "done": {
+         "type": "boolean"
+        },
+        "why": {
+         "type": "string"
+        }
+       }
+      }
+     },
+     "hard": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     }
+    }
+   }
+  }
+ }
+}

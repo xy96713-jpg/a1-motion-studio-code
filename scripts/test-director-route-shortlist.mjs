@@ -1,0 +1,21 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import { designBeatShortlist } from '../apps/studio-next/src/lib/recipe-board/filmdesign.mjs';
+import { pickDirectorDefaults } from '../apps/studio-next/src/lib/recipe-board/directorroutes.mjs';
+
+const root = new URL('../work/recipe-board-v1/routing/', import.meta.url);
+const table = JSON.parse(fs.readFileSync(new URL('director-routes.json', root)));
+const devices = JSON.parse(fs.readFileSync(new URL('devices.json', root))).devices;
+const beat = { beat: 'B', text: '全球产量达到 47%', act: 'build', medium: 'diagram' };
+const route = pickDirectorDefaults(beat, { table, devices });
+assert.equal(route.kind, 'numbers', 'a worldwide production percentage is a quantity, not a map');
+assert.equal(pickDirectorDefaults({ text: '全球的航运路线从亚洲跨洲到欧洲' }, { table, devices }).kind, 'map', 'a route across regions remains a map');
+assert.equal(pickDirectorDefaults({ text: '文件显示全球占比达到 47%', medium: 'evidence' }, { table, devices }).kind, 'evidence', 'explicit evidence medium takes priority');
+assert.equal(pickDirectorDefaults({ text: '报道', hero: true, act: 'peak', medium: 'evidence' }, { table, devices }).kind, 'evidence', 'a peak hero is not an opening');
+assert.equal(pickDirectorDefaults({ hero: true }, { table, devices }).kind, 'opening', 'legacy hero without act retains the opening fallback');
+assert.ok(route.devices.length > 0, 'fixture must select a route with devices');
+const cued = devices.map((d) => d.id).filter((id) => !route.devices.includes(id)).slice(0, 8);
+const shortlist = designBeatShortlist(beat, { table, devices, cued }).devices;
+assert.ok(shortlist.some((id) => route.devices.includes(id)), 'mandatory route remains selectable even when cues fill the list');
+assert.ok(shortlist.length <= 8);
+console.log('route shortlist: selected route remains selectable with eight competing cues');

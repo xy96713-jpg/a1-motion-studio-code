@@ -1,0 +1,116 @@
+{
+ "contract": "A1PackagingWorkflow/v1",
+ "purpose": "任意文字 -> 可交付动态包装的通用闭环；不依赖单一题材或模板。",
+ "entry": {
+  "project": "work/recipe-board-v1/projects/<id>/project.json",
+  "plan": "plan.json",
+  "designBoard": "design-board.json",
+  "brief": "brief.json"
+ },
+ "stages": [
+  {
+   "id": "intake",
+   "label": "文本/事实/一句话概念",
+   "must": [
+    "source",
+    "beats>=1",
+    "fact-ledger"
+   ]
+  },
+  {
+   "id": "editorial",
+   "label": "语义切拍/每拍问题",
+   "must": [
+    "intent",
+    "visualQuestion",
+    "duration"
+   ]
+  },
+  {
+   "id": "design-options",
+   "label": "≥6可比较方案",
+   "must": [
+    "look-lock.minOptions",
+    "same-line/transition",
+    "user-choice",
+    "text-free prompts",
+    "same shot/transition"
+   ],
+   "generator": "node scripts/design-options.mjs --brief brief.json --out design-options.json",
+   "fallback": "python3 scripts/flux-design-options.py --options design-options.json --out design-options-images"
+  },
+  {
+   "id": "look-lock",
+   "label": "用户选定即锁图",
+   "must": [
+    "look-lock.locked",
+    "7 rules",
+    "evidence"
+   ]
+  },
+  {
+   "id": "previz",
+   "label": "灰盒/运动合同/接缝",
+   "must": [
+    "camera",
+    "event 2-4s",
+    "in/out"
+   ]
+  },
+  {
+   "id": "build",
+   "label": "按镜头技术路由",
+   "must": [
+    "build=3d|real|procedural|graphic",
+    "generated-only-as-reference"
+   ]
+  },
+  {
+   "id": "verify",
+   "label": "帧差/接缝/盲审",
+   "must": [
+    "still",
+    "motion",
+    "review",
+    "look-lock-check when lockedFrame/renderFrame present"
+   ]
+  },
+  {
+   "id": "delivery",
+   "label": "无锁不交",
+   "must": [
+    "release gate",
+    "no-different-delivery"
+   ]
+  }
+ ],
+ "planChecks": {
+  "beats": [
+   "intent",
+   "text|onScreen",
+   "duration",
+   "route.primaryModule",
+   "design.camera",
+   "design.in",
+   "design.out"
+  ],
+  "visualLanding": [
+   "design.hero",
+   "design.evidence",
+   "onScreen.headline"
+  ],
+  "seam": [
+   "every beat except last has design.out",
+   "next design.in"
+  ],
+  "forbidden": [
+   "generated still as final frame",
+   "static plate + move"
+  ]
+ },
+ "references": {
+  "lookLock": "work/recipe-board-v1/routing/look-lock.json",
+  "mediaPolicy": "work/recipe-board-v1/routing/media-policy.json",
+  "house": "work/recipe-board-v1/HOUSE.md"
+ }
+}

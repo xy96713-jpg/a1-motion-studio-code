@@ -1,0 +1,77 @@
+{
+ "contract": "A1ImageDirectionStyle/v1",
+ "decided": "2026-11-04 用户：生图定方向、确定后用最佳技术栈复刻；带入我的美学，每次生成能是喜欢的画风和各种变体。",
+ "purpose": "GPT Image 只做 design direction / reference，不做 final frame。",
+ "fixed": [
+  "cinematic documentary still / editorial photography",
+  "shot on 35mm film, fine grain, subtle halation",
+  "saturated banana yellow as dominant light, black only silhouette/negative space",
+  "one-point perspective, repeated clone rows, one empty slot or anomaly",
+  "low camera, near subject crisp, far rows dissolve into darkness",
+  "16:9 (2048x1152), single full-frame image, no collage/grid/split screen",
+  "no text, letters, numbers, logos, brands, people, watermark, signature, caption, border text",
+  "leave clean negative space for code-set type"
+ ],
+ "variants": {
+  "world": [
+   "clone shelf",
+   "yellow room",
+   "archive room",
+   "peel macro",
+   "type field",
+   "field grid"
+  ],
+  "camera": [
+   "35mm low tracking",
+   "floor-level pullback",
+   "55mm tabletop",
+   "100mm macro",
+   "50mm graphic plane",
+   "28mm aerial"
+  ],
+  "light": [
+   "hard overhead pools",
+   "single hard top",
+   "raking side window",
+   "side raking macro",
+   "even print light",
+   "hard tropical sun"
+  ],
+  "material": [
+   "waxed peel",
+   "old wood and paper",
+   "soil and leaves",
+   "printed paper and ink",
+   "steel shelf"
+  ],
+  "typeMechanism": [
+   "vertical crop",
+   "single figure",
+   "blank label strip",
+   "ground scale",
+   "bar field"
+  ],
+  "accent": [
+   "banana yellow",
+   "bone cream",
+   "oxidized brown",
+   "red only once"
+  ]
+ },
+ "negative": [
+  "no readable text/letters/numbers",
+  "no logos/brands/watermarks/UI",
+  "no collage/grid/split screen",
+  "no stock-photo look",
+  "no plastic 3D",
+  "no generic AI fantasy",
+  "no dirty brown",
+  "no cobalt-blue print",
+  "no paperclip map/card/black-studio skin",
+  "no red underline",
+  "no left-top Ming title",
+  "no floating object without contact shadow",
+  "no uniform flat lighting"
+ ],
+ "promptPack": "work/recipe-board-v1/projects/banana-design/DESIGN-IMAGE-PROMPTS-20261104.md"
+}

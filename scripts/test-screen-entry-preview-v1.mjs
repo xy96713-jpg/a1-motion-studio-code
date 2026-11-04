@@ -1,0 +1,11 @@
+import assert from "node:assert/strict";
+import {compileScreenEntryPreview as compile} from "../apps/studio-next/src/lib/a1-screen-entry-preview-v1.mjs";
+const shot={shotId:"TEST",versionId:"v",timeRange:{startMs:3000,endMs:5000,durationMs:2000},motionReviewPlan:{viewerRequirements:{scope:"ENTRY_PREVIEW",durationMs:2000,plannedMinimumMs:1800,minimumSettledHoldMs:1000,requireStableLayout:true}}};
+const report={shotId:"TEST",sourceStoryboardVersionId:"v",demonstrationScope:"ENTRY_PREVIEW",modelEvidence:[],events:[{name:"selection_drag_started",outputTimeMs:100},{name:"sentence_selected",outputTimeMs:600},{name:"rewrite_entry_visible",outputTimeMs:700}],output:{width:3200,height:1800,sha256:"a".repeat(64)},layoutStability:{status:"PASS",drift:{x:0,y:0,width:0,scrollY:0},samples:[{x:240,y:800,width:1660,height:170}]},domTargets:[{event:"rewrite_entry_visible",sourceRect:{x:.08,y:.55,width:.05,height:.04}}]};
+const output=compile(shot,report);
+assert.equal(output.proof.dragMs,500);assert.ok(output.proof.settledHoldMs>=1000);assert.equal(output.scene.editCoverage.fullSourceActionShown,false);
+assert.throws(()=>compile(shot,{...report,modelEvidence:[{}]}),/INFERENCE_FLOW/);
+assert.throws(()=>compile(shot,{...report,sourceStoryboardVersionId:"old"}),/VERSION_MISMATCH/);
+assert.throws(()=>compile(shot,{...report,events:report.events.filter(e=>e.name!=="selection_drag_started")}),/NATIVE_SELECTION_REQUIRED/);
+assert.throws(()=>compile(shot,report,{moveMs:600}),/VIEWING_PREFLIGHT/);
+console.log("PASS: native entry scope, no inference, current version, readable hold and control visibility");

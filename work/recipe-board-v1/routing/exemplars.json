@@ -1,0 +1,18 @@
+{
+ "contract": "A1RecipeBoardExemplars/v1",
+ "note": "Each card's replica: the card done right, matched cut by cut against the reference (REVIEW 17). The critic sets every still beside the replica of its card. project/shot; the still is that project's rendered candidate.",
+ "chapterReferences": [
+  {"id":"hupo-69/P04-layered","project":"hupo-69","kinds":["evidence","numbers"],"mechanism":"layered evidence and code-set figures on a perspective surface","frame":"work/recipe-board-v1/projects/hupo-69/out/candidates/P04-layered.png","source":"work/recipe-board-v1/projects/hupo-69/out/html/P04-layered.html","shot":"work/recipe-board-v1/projects/hupo-69/shots/P04-layered.json","scope":"Research replica, not individually user-approved; hupo-auto2 aesthetic approval does not approve this shot."},
+  {"id":"paperclip-138-full/B18/B19","project":"paperclip-138-full","kinds":["evidence","map"],"mechanism":"spatial map and evidence information hierarchy","frame":"work/recipe-board-v1/projects/paperclip-138-full/out/chapters/B18/key-2-B19.png","source":"work/recipe-board-v1/projects/paperclip-138-full/chapters/B18.mjs","scope":"Paperclip Vol.138 film-level taste approval; not individual frame or current design approval."}
+ ],
+ "cards": {
+  "presenter-tags": "hupo-replica/R03",
+  "presenter-side-card": "hupo-replica/R29",
+  "poster-pair": "hupo-replica/R44",
+  "product-side-card": "hupo-replica/R48",
+  "title-hero-over-photo": "hupo-replica/R00",
+  "presenter-quotes": "hupo-replica/R68",
+  "quote-portrait-bw": "hupo-replica/R80",
+  "spec-pair-dark": "hupo-replica/R36"
+ }
+}

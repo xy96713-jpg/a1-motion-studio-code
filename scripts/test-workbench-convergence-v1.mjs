@@ -1,0 +1,37 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {projectResearchResourceObservationV1} from '../apps/studio-next/src/lib/a1-research-resource-observation-v1.mjs';
+import {productionShotStageV1} from '../apps/studio-next/src/lib/a1-research-production-presentation-v1.mjs';
+const base = {ownerThreadId: 'owner', budgetAccount: 'one-account', shotId: 'UNSEEN1', observedMtimeMs: 1,
+  status: 'ACTIVE', reservationEndUTC: '2026-10-08T01:00:00Z', actualClaimCount: 0, observedFilename: 'phase.json'};
+const observation = projectResearchResourceObservationV1([base], ['UNSEEN1'], Date.parse('2026-10-08T02:00:00Z'));
+assert.equal(observation.phases[0].state, 'EXPIRED_UNCLOSED'); assert.equal(observation.phases[0].actualClaimCount, 0);
+assert.equal(observation.processClosureVerified, false); assert.equal(observation.resourceMutationPerformed, false);
+assert.equal(projectResearchResourceObservationV1([base], ['UNSEEN1'], Date.parse('2026-10-08T00:00:00Z')).phases[0].state, 'WINDOW_ACTIVE');
+assert.equal(projectResearchResourceObservationV1([base, {...base, status: 'COMPLETED_CLOSED_RELEASED', observedMtimeMs: 2}], ['UNSEEN1']).phases.length, 0);
+assert.equal(projectResearchResourceObservationV1([{...base, shotId: 'TEST_ONLY'}], ['UNSEEN1']).phases.length, 0);
+assert.equal(projectResearchResourceObservationV1([{...base, purpose: 'WORKBENCH_UI_VERIFICATION'}], ['UNSEEN1']).phases.length, 0);
+assert.equal(projectResearchResourceObservationV1([{...base, reservationEndUTC: null}], ['UNSEEN1']).phases[0].state, 'WINDOW_UNKNOWN');
+const shot = {packagingDecision: 'FORM', anchors: [], missingStates: ['ENTRY']};
+assert.equal(productionShotStageV1({...shot, packagingDecision: 'UNDECIDED'}), 'INPUTS');
+assert.equal(productionShotStageV1(shot), 'INPUTS');
+assert.equal(productionShotStageV1({...shot, anchors: [{status:'PASS', imageArtifactId:'image'}]}), 'PRODUCE');
+assert.equal(productionShotStageV1({...shot, packagingDecision:'UNDECIDED', anchors:[{status:'PASS',imageArtifactId:'image'}],missingStates:[]}), 'CONTINUITY', 'missing planning cannot erase reviewed images');
+assert.equal(productionShotStageV1({...shot, anchors: [{status: 'VISUAL_FAIL'}]}), 'REPAIR');
+assert.equal(productionShotStageV1({...shot, anchors: [{status: 'TECHNICAL_PASS_ONLY', imageArtifactId: 'image'}]}), 'REVIEW');
+assert.equal(productionShotStageV1({...shot, missingStates: []}), 'CONTINUITY');
+const surface = fs.readFileSync('apps/studio-next/src/app/system-line-visual-workbench/PackagingWorkbenchSurface.tsx', 'utf8');
+assert.ok(surface.indexOf('if (projectIntakePanel)') < surface.indexOf('if (screenStoryboardReviewCurrent)'), 'research view must precede parked formal board');
+const panel = fs.readFileSync('apps/studio-next/src/app/system-line-visual-workbench/ResearchTaskExecutionPanel.tsx', 'utf8');
+assert.match(panel, /engineeringOpen && <ResearchTaskExecutionDetails/u, 'legacy execution details load only on demand');
+const client = fs.readFileSync('apps/studio-next/src/app/system-line-visual-workbench/VisualAssetWorkbenchClient.tsx', 'utf8');
+assert.match(client, /researchTaskId && !legacyResearchView/u); assert.match(client, /engineering: "1"/u);
+assert.match(client, /projectIntakeViewOpen === null/u, 'unresolved route must not flash parked production');
+assert.match(client, /!researchContextResolved/u, 'unresolved research task must not flash legacy metrics');
+console.log(JSON.stringify({status: 'PASS', checks: ['expired-not-running', 'no-inferred-process-closure', 'latest-terminal-supersedes-old-active',
+  'test-window-excluded', 'unknown-window-explicit', 'exclusive-shot-stages', 'research-before-parked-board', 'lazy-engineering-details', 'explicit-legacy-view']}));
+assert.equal(productionShotStageV1({...shot,missingStates:[],latestReview:{status:'VISUAL_FAIL'}}),'REPAIR','retained anchors cannot hide newer failed attempt');
+const executed=projectResearchResourceObservationV1([{...base,observedExecutionReceipt:{status:'PHASE_BOUND_UNSETTLED',phaseBound:true}}],['UNSEEN1'],Date.parse('2026-10-08T02:00:00Z'));
+assert.equal(executed.phases[0].state,'EXECUTION_RECEIPT_REQUIRES_RECONCILIATION');
+assert.equal(executed.processClosureVerified,false,'receipt presence is not independent live process closure');
+assert.equal(executed.dispatchAuthorized,false);

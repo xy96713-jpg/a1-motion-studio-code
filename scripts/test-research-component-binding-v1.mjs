@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';import{createHash}from'node:crypto';
+import{registeredCopyFragmentsV1,compileRegisteredComponentFactsV1}from'../apps/studio-next/src/lib/a1-research-component-binding-v1.mjs';
+const source='a'.repeat(64),ref='b'.repeat(64),binding='c'.repeat(64);
+const copyObject={heading:null,fields:[{text:'Visible byline'},{text:'Cropped fragment'}],unknown:{title:'Do not infer'},overlayWatermarkWords:['Do not copy'],states:[{captionExact:'Not packaging'}]};
+assert.deepEqual(registeredCopyFragmentsV1(copyObject).map(f=>f.text),['Visible byline','Cropped fragment']);
+const selection={contract:'A1RegisteredComponentSelection/v1',kind:'normal-static',selector:'unseen-page',bindingSha256:binding,sourceVideoSha256:source};
+const registered={entry:{kind:'normal-static',selector:'unseen-page'},selectedBinding:{sha256:binding},binding:{contract:'A1RegisteredSourceFrameDerivedPageBinding/v1',executionAuthorized:false,productionAdmission:false,references:[{sha256:ref}],fonts:[],canonicalURL:null}};
+const args={selection,registered,copyInput:{copyObject,copyObjectSHA:createHash('sha256').update(JSON.stringify(copyObject)).digest('hex')},sourceVideoSha256:source,reviewedFrames:[{sourceFrame:40,referenceSha256:ref}]};
+const result=compileRegisteredComponentFactsV1(args);assert.equal(result.status,'VERIFIED_REGISTERED_COMPONENT');assert.deepEqual(result.coveredSourceFrames,[40]);assert.equal(result.nativePageEvidence,false);assert.equal(result.boundaries.newProductionAuthorized,false);
+assert.throws(()=>compileRegisteredComponentFactsV1({...args,selection:{...selection,bindingSha256:source}}),/DRIFT/);
+assert.throws(()=>compileRegisteredComponentFactsV1({...args,reviewedFrames:[{sourceFrame:20,referenceSha256:source}]}),/NO_MATCHING/);
+assert.throws(()=>compileRegisteredComponentFactsV1({...args,copyInput:{...args.copyInput,copyObjectSHA:ref}}),/COPY_OBJECT_DRIFT/);
+console.log('PASS registered recipe scope, exact sample matching, copy fragments, source/binding drift and no approval escalation');
+const copyArgs={...args,exactCopy:['Visible byline'],copyBinding:{sourceVideoSha256:source,sourceFrame:40,copyInput:null,copyBindings:[{copyIndex:0,locator:'/copyObject/fields/0/text',text:'Visible byline'}]}};
+assert.equal(compileRegisteredComponentFactsV1(copyArgs).status,'VERIFIED_REGISTERED_COMPONENT');
+assert.throws(()=>compileRegisteredComponentFactsV1({...copyArgs,exactCopy:['Invented replacement']}),/LOCKED_COPY_DRIFT/);

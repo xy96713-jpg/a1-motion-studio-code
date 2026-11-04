@@ -1,0 +1,44 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+const root = path.resolve(import.meta.dirname, '..');
+const base = 'work/screen-recording-maturity-test-v1';
+const hash = file => crypto.createHash('sha256').update(fs.readFileSync(path.join(root, file))).digest('hex');
+const read = file => JSON.parse(fs.readFileSync(path.join(root, file), 'utf8'));
+const inputs = ['englishflow-fresh-director-maturity-v1', 'lab-vault-fresh-navigation-maturity-v1', 'lab-vault-fresh-menu-maturity-v1', 'noaa-article', 'cap-readback-audit'];
+const rows = inputs.map(id => {
+  const receiptFile = `${base}/${id}/cap-receipt.json`;
+  const receipt = read(receiptFile);
+  const capture = read(receipt.captureReport.path);
+  const config = read(`${receipt.capProject.path}/project-config.json`);
+  const issues = [];
+  if (hash(receipt.sourceVideo.path) !== receipt.sourceVideo.sha256) issues.push('SOURCE_BYTES_CHANGED');
+  if (hash(receipt.reviewVideo.path) !== receipt.reviewVideo.sha256) issues.push('OUTPUT_BYTES_CHANGED');
+  if (!capture.captureSync?.method || !capture.captureSync.syncPass) issues.push('TIME_ORIGIN_NOT_PROVED');
+  const persisted = config.timeline?.zoomSegments || [];
+  const targets = new Map((capture.geometryTruth?.targets || []).map(t => [t.targetKey, t]));
+  const cameras = (receipt.directorPlan?.cameraBeats || []).map((beat, index) => {
+    const target = targets.get(beat.targetEvent);
+    const actual = persisted[index];
+    const errors = [];
+    if (!actual?.mode?.manual) errors.push('TARGET_COORDINATES_NOT_PERSISTED');
+    if (!target || !Number.isFinite(target.observedAtMs)) errors.push('TARGET_OBSERVATION_MISSING');
+    else if (actual?.start * 1000 < target.observedAtMs - 1) errors.push('CAMERA_PRECEDES_OBSERVATION');
+    const maxScale = receipt.matureDirection?.admission?.maximumCameraScale;
+    if (Number.isFinite(maxScale) && actual?.amount > maxScale + 1e-5) errors.push('CAMERA_EXCEEDS_RECORDED_POLICY');
+    issues.push(...errors.map(e => `${beat.id}:${e}`));
+    return {id: beat.id, requested: beat, persisted: actual, observationMs: target?.observedAtMs, status: errors.length ? 'FAIL' : 'CONFIGURATION_ONLY', errors};
+  });
+  const effects = (receipt.directorPlan?.beats || []).map(beat => {
+    const execution = receipt.executionEffects?.find((item) => item.id === beat.id);
+    const implementedHere = execution && execution.execution !== 'UNAVAILABLE';
+    const status = implementedHere ? 'PIXEL_REVIEW_PENDING' : 'EXECUTION_NOT_PROVED';
+    if (!implementedHere) issues.push(`${beat.id}:${beat.technique}:NO_EFFECT_EXECUTION_RECEIPT`);
+    return {id: beat.id, requested: beat.technique, execution: execution?.execution || null, status};
+  });
+  if (receipt.matureDirection?.admission?.clickRingsAllowed === false && config.cursor?.ripple?.enabled) issues.push('RIPPLE_CONTRADICTS_POLICY');
+  return {id, receiptFile, receiptSha256: hash(receiptFile), source: receipt.sourceVideo, output: receipt.reviewVideo, cameras, effects, status: issues.length ? 'FAIL' : 'PIXEL_REVIEW_PENDING', issues};
+});
+const report = {scope: 'ACTUAL_CAP_CONFIGURATION_AND_EXECUTION_GAPS', status: rows.some(r => r.issues.length) ? 'FAIL' : 'PIXEL_REVIEW_PENDING', rows, conclusion: 'Not a maturity or visual-quality pass', generatedAt: new Date().toISOString()};
+fs.writeFileSync(path.join(root, base, 'execution-chain-audit.json'), JSON.stringify(report, null, 2)+'\n');
+console.log(JSON.stringify({status:report.status,rows:rows.map(({id,issues})=>({id,issues}))},null,2));

@@ -1,0 +1,383 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "A1TypePlan/v1",
+  "title": "Type direction plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "planHash",
+    "budget",
+    "beats"
+  ],
+  "properties": {
+    "contract": {
+      "const": "A1TypePlan/v1"
+    },
+    "planHash": {
+      "type": "string",
+      "minLength": 8
+    },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type3dShots"
+      ],
+      "properties": {
+        "type3dShots": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 6
+        }
+      }
+    },
+    "beats": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "beat",
+          "lines"
+        ],
+        "properties": {
+          "beat": {
+            "type": "string"
+          },
+          "lines": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "text",
+                "role",
+                "size",
+                "reason",
+                "anchor",
+                "material",
+                "light",
+                "integration",
+                "perspective",
+                "composition",
+                "occlusion",
+                "hierarchy",
+                "motion",
+                "envMap",
+                "contactShadow",
+                "occludeBy",
+                "ink",
+                "inkOffset"
+              ],
+              "properties": {
+                "text": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "role": {
+                  "enum": [
+                    "hero",
+                    "figure",
+                    "title",
+                    "sub",
+                    "caption"
+                  ]
+                },
+                "size": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "reason": {
+                  "type": "string",
+                  "minLength": 4
+                },
+                "anchor": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "kind",
+                    "target",
+                    "quad"
+                  ],
+                  "properties": {
+                    "kind": {
+                      "enum": [
+                        "graphic",
+                        "print",
+                        "card",
+                        "surface",
+                        "attached",
+                        "occluded",
+                        "screen",
+                        "none"
+                      ]
+                    },
+                    "target": {
+                      "type": "string"
+                    },
+                    "quad": {
+                      "type": [
+                        "array",
+                        "null"
+                      ],
+                      "minItems": 4,
+                      "maxItems": 4,
+                      "items": {
+                        "type": "array",
+                        "minItems": 2,
+                        "maxItems": 2,
+                        "items": {
+                          "type": "number"
+                        }
+                      }
+                    }
+                  }
+                },
+                "material": {
+                  "enum": [
+                    "paper",
+                    "ink",
+                    "print",
+                    "card",
+                    "metal",
+                    "light"
+                  ]
+                },
+                "light": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "dir",
+                    "temp",
+                    "source"
+                  ],
+                  "properties": {
+                    "dir": {
+                      "type": "number"
+                    },
+                    "temp": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "source": {
+                      "enum": [
+                        "plate",
+                        "declared",
+                        "frame",
+                        null
+                      ]
+                    }
+                  }
+                },
+                "integration": {
+                  "enum": [
+                    "graphic",
+                    "print",
+                    "card",
+                    "occlusion",
+                    "3d"
+                  ]
+                },
+                "perspective": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "quad"
+                  ],
+                  "properties": {
+                    "quad": {
+                      "type": [
+                        "array",
+                        "null"
+                      ],
+                      "minItems": 4,
+                      "maxItems": 4,
+                      "items": {
+                        "type": "array",
+                        "minItems": 2,
+                        "maxItems": 2,
+                        "items": {
+                          "type": "number"
+                        }
+                      }
+                    }
+                  }
+                },
+                "composition": {
+                  "type": [
+                    "object",
+                    "null"
+                  ],
+                  "additionalProperties": false,
+                  "required": [
+                    "align",
+                    "edge",
+                    "column",
+                    "crop"
+                  ],
+                  "properties": {
+                    "align": {
+                      "enum": [
+                        "left",
+                        "centre",
+                        "right"
+                      ]
+                    },
+                    "edge": {
+                      "enum": [
+                        "top",
+                        "bottom",
+                        "left",
+                        "right",
+                        null
+                      ]
+                    },
+                    "column": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ],
+                      "minimum": 1,
+                      "maximum": 12
+                    },
+                    "crop": {
+                      "type": "boolean"
+                    }
+                  }
+                },
+                "occlusion": {
+                  "type": [
+                    "object",
+                    "null"
+                  ],
+                  "additionalProperties": false,
+                  "required": [
+                    "covers",
+                    "edge",
+                    "contactShadow",
+                    "ao"
+                  ],
+                  "properties": {
+                    "covers": {
+                      "type": "array",
+                      "items": {
+                        "type": "integer"
+                      }
+                    },
+                    "edge": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "contactShadow": {
+                      "type": [
+                        "boolean",
+                        "null"
+                      ]
+                    },
+                    "ao": {
+                      "type": [
+                        "boolean",
+                        "null"
+                      ]
+                    }
+                  }
+                },
+                "hierarchy": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "rank"
+                  ],
+                  "properties": {
+                    "rank": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    }
+                  }
+                },
+                "motion": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "type",
+                    "reveal",
+                    "drift"
+                  ],
+                  "properties": {
+                    "type": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "reveal": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "drift": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    }
+                  }
+                },
+                "envMap": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                },
+                "contactShadow": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                },
+                "occludeBy": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "ink": {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}$"
+                },
+                "inkOffset": {
+                  "type": "object",
+                  "required": [
+                    "dx",
+                    "dy"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "dx": {
+                      "type": "number"
+                    },
+                    "dy": {
+                      "type": "number"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

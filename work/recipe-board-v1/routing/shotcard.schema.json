@@ -1,0 +1,90 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "subs"
+  ],
+  "properties": {
+    "subs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "device",
+          "material",
+          "shows",
+          "layers",
+          "type",
+          "motion",
+          "transition",
+          "texture"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "device": {
+            "type": "string",
+            "enum": [
+              "presenter",
+              "side-card",
+              "pagecurl",
+              "article",
+              "chat",
+              "table",
+              "compare3d",
+              "brand",
+              "broll",
+              "diagram",
+              "title",
+              "quote",
+              "person",
+              "recap",
+              "chart",
+              "screen",
+              "market"
+            ],
+            "description": "the device of the sub-shot (the shot plan devices)"
+          },
+          "material": {
+            "type": "string",
+            "enum": [
+              "page",
+              "photo",
+              "cutout",
+              "portrait",
+              "logo",
+              "footage",
+              "none"
+            ],
+            "description": "the real material the sub-shot shows"
+          },
+          "shows": {
+            "type": "string"
+          },
+          "layers": {
+            "type": "string"
+          },
+          "type": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "the type design; null where no display line is set"
+          },
+          "motion": {
+            "type": "string"
+          },
+          "transition": {
+            "type": "string"
+          },
+          "texture": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

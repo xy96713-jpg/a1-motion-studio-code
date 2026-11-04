@@ -1,0 +1,135 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "title": "A1BeatDesign/v1 (agent answer)",
+ "type": "object",
+ "additionalProperties": false,
+ "required": [
+  "beats"
+ ],
+ "properties": {
+  "beats": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "beat",
+     "composition",
+     "picture",
+     "focus",
+     "ground",
+     "colour",
+     "type",
+     "alternative",
+     "subject",
+     "accentOn",
+     "words"
+    ],
+    "properties": {
+     "beat": {
+      "type": "string"
+     },
+     "composition": {
+      "type": "string"
+     },
+     "picture": {
+      "type": "string"
+     },
+     "focus": {
+      "type": "string"
+     },
+     "ground": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+       "kind",
+       "place",
+       "how",
+       "turn",
+       "isSubject"
+      ],
+      "properties": {
+       "kind": {
+        "type": "string"
+       },
+       "place": {
+        "type": "string"
+       },
+       "how": {
+        "type": "string"
+       },
+       "turn": {
+        "type": "boolean"
+       },
+       "isSubject": {
+        "type": "boolean"
+       }
+      }
+     },
+     "colour": {
+      "type": "string"
+     },
+     "type": {
+      "type": "string"
+     },
+     "alternative": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+       "composition",
+       "why"
+      ],
+      "properties": {
+       "composition": {
+        "type": "string"
+       },
+       "why": {
+        "type": "string"
+       }
+      }
+     },
+     "subject": {
+      "type": "string"
+     },
+     "accentOn": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "words": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "big",
+        "small",
+        "role"
+       ],
+       "properties": {
+        "big": {
+         "type": "string"
+        },
+        "small": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "role": {
+         "type": "string",
+         "enum": [
+          "pair",
+          "label",
+          "block"
+         ]
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}

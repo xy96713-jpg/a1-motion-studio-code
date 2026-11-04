@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import {productionFrameGoalShaV1,productionFrameRequestIsCurrentV1} from '../apps/studio-next/src/lib/a1-production-frame-identity-v1.mjs';
+import {assertFrameProductionDecisionV1} from '../apps/studio-next/src/lib/a1-production-frame-options-v1.mjs';
+const shot={id:'A',sourceText:'Original source',visualJob:'Explain a photo',exactCopy:['Locked']},plan={source:{videoSha256:'a'.repeat(64)},shots:[shot]},unit={visualIntake:{reference:{sha256:'reference'}}};
+const request={state:'HOLD',goalInputSha256:productionFrameGoalShaV1(plan,shot),reference:{sha256:'reference'}};
+assert.equal(productionFrameRequestIsCurrentV1({plan,shot,request,unit}),true);
+const changed={...shot,exactCopy:['Changed']};assert.equal(productionFrameRequestIsCurrentV1({plan,shot:changed,request,unit}),false);
+assert.equal(productionFrameRequestIsCurrentV1({plan,shot:{...shot,fullFrameStateFocus:{excludedStates:['HOLD']}},request,unit}),false);
+const legacy={state:'HOLD',reference:{sha256:'reference'}};
+assert.equal(productionFrameRequestIsCurrentV1({plan,shot:{...shot,productionRevisionRequest:{status:'OPEN'}},request:legacy,unit}),false);
+const decision={method:'REUSE_COMPLETE_FRAME',whySelected:'Accepted bytes fit current content',alternatives:[{method:'GENERATE_COMPLETE_FRAME',reason:'Unnecessary provider call'}],sequenceRole:'Establish',handoff:'Next detail'};
+assert.throws(()=>assertFrameProductionDecisionV1({route:'REUSE',productionDecision:decision},{}),/REUSE_UNBOUND/);
+assertFrameProductionDecisionV1({route:'REUSE',productionDecision:decision},{reusableFrame:{}});
+assert.throws(()=>assertFrameProductionDecisionV1({route:'GENERATE',productionDecision:decision},{reusableFrame:{}}),/METHOD_ROUTE_MISMATCH/);
+assert.throws(()=>assertFrameProductionDecisionV1({route:'NATIVE_IMAGE',nativeMaterialId:'invented',productionDecision:{...decision,method:'NATIVE_IMAGE'}},{nativeImageOptions:[]}),/NATIVE_IMAGE_UNBOUND/);
+console.log('PASS content changes/old revisions/excluded states invalidate requests; production method must match its route and an actual available frame/native option.');

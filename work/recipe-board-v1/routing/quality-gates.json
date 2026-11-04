@@ -1,0 +1,15 @@
+{
+ "contract": "A1CanaryQuality/v1",
+ "about": "Pixel/measurement gate before a canary may be called usable. Not an aesthetic pass; it catches dark, flat, low-edge, blank, overexposed and dead-motion canaries.",
+ "thresholds": {
+  "minMeanL": 0.12,
+  "maxMeanL": 0.9,
+  "maxDarkPct": 0.32,
+  "minStdL": 0.11,
+  "minEdge": 0.006,
+  "maxClippedPct": 0.03,
+  "minMotionDiff": 0.0015,
+  "sampleFps": 2
+ },
+ "note": "A canary that fails is not shown as a design result; fix asset/light/composition first."
+}

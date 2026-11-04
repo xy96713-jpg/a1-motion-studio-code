@@ -1,0 +1,28 @@
+{
+ "contract": "A1CompositionGate/v1",
+ "minSsim": 0.55,
+ "rule": "A selected direction needs lookLock seven rules, buildPlan ready, lookMatch pass, and B12/Hupo benchmark pass before shot expansion. A mismatch below 0.55 is returned; do not call it a reproduction.",
+ "composition": [
+  "camera/lens/height/perspective must match the reference",
+  "subject scale and placement must match",
+  "foreground/background and negative space must match",
+  "light direction and contrast must match",
+  "palette and material must match",
+  "seam/motion seed must match",
+  "no type/logo/text may be added to match the still; type is code later"
+ ],
+ "assets": "buildPlan.assets must be ready; missing = blocked",
+ "lookMatch": "scripts/look-match-gate.mjs",
+ "planCheck": "scripts/direction-plan-check.mjs",
+ "compositionMetrics": "scripts/reference-metrics.mjs",
+ "metrics": [
+  "meanL",
+  "darkPct",
+  "edge",
+  "3x3 grid meanL"
+ ],
+ "gridMeanMax": 0.12,
+ "darkPctDeltaMax": 0.12,
+ "edgeRatioMin": 0.7,
+ "clippedMax": 0.03
+}

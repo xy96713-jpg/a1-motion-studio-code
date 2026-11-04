@@ -1,0 +1,199 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>title</title>
+<style>
+#bg { position: absolute; inset: -9%; background-size: cover; background-position: center; transform-origin: 50% 50%; }
+/* the product stands in front of the lower part of the word: the word stays readable (cards-S3: a card 62 % tall in
+   the middle hid 顯卡 whole; the reference's card crosses the letters' feet) */
+#hw { position: absolute; left: 54%; top: 76%; width: 48%; height: 42%; transform: translate(-50%, -50%); background-size: contain; background-repeat: no-repeat; background-position: center; filter: drop-shadow(0 30px 40px rgba(0,0,0,.7)); z-index: 3; }
+#txt { position: absolute; left: 0; right: 0; top: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2; }
+#big { font-size: 210px; color: #f4f2ee; }
+#big.ink { font-size: 250px; }
+#wash { position: absolute; inset: 0; background: var(--paper, #f3f2ee); opacity: 0; }
+#big.ink { color: var(--ink, #111); text-shadow: -2px 0 rgba(255,40,40,.35), 2px 0 rgba(40,200,255,.35); }
+/* metal: the gradient on each character (a gradient clipped on the line did not reach characters that move on their own,
+   and the colour fringe showed through the clear type as pink: open-S1); no fringe on metal */
+#big.metal { font-size: 330px; text-shadow: none; filter: drop-shadow(0 20px 30px rgba(0,0,0,.6)); }
+#big.metal .ch { background: linear-gradient(180deg, #fbfbf8 0%, #c9c2ae 40%, #6b6555 52%, #e8e2cf 100%); -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: none; }
+#en { margin-top: 18px; font-size: 54px; color: rgba(240,238,232,.88); }
+#big.ink + #en { color: var(--ink, #2a2a2a); }
+#big.brand { font-size: 230px; }
+/* brand face: a bevelled blue (light at the top, deep at the foot, a white edge) on each character, as the reference
+   cuts 深度求索 in blue chrome (open R14; ours was a flat blue with a stacked shadow) */
+#big.brand .ch { color: var(--col); text-shadow: none; }   /* (solid, its depth the one treatment: a gradient clipped to the strokes filled each character's whole box where the clip failed, a navy block behind 深度求索 once the strokes were thin, open S14 review 2026-10-26; the reference's is solid blue with depth) */
+#tiles { position: absolute; inset: 0; z-index: 1; }
+/* card: the ground as an explainer slide (open R20: the whale on the left, three points on the right, the title pressed
+   over them), laid on a painted plate; part of the ground, it moves and softens with it */
+#card { position: absolute; inset: 0; }
+#card .mk { position: absolute; left: 5%; top: 30%; width: 54%; height: 30%; background-repeat: no-repeat; }
+#card .ln { position: absolute; left: 62%; right: 3%; font-family: 'House Kokka'; font-size: 104px; line-height: 1.15; color: var(--brand, #2b3fb8); white-space: nowrap; }
+#card .ln::before { content: ''; display: inline-block; width: .32em; height: .32em; background: var(--brand, #2b3fb8); margin-right: .45em; vertical-align: .2em; }
+#tiles > div { position: absolute; border-radius: 22%; background: #fff; box-shadow: 0 18px 40px rgba(0,0,0,.25); }
+</style></head>
+<body>
+<div id="bg"><div id="card" data-ground></div></div><div id="shade" class="dark" style="background:#000"></div><div id="wash"></div><div id="tiles"></div>
+<div id="txt"><div id="lead" class="song"></div><div id="big" class="song"></div><div id="en" class="en"></div></div><div id="hw"></div>
+<div id="vig"></div><div id="sub"></div>
+<script>window.__spec = window.__spec || {};</script>
+<script src="common.js"></script>
+<script>
+// 大字标题压在实拍 / 资料上 (reference P01, P05, P07, P11, P13, P16, P19, P38; measured at 4 fps): the ground is real
+// material (a photograph, a page, a footage still) dimmed and drifting, or a plate from image generation where nothing
+// real fits; the title rises character by character out of a blur, a small English line under it; `ink` sets it black
+// over a light page (P07), `metal` sets it huge in metal behind a real product cut-out (P16). Words by code, exact.
+const S = M.S, $ = M.$;
+const onPaper = !S.bg;
+// metal letters with no ground stand on a dark stage, never on the light paper (the reference's P16 / cards R03: grey metal
+// on paper read as a faint smudge; found by the module bench)
+const darkStage = onPaper && S.style === 'metal';
+if (darkStage) document.body.style.background = 'radial-gradient(ellipse 75% 65% at 50% 45%, #2a2622 0%, #0d0b09 75%)';
+else if (onPaper) M.paper(document.body); else $('#bg').style.backgroundImage = `url("${S.bg}")`;
+$('#shade').style.opacity = onPaper ? 0 : (S.dim ?? (S.style === 'ink' ? .05 : .5));
+// ink over a light page (P07): the page stays readable as a page but steps back, washed and softened
+// (softened enough that its lines no longer read through the title: at 3 px the page's words stood sharp among the
+// title's strokes, open-S8 / S12; the reference's page behind its titles is a texture of lines)
+if ((S.style === 'ink' || S.style === 'brand') && !onPaper) { $('#wash').style.opacity = S.wash ?? .55; $('#bg').style.filter = `blur(${S.blur ?? 7}px) grayscale(.5)`; }
+else if (S.blur) $('#bg').style.filter = `blur(${S.blur}px)`;
+$('#big').className = `song fringe ${S.style || ''}`.trim(); $('#big').innerHTML = `<span class="cond">${M.chars(S.text)}</span>`;
+// a centred title narrows about its middle (narrowed from its left edge it stood 7 % left of centre: recap-S5 開源)
+if (!S.side) $('#big .cond').style.transformOrigin = '50% 50%';
+// ground 'dark': a light page shown in its dark mode, white words on black, as the reference's tweet (recap R05)
+if (S.ground === 'dark' && !onPaper) $('#bg').style.filter = `invert(1) hue-rotate(180deg) brightness(1.1) contrast(1.6)${S.blur ? ` blur(${S.blur}px)` : ''}`;
+$('#en').textContent = S.en || '';
+// a lead line over the title (the reference's ending R02: 2015年，梁文锋创立 over 幻方量化), and the ground in black and
+// white (its office is monochrome; ours a coloured stage photo, ending-S2 review)
+$('#lead').textContent = S.lead || ''; Object.assign($('#lead').style, { fontSize: '54px', color: 'rgba(240,238,232,.92)', marginBottom: '6px', textShadow: '0 4px 16px rgba(0,0,0,.6)', display: S.lead ? '' : 'none' });
+if (S.mono) $('#bg').style.filter = `${$('#bg').style.filter || ''} grayscale(1) contrast(1.08)`;
+// side: the title at the left or the right of the frame, the picture keeping the other half (the reference's P38 /
+// meta R07: 650 on the right, Zuckerberg on the left; ours stood centred on his face)
+// (the words laid inside what the camera shows: M.view)
+{ const v = M.view(S.textAt ?? S.at); if ((S.camera || []).length) Object.assign($('#txt').style, { left: `${v.L}px`, right: `${1920 - v.R}px`, top: `${v.T}px`, bottom: `${1080 - v.B}px` }); }
+if (S.side === 'left' || S.side === 'right') Object.assign($('#txt').style, { alignItems: S.side === 'left' ? 'flex-start' : 'flex-end', [S.side === 'left' ? 'paddingLeft' : 'paddingRight']: `${Math.round(150 * M.view(S.textAt ?? S.at).w / 1920)}px` });
+// big: the characters of one part of the title set larger (the reference's 650 stands three times the height of its
+// words, meta R07)
+if (S.big && String(S.text).includes(S.big)) { const at = [...String(S.text)].length - [...String(S.text).slice(String(S.text).indexOf(S.big))].length, n = [...S.big].length;
+  [...$('#big').querySelectorAll('.ch')].forEach((c, i) => { if (i >= at && i < at + n) { c.style.fontSize = '2.3em'; c.style.lineHeight = '1'; c.style.verticalAlign = '-.08em'; } }); }
+// treat: the display line's treatment, each character (they come in one by one): common.js M.treat, from the reference's
+// own type at this moment when the plan sets none (shotplan withRefTreat)
+// (the display line's own face, on its Chinese characters only: on the whole line it turned the brand block's DeepSeek
+// into the poster face, open S14)
+if (S.face && M.FACE[S.face]) [...$('#big').querySelectorAll('.ch')].forEach((c) => { if (/[\u3400-\u9fff]/.test(c.textContent)) c.style.fontFamily = `'${M.FACE[S.face]}', 'House Kokka'`; });
+// (the brand block draws its own depth: a treatment over it is a second, open S14's extrude on the brand depth)
+if (S.treat && S.style !== 'metal' && S.style !== 'brand') [...$('#big').querySelectorAll('.ch')].forEach((c) => M.treat(c, S.treat));
+// brand: the name as the brand sets it (open R14: DeepSeek in bold blue italics on a yellow block over 深度求索 in deep
+// blue with a thickness): the English line goes above, on its block; the title gets depth
+if (S.style === 'brand') { const col = S.color || S.theme?.brand || '#1d3fd6', blk = S.block || S.theme?.block || '#f4d400';
+  // (a lettered page's tall face is .72 of the width 230 px was chosen for: 深度求索 stood a third of the frame, open S14)
+  if (S.letter?.big && !S.size) { $("#big").style.fontSize = "260px"; $("#txt").style.marginTop = "-110px"; }   /* (raised: set by its own size it sat on the subtitle band) */   /* (320, the full .72 back, ran onto the whale tiles beside it, open S14) */
+  $('#txt').insertBefore($('#en'), $('#big'));
+  Object.assign($('#en').style, { fontFamily: getComputedStyle($('#big')).fontFamily, fontStyle: 'italic', fontWeight: '900', fontSize: `${S.enSize || 150}px`, color: col, background: blk, padding: '0 28px', lineHeight: '1.05', marginTop: '0', marginBottom: '6px', transform: 'skewX(-8deg)' });
+  // (the block is the label family's paper strip in the brand's yellow, not a flat fill: flatPlateErrors, open S14)
+  { const pl = M.plate(0, blk); if (pl) $('#en').style.cssText += pl; }
+  // (the depth is drawn behind the clipped face: a drop-shadow per step, since a text-shadow on clear type shows through)
+  const mix = (h, k) => '#' + [1, 3, 5].map((i) => Math.round(parseInt(h.slice(i, i + 2), 16) * k + (k > 1 ? 0 : 0)).toString(16).padStart(2, '0').slice(-2)).join(''), lift = (h, k) => '#' + [1, 3, 5].map((i) => { const v = parseInt(h.slice(i, i + 2), 16); return Math.round(v + (255 - v) * k).toString(16).padStart(2, '0'); }).join('');
+  for (const [k, v] of [['--col', col], ['--hi', lift(col, .55)], ['--lo', mix(col, .55)]]) $('#big').style.setProperty(k, v);
+  Object.assign($('#big').style, { color: col, filter: [...Array.from({ length: 8 }, (_, i) => `drop-shadow(${i < 4 ? 1.5 : 1.5}px 1.5px 0 ${mix(col, .42 - i * .02)})`), 'drop-shadow(16px 22px 22px rgba(0,0,0,.4))'].join(' ') }); }
+if (S.hardware) $('#hw').style.backgroundImage = `url("${S.hardware}")`;
+// (hwBox: where the product stands and how large, in % of the frame: the reference lays a big card across the middle of 显卡, cards-S3)
+if (S.hardware && S.hwBox) Object.assign($('#hw').style, { left: `${S.hwBox.x}%`, top: `${S.hwBox.y}%`, width: `${S.hwBox.w}%`, height: `${S.hwBox.h ?? S.hwBox.w * .6}%` });
+// focus: the ground framed on one region of the page (open R20: the reference sits close on DeepSeek's whale and its
+// bullet points, sharp, where ours blurred the whole page to a grey: the title had nothing behind it); x, y the
+// region's centre in fractions of the picture, zoom how close
+if (S.focus) Object.assign($('#bg').style, { backgroundSize: `${(S.focus.zoom || 1.6) * 100}% auto`, backgroundPosition: `${(S.focus.x ?? .5) * 100}% ${(S.focus.y ?? .5) * 100}%` });
+// under 1 the picture whole and smaller in the frame's middle on the dark (recap-S5: the release at full width lost its
+// head off the top edge; the reference shows the post whole on black)
+if (S.focus && S.focus.zoom < 1) Object.assign($('#bg').style, { backgroundRepeat: 'no-repeat', backgroundColor: S.ground === 'dark' ? '#fff' : '#000', backgroundSize: `${S.focus.zoom * 100 / 1.18}% auto` });
+// tiles: the brand's real mark on app tiles floating round the title at several depths, the far ones soft (open R14:
+// DeepSeek's whale tiles behind 深度求索; ours had a bare page). Fixed places, the same on every render
+const TILE = [[.08, .1, 230, 6], [.8, .06, 200, 9], [.9, .62, 260, 3], [.03, .66, 180, 10], [.62, .02, 150, 12], [.28, .78, 140, 13]];
+// (crop: [x, y, w, h] of the picture in fractions, the mark alone out of a wordmark)
+const [cx, cy, cw, ch] = S.tiles?.crop || [0, 0, 1, 1];
+const tiles = S.tiles ? TILE.slice(0, S.tiles.n || 4).map(([x, y, w, b]) => { const d = document.createElement('div'), m = w * .72, clip = document.createElement('div');
+  // (each kept whole inside the camera's closest framing, its drift and turn allowed for: open S14 opened at ×1.3 and
+  // its corner tiles were cut by the edge, a strip of each)
+  const zmax = Math.max(1, ...[].concat(S.camera || []).flatMap((c) => [c.from?.zoom, c.to?.zoom, c.zoom]).filter((z) => z > 0)), lo = (c, m) => c - (c - m) / zmax;
+  const X0 = lo(960, 70), Y0 = lo(540, 70), px = Math.min(Math.max(x * 1920, X0), 1920 - X0 - w), py = Math.min(Math.max(y * 1080, Y0), 1080 - Y0 - w);
+  Object.assign(d.style, { left: `${px}px`, top: `${py}px`, width: `${w}px`, height: `${w}px`, filter: `blur(${b}px)` });
+  Object.assign(clip.style, { position: 'absolute', left: `${(w - m) / 2}px`, top: `${(w - m) / 2}px`, width: `${m}px`, height: `${m}px`, backgroundImage: `url("${S.tiles.src}")`, backgroundRepeat: 'no-repeat', backgroundSize: `${(100 / cw).toFixed(2)}% auto`, backgroundPosition: `${cw < 1 ? (cx / (1 - cw) * 100).toFixed(2) : 50}% ${ch < 1 ? (cy / (1 - ch) * 100).toFixed(2) : 50}%` });
+  d.appendChild(clip); $('#tiles').appendChild(d); return { d, k: 1 - b / 16 }; }) : [];
+if (S.card) { const c = S.card, [mx, my, mw, mh] = c.mark?.crop || [0, 0, 1, 1];
+  if (c.mark) Object.assign($('#card').appendChild(Object.assign(document.createElement('div'), { className: 'mk' })).style, { backgroundImage: `url("${c.mark.src}")`, backgroundSize: `${(100 / mw).toFixed(2)}% auto`, backgroundPosition: `${mw < 1 ? (mx / (1 - mw) * 100).toFixed(2) : 50}% ${mh < 1 ? (my / (1 - mh) * 100).toFixed(2) : 50}%` });
+  (c.lines || []).forEach((l, i) => { const d = document.createElement('div'); d.className = 'ln'; d.textContent = l; d.style.top = `${20 + i * 19}%`; $('#card').appendChild(d); });
+  // (the card is the ground: no wash or blur of a page over it unless asked)
+  if (S.wash == null) $('#wash').style.opacity = 0; if (S.blur == null) $('#bg').style.filter = 'none';
+  // the panel shown whole, its bands at the top and foot in the frame (cut 9 % larger for the ground's own slide, the
+  // bands fell outside it)
+  Object.assign($('#bg').style, { inset: '-2%', backgroundSize: '100% 100%' }); }
+// (no more: ragged edges read as torn paper, user 2026-10-25: 之后也不要这种纸条撕纸设计什么的了; the plan check refuses brush)
+window.render = (t) => {
+  M.subs(t);
+  const a = M.seg(t, S.at, S.end);
+  // the ground slides on steadily, never only a slow zoom (the reference keeps moving: ours measured still 95 % of the
+  // time, motion check on the animatic, meta-S1); the ground is cut 9 % larger than the frame so the slide stays inside
+  // (under the director's camera, spec.camera, the ground and the title hold still: the camera moves them, open-S14)
+  const own = !(S.camera || []).length;
+  // (a card is a slide seen whole: it only pushes in, a slide aside cut its mark off and showed the frame's edge)
+  $('#bg').style.transform = !own && S.groundMove ? M.groundMove(S.groundMove, M.E.inout(a)) : own ? (S.card ? `scale(${1 + .06 * a})` : `scale(${1.02 + .07 * a}) translateX(${-Math.min(160, 60 * (t - S.at))}px)`) : 'scale(1.02)';
+  // the title drifts too (a page blurred under ink type, or bare paper, gives the eye nothing moving: open-S8, S12)
+  $('#txt').style.translate = own ? `${-18 * (t - S.at)}px ${-6 * (t - S.at)}px` : '0px 0px';
+  const at = S.textAt ?? S.at + .15;
+  // reveal: the seconds the characters take to come in, one after another (the reference brings 凭什么 in over 2.7 s,
+  // a character a beat; ours showed all three in 0.3 s: open R20, measured by the pace of the packaging)
+  const nCh = [...String(S.text)].length, step = S.reveal ? Math.max(.03, (S.reveal - .3) / Math.max(1, nCh - 1)) : S.style === 'metal' ? .09 : .05;
+  M.reveal($('#big'), t, at, { step, pop: !!S.reveal });
+  // (with a reveal the English line comes in partway through it, never after the shot: who-S8 lost its line)
+  if (S.lead) M.fade($('#lead'), t, at - .1, .35, 0, 12);
+  M.fade($('#en'), t, Math.min(at + .35 + (S.reveal ? S.reveal * .4 : [...String(S.text)].length * .04), S.end - .5), .4, 0, 12);
+  $('#txt').style.transform = own ? `scale(${1 + .04 * a})` : 'none';
+  // the tiles drift against the title, the near ones more (parallax)
+  tiles.forEach(({ d, k }, i) => { d.style.transform = `translate(${((i % 2 ? 1 : -1) * 30 * k * a).toFixed(1)}px, ${(-20 * k * a).toFixed(1)}px) rotate(${(i % 2 ? 6 : -8)}deg)`; });
+  if (S.hardware) { const k = M.E.out(M.seg(t, S.at + .2, S.at + 1)); $('#hw').style.opacity = k; $('#hw').style.transform = `translate(-50%, ${-50 + (1 - k) * 6}%) scale(${1 + .05 * a})`; }
+};
+// the title set to its width, not one size for every length: a short word fills the frame as the reference's do
+// (凭什么 at 250 px was a third of the reference's: open-S12); about 60 % of the frame, 440 px a character at most
+// shape 'tall': the reference's year (open R01: 2025年1月 in a condensed Mincho 600 px tall, half the frame's height,
+// each character narrow): set by its height, then narrowed to fit the width (ours was a wide face at a third the height)
+// (an OCR box of a line stands about a sixth taller than the strokes in it: the ink is set to that share of the box)
+const REF_INK = .85;
+document.fonts.ready.then(() => { const el = $('#big'), cond = el.querySelector('.cond'), r = document.createRange();
+  if (S.shape === 'tall') {
+    // sized by its strokes (a Mincho's box is a third taller than them; the frame checks measure display type by its
+    // strokes too: framecheck PAGE_BLOCKS): the strokes as tall as asked, centred a little above the middle (the
+    // subtitle band stays clear), then narrowed to the width
+    const box = () => { r.selectNodeContents(el); const q = [...r.getClientRects()]; return { top: Math.min(...q.map((x) => x.top)), bot: Math.max(...q.map((x) => x.bottom)) }; };
+    const inkOf = () => { const cs = getComputedStyle(cond), cx = document.createElement('canvas').getContext('2d'); cx.font = cs.fontStyle + ' ' + cs.fontWeight + ' ' + cs.fontSize + ' ' + cs.fontFamily;
+      const m = cx.measureText(String(S.text)), fa = m.fontBoundingBoxAscent, fd = m.fontBoundingBoxDescent; return fa + fd > 0 ? [(fa - m.actualBoundingBoxAscent) / (fa + fd), (fd - m.actualBoundingBoxDescent) / (fa + fd)] : [0, 0]; };
+    cond.style.transform = 'none'; el.style.lineHeight = '1'; el.style.fontSize = '600px';
+    let b = box(), k = inkOf(); const ink0 = (b.bot - b.top) * (1 - k[0] - k[1]);
+    el.style.fontSize = `${600 * (S.height ?? (S.refType?.h ? S.refType.h * REF_INK / 1080 : .55)) * 1080 / Math.max(1, ink0)}px`;
+    // (beside a card of lines on the right, the title keeps to the left part, over the mark's wordmark, clear of its emblem and of the lines — set in
+    // the middle it grew over 中國AI實驗室 and 開發大模型, film review 17, 0:45; the reference's lies over its logo)
+    const side = (S.card?.lines || []).length > 0;
+    r.selectNodeContents(el); const w = r.getBoundingClientRect().width; cond.style.transformOrigin = '50% 50%'; const nar = S.letter?.big ? .62 / .72 : .62;   /* (the tall face is narrow of itself: .62 again stood 憑什麼 at a quarter of the frame, open S19) */ cond.style.transform = `scaleX(${Math.min(nar, (side ? 700 : 1550) / Math.max(1, w)).toFixed(3)})`;
+    // (a title over the mark's wordmark read as a stamp pressed on the logo, and the user turned the shot down, 2026-10-25: the mark goes up
+    // in the left column and the title stands under it, clear of the mark and of the lines; at most a third of the frame tall there)
+    if (side && S.card?.mark) { const mk = $('#card .mk'); if (mk) Object.assign(mk.style, { top: '10%', height: '26%' });
+      const hh = Math.min(S.height ?? .36, .36) * 1080, f = parseFloat(el.style.fontSize); el.style.fontSize = `${f * Math.min(1, hh / Math.max(1, (S.height ?? .55) * 1080))}px`;
+      r.selectNodeContents(el); const w2 = r.getBoundingClientRect().width; cond.style.transform = `scaleX(${Math.min(nar, 900 / Math.max(1, w2)).toFixed(3)})`; }
+    if (side) el.style.transform = `translateX(${S.card?.mark ? -370 : -190}px)`;
+    b = box(); k = inkOf(); const h = b.bot - b.top, it = b.top + h * k[0], ib = b.bot - h * k[1];
+    el.style.marginTop = `${2 * ((side && S.card?.mark ? 680 : 470) - (it + ib) / 2)}px`; return; }
+  // refType: the reference's own display line at this moment (the card's measure: its height in px of 1080, as OCR boxes
+  // it): the title set to that height and no wider than the frame, unless the shot sets a size or a side (recap-S5:
+  // 开源 tried at three sizes by hand; the white model then measured it against this same line)
+  // size: the shot's own size in px (it only turned the automatic size off, and the words kept the CSS default: recap-S5)
+  if (S.size && S.shape !== 'tall') { el.style.fontSize = `${+S.size}px`; return; }
+  // (by the em, not a canvas measure: a title whose display face lacks a character is set whole in its fallback, and the
+  // canvas measured another face, 顯卡 came out at a seventh of the reference's height, recap-S2; CJK ink is .88 of the em)
+  // (a lettered brand block keeps the size it was given for the tall face: the reference's line height set over it put
+  // 深度求索 back at a quarter of the frame, open S14)
+  if (S.refType?.h && !S.size && !S.side && !(S.style === 'brand' && S.letter?.big)) {
+    { el.style.fontSize = `${S.refType.h / .88}px`;   /* (the reference's line height is its ink: less by REF_INK set every title a size down, round 40 reviews) */ const w2 = el.getBoundingClientRect().width   /* (its own box: a range took in the characters' entrance offsets, far off, and shrank the title to nothing, recap-S2) */, room = 1750 * M.view(S.textAt ?? S.at).w / 1920; if (w2 > room) el.style.fontSize = `${parseFloat(el.style.fontSize) * room / w2}px`; return; } }
+  r.selectNodeContents(el); const w = r.getBoundingClientRect().width, fs = parseFloat(getComputedStyle(el).fontSize);
+  // (a title at one side takes a third of the frame: the rest is the picture's, meta-S6 covered Zuckerberg's face at half)
+  if (w > 0 && !S.size) el.style.fontSize = `${Math.min(440, fs * (S.side ? 640 : S.style === 'metal' ? 1500 : 1150) * M.view(S.textAt ?? S.at).w / 1920 / w)}px`; });
+// the lead line a third of the title's size once the title is set (at a fixed 54 px it read as a footnote under a
+// huge figure, meta-S6 未來一年 over 650億)
+document.fonts.ready.then(() => { if (S.lead) $('#lead').style.fontSize = `${Math.max(54, Math.round(parseFloat(getComputedStyle($('#big')).fontSize) * .3))}px`; });
+M.ready([S.bg, S.hardware, S.tiles?.src, S.card?.mark?.src]);
+</script>
+</body></html>

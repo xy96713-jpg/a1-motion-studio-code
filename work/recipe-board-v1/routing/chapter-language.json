@@ -1,0 +1,3868 @@
+{
+ "contract": "A1ChapterLanguage/v1",
+ "films": [
+  "回形针 Vol.138《如何用 DNA 追捕真凶》",
+  "回形针 Vol.047《低焦油香烟的骗局》"
+ ],
+ "beats": 92,
+ "perFilm": [
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beats": 54,
+   "hardCutsPerMinute": 3.06,
+   "movingShare": 0.5,
+   "framesWithRed": 0.65
+  },
+  {
+   "film": "回形针 Vol.047《低焦油香烟的骗局》",
+   "beats": 38,
+   "hardCutsPerMinute": 11.55,
+   "movingShare": 0.88,
+   "framesWithRed": 0.192
+  }
+ ],
+ "about": "A continuous diagram beat as the reference makes it, measured (chapterlang.mjs). Ranges [p10, p25, median, p75, p90]; a beat is held to p10-p90, defaults come from p25-p75.",
+ "camera": {
+  "moving": [
+   0.12,
+   0.38,
+   0.62,
+   1,
+   1
+  ],
+  "still": [
+   0,
+   0,
+   0.143,
+   0.429,
+   0.6
+  ],
+  "hold": [
+   0,
+   0,
+   1,
+   2,
+   4
+  ],
+  "holdSeconds": {
+   "25": 0.5,
+   "50": 1,
+   "75": 1.875,
+   "90": 3.35
+  },
+  "moveSeconds": {
+   "25": 0.375,
+   "50": 0.875,
+   "75": 1.375,
+   "90": 3.263
+  },
+  "cameraPxPerSec": {
+   "10": 0,
+   "50": 0,
+   "90": 441
+  },
+  "hardCutsPerMinute": 6.57
+ },
+ "type": {
+  "chars": [
+   0,
+   3,
+   17,
+   36,
+   96
+  ],
+  "lines": [
+   0,
+   1,
+   4,
+   6,
+   12
+  ],
+  "bare": [
+   0,
+   0,
+   0.083,
+   0.375,
+   0.7
+  ],
+  "lineH": [
+   45,
+   56,
+   76,
+   112,
+   191
+  ],
+  "biggest": [
+   50,
+   69,
+   90,
+   148,
+   207
+  ],
+  "textArea": [
+   0,
+   0.004,
+   0.021,
+   0.076,
+   0.135
+  ],
+  "framesWithoutType": 0.24,
+  "zones": {
+   "left": 0.447,
+   "centre": 0.495,
+   "right": 0.439
+  }
+ },
+ "colour": {
+  "fill": [
+   0.306,
+   0.4,
+   0.575,
+   0.706,
+   0.875
+  ],
+  "red": [
+   0,
+   0,
+   0.5,
+   1,
+   1
+  ],
+  "lum": [
+   26.8,
+   39.9,
+   49.2,
+   84,
+   146.7
+  ],
+  "sat": [
+   0.008,
+   0.023,
+   0.048,
+   0.11,
+   0.148
+  ]
+ },
+ "rhythm": {
+  "beat": [
+   3.5,
+   5,
+   7,
+   10,
+   12
+  ],
+  "elements": [
+   2,
+   2,
+   3,
+   4,
+   4
+  ],
+  "perSec": [
+   0.267,
+   0.333,
+   0.4,
+   0.5,
+   0.556
+  ],
+  "gap": [
+   1,
+   1.5,
+   2,
+   3,
+   4
+  ],
+  "firstAt": [
+   0,
+   0,
+   0,
+   0.5,
+   1
+  ],
+  "lead": [
+   -1,
+   -0.5,
+   0,
+   0.5,
+   1.5
+  ],
+  "onsetOnLine": {
+   "within0_5s": 0.502,
+   "chance": 0.386
+  }
+ },
+ "transitions": {
+  "carries": {
+   "keep": 47,
+   "black": 4,
+   "cut": 7,
+   "texture": 6,
+   "other": 28
+  },
+  "keepShare": 0.51
+ },
+ "devices": {
+  "word-cue": {
+   "n": 28,
+   "beats": [
+    "B01",
+    "B03",
+    "B26",
+    "B27",
+    "B30",
+    "B34",
+    "B44",
+    "B50",
+    "B06",
+    "R04",
+    "R17",
+    "R18",
+    "R19",
+    "R20",
+    "R23",
+    "R24",
+    "R26",
+    "R27",
+    "R29",
+    "R32",
+    "R34",
+    "R35",
+    "R06",
+    "R07",
+    "R08",
+    "R14",
+    "R15",
+    "R16"
+   ]
+  },
+  "title-to-texture": {
+   "n": 15,
+   "beats": [
+    "B03",
+    "B18",
+    "B22",
+    "B24",
+    "B25",
+    "B26",
+    "B33",
+    "B38",
+    "B41",
+    "B52",
+    "B08",
+    "B11",
+    "R24",
+    "R29",
+    "R34"
+   ]
+  },
+  "carrier": {
+   "n": 14,
+   "beats": [
+    "B05",
+    "B19",
+    "B23",
+    "B26",
+    "B27",
+    "B29",
+    "B30",
+    "B40",
+    "B42",
+    "B48",
+    "B07",
+    "B12",
+    "B15",
+    "R05"
+   ]
+  },
+  "mark-in-red": {
+   "n": 13,
+   "beats": [
+    "B39",
+    "B43",
+    "B09",
+    "B10",
+    "B13",
+    "R05",
+    "R21",
+    "R23",
+    "R30",
+    "R33",
+    "R37",
+    "R08",
+    "R10"
+   ]
+  },
+  "callout-line": {
+   "n": 12,
+   "beats": [
+    "B22",
+    "B10",
+    "B14",
+    "R04",
+    "R29",
+    "R30",
+    "R06",
+    "R07",
+    "R08",
+    "R13",
+    "R14",
+    "R15"
+   ]
+  },
+  "real-in-frame": {
+   "n": 11,
+   "beats": [
+    "B33",
+    "B36",
+    "B47",
+    "R04",
+    "R22",
+    "R27",
+    "R31",
+    "R33",
+    "R37",
+    "R06",
+    "R10"
+   ]
+  },
+  "literal-metaphor": {
+   "n": 9,
+   "beats": [
+    "B05",
+    "B19",
+    "B20",
+    "B37",
+    "B46",
+    "B51",
+    "R17",
+    "R25",
+    "R16"
+   ]
+  },
+  "symmetry": {
+   "n": 9,
+   "beats": [
+    "B18",
+    "B28",
+    "B32",
+    "R19",
+    "R20",
+    "R31",
+    "R32",
+    "R35",
+    "R36"
+   ]
+  },
+  "term-biggest": {
+   "n": 9,
+   "beats": [
+    "B24",
+    "B38",
+    "B41",
+    "B46",
+    "B06",
+    "B11",
+    "R02",
+    "R04",
+    "R06"
+   ]
+  },
+  "number-grows": {
+   "n": 8,
+   "beats": [
+    "B35",
+    "B14",
+    "B16",
+    "R21",
+    "R25",
+    "R31",
+    "R32",
+    "R09"
+   ]
+  },
+  "scale-jump": {
+   "n": 7,
+   "beats": [
+    "B04",
+    "B27",
+    "B47",
+    "B15",
+    "R21",
+    "R22",
+    "R12"
+   ]
+  },
+  "real-doc-callout": {
+   "n": 7,
+   "beats": [
+    "B34",
+    "R23",
+    "R26",
+    "R33",
+    "R37",
+    "R10",
+    "R13"
+   ]
+  },
+  "label-swap": {
+   "n": 7,
+   "beats": [
+    "B12",
+    "R20",
+    "R34",
+    "R07",
+    "R10",
+    "R11",
+    "R12"
+   ]
+  },
+  "black-pause": {
+   "n": 5,
+   "beats": [
+    "B02",
+    "B05",
+    "B21",
+    "B51",
+    "R01"
+   ]
+  },
+  "callback": {
+   "n": 5,
+   "beats": [
+    "B19",
+    "B17",
+    "R19",
+    "R25",
+    "R36"
+   ]
+  },
+  "subject-stays": {
+   "n": 5,
+   "beats": [
+    "B29",
+    "B33",
+    "R03",
+    "R28",
+    "R09"
+   ]
+  },
+  "rhyme": {
+   "n": 4,
+   "beats": [
+    "B31",
+    "B32",
+    "B37",
+    "B45"
+   ]
+  },
+  "narrowing-frames": {
+   "n": 4,
+   "beats": [
+    "B43",
+    "B49",
+    "B14",
+    "B15"
+   ]
+  },
+  "cycle-compare": {
+   "n": 3,
+   "beats": [
+    "B04",
+    "R24",
+    "R11"
+   ]
+  },
+  "zoom-into": {
+   "n": 3,
+   "beats": [
+    "B22",
+    "R03",
+    "R16"
+   ]
+  },
+  "letter-to-structure": {
+   "n": 3,
+   "beats": [
+    "B06",
+    "B07",
+    "B08"
+   ]
+  },
+  "pan-distance": {
+   "n": 3,
+   "beats": [
+    "B12",
+    "B13",
+    "R28"
+   ]
+  },
+  "glitch-cut": {
+   "n": 2,
+   "beats": [
+    "B19",
+    "B31"
+   ]
+  },
+  "banner-verdict": {
+   "n": 2,
+   "beats": [
+    "B20",
+    "B32"
+   ]
+  },
+  "clipping-stack": {
+   "n": 2,
+   "beats": [
+    "B20",
+    "R18"
+   ]
+  },
+  "bracket-group": {
+   "n": 2,
+   "beats": [
+    "B22",
+    "R29"
+   ]
+  },
+  "letter-as-set": {
+   "n": 2,
+   "beats": [
+    "B23",
+    "B44"
+   ]
+  },
+  "dim-keep-red": {
+   "n": 2,
+   "beats": [
+    "B24",
+    "B40"
+   ]
+  },
+  "signal-break": {
+   "n": 2,
+   "beats": [
+    "B37",
+    "R36"
+   ]
+  },
+  "bar-length-ratio": {
+   "n": 2,
+   "beats": [
+    "B39",
+    "B40"
+   ]
+  },
+  "sort-to-rank": {
+   "n": 2,
+   "beats": [
+    "B42",
+    "B43"
+   ]
+  },
+  "dots-as-people": {
+   "n": 2,
+   "beats": [
+    "B47",
+    "B14"
+   ]
+  },
+  "presenter-close": {
+   "n": 2,
+   "beats": [
+    "B53",
+    "R38"
+   ]
+  },
+  "zoom-out-whole": {
+   "n": 2,
+   "beats": [
+    "B09",
+    "B16"
+   ]
+  },
+  "product-hero": {
+   "n": 2,
+   "beats": [
+    "R01",
+    "R34"
+   ]
+  },
+  "tilt-into-space": {
+   "n": 1,
+   "beats": [
+    "B01"
+   ]
+  },
+  "map-pin-count": {
+   "n": 1,
+   "beats": [
+    "B01"
+   ]
+  },
+  "colour-mood": {
+   "n": 1,
+   "beats": [
+    "B02"
+   ]
+  },
+  "evidence-on-timeline": {
+   "n": 1,
+   "beats": [
+    "B03"
+   ]
+  },
+  "table-grows": {
+   "n": 1,
+   "beats": [
+    "B18"
+   ]
+  },
+  "mark-follows-line": {
+   "n": 1,
+   "beats": [
+    "B23"
+   ]
+  },
+  "tape-sweep": {
+   "n": 1,
+   "beats": [
+    "B32"
+   ]
+  },
+  "data-to-people": {
+   "n": 1,
+   "beats": [
+    "B44"
+   ]
+  },
+  "shrink-to-reality": {
+   "n": 1,
+   "beats": [
+    "B45"
+   ]
+  },
+  "climb-tree": {
+   "n": 1,
+   "beats": [
+    "B48"
+   ]
+  },
+  "screen-workflow": {
+   "n": 1,
+   "beats": [
+    "B49"
+   ]
+  },
+  "age-morph": {
+   "n": 1,
+   "beats": [
+    "B50"
+   ]
+  },
+  "lineup-row": {
+   "n": 1,
+   "beats": [
+    "B52"
+   ]
+  },
+  "countdown-object": {
+   "n": 1,
+   "beats": [
+    "B53"
+   ]
+  },
+  "unwind-3d-to-flat": {
+   "n": 1,
+   "beats": [
+    "B10"
+   ]
+  },
+  "copy-to-repeat": {
+   "n": 1,
+   "beats": [
+    "B10"
+   ]
+  },
+  "quadrant-compare": {
+   "n": 1,
+   "beats": [
+    "B17"
+   ]
+  },
+  "matter-transition": {
+   "n": 1,
+   "beats": [
+    "R02"
+   ]
+  },
+  "branch-out": {
+   "n": 1,
+   "beats": [
+    "R27"
+   ]
+  },
+  "exploded-view": {
+   "n": 1,
+   "beats": [
+    "R30"
+   ]
+  },
+  "trace-diagram": {
+   "n": 1,
+   "beats": [
+    "R13"
+   ]
+  }
+ },
+ "rows": [
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B01",
+   "dur": 10,
+   "seconds": 10,
+   "moving": 1,
+   "still": 0,
+   "hold": 0,
+   "chars": 0,
+   "lines": 0,
+   "bare": 0.9,
+   "lineH": 64,
+   "biggest": 64,
+   "textArea": 0,
+   "fill": 0.994,
+   "black": 0,
+   "red": 0.5,
+   "lum": 158.7,
+   "sat": 0.071,
+   "elements": 4,
+   "perSec": 0.4,
+   "gap": 1.6,
+   "firstAt": 0,
+   "lead": [
+    -2.5,
+    0.5,
+    0.6,
+    -0.5
+   ],
+   "devices": [
+    "tilt-into-space",
+    "map-pin-count",
+    "word-cue"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B02",
+   "dur": 8.5,
+   "seconds": 8,
+   "moving": 1,
+   "still": 0.125,
+   "hold": 1,
+   "chars": 0,
+   "lines": 0,
+   "bare": 0.625,
+   "lineH": 79,
+   "biggest": 90,
+   "textArea": 0,
+   "fill": 0.994,
+   "black": 0.25,
+   "red": 0.625,
+   "lum": 83.8,
+   "sat": 0.339,
+   "elements": 3,
+   "perSec": 0.35294117647058826,
+   "gap": 3,
+   "firstAt": 0,
+   "lead": [
+    -1,
+    -3.5,
+    -0.5
+   ],
+   "devices": [
+    "colour-mood",
+    "black-pause"
+   ],
+   "carry": "black"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B03",
+   "dur": 6.5,
+   "seconds": 7,
+   "moving": 0.5,
+   "still": 0.286,
+   "hold": 1,
+   "chars": 16,
+   "lines": 4,
+   "bare": 0.286,
+   "lineH": 52,
+   "biggest": 73,
+   "textArea": 0.011,
+   "fill": 0.306,
+   "black": 0.143,
+   "red": 0.429,
+   "lum": 77.3,
+   "sat": 0.034,
+   "elements": 3,
+   "perSec": 0.46153846153846156,
+   "gap": 1.7,
+   "firstAt": 0.10000000000000142,
+   "lead": [
+    0.1,
+    1,
+    0.2
+   ],
+   "devices": [
+    "title-to-texture",
+    "evidence-on-timeline",
+    "word-cue"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B04",
+   "dur": 4,
+   "seconds": 4,
+   "moving": 1,
+   "still": 0,
+   "hold": 0,
+   "chars": 8,
+   "lines": 2,
+   "bare": 0,
+   "lineH": 65,
+   "biggest": 65,
+   "textArea": 0.01,
+   "fill": 0.575,
+   "black": 0,
+   "red": 1,
+   "lum": 57.4,
+   "sat": 0.111,
+   "elements": 2,
+   "perSec": 0.5,
+   "gap": 0.7,
+   "firstAt": 0.3000000000000007,
+   "lead": [
+    0.3,
+    1
+   ],
+   "devices": [
+    "scale-jump",
+    "cycle-compare"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B05",
+   "dur": 8,
+   "seconds": 8,
+   "moving": 0.38,
+   "still": 0.25,
+   "hold": 1,
+   "chars": 28,
+   "lines": 6,
+   "bare": 0,
+   "lineH": 52,
+   "biggest": 66,
+   "textArea": 0.015,
+   "fill": 0.6,
+   "black": 0.125,
+   "red": 0.5,
+   "lum": 71,
+   "sat": 0.08,
+   "elements": 3,
+   "perSec": 0.375,
+   "gap": 3.6,
+   "firstAt": 0.3999999999999986,
+   "lead": [
+    -2.1,
+    -1
+   ],
+   "devices": [
+    "literal-metaphor",
+    "black-pause",
+    "carrier"
+   ],
+   "carry": "cut"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B18",
+   "dur": 7.5,
+   "seconds": 8,
+   "moving": 0.38,
+   "still": 0.125,
+   "hold": 1,
+   "chars": 64,
+   "lines": 26,
+   "bare": 0.125,
+   "lineH": 76,
+   "biggest": 78,
+   "textArea": 0.06,
+   "fill": 0.719,
+   "black": 0,
+   "red": 1,
+   "lum": 60.6,
+   "sat": 0.153,
+   "elements": 3,
+   "perSec": 0.4,
+   "gap": 0.5,
+   "firstAt": 0.5,
+   "lead": [
+    0,
+    0,
+    -2
+   ],
+   "devices": [
+    "title-to-texture",
+    "table-grows",
+    "symmetry"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B19",
+   "dur": 7.5,
+   "seconds": 7,
+   "moving": 0.5,
+   "still": 0.143,
+   "hold": 1,
+   "chars": 27,
+   "lines": 7,
+   "bare": 0,
+   "lineH": 68,
+   "biggest": 80,
+   "textArea": 0.026,
+   "fill": 0.956,
+   "black": 0,
+   "red": 1,
+   "lum": 64.1,
+   "sat": 0.07,
+   "elements": 4,
+   "perSec": 0.5333333333333333,
+   "gap": 2,
+   "firstAt": 0,
+   "lead": [
+    1,
+    -0.5,
+    -1,
+    2
+   ],
+   "devices": [
+    "literal-metaphor",
+    "glitch-cut",
+    "callback",
+    "carrier"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B20",
+   "dur": 11.5,
+   "seconds": 12,
+   "moving": 0.38,
+   "still": 0.5,
+   "hold": 4,
+   "chars": 11,
+   "lines": 2,
+   "bare": 0.333,
+   "lineH": 108,
+   "biggest": 439,
+   "textArea": 0.098,
+   "fill": 0.644,
+   "black": 0,
+   "red": 0.583,
+   "lum": 43.6,
+   "sat": 0.048,
+   "elements": 4,
+   "perSec": 0.34782608695652173,
+   "gap": 2.5,
+   "firstAt": 0.09999999999999432,
+   "lead": [
+    0.1,
+    1,
+    -1,
+    1.5
+   ],
+   "devices": [
+    "banner-verdict",
+    "clipping-stack",
+    "literal-metaphor"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B21",
+   "dur": 4,
+   "seconds": 4,
+   "moving": 0.12,
+   "still": 1,
+   "hold": 4,
+   "chars": 0,
+   "lines": 0,
+   "bare": 1,
+   "lineH": null,
+   "biggest": 0,
+   "textArea": 0,
+   "fill": 0.919,
+   "black": 0.5,
+   "red": 0.5,
+   "lum": 52.7,
+   "sat": 0.022,
+   "elements": 2,
+   "perSec": 0.5,
+   "gap": 1.7,
+   "firstAt": 0.30000000000001137,
+   "lead": [
+    0.3
+   ],
+   "devices": [
+    "black-pause"
+   ],
+   "carry": "black"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B22",
+   "dur": 11.5,
+   "seconds": 11,
+   "moving": 1,
+   "still": 0.091,
+   "hold": 1,
+   "chars": 9,
+   "lines": 5,
+   "bare": 0.182,
+   "lineH": 76,
+   "biggest": 120,
+   "textArea": 0.007,
+   "fill": 0.388,
+   "black": 0,
+   "red": 0.455,
+   "lum": 35.3,
+   "sat": 0.008,
+   "elements": 5,
+   "perSec": 0.43478260869565216,
+   "gap": 1.8,
+   "firstAt": 0,
+   "lead": [
+    0,
+    -1.5,
+    -0.2,
+    -1.8,
+    -1
+   ],
+   "devices": [
+    "zoom-into",
+    "title-to-texture",
+    "bracket-group",
+    "callout-line"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B23",
+   "dur": 7,
+   "seconds": 7,
+   "moving": 0.75,
+   "still": 0.286,
+   "hold": 2,
+   "chars": 1,
+   "lines": 1,
+   "bare": 0.143,
+   "lineH": 116,
+   "biggest": 124,
+   "textArea": 0.007,
+   "fill": 0.275,
+   "black": 0,
+   "red": 0.714,
+   "lum": 43.1,
+   "sat": 0.03,
+   "elements": 3,
+   "perSec": 0.42857142857142855,
+   "gap": 4,
+   "firstAt": -1.5,
+   "lead": [
+    0.5,
+    -1,
+    1
+   ],
+   "devices": [
+    "letter-as-set",
+    "mark-follows-line",
+    "carrier"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B24",
+   "dur": 6.5,
+   "seconds": 7,
+   "moving": 0.12,
+   "still": 0.571,
+   "hold": 2,
+   "chars": 12,
+   "lines": 5,
+   "bare": 0,
+   "lineH": 52,
+   "biggest": 260,
+   "textArea": 0.009,
+   "fill": 0.35,
+   "black": 0,
+   "red": 0.286,
+   "lum": 40.8,
+   "sat": 0.03,
+   "elements": 2,
+   "perSec": 0.3076923076923077,
+   "gap": 4.5,
+   "firstAt": 0,
+   "lead": [
+    0,
+    0
+   ],
+   "devices": [
+    "dim-keep-red",
+    "term-biggest",
+    "title-to-texture"
+   ],
+   "carry": "texture"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B25",
+   "dur": 2.1999999999999886,
+   "seconds": 2,
+   "moving": 0,
+   "still": 1,
+   "hold": 2,
+   "chars": 96,
+   "lines": 4,
+   "bare": 0,
+   "lineH": 261,
+   "biggest": 261,
+   "textArea": 0.167,
+   "fill": 0.369,
+   "black": 0,
+   "red": 1,
+   "lum": 48.5,
+   "sat": 0.035,
+   "elements": 1,
+   "perSec": 0.4545454545454569,
+   "gap": null,
+   "firstAt": 0,
+   "lead": [
+    0
+   ],
+   "devices": [
+    "title-to-texture"
+   ],
+   "carry": "texture"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B26",
+   "dur": 5.800000000000011,
+   "seconds": 6,
+   "moving": 0.62,
+   "still": 0.167,
+   "hold": 1,
+   "chars": 23,
+   "lines": 7,
+   "bare": 0,
+   "lineH": 88,
+   "biggest": 184,
+   "textArea": 0.031,
+   "fill": 0.669,
+   "black": 0,
+   "red": 1,
+   "lum": 41,
+   "sat": 0.038,
+   "elements": 5,
+   "perSec": 0.8620689655172397,
+   "gap": 1.3,
+   "firstAt": 0,
+   "lead": [
+    -0.3,
+    1.1,
+    -0.5,
+    0,
+    2
+   ],
+   "devices": [
+    "title-to-texture",
+    "carrier",
+    "word-cue"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B27",
+   "dur": 7,
+   "seconds": 7,
+   "moving": 0.5,
+   "still": 0.143,
+   "hold": 1,
+   "chars": 18,
+   "lines": 3,
+   "bare": 0,
+   "lineH": 72,
+   "biggest": 116,
+   "textArea": 0.019,
+   "fill": 0.344,
+   "black": 0,
+   "red": 1,
+   "lum": 41.8,
+   "sat": 0.031,
+   "elements": 3,
+   "perSec": 0.42857142857142855,
+   "gap": 1.5,
+   "firstAt": 0.5,
+   "lead": [
+    0.5,
+    -0.5,
+    0
+   ],
+   "devices": [
+    "carrier",
+    "word-cue"
+   ],
+   "carry": "other"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B27",
+   "dur": 1.5,
+   "seconds": 1,
+   "moving": 1,
+   "still": 0,
+   "hold": 0,
+   "chars": 29,
+   "lines": 6,
+   "bare": 0,
+   "lineH": 72,
+   "biggest": 72,
+   "textArea": 0.04,
+   "fill": 0.994,
+   "black": 0,
+   "red": 1,
+   "lum": 44,
+   "sat": 0.044,
+   "elements": 1,
+   "perSec": 0.6666666666666666,
+   "gap": null,
+   "firstAt": 0,
+   "lead": [
+    1
+   ],
+   "devices": [
+    "scale-jump"
+   ],
+   "carry": "other"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B28",
+   "dur": 5.5,
+   "seconds": 6,
+   "moving": 0.75,
+   "still": 0.167,
+   "hold": 1,
+   "chars": 17,
+   "lines": 4,
+   "bare": 0,
+   "lineH": 72,
+   "biggest": 84,
+   "textArea": 0.012,
+   "fill": 0.556,
+   "black": 0,
+   "red": 1,
+   "lum": 42.1,
+   "sat": 0.137,
+   "elements": 2,
+   "perSec": 0.36363636363636365,
+   "gap": 0,
+   "firstAt": 0,
+   "lead": [
+    2.5,
+    -0.5
+   ],
+   "devices": [
+    "symmetry"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B29",
+   "dur": 7,
+   "seconds": 7,
+   "moving": 0.5,
+   "still": 0.429,
+   "hold": 3,
+   "chars": 14,
+   "lines": 3,
+   "bare": 0.143,
+   "lineH": 112,
+   "biggest": 169,
+   "textArea": 0.032,
+   "fill": 0.775,
+   "black": 0,
+   "red": 0.429,
+   "lum": 26.5,
+   "sat": 0.012,
+   "elements": 3,
+   "perSec": 0.42857142857142855,
+   "gap": 2,
+   "firstAt": 0,
+   "lead": [
+    1,
+    0,
+    1
+   ],
+   "devices": [
+    "subject-stays",
+    "carrier"
+   ],
+   "carry": "other"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B30",
+   "dur": 8.5,
+   "seconds": 8,
+   "moving": 0.38,
+   "still": 0.375,
+   "hold": 2,
+   "chars": 12,
+   "lines": 2,
+   "bare": 0,
+   "lineH": 52,
+   "biggest": 157,
+   "textArea": 0.013,
+   "fill": 0.831,
+   "black": 0,
+   "red": 0.375,
+   "lum": 28.6,
+   "sat": 0.023,
+   "elements": 3,
+   "perSec": 0.35294117647058826,
+   "gap": 2,
+   "firstAt": 0,
+   "lead": [
+    1.5,
+    0.5,
+    0
+   ],
+   "devices": [
+    "carrier",
+    "word-cue"
+   ],
+   "carry": "other"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B31",
+   "dur": 3,
+   "seconds": 3,
+   "moving": 0.12,
+   "still": 0.667,
+   "hold": 1,
+   "chars": 45,
+   "lines": 15,
+   "bare": 0,
+   "lineH": 36,
+   "biggest": 36,
+   "textArea": 0.017,
+   "fill": 0.537,
+   "black": 0,
+   "red": 1,
+   "lum": 14.1,
+   "sat": 0.011,
+   "elements": 1,
+   "perSec": 0.3333333333333333,
+   "gap": null,
+   "firstAt": 0,
+   "lead": [
+    1.5
+   ],
+   "devices": [
+    "rhyme",
+    "glitch-cut"
+   ],
+   "carry": "other"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B32",
+   "dur": 9,
+   "seconds": 9,
+   "moving": 0.75,
+   "still": 0.111,
+   "hold": 1,
+   "chars": 29,
+   "lines": 9,
+   "bare": 0.111,
+   "lineH": 176,
+   "biggest": 180,
+   "textArea": 0.135,
+   "fill": 0.906,
+   "black": 0,
+   "red": 1,
+   "lum": 48.8,
+   "sat": 0.053,
+   "elements": 4,
+   "perSec": 0.4444444444444444,
+   "gap": 3,
+   "firstAt": 0,
+   "lead": [
+    0,
+    0.5,
+    -0.5,
+    2.5
+   ],
+   "devices": [
+    "rhyme",
+    "symmetry",
+    "tape-sweep",
+    "banner-verdict"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B33",
+   "dur": 5,
+   "seconds": 5,
+   "moving": 0,
+   "still": 0.6,
+   "hold": 3,
+   "chars": 36,
+   "lines": 5,
+   "bare": 0.2,
+   "lineH": 184,
+   "biggest": 184,
+   "textArea": 0.176,
+   "fill": 0.981,
+   "black": 0,
+   "red": 1,
+   "lum": 98.5,
+   "sat": 0.034,
+   "elements": 2,
+   "perSec": 0.4,
+   "gap": 0.5,
+   "firstAt": 0,
+   "lead": [
+    -1,
+    -2.5
+   ],
+   "devices": [
+    "subject-stays",
+    "title-to-texture",
+    "real-in-frame"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B34",
+   "dur": 9.5,
+   "seconds": 9,
+   "moving": 0.38,
+   "still": 0.333,
+   "hold": 2,
+   "chars": 1010,
+   "lines": 32,
+   "bare": 0,
+   "lineH": 176,
+   "biggest": 188,
+   "textArea": 0.485,
+   "fill": 0.919,
+   "black": 0,
+   "red": 0.778,
+   "lum": 42.7,
+   "sat": 0.036,
+   "elements": 4,
+   "perSec": 0.42105263157894735,
+   "gap": 1.5,
+   "firstAt": 0.5,
+   "lead": [
+    0.5,
+    2,
+    2.5,
+    0.5
+   ],
+   "devices": [
+    "real-doc-callout",
+    "word-cue"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B35",
+   "dur": 3.5,
+   "seconds": 4,
+   "moving": 1,
+   "still": 0,
+   "hold": 0,
+   "chars": 32,
+   "lines": 5,
+   "bare": 0,
+   "lineH": 198,
+   "biggest": 212,
+   "textArea": 0.155,
+   "fill": 0.481,
+   "black": 0,
+   "red": 1,
+   "lum": 38.7,
+   "sat": 0.05,
+   "elements": 2,
+   "perSec": 0.5714285714285714,
+   "gap": 0.4,
+   "firstAt": 0.09999999999999432,
+   "lead": [
+    -0.4,
+    0.5
+   ],
+   "devices": [
+    "number-grows"
+   ],
+   "carry": "other"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B36",
+   "dur": 4,
+   "seconds": 4,
+   "moving": 1,
+   "still": 0.25,
+   "hold": 1,
+   "chars": 27,
+   "lines": 4,
+   "bare": 0,
+   "lineH": 80,
+   "biggest": 81,
+   "textArea": 0.023,
+   "fill": 0.7,
+   "black": 0,
+   "red": 1,
+   "lum": 51,
+   "sat": 0.148,
+   "elements": 2,
+   "perSec": 0.5,
+   "gap": 2.5,
+   "firstAt": 0,
+   "lead": [
+    -1.5,
+    -0.5
+   ],
+   "devices": [
+    "real-in-frame"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B37",
+   "dur": 14,
+   "seconds": 14,
+   "moving": 1,
+   "still": 0.143,
+   "hold": 1,
+   "chars": 30,
+   "lines": 3,
+   "bare": 0.5,
+   "lineH": 64,
+   "biggest": 75,
+   "textArea": 0.021,
+   "fill": 0.525,
+   "black": 0,
+   "red": 0.357,
+   "lum": 54.3,
+   "sat": 0.03,
+   "elements": 5,
+   "perSec": 0.35714285714285715,
+   "gap": 2.5,
+   "firstAt": 0,
+   "lead": [
+    1,
+    -0.5,
+    2,
+    0.5,
+    2.5
+   ],
+   "devices": [
+    "rhyme",
+    "signal-break",
+    "literal-metaphor"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B38",
+   "dur": 4.5,
+   "seconds": 4,
+   "moving": 0.25,
+   "still": 0.5,
+   "hold": 2,
+   "chars": 72,
+   "lines": 3,
+   "bare": 0,
+   "lineH": 160,
+   "biggest": 174,
+   "textArea": 0.124,
+   "fill": 0.431,
+   "black": 0,
+   "red": 0.75,
+   "lum": 22.1,
+   "sat": 0.04,
+   "elements": 2,
+   "perSec": 0.4444444444444444,
+   "gap": 0.5,
+   "firstAt": -0.5,
+   "lead": [
+    0.5,
+    -2
+   ],
+   "devices": [
+    "term-biggest",
+    "title-to-texture"
+   ],
+   "carry": "texture"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B39",
+   "dur": 5,
+   "seconds": 5,
+   "moving": 0,
+   "still": 0.6,
+   "hold": 3,
+   "chars": 0,
+   "lines": 0,
+   "bare": 0.6,
+   "lineH": 40,
+   "biggest": 40,
+   "textArea": 0,
+   "fill": 0.263,
+   "black": 0,
+   "red": 0.8,
+   "lum": 24.7,
+   "sat": 0.02,
+   "elements": 2,
+   "perSec": 0.4,
+   "gap": 2,
+   "firstAt": 0,
+   "lead": [
+    0,
+    0
+   ],
+   "devices": [
+    "mark-in-red",
+    "bar-length-ratio"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B40",
+   "dur": 10,
+   "seconds": 10,
+   "moving": 0.5,
+   "still": 0.1,
+   "hold": 1,
+   "chars": 1,
+   "lines": 1,
+   "bare": 0.5,
+   "lineH": 32,
+   "biggest": 36,
+   "textArea": 0,
+   "fill": 0.456,
+   "black": 0,
+   "red": 1,
+   "lum": 29.3,
+   "sat": 0.043,
+   "elements": 3,
+   "perSec": 0.3,
+   "gap": 4.5,
+   "firstAt": 0.5,
+   "lead": [
+    -1.5,
+    0.5,
+    0
+   ],
+   "devices": [
+    "bar-length-ratio",
+    "dim-keep-red",
+    "carrier"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B41",
+   "dur": 2.5,
+   "seconds": 3,
+   "moving": 0.5,
+   "still": 0,
+   "hold": 0,
+   "chars": 23,
+   "lines": 2,
+   "bare": 0,
+   "lineH": 85,
+   "biggest": 85,
+   "textArea": 0.035,
+   "fill": 0.594,
+   "black": 0,
+   "red": 1,
+   "lum": 37.3,
+   "sat": 0.201,
+   "elements": 1,
+   "perSec": 0.4,
+   "gap": null,
+   "firstAt": 0,
+   "lead": [
+    0.5
+   ],
+   "devices": [
+    "term-biggest",
+    "title-to-texture"
+   ],
+   "carry": "texture"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B42",
+   "dur": 4.5,
+   "seconds": 4,
+   "moving": 0.75,
+   "still": 0,
+   "hold": 0,
+   "chars": 0,
+   "lines": 0,
+   "bare": 1,
+   "lineH": null,
+   "biggest": 0,
+   "textArea": 0,
+   "fill": 0.606,
+   "black": 0,
+   "red": 1,
+   "lum": 40.3,
+   "sat": 0.047,
+   "elements": 2,
+   "perSec": 0.4444444444444444,
+   "gap": 2.5,
+   "firstAt": 0,
+   "lead": [
+    0,
+    0.5
+   ],
+   "devices": [
+    "sort-to-rank",
+    "carrier"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B43",
+   "dur": 12,
+   "seconds": 12,
+   "moving": 0,
+   "still": 0.75,
+   "hold": 4,
+   "chars": 10,
+   "lines": 2,
+   "bare": 0.167,
+   "lineH": 37,
+   "biggest": 50,
+   "textArea": 0.005,
+   "fill": 0.619,
+   "black": 0,
+   "red": 1,
+   "lum": 40.6,
+   "sat": 0.077,
+   "elements": 4,
+   "perSec": 0.3333333333333333,
+   "gap": 3,
+   "firstAt": 0,
+   "lead": [
+    -2.5,
+    0,
+    0.5,
+    0
+   ],
+   "devices": [
+    "sort-to-rank",
+    "narrowing-frames",
+    "mark-in-red"
+   ],
+   "carry": "other"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B44",
+   "dur": 10.5,
+   "seconds": 11,
+   "moving": 0.75,
+   "still": 0.182,
+   "hold": 2,
+   "chars": 3,
+   "lines": 2,
+   "bare": 0.273,
+   "lineH": 60,
+   "biggest": 76,
+   "textArea": 0.003,
+   "fill": 0.7,
+   "black": 0,
+   "red": 0.636,
+   "lum": 26.5,
+   "sat": 0.077,
+   "elements": 3,
+   "perSec": 0.2857142857142857,
+   "gap": 3.5,
+   "firstAt": 0.5,
+   "lead": [
+    0,
+    0,
+    0.5
+   ],
+   "devices": [
+    "letter-as-set",
+    "data-to-people",
+    "word-cue"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B45",
+   "dur": 5,
+   "seconds": 5,
+   "moving": 0.5,
+   "still": 0.4,
+   "hold": 1,
+   "chars": 17,
+   "lines": 9,
+   "bare": 0,
+   "lineH": 76,
+   "biggest": 76,
+   "textArea": 0.025,
+   "fill": 0.706,
+   "black": 0,
+   "red": 1,
+   "lum": 23.9,
+   "sat": 0.072,
+   "elements": 2,
+   "perSec": 0.4,
+   "gap": 2,
+   "firstAt": 0,
+   "lead": [
+    0,
+    0.5
+   ],
+   "devices": [
+    "shrink-to-reality",
+    "rhyme"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B46",
+   "dur": 4.5,
+   "seconds": 4,
+   "moving": 1,
+   "still": 0,
+   "hold": 0,
+   "chars": 3,
+   "lines": 1,
+   "bare": 0.5,
+   "lineH": 88,
+   "biggest": 88,
+   "textArea": 0.004,
+   "fill": 0.625,
+   "black": 0,
+   "red": 0.25,
+   "lum": 38.5,
+   "sat": 0.032,
+   "elements": 3,
+   "perSec": 0.6666666666666666,
+   "gap": 2.5,
+   "firstAt": 0,
+   "lead": [
+    0.5,
+    0,
+    0.5
+   ],
+   "devices": [
+    "literal-metaphor",
+    "term-biggest"
+   ],
+   "carry": "other"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B47",
+   "dur": 6.5,
+   "seconds": 7,
+   "moving": 1,
+   "still": 0,
+   "hold": 0,
+   "chars": 37,
+   "lines": 4,
+   "bare": 0.143,
+   "lineH": 62,
+   "biggest": 88,
+   "textArea": 0.04,
+   "fill": 0.613,
+   "black": 0,
+   "red": 0.714,
+   "lum": 160.8,
+   "sat": 0.074,
+   "elements": 3,
+   "perSec": 0.46153846153846156,
+   "gap": 2.5,
+   "firstAt": 0,
+   "lead": [
+    -0.5,
+    0
+   ],
+   "devices": [
+    "real-in-frame",
+    "scale-jump",
+    "dots-as-people"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B48",
+   "dur": 11,
+   "seconds": 11,
+   "moving": 0.88,
+   "still": 0.273,
+   "hold": 3,
+   "chars": 0,
+   "lines": 0,
+   "bare": 0.636,
+   "lineH": 48,
+   "biggest": 55,
+   "textArea": 0,
+   "fill": 0.344,
+   "black": 0,
+   "red": 0.545,
+   "lum": 39.1,
+   "sat": 0.144,
+   "elements": 4,
+   "perSec": 0.36363636363636365,
+   "gap": 1.5,
+   "firstAt": -0.5,
+   "lead": [
+    -0.5,
+    -0.5,
+    -3.5
+   ],
+   "devices": [
+    "climb-tree",
+    "carrier"
+   ],
+   "carry": "other"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B49",
+   "dur": 3.5,
+   "seconds": 3,
+   "moving": 1,
+   "still": 0,
+   "hold": 0,
+   "chars": 0,
+   "lines": 0,
+   "bare": 0.667,
+   "lineH": 61,
+   "biggest": 61,
+   "textArea": 0,
+   "fill": 0.719,
+   "black": 0,
+   "red": 0,
+   "lum": 59.6,
+   "sat": 0.167,
+   "elements": 2,
+   "perSec": 0.5714285714285714,
+   "gap": 1,
+   "firstAt": 1.5,
+   "lead": [
+    -0.5,
+    0.5
+   ],
+   "devices": [
+    "screen-workflow",
+    "narrowing-frames"
+   ],
+   "carry": "other"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B50",
+   "dur": 3.5,
+   "seconds": 4,
+   "moving": 0.88,
+   "still": 0.25,
+   "hold": 1,
+   "chars": 70,
+   "lines": 10,
+   "bare": 0,
+   "lineH": 64,
+   "biggest": 69,
+   "textArea": 0.063,
+   "fill": 0.775,
+   "black": 0,
+   "red": 0,
+   "lum": 129.7,
+   "sat": 0.112,
+   "elements": 3,
+   "perSec": 0.8571428571428571,
+   "gap": 1,
+   "firstAt": 0.5,
+   "lead": [
+    0.5,
+    1,
+    2
+   ],
+   "devices": [
+    "age-morph",
+    "word-cue"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B51",
+   "dur": 9,
+   "seconds": 9,
+   "moving": 0,
+   "still": 0.667,
+   "hold": 6,
+   "chars": 9,
+   "lines": 1,
+   "bare": 0.444,
+   "lineH": 53,
+   "biggest": 62,
+   "textArea": 0.007,
+   "fill": 0.731,
+   "black": 0.444,
+   "red": 0,
+   "lum": 51.3,
+   "sat": 0.007,
+   "elements": 2,
+   "perSec": 0.2222222222222222,
+   "gap": 4,
+   "firstAt": 0,
+   "lead": [
+    -1.5,
+    0.5
+   ],
+   "devices": [
+    "literal-metaphor",
+    "black-pause"
+   ],
+   "carry": "other"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B52",
+   "dur": 7.5,
+   "seconds": 8,
+   "moving": 1,
+   "still": 0,
+   "hold": 0,
+   "chars": 143,
+   "lines": 16,
+   "bare": 0,
+   "lineH": 40,
+   "biggest": 41,
+   "textArea": 0.058,
+   "fill": 0.787,
+   "black": 0,
+   "red": 0,
+   "lum": 95.9,
+   "sat": 0.005,
+   "elements": 2,
+   "perSec": 0.26666666666666666,
+   "gap": 2.5,
+   "firstAt": 0,
+   "lead": [
+    -0.5,
+    0
+   ],
+   "devices": [
+    "lineup-row",
+    "title-to-texture"
+   ],
+   "carry": "black"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B53",
+   "dur": 37,
+   "seconds": 37,
+   "moving": 0.38,
+   "still": 0.432,
+   "hold": 8,
+   "chars": 22,
+   "lines": 3,
+   "bare": 0.135,
+   "lineH": 76,
+   "biggest": 120,
+   "textArea": 0.02,
+   "fill": 0.4,
+   "black": 0.135,
+   "red": 0.216,
+   "lum": 27.5,
+   "sat": 0.039,
+   "elements": 3,
+   "perSec": 0.08108108108108109,
+   "gap": 5,
+   "firstAt": 0,
+   "lead": [
+    1,
+    -0.5,
+    2
+   ],
+   "devices": [
+    "countdown-object",
+    "presenter-close"
+   ],
+   "carry": "other"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B06",
+   "dur": 6,
+   "seconds": 6,
+   "moving": 0.75,
+   "still": 0.333,
+   "hold": 2,
+   "chars": 13,
+   "lines": 5,
+   "bare": 0,
+   "lineH": 236,
+   "biggest": 260,
+   "textArea": 0.05,
+   "fill": 0.269,
+   "black": 0,
+   "red": 0.667,
+   "lum": 44.6,
+   "sat": 0.015,
+   "elements": 3,
+   "perSec": 0.5,
+   "gap": 4.7,
+   "firstAt": 0.20000000000000284,
+   "lead": [
+    -2.9,
+    0.3
+   ],
+   "devices": [
+    "letter-to-structure",
+    "term-biggest",
+    "word-cue"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B07",
+   "dur": 4,
+   "seconds": 4,
+   "moving": 1,
+   "still": 0,
+   "hold": 0,
+   "chars": 0,
+   "lines": 0,
+   "bare": 0.75,
+   "lineH": 252,
+   "biggest": 252,
+   "textArea": 0,
+   "fill": 0.713,
+   "black": 0,
+   "red": 0,
+   "lum": 54.5,
+   "sat": 0.001,
+   "elements": 2,
+   "perSec": 0.5,
+   "gap": 1.5,
+   "firstAt": 0.5,
+   "lead": [
+    0,
+    0
+   ],
+   "devices": [
+    "letter-to-structure",
+    "carrier"
+   ],
+   "carry": "other"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B08",
+   "dur": 6,
+   "seconds": 6,
+   "moving": 1,
+   "still": 0,
+   "hold": 0,
+   "chars": 3,
+   "lines": 1,
+   "bare": 0.167,
+   "lineH": 52,
+   "biggest": 80,
+   "textArea": 0.004,
+   "fill": 0.381,
+   "black": 0,
+   "red": 0.667,
+   "lum": 40,
+   "sat": 0.006,
+   "elements": 3,
+   "perSec": 0.5,
+   "gap": 2.5,
+   "firstAt": 0,
+   "lead": [
+    0,
+    1,
+    1.1
+   ],
+   "devices": [
+    "letter-to-structure",
+    "title-to-texture"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B09",
+   "dur": 11,
+   "seconds": 11,
+   "moving": 0.25,
+   "still": 0.455,
+   "hold": 2,
+   "chars": 0,
+   "lines": 0,
+   "bare": 1,
+   "lineH": null,
+   "biggest": 0,
+   "textArea": 0,
+   "fill": 0.4,
+   "black": 0,
+   "red": 0.636,
+   "lum": 41.7,
+   "sat": 0.009,
+   "elements": 2,
+   "perSec": 0.18181818181818182,
+   "gap": 7,
+   "firstAt": 1,
+   "lead": [
+    -0.5,
+    1.5
+   ],
+   "devices": [
+    "mark-in-red",
+    "zoom-out-whole"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B10",
+   "dur": 13.5,
+   "seconds": 13,
+   "moving": 0.12,
+   "still": 0.538,
+   "hold": 6,
+   "chars": 0,
+   "lines": 0,
+   "bare": 0.538,
+   "lineH": 81,
+   "biggest": 81,
+   "textArea": 0,
+   "fill": 0.419,
+   "black": 0,
+   "red": 0.385,
+   "lum": 43.1,
+   "sat": 0.003,
+   "elements": 5,
+   "perSec": 0.37037037037037035,
+   "gap": 3,
+   "firstAt": 0,
+   "lead": [
+    0.8,
+    -0.8,
+    -1,
+    0
+   ],
+   "devices": [
+    "unwind-3d-to-flat",
+    "callout-line",
+    "copy-to-repeat",
+    "mark-in-red"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B11",
+   "dur": 6.5,
+   "seconds": 7,
+   "moving": 0.38,
+   "still": 0.143,
+   "hold": 1,
+   "chars": 0,
+   "lines": 0,
+   "bare": 0.857,
+   "lineH": 114,
+   "biggest": 114,
+   "textArea": 0,
+   "fill": 0.481,
+   "black": 0,
+   "red": 1,
+   "lum": 46.3,
+   "sat": 0.068,
+   "elements": 3,
+   "perSec": 0.46153846153846156,
+   "gap": 1.5,
+   "firstAt": 1.2999999999999972,
+   "lead": [
+    0.8,
+    0,
+    0
+   ],
+   "devices": [
+    "term-biggest",
+    "title-to-texture"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B12",
+   "dur": 12,
+   "seconds": 12,
+   "moving": 0.62,
+   "still": 0.5,
+   "hold": 4,
+   "chars": 2,
+   "lines": 1,
+   "bare": 0.333,
+   "lineH": 60,
+   "biggest": 64,
+   "textArea": 0.005,
+   "fill": 0.4,
+   "black": 0,
+   "red": 1,
+   "lum": 39.9,
+   "sat": 0.03,
+   "elements": 3,
+   "perSec": 0.25,
+   "gap": 4.2,
+   "firstAt": 0.29999999999999716,
+   "lead": [
+    -1.7,
+    -0.5,
+    -1
+   ],
+   "devices": [
+    "label-swap",
+    "pan-distance",
+    "carrier"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B13",
+   "dur": 7.5,
+   "seconds": 8,
+   "moving": 0.88,
+   "still": 0.25,
+   "hold": 1,
+   "chars": 51,
+   "lines": 10,
+   "bare": 0,
+   "lineH": 128,
+   "biggest": 128,
+   "textArea": 0.118,
+   "fill": 0.688,
+   "black": 0,
+   "red": 1,
+   "lum": 56.5,
+   "sat": 0.078,
+   "elements": 3,
+   "perSec": 0.4,
+   "gap": 2.5,
+   "firstAt": 0.09999999999999432,
+   "lead": [
+    -0.4,
+    1,
+    0
+   ],
+   "devices": [
+    "pan-distance",
+    "mark-in-red"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B14",
+   "dur": 12,
+   "seconds": 12,
+   "moving": 0,
+   "still": 0.75,
+   "hold": 6,
+   "chars": 20,
+   "lines": 3,
+   "bare": 0,
+   "lineH": 93,
+   "biggest": 97,
+   "textArea": 0.019,
+   "fill": 0.306,
+   "black": 0,
+   "red": 1,
+   "lum": 49.2,
+   "sat": 0.086,
+   "elements": 4,
+   "perSec": 0.3333333333333333,
+   "gap": 1.5,
+   "firstAt": -0.5,
+   "lead": [
+    0.5,
+    -3.5,
+    0.5,
+    0
+   ],
+   "devices": [
+    "callout-line",
+    "number-grows",
+    "dots-as-people",
+    "narrowing-frames"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B15",
+   "dur": 8,
+   "seconds": 8,
+   "moving": 0.5,
+   "still": 0.125,
+   "hold": 1,
+   "chars": 13,
+   "lines": 5,
+   "bare": 0,
+   "lineH": 128,
+   "biggest": 140,
+   "textArea": 0.024,
+   "fill": 0.644,
+   "black": 0,
+   "red": 1,
+   "lum": 47.6,
+   "sat": 0.132,
+   "elements": 3,
+   "perSec": 0.375,
+   "gap": 4.5,
+   "firstAt": 0.5,
+   "lead": [
+    0.5,
+    2,
+    2.5
+   ],
+   "devices": [
+    "narrowing-frames",
+    "scale-jump",
+    "carrier"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B16",
+   "dur": 9,
+   "seconds": 9,
+   "moving": 0.88,
+   "still": 0.111,
+   "hold": 1,
+   "chars": 0,
+   "lines": 0,
+   "bare": 0.667,
+   "lineH": 69,
+   "biggest": 99,
+   "textArea": 0,
+   "fill": 0.444,
+   "black": 0,
+   "red": 1,
+   "lum": 49.2,
+   "sat": 0.113,
+   "elements": 2,
+   "perSec": 0.2222222222222222,
+   "gap": 4,
+   "firstAt": 0,
+   "lead": [
+    0,
+    2
+   ],
+   "devices": [
+    "zoom-out-whole",
+    "number-grows"
+   ],
+   "carry": "other"
+  },
+  {
+   "film": "回形针 Vol.138《如何用 DNA 追捕真凶》",
+   "beat": "B17",
+   "dur": 3.5,
+   "seconds": 3,
+   "moving": 0.88,
+   "still": 0.333,
+   "hold": 1,
+   "chars": 27,
+   "lines": 6,
+   "bare": 0,
+   "lineH": 56,
+   "biggest": 64,
+   "textArea": 0.02,
+   "fill": 0.412,
+   "black": 0,
+   "red": 1,
+   "lum": 49.9,
+   "sat": 0.054,
+   "elements": 2,
+   "perSec": 0.5714285714285714,
+   "gap": 1,
+   "firstAt": 0.5,
+   "lead": [
+    0.5,
+    1.5
+   ],
+   "devices": [
+    "quadrant-compare",
+    "callback"
+   ],
+   "carry": "texture"
+  },
+  {
+   "film": "回形针 Vol.047《低焦油香烟的骗局》",
+   "beat": "R01",
+   "dur": 11,
+   "seconds": 11,
+   "moving": 1,
+   "still": 0,
+   "hold": 0,
+   "chars": 0,
+   "lines": 0,
+   "bare": 0.909,
+   "lineH": 207,
+   "biggest": 207,
+   "textArea": 0,
+   "fill": 0.487,
+   "black": 0.182,
+   "red": 0.091,
+   "lum": 98.8,
+   "sat": 0.098,
+   "elements": 6,
+   "perSec": 0.5454545454545454,
+   "gap": 1.5,
+   "firstAt": 0.5,
+   "lead": [],
+   "devices": [
+    "product-hero",
+    "black-pause"
+   ],
+   "carry": "black"
+  },
+  {
+   "film": "回形针 Vol.047《低焦油香烟的骗局》",
+   "beat": "R02",
+   "dur": 6,
+   "seconds": 6,
+   "moving": 1,
+   "still": 0,
+   "hold": 0,
+   "chars": 12,
+   "lines": 4,
+   "bare": 0.167,
+   "lineH": 198,
+   "biggest": 207,
+   "textArea": 0.179,
+   "fill": 0.588,
+   "black": 0,
+   "red": 0.167,
+   "lum": 66.3,
+   "sat": 0.291,
+   "elements": 3,
+   "perSec": 0.5,
+   "gap": 2,
+   "firstAt": 1,
+   "lead": [
+    1,
+    1.5
+   ],
+   "devices": [
+    "matter-transition",
+    "term-biggest"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.047《低焦油香烟的骗局》",
+   "beat": "R03",
+   "dur": 3,
+   "seconds": 3,
+   "moving": 1,
+   "still": 0,
+   "hold": 0,
+   "chars": 34,
+   "lines": 4,
+   "bare": 0,
+   "lineH": 56,
+   "biggest": 277,
+   "textArea": 0.063,
+   "fill": 0.456,
+   "black": 0,
+   "red": 0,
+   "lum": 76.5,
+   "sat": 0.103,
+   "elements": 1,
+   "perSec": 0.3333333333333333,
+   "gap": null,
+   "firstAt": 0.6000000000000014,
+   "lead": [
+    0.6
+   ],
+   "devices": [
+    "subject-stays",
+    "zoom-into"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.047《低焦油香烟的骗局》",
+   "beat": "R04",
+   "dur": 11,
+   "seconds": 11,
+   "moving": 1,
+   "still": 0,
+   "hold": 0,
+   "chars": 85,
+   "lines": 11,
+   "bare": 0,
+   "lineH": 112,
+   "biggest": 134,
+   "textArea": 0.091,
+   "fill": 0.594,
+   "black": 0,
+   "red": 0.636,
+   "lum": 92.2,
+   "sat": 0.132,
+   "elements": 6,
+   "perSec": 0.5454545454545454,
+   "gap": 1.5,
+   "firstAt": 0,
+   "lead": [
+    0,
+    -0.5,
+    -1,
+    1.5,
+    0.5,
+    -1.5
+   ],
+   "devices": [
+    "callout-line",
+    "term-biggest",
+    "real-in-frame",
+    "word-cue"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.047《低焦油香烟的骗局》",
+   "beat": "R05",
+   "dur": 5,
+   "seconds": 5,
+   "moving": 0.5,
+   "still": 0.4,
+   "hold": 2,
+   "chars": 60,
+   "lines": 7,
+   "bare": 0,
+   "lineH": 53,
+   "biggest": 145,
+   "textArea": 0.076,
+   "fill": 0.506,
+   "black": 0,
+   "red": 0.2,
+   "lum": 92,
+   "sat": 0.1,
+   "elements": 2,
+   "perSec": 0.4,
+   "gap": 2,
+   "firstAt": 0.5,
+   "lead": [
+    -0.5,
+    1.5
+   ],
+   "devices": [
+    "mark-in-red",
+    "carrier"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.047《低焦油香烟的骗局》",
+   "beat": "R17",
+   "dur": 5,
+   "seconds": 5,
+   "moving": 1,
+   "still": 0,
+   "hold": 0,
+   "chars": 3,
+   "lines": 1,
+   "bare": 0,
+   "lineH": 84,
+   "biggest": 89,
+   "textArea": 0.009,
+   "fill": 0.531,
+   "black": 0,
+   "red": 0,
+   "lum": 34.1,
+   "sat": 0.11,
+   "elements": 2,
+   "perSec": 0.4,
+   "gap": 1,
+   "firstAt": 1,
+   "lead": [
+    1,
+    0
+   ],
+   "devices": [
+    "literal-metaphor",
+    "word-cue"
+   ],
+   "carry": "cut"
+  },
+  {
+   "film": "回形针 Vol.047《低焦油香烟的骗局》",
+   "beat": "R18",
+   "dur": 3.5,
+   "seconds": 4,
+   "moving": 1,
+   "still": 0,
+   "hold": 0,
+   "chars": 229,
+   "lines": 43,
+   "bare": 0,
+   "lineH": 100,
+   "biggest": 104,
+   "textArea": 0.169,
+   "fill": 0.875,
+   "black": 0,
+   "red": 0,
+   "lum": 151.7,
+   "sat": 0.049,
+   "elements": 1,
+   "perSec": 0.2857142857142857,
+   "gap": null,
+   "firstAt": 0,
+   "lead": [
+    0.5
+   ],
+   "devices": [
+    "clipping-stack",
+    "word-cue"
+   ],
+   "carry": "other"
+  },
+  {
+   "film": "回形针 Vol.047《低焦油香烟的骗局》",
+   "beat": "R19",
+   "dur": 8,
+   "seconds": 8,
+   "moving": 0.62,
+   "still": 0.125,
+   "hold": 1,
+   "chars": 3,
+   "lines": 1,
+   "bare": 0.375,
+   "lineH": 42,
+   "biggest": 82,
+   "textArea": 0.002,
+   "fill": 0.412,
+   "black": 0,
+   "red": 0,
+   "lum": 26.8,
+   "sat": 0.061,
+   "elements": 3,
+   "perSec": 0.375,
+   "gap": 4,
+   "firstAt": 0,
+   "lead": [
+    0,
+    0.5,
+    -0.5
+   ],
+   "devices": [
+    "callback",
+    "symmetry",
+    "word-cue"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.047《低焦油香烟的骗局》",
+   "beat": "R20",
+   "dur": 6,
+   "seconds": 6,
+   "moving": 0.25,
+   "still": 0.5,
+   "hold": 2,
+   "chars": 17,
+   "lines": 4,
+   "bare": 0,
+   "lineH": 318,
+   "biggest": 462,
+   "textArea": 0.192,
+   "fill": 0.675,
+   "black": 0,
+   "red": 0,
+   "lum": 44.2,
+   "sat": 0.067,
+   "elements": 3,
+   "perSec": 0.5,
+   "gap": 2,
+   "firstAt": -0.5,
+   "lead": [
+    0,
+    0
+   ],
+   "devices": [
+    "symmetry",
+    "label-swap",
+    "word-cue"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.047《低焦油香烟的骗局》",
+   "beat": "R21",
+   "dur": 11,
+   "seconds": 11,
+   "moving": 0.38,
+   "still": 0.455,
+   "hold": 2,
+   "chars": 12,
+   "lines": 2,
+   "bare": 0,
+   "lineH": 277,
+   "biggest": 310,
+   "textArea": 0.135,
+   "fill": 0.506,
+   "black": 0,
+   "red": 0,
+   "lum": 39.6,
+   "sat": 0.062,
+   "elements": 4,
+   "perSec": 0.36363636363636365,
+   "gap": 2.5,
+   "firstAt": 2,
+   "lead": [
+    -1,
+    0,
+    1,
+    0
+   ],
+   "devices": [
+    "number-grows",
+    "scale-jump",
+    "mark-in-red"
+   ],
+   "carry": "other"
+  },
+  {
+   "film": "回形针 Vol.047《低焦油香烟的骗局》",
+   "beat": "R22",
+   "dur": 3,
+   "seconds": 3,
+   "moving": 0.75,
+   "still": 0,
+   "hold": 0,
+   "chars": 661,
+   "lines": 24,
+   "bare": 0.333,
+   "lineH": 62,
+   "biggest": 62,
+   "textArea": 0.113,
+   "fill": 0.738,
+   "black": 0.333,
+   "red": 0,
+   "lum": 230,
+   "sat": 0.048,
+   "elements": 1,
+   "perSec": 0.3333333333333333,
+   "gap": null,
+   "firstAt": 0.5,
+   "lead": [
+    -2
+   ],
+   "devices": [
+    "real-in-frame",
+    "scale-jump"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.047《低焦油香烟的骗局》",
+   "beat": "R23",
+   "dur": 12,
+   "seconds": 12,
+   "moving": 1,
+   "still": 0,
+   "hold": 0,
+   "chars": 535,
+   "lines": 12,
+   "bare": 0.083,
+   "lineH": 59,
+   "biggest": 64,
+   "textArea": 0.349,
+   "fill": 0.912,
+   "black": 0,
+   "red": 0,
+   "lum": 228.5,
+   "sat": 0.044,
+   "elements": 3,
+   "perSec": 0.25,
+   "gap": 4,
+   "firstAt": 0,
+   "lead": [
+    0.5,
+    1,
+    -0.5
+   ],
+   "devices": [
+    "real-doc-callout",
+    "mark-in-red",
+    "word-cue"
+   ],
+   "carry": "other"
+  },
+  {
+   "film": "回形针 Vol.047《低焦油香烟的骗局》",
+   "beat": "R24",
+   "dur": 13,
+   "seconds": 13,
+   "moving": 0.38,
+   "still": 0.308,
+   "hold": 1,
+   "chars": 11,
+   "lines": 3,
+   "bare": 0,
+   "lineH": 51,
+   "biggest": 170,
+   "textArea": 0.012,
+   "fill": 0.219,
+   "black": 0,
+   "red": 0.692,
+   "lum": 31.9,
+   "sat": 0.05,
+   "elements": 4,
+   "perSec": 0.3076923076923077,
+   "gap": 2.5,
+   "firstAt": 0,
+   "lead": [
+    -2,
+    0,
+    0,
+    0
+   ],
+   "devices": [
+    "cycle-compare",
+    "title-to-texture",
+    "word-cue"
+   ],
+   "carry": "cut"
+  },
+  {
+   "film": "回形针 Vol.047《低焦油香烟的骗局》",
+   "beat": "R25",
+   "dur": 6,
+   "seconds": 6,
+   "moving": 1,
+   "still": 0,
+   "hold": 0,
+   "chars": 26,
+   "lines": 4,
+   "bare": 0,
+   "lineH": 170,
+   "biggest": 173,
+   "textArea": 0.076,
+   "fill": 0.525,
+   "black": 0,
+   "red": 0,
+   "lum": 96.9,
+   "sat": 0.021,
+   "elements": 3,
+   "perSec": 0.5,
+   "gap": 3,
+   "firstAt": 0,
+   "lead": [
+    0,
+    0,
+    0.5
+   ],
+   "devices": [
+    "callback",
+    "number-grows",
+    "literal-metaphor"
+   ],
+   "carry": "other"
+  },
+  {
+   "film": "回形针 Vol.047《低焦油香烟的骗局》",
+   "beat": "R26",
+   "dur": 6,
+   "seconds": 6,
+   "moving": 1,
+   "still": 0,
+   "hold": 0,
+   "chars": 246,
+   "lines": 11,
+   "bare": 0,
+   "lineH": 39,
+   "biggest": 48,
+   "textArea": 0.093,
+   "fill": 0.731,
+   "black": 0,
+   "red": 0,
+   "lum": 203.3,
+   "sat": 0.001,
+   "elements": 3,
+   "perSec": 0.5,
+   "gap": 2,
+   "firstAt": 0.5,
+   "lead": [
+    0.5,
+    -3.5,
+    -1.5
+   ],
+   "devices": [
+    "real-doc-callout",
+    "word-cue"
+   ],
+   "carry": "other"
+  },
+  {
+   "film": "回形针 Vol.047《低焦油香烟的骗局》",
+   "beat": "R27",
+   "dur": 9.5,
+   "seconds": 9,
+   "moving": 1,
+   "still": 0.111,
+   "hold": 1,
+   "chars": 2,
+   "lines": 1,
+   "bare": 0.111,
+   "lineH": 39,
+   "biggest": 48,
+   "textArea": 0.002,
+   "fill": 0.7,
+   "black": 0,
+   "red": 0.222,
+   "lum": 54.7,
+   "sat": 0.02,
+   "elements": 3,
+   "perSec": 0.3157894736842105,
+   "gap": 3.5,
+   "firstAt": 2.5,
+   "lead": [
+    0,
+    1,
+    0.5
+   ],
+   "devices": [
+    "branch-out",
+    "real-in-frame",
+    "word-cue"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.047《低焦油香烟的骗局》",
+   "beat": "R28",
+   "dur": 4,
+   "seconds": 4,
+   "moving": 1,
+   "still": 0,
+   "hold": 0,
+   "chars": 3,
+   "lines": 1,
+   "bare": 0,
+   "lineH": 45,
+   "biggest": 50,
+   "textArea": 0.004,
+   "fill": 0.706,
+   "black": 0,
+   "red": 0.75,
+   "lum": 67.8,
+   "sat": 0.145,
+   "elements": 1,
+   "perSec": 0.25,
+   "gap": null,
+   "firstAt": 0.5,
+   "lead": [
+    0.5
+   ],
+   "devices": [
+    "subject-stays",
+    "pan-distance"
+   ],
+   "carry": "texture"
+  },
+  {
+   "film": "回形针 Vol.047《低焦油香烟的骗局》",
+   "beat": "R29",
+   "dur": 12,
+   "seconds": 12,
+   "moving": 0.38,
+   "still": 0.333,
+   "hold": 2,
+   "chars": 18,
+   "lines": 7,
+   "bare": 0.083,
+   "lineH": 72,
+   "biggest": 91,
+   "textArea": 0.026,
+   "fill": 0.356,
+   "black": 0,
+   "red": 0.083,
+   "lum": 25,
+   "sat": 0.026,
+   "elements": 4,
+   "perSec": 0.3333333333333333,
+   "gap": 1.5,
+   "firstAt": 0.5,
+   "lead": [
+    0.5,
+    2,
+    0,
+    1
+   ],
+   "devices": [
+    "callout-line",
+    "title-to-texture",
+    "bracket-group",
+    "word-cue"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.047《低焦油香烟的骗局》",
+   "beat": "R30",
+   "dur": 7.5,
+   "seconds": 8,
+   "moving": 0,
+   "still": 0.625,
+   "hold": 4,
+   "chars": 30,
+   "lines": 6,
+   "bare": 0.25,
+   "lineH": 50,
+   "biggest": 56,
+   "textArea": 0.03,
+   "fill": 0.35,
+   "black": 0,
+   "red": 0,
+   "lum": 26.6,
+   "sat": 0.012,
+   "elements": 3,
+   "perSec": 0.4,
+   "gap": 5,
+   "firstAt": 0,
+   "lead": [
+    0,
+    0,
+    1.5
+   ],
+   "devices": [
+    "exploded-view",
+    "callout-line",
+    "mark-in-red"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.047《低焦油香烟的骗局》",
+   "beat": "R31",
+   "dur": 5,
+   "seconds": 5,
+   "moving": 0.62,
+   "still": 0.2,
+   "hold": 1,
+   "chars": 0,
+   "lines": 0,
+   "bare": 0.8,
+   "lineH": 89,
+   "biggest": 89,
+   "textArea": 0,
+   "fill": 0.094,
+   "black": 0,
+   "red": 0.2,
+   "lum": 20.7,
+   "sat": 0.008,
+   "elements": 2,
+   "perSec": 0.4,
+   "gap": 0,
+   "firstAt": 3.5,
+   "lead": [
+    0,
+    0
+   ],
+   "devices": [
+    "symmetry",
+    "number-grows",
+    "real-in-frame"
+   ],
+   "carry": "other"
+  },
+  {
+   "film": "回形针 Vol.047《低焦油香烟的骗局》",
+   "beat": "R32",
+   "dur": 11,
+   "seconds": 11,
+   "moving": 1,
+   "still": 0,
+   "hold": 0,
+   "chars": 0,
+   "lines": 0,
+   "bare": 0.636,
+   "lineH": 92,
+   "biggest": 92,
+   "textArea": 0,
+   "fill": 0.45,
+   "black": 0,
+   "red": 0.273,
+   "lum": 178.5,
+   "sat": 0.144,
+   "elements": 4,
+   "perSec": 0.36363636363636365,
+   "gap": 2.5,
+   "firstAt": 0,
+   "lead": [
+    -2,
+    -1,
+    1.5,
+    -2
+   ],
+   "devices": [
+    "number-grows",
+    "symmetry",
+    "word-cue"
+   ],
+   "carry": "other"
+  },
+  {
+   "film": "回形针 Vol.047《低焦油香烟的骗局》",
+   "beat": "R33",
+   "dur": 7.5,
+   "seconds": 7,
+   "moving": 1,
+   "still": 0.143,
+   "hold": 1,
+   "chars": 306,
+   "lines": 12,
+   "bare": 0.286,
+   "lineH": 65,
+   "biggest": 80,
+   "textArea": 0.149,
+   "fill": 0.6,
+   "black": 0,
+   "red": 0,
+   "lum": 218.7,
+   "sat": 0.036,
+   "elements": 2,
+   "perSec": 0.26666666666666666,
+   "gap": 2,
+   "firstAt": 1.5,
+   "lead": [
+    1.5,
+    0.5
+   ],
+   "devices": [
+    "real-doc-callout",
+    "real-in-frame",
+    "mark-in-red"
+   ],
+   "carry": "cut"
+  },
+  {
+   "film": "回形针 Vol.047《低焦油香烟的骗局》",
+   "beat": "R34",
+   "dur": 11.5,
+   "seconds": 12,
+   "moving": 0.62,
+   "still": 0.083,
+   "hold": 1,
+   "chars": 3,
+   "lines": 1,
+   "bare": 0.333,
+   "lineH": 137,
+   "biggest": 148,
+   "textArea": 0.007,
+   "fill": 0.237,
+   "black": 0,
+   "red": 0.417,
+   "lum": 40.2,
+   "sat": 0.022,
+   "elements": 5,
+   "perSec": 0.43478260869565216,
+   "gap": 2,
+   "firstAt": 0,
+   "lead": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "devices": [
+    "product-hero",
+    "title-to-texture",
+    "label-swap",
+    "word-cue"
+   ],
+   "carry": "other"
+  },
+  {
+   "film": "回形针 Vol.047《低焦油香烟的骗局》",
+   "beat": "R35",
+   "dur": 6,
+   "seconds": 6,
+   "moving": 0.38,
+   "still": 0.5,
+   "hold": 2,
+   "chars": 18,
+   "lines": 5,
+   "bare": 0,
+   "lineH": 105,
+   "biggest": 109,
+   "textArea": 0.079,
+   "fill": 0.419,
+   "black": 0,
+   "red": 0,
+   "lum": 42,
+   "sat": 0.01,
+   "elements": 2,
+   "perSec": 0.3333333333333333,
+   "gap": 3,
+   "firstAt": 0,
+   "lead": [
+    -1.5,
+    0
+   ],
+   "devices": [
+    "symmetry",
+    "word-cue"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.047《低焦油香烟的骗局》",
+   "beat": "R36",
+   "dur": 6,
+   "seconds": 6,
+   "moving": 0.5,
+   "still": 0.333,
+   "hold": 2,
+   "chars": 19,
+   "lines": 6,
+   "bare": 0,
+   "lineH": 78,
+   "biggest": 112,
+   "textArea": 0.023,
+   "fill": 0.35,
+   "black": 0,
+   "red": 0,
+   "lum": 45,
+   "sat": 0.008,
+   "elements": 3,
+   "perSec": 0.5,
+   "gap": 3,
+   "firstAt": 0.5,
+   "lead": [
+    -0.5,
+    -0.5,
+    1
+   ],
+   "devices": [
+    "symmetry",
+    "callback",
+    "signal-break"
+   ],
+   "carry": "other"
+  },
+  {
+   "film": "回形针 Vol.047《低焦油香烟的骗局》",
+   "beat": "R37",
+   "dur": 8,
+   "seconds": 8,
+   "moving": 1,
+   "still": 0.125,
+   "hold": 1,
+   "chars": 336,
+   "lines": 12,
+   "bare": 0.375,
+   "lineH": 53,
+   "biggest": 77,
+   "textArea": 0.024,
+   "fill": 0.662,
+   "black": 0,
+   "red": 0,
+   "lum": 160.7,
+   "sat": 0.145,
+   "elements": 4,
+   "perSec": 0.5,
+   "gap": 1.5,
+   "firstAt": 1,
+   "lead": [
+    0,
+    0
+   ],
+   "devices": [
+    "real-doc-callout",
+    "real-in-frame",
+    "mark-in-red"
+   ],
+   "carry": "other"
+  },
+  {
+   "film": "回形针 Vol.047《低焦油香烟的骗局》",
+   "beat": "R38",
+   "dur": 21,
+   "seconds": 21,
+   "moving": 0.25,
+   "still": 0.476,
+   "hold": 10,
+   "chars": 12,
+   "lines": 1,
+   "bare": 0.143,
+   "lineH": 71,
+   "biggest": 74,
+   "textArea": 0.016,
+   "fill": 0.425,
+   "black": 0,
+   "red": 0,
+   "lum": 140.8,
+   "sat": 0.185,
+   "elements": 3,
+   "perSec": 0.14285714285714285,
+   "gap": 3,
+   "firstAt": 0.5,
+   "lead": [
+    -0.5
+   ],
+   "devices": [
+    "presenter-close"
+   ],
+   "carry": "other"
+  },
+  {
+   "film": "回形针 Vol.047《低焦油香烟的骗局》",
+   "beat": "R06",
+   "dur": 5.5,
+   "seconds": 5,
+   "moving": 1,
+   "still": 0,
+   "hold": 0,
+   "chars": 96,
+   "lines": 10,
+   "bare": 0,
+   "lineH": 131,
+   "biggest": 131,
+   "textArea": 0.133,
+   "fill": 0.694,
+   "black": 0,
+   "red": 0.6,
+   "lum": 92,
+   "sat": 0.241,
+   "elements": 5,
+   "perSec": 0.9090909090909091,
+   "gap": 1.5,
+   "firstAt": 0.5,
+   "lead": [
+    2.5,
+    3.5,
+    0.5,
+    0.5,
+    0.5
+   ],
+   "devices": [
+    "callout-line",
+    "term-biggest",
+    "real-in-frame",
+    "word-cue"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.047《低焦油香烟的骗局》",
+   "beat": "R07",
+   "dur": 7,
+   "seconds": 7,
+   "moving": 0,
+   "still": 0.714,
+   "hold": 5,
+   "chars": 93,
+   "lines": 14,
+   "bare": 0,
+   "lineH": 128,
+   "biggest": 134,
+   "textArea": 0.105,
+   "fill": 0.556,
+   "black": 0,
+   "red": 0,
+   "lum": 75.8,
+   "sat": 0.117,
+   "elements": 3,
+   "perSec": 0.42857142857142855,
+   "gap": 1,
+   "firstAt": 0.5,
+   "lead": [
+    0.5,
+    1.5,
+    0.5
+   ],
+   "devices": [
+    "label-swap",
+    "callout-line",
+    "word-cue"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.047《低焦油香烟的骗局》",
+   "beat": "R08",
+   "dur": 7.5,
+   "seconds": 8,
+   "moving": 0.25,
+   "still": 0.5,
+   "hold": 2,
+   "chars": 16,
+   "lines": 8,
+   "bare": 0,
+   "lineH": 64,
+   "biggest": 128,
+   "textArea": 0.021,
+   "fill": 0.319,
+   "black": 0,
+   "red": 0,
+   "lum": 36,
+   "sat": 0.008,
+   "elements": 4,
+   "perSec": 0.5333333333333333,
+   "gap": 1.5,
+   "firstAt": 0,
+   "lead": [
+    0,
+    0.5,
+    1,
+    0
+   ],
+   "devices": [
+    "callout-line",
+    "mark-in-red",
+    "word-cue"
+   ],
+   "carry": "cut"
+  },
+  {
+   "film": "回形针 Vol.047《低焦油香烟的骗局》",
+   "beat": "R09",
+   "dur": 3,
+   "seconds": 3,
+   "moving": 1,
+   "still": 0,
+   "hold": 0,
+   "chars": 28,
+   "lines": 4,
+   "bare": 0,
+   "lineH": 170,
+   "biggest": 173,
+   "textArea": 0.076,
+   "fill": 0.544,
+   "black": 0,
+   "red": 0,
+   "lum": 96.9,
+   "sat": 0.02,
+   "elements": 1,
+   "perSec": 0.3333333333333333,
+   "gap": null,
+   "firstAt": 0,
+   "lead": [
+    -0.5
+   ],
+   "devices": [
+    "number-grows",
+    "subject-stays"
+   ],
+   "carry": "other"
+  },
+  {
+   "film": "回形针 Vol.047《低焦油香烟的骗局》",
+   "beat": "R10",
+   "dur": 9,
+   "seconds": 9,
+   "moving": 0.62,
+   "still": 0,
+   "hold": 0,
+   "chars": 25,
+   "lines": 4,
+   "bare": 0,
+   "lineH": 191,
+   "biggest": 193,
+   "textArea": 0.087,
+   "fill": 0.694,
+   "black": 0,
+   "red": 1,
+   "lum": 84,
+   "sat": 0.154,
+   "elements": 5,
+   "perSec": 0.5555555555555556,
+   "gap": 2,
+   "firstAt": 0,
+   "lead": [
+    0,
+    1,
+    0,
+    -2,
+    0
+   ],
+   "devices": [
+    "label-swap",
+    "real-in-frame",
+    "real-doc-callout",
+    "mark-in-red"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.047《低焦油香烟的骗局》",
+   "beat": "R11",
+   "dur": 5.5,
+   "seconds": 5,
+   "moving": 0.38,
+   "still": 0.2,
+   "hold": 1,
+   "chars": 39,
+   "lines": 6,
+   "bare": 0,
+   "lineH": 106,
+   "biggest": 109,
+   "textArea": 0.049,
+   "fill": 0.312,
+   "black": 0,
+   "red": 0,
+   "lum": 60.2,
+   "sat": 0.046,
+   "elements": 2,
+   "perSec": 0.36363636363636365,
+   "gap": 3,
+   "firstAt": 0,
+   "lead": [
+    0,
+    -0.5
+   ],
+   "devices": [
+    "cycle-compare",
+    "label-swap"
+   ],
+   "carry": "other"
+  },
+  {
+   "film": "回形针 Vol.047《低焦油香烟的骗局》",
+   "beat": "R12",
+   "dur": 2.5,
+   "seconds": 2,
+   "moving": 0.62,
+   "still": 0,
+   "hold": 0,
+   "chars": 39,
+   "lines": 6,
+   "bare": 0,
+   "lineH": 104,
+   "biggest": 104,
+   "textArea": 0.049,
+   "fill": 0.294,
+   "black": 0,
+   "red": 0,
+   "lum": 68.4,
+   "sat": 0.046,
+   "elements": 2,
+   "perSec": 0.8,
+   "gap": 1,
+   "firstAt": 0.5,
+   "lead": [
+    1,
+    2
+   ],
+   "devices": [
+    "label-swap",
+    "scale-jump"
+   ],
+   "carry": "other"
+  },
+  {
+   "film": "回形针 Vol.047《低焦油香烟的骗局》",
+   "beat": "R13",
+   "dur": 7.5,
+   "seconds": 8,
+   "moving": 0.25,
+   "still": 0.25,
+   "hold": 2,
+   "chars": 51,
+   "lines": 4,
+   "bare": 0,
+   "lineH": 53,
+   "biggest": 95,
+   "textArea": 0.036,
+   "fill": 0.575,
+   "black": 0,
+   "red": 0,
+   "lum": 146.7,
+   "sat": 0.02,
+   "elements": 4,
+   "perSec": 0.5333333333333333,
+   "gap": 1,
+   "firstAt": 0.29999999999999716,
+   "lead": [
+    0.3,
+    0.5,
+    1.5,
+    0
+   ],
+   "devices": [
+    "real-doc-callout",
+    "trace-diagram",
+    "callout-line"
+   ],
+   "carry": "cut"
+  },
+  {
+   "film": "回形针 Vol.047《低焦油香烟的骗局》",
+   "beat": "R14",
+   "dur": 10,
+   "seconds": 10,
+   "moving": 1,
+   "still": 0,
+   "hold": 0,
+   "chars": 0,
+   "lines": 0,
+   "bare": 0.7,
+   "lineH": 84,
+   "biggest": 87,
+   "textArea": 0,
+   "fill": 0.844,
+   "black": 0,
+   "red": 0.4,
+   "lum": 93.8,
+   "sat": 0.226,
+   "elements": 4,
+   "perSec": 0.4,
+   "gap": 2,
+   "firstAt": 0.5,
+   "lead": [
+    3.5,
+    0.5,
+    0,
+    0
+   ],
+   "devices": [
+    "callout-line",
+    "word-cue"
+   ],
+   "carry": "keep"
+  },
+  {
+   "film": "回形针 Vol.047《低焦油香烟的骗局》",
+   "beat": "R15",
+   "dur": 9.5,
+   "seconds": 9,
+   "moving": 1,
+   "still": 0,
+   "hold": 0,
+   "chars": 0,
+   "lines": 0,
+   "bare": 0.778,
+   "lineH": 64,
+   "biggest": 64,
+   "textArea": 0,
+   "fill": 0.838,
+   "black": 0,
+   "red": 0.667,
+   "lum": 116.7,
+   "sat": 0.136,
+   "elements": 3,
+   "perSec": 0.3157894736842105,
+   "gap": 3,
+   "firstAt": 0,
+   "lead": [
+    0,
+    0,
+    0
+   ],
+   "devices": [
+    "callout-line",
+    "word-cue"
+   ],
+   "carry": "cut"
+  },
+  {
+   "film": "回形针 Vol.047《低焦油香烟的骗局》",
+   "beat": "R16",
+   "dur": 7,
+   "seconds": 7,
+   "moving": 1,
+   "still": 0,
+   "hold": 0,
+   "chars": 3,
+   "lines": 1,
+   "bare": 0.286,
+   "lineH": 76,
+   "biggest": 84,
+   "textArea": 0.008,
+   "fill": 0.206,
+   "black": 0,
+   "red": 0,
+   "lum": 36.5,
+   "sat": 0.11,
+   "elements": 3,
+   "perSec": 0.42857142857142855,
+   "gap": 2,
+   "firstAt": 0,
+   "lead": [
+    0,
+    -0.5,
+    -1
+   ],
+   "devices": [
+    "zoom-into",
+    "literal-metaphor",
+    "word-cue"
+   ],
+   "carry": "keep"
+  }
+ ]
+}

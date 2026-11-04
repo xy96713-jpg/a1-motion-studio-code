@@ -1,0 +1,3 @@
+#!/usr/bin/env node
+import fs from "node:fs";import path from "node:path";
+const root=path.resolve(import.meta.dirname,".."),dir=path.join(root,"work/mature-real-source-sequence-v1"),props=JSON.parse(fs.readFileSync(path.join(dir,"props.json"),"utf8")),binding=JSON.parse(fs.readFileSync(path.join(dir,"beat-program-binding.json"),"utf8"));props.beatPrograms={menu:binding.programs.menu,typing:binding.programs.typing,result:binding.programs.result,state:binding.programs.state};fs.writeFileSync(path.join(dir,"props.json"),`${JSON.stringify(props,null,2)}\n`);console.log(JSON.stringify({status:"PASS",attached:Object.fromEntries(Object.entries(props.beatPrograms).map(([id,p])=>[id,{status:p.status,primary:p.program.primaryActor}]))},null,2));

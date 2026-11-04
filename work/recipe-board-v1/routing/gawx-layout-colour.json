@@ -1,0 +1,1271 @@
+{
+ "contract": "A1GawxLayoutColour/v1",
+ "version": "2026-11-03",
+ "purpose": "Gawx 四部片的排版与配色实测：字的大小/行数/位置/边距/字数/颜色占比，以及可复用的和谐配色变体；不看实拍内容，只量为包装。",
+ "sources": {
+  "palette": "style-lab/research-gawx-20261027/palette-*.jpg (k-means 8 主色)",
+  "arc": "style-lab/research-gawx-20261027/palette-arc.jsonl",
+  "colour": "style-lab/research-gawx-20261027/colour-measures.jsonl",
+  "type": "style-lab/research-gawx-20261027/type-measures.jsonl (Gawx 812 frames)"
+ },
+ "films": {
+  "20210616": {
+   "file": "20210616-Z67RYr19I_Q-I Made an Animation in 24 Different Styles.mp4",
+   "arc": {
+    "file": "20210616-Z67RYr19I_Q-I Made an Animation in 24 Different Styles.mp4",
+    "frames": 229,
+    "every": 2,
+    "colouredGround": 0.148,
+    "lightGround": 0.074,
+    "darkGround": 0.782,
+    "groundL": [
+     2.9,
+     13.3,
+     45.2
+    ],
+    "leadFrames": 0.655,
+    "leads": {
+     "orange": 0.258,
+     "indigo": 0.175,
+     "blue": 0.052,
+     "amber": 0.044,
+     "red": 0.031,
+     "violet": 0.031,
+     "yellow": 0.022,
+     "magenta": 0.013,
+     "teal": 0.013,
+     "green": 0.009,
+     "olive": 0.004,
+     "cyan": 0.004
+    },
+    "grounds": {
+     "neutral": 0.852,
+     "indigo": 0.066,
+     "orange": 0.017,
+     "yellow": 0.017,
+     "amber": 0.009,
+     "violet": 0.009,
+     "green": 0.009,
+     "cyan": 0.009,
+     "blue": 0.004,
+     "magenta": 0.004,
+     "red": 0.004
+    },
+    "familiesOver5pct": 3,
+    "leadRunSeconds": [
+     2,
+     6
+    ],
+    "turns": 76
+   },
+   "colour": {
+    "file": "20210616-Z67RYr19I_Q-I Made an Animation in 24 Different Styles.mp4",
+    "frames": 154,
+    "neutral": [
+     0.523,
+     0.754,
+     0.848
+    ],
+    "dark": [
+     0.446,
+     0.633,
+     0.822
+    ],
+    "mid": [
+     0.12,
+     0.218,
+     0.356
+    ],
+    "light": [
+     0.007,
+     0.073,
+     0.164
+    ],
+    "fams": [
+     0,
+     1,
+     2
+    ],
+    "top": [
+     0.016,
+     0.058,
+     0.169
+    ],
+    "strong": [
+     0,
+     0.004,
+     0.029
+    ],
+    "warm": [
+     0.154,
+     0.532,
+     0.883
+    ],
+    "cool": [
+     0.007,
+     0.091,
+     0.48
+    ],
+    "pairs": {
+     "analogous": 0.61,
+     "contrast": 0.25,
+     "complementary": 0.14,
+     "n": 57
+    },
+    "accentFrames": 0.55,
+    "accentHues": {
+     "0-30": 0.11,
+     "30-60": 0.35,
+     "60-90": 0.13,
+     "270-300": 0.13
+    }
+   },
+   "palette": {
+    "ground": "#101116",
+    "groundL": 0.0057,
+    "ink": "#f6f5f2",
+    "inkContrast": 17.29,
+    "darkShare": 0.614,
+    "lightShare": 0.058,
+    "colouredShare": 0.28,
+    "leads": [
+     [
+      "blue",
+      "#242939",
+      0.222
+     ],
+     [
+      "cyan",
+      "#3d6f89",
+      0.038
+     ],
+     [
+      "red",
+      "#bc1014",
+      0.02
+     ]
+    ]
+   }
+  },
+  "20231027": {
+   "file": "20231027-yLiBehpMhbw-How To Make Videos Like a PRO!.mp4",
+   "arc": {
+    "file": "20231027-yLiBehpMhbw-How To Make Videos Like a PRO!.mp4",
+    "frames": 344,
+    "every": 2,
+    "colouredGround": 0.299,
+    "lightGround": 0.026,
+    "darkGround": 0.802,
+    "groundL": [
+     3.4,
+     10.2,
+     43.7
+    ],
+    "leadFrames": 0.881,
+    "leads": {
+     "orange": 0.259,
+     "amber": 0.235,
+     "yellow": 0.16,
+     "olive": 0.076,
+     "indigo": 0.073,
+     "teal": 0.038,
+     "cyan": 0.012,
+     "green": 0.012,
+     "violet": 0.006,
+     "blue": 0.006,
+     "red": 0.003,
+     "magenta": 0.003
+    },
+    "grounds": {
+     "neutral": 0.701,
+     "amber": 0.076,
+     "yellow": 0.067,
+     "olive": 0.035,
+     "orange": 0.032,
+     "indigo": 0.026,
+     "cyan": 0.023,
+     "green": 0.015,
+     "blue": 0.012,
+     "violet": 0.006,
+     "red": 0.006,
+     "magenta": 0.003
+    },
+    "familiesOver5pct": 5,
+    "leadRunSeconds": [
+     2,
+     6
+    ],
+    "turns": 180
+   },
+   "colour": {
+    "file": "20231027-yLiBehpMhbw-How To Make Videos Like a PRO!.mp4",
+    "frames": 229,
+    "neutral": [
+     0.387,
+     0.587,
+     0.748
+    ],
+    "dark": [
+     0.545,
+     0.744,
+     0.897
+    ],
+    "mid": [
+     0.087,
+     0.224,
+     0.397
+    ],
+    "light": [
+     0,
+     0.004,
+     0.02
+    ],
+    "fams": [
+     1,
+     2,
+     3
+    ],
+    "top": [
+     0.043,
+     0.106,
+     0.2
+    ],
+    "strong": [
+     0.002,
+     0.017,
+     0.061
+    ],
+    "warm": [
+     0.312,
+     0.752,
+     0.977
+    ],
+    "cool": [
+     0,
+     0.01,
+     0.221
+    ],
+    "pairs": {
+     "analogous": 0.74,
+     "contrast": 0.24,
+     "complementary": 0.02,
+     "n": 165
+    },
+    "accentFrames": 0.72,
+    "accentHues": {
+     "30-60": 0.46,
+     "60-90": 0.37
+    }
+   },
+   "palette": {
+    "ground": "#0f1113",
+    "groundL": 0.0055,
+    "ink": "#c2bb9f",
+    "inkContrast": 9.82,
+    "darkShare": 0.683,
+    "lightShare": 0,
+    "colouredShare": 0.208,
+    "leads": [
+     [
+      "orange",
+      "#726b58",
+      0.076
+     ],
+     [
+      "orange",
+      "#59321d",
+      0.069
+     ],
+     [
+      "red",
+      "#fd2828",
+      0.038
+     ]
+    ]
+   }
+  },
+  "20241125": {
+   "file": "20241125-N08LnQ77hGs-Anatomy Of The Artist Brain.mp4",
+   "arc": {
+    "file": "20241125-N08LnQ77hGs-Anatomy Of The Artist Brain.mp4",
+    "frames": 436,
+    "every": 2,
+    "colouredGround": 0.271,
+    "lightGround": 0.041,
+    "darkGround": 0.846,
+    "groundL": [
+     2.4,
+     8.8,
+     36.5
+    ],
+    "leadFrames": 0.771,
+    "leads": {
+     "amber": 0.339,
+     "orange": 0.154,
+     "yellow": 0.094,
+     "green": 0.034,
+     "olive": 0.032,
+     "cyan": 0.025,
+     "indigo": 0.025,
+     "violet": 0.018,
+     "teal": 0.016,
+     "red": 0.016,
+     "blue": 0.014,
+     "magenta": 0.002
+    },
+    "grounds": {
+     "neutral": 0.729,
+     "amber": 0.101,
+     "orange": 0.055,
+     "yellow": 0.032,
+     "red": 0.018,
+     "teal": 0.014,
+     "violet": 0.014,
+     "olive": 0.011,
+     "cyan": 0.009,
+     "blue": 0.007,
+     "indigo": 0.005,
+     "magenta": 0.002,
+     "green": 0.002
+    },
+    "familiesOver5pct": 3,
+    "leadRunSeconds": [
+     2,
+     8
+    ],
+    "turns": 170
+   },
+   "colour": {
+    "file": "20241125-N08LnQ77hGs-Anatomy Of The Artist Brain.mp4",
+    "frames": 290,
+    "neutral": [
+     0.424,
+     0.637,
+     0.813
+    ],
+    "dark": [
+     0.51,
+     0.75,
+     0.868
+    ],
+    "mid": [
+     0.093,
+     0.199,
+     0.365
+    ],
+    "light": [
+     0,
+     0.008,
+     0.063
+    ],
+    "fams": [
+     1,
+     2,
+     2
+    ],
+    "top": [
+     0.024,
+     0.1,
+     0.216
+    ],
+    "strong": [
+     0,
+     0.012,
+     0.078
+    ],
+    "warm": [
+     0.448,
+     0.926,
+     0.998
+    ],
+    "cool": [
+     0,
+     0.006,
+     0.178
+    ],
+    "pairs": {
+     "analogous": 0.79,
+     "contrast": 0.14,
+     "complementary": 0.07,
+     "n": 168
+    },
+    "accentFrames": 0.62,
+    "accentHues": {
+     "30-60": 0.19,
+     "60-90": 0.64
+    }
+   },
+   "palette": {
+    "ground": "#100d0c",
+    "groundL": 0.0042,
+    "ink": "#f1f0ed",
+    "inkContrast": 16.98,
+    "darkShare": 0.618,
+    "lightShare": 0.027,
+    "colouredShare": 0.246,
+    "leads": [
+     [
+      "orange",
+      "#623e1b",
+      0.087
+     ],
+     [
+      "orange",
+      "#8c734c",
+      0.077
+     ],
+     [
+      "orange",
+      "#bdab85",
+      0.045
+     ]
+    ]
+   }
+  },
+  "20260314": {
+   "file": "20260314-55oPmIBq3Ok-Artist Athlete.mp4",
+   "arc": {
+    "file": "20260314-55oPmIBq3Ok-Artist Athlete.mp4",
+    "frames": 196,
+    "every": 2,
+    "colouredGround": 0.117,
+    "lightGround": 0.031,
+    "darkGround": 0.796,
+    "groundL": [
+     3.4,
+     13.2,
+     37.1
+    ],
+    "leadFrames": 0.556,
+    "leads": {
+     "orange": 0.24,
+     "red": 0.112,
+     "amber": 0.097,
+     "blue": 0.041,
+     "olive": 0.026,
+     "cyan": 0.02,
+     "yellow": 0.01,
+     "indigo": 0.005,
+     "green": 0.005
+    },
+    "grounds": {
+     "neutral": 0.883,
+     "orange": 0.051,
+     "amber": 0.02,
+     "olive": 0.015,
+     "teal": 0.01,
+     "cyan": 0.01,
+     "blue": 0.005,
+     "red": 0.005
+    },
+    "familiesOver5pct": 3,
+    "leadRunSeconds": [
+     2,
+     8
+    ],
+    "turns": 47
+   },
+   "colour": {
+    "file": "20260314-55oPmIBq3Ok-Artist Athlete.mp4",
+    "frames": 130,
+    "neutral": [
+     0.644,
+     0.786,
+     0.905
+    ],
+    "dark": [
+     0.604,
+     0.779,
+     0.915
+    ],
+    "mid": [
+     0.081,
+     0.213,
+     0.37
+    ],
+    "light": [
+     0,
+     0,
+     0.01
+    ],
+    "fams": [
+     0,
+     1,
+     2
+    ],
+    "top": [
+     0.006,
+     0.036,
+     0.098
+    ],
+    "strong": [
+     0,
+     0,
+     0.003
+    ],
+    "warm": [
+     0.291,
+     0.852,
+     0.992
+    ],
+    "cool": [
+     0,
+     0.013,
+     0.318
+    ],
+    "pairs": {
+     "analogous": 0.73,
+     "contrast": 0.18,
+     "complementary": 0.09,
+     "n": 44
+    },
+    "accentFrames": 0.25,
+    "accentHues": {
+     "30-60": 0.56,
+     "60-90": 0.41
+    }
+   },
+   "palette": {
+    "ground": "#111111",
+    "groundL": 0.0056,
+    "ink": "#87918d",
+    "inkContrast": 5.81,
+    "darkShare": 0.842,
+    "lightShare": 0,
+    "colouredShare": 0.054,
+    "leads": [
+     [
+      "red",
+      "#582615",
+      0.033
+     ],
+     [
+      "orange",
+      "#b0700b",
+      0.021
+     ]
+    ]
+   }
+  }
+ },
+ "typography": {
+  "gawx": {
+   "name": "Gawx",
+   "frames": 812,
+   "withWords": 0.213,
+   "biggest": [
+    0.032,
+    0.044,
+    0.073,
+    0.139
+   ],
+   "bigShare": 0.026,
+   "lines": [
+    2,
+    3,
+    6
+   ],
+   "align": {
+    "left": 0.13,
+    "centre": 0.08,
+    "right": 0,
+    "loose": 0.79
+   },
+   "x": {
+    "left": 0.26,
+    "centre": 0.47,
+    "right": 0.27
+   },
+   "y": {
+    "top": 0.31,
+    "middle": 0.49,
+    "bottom": 0.2
+   },
+   "margin": [
+    0.041,
+    0.286
+   ],
+   "colour": {
+    "light": 0.34,
+    "colour": 0.2,
+    "dark": 0.24,
+    "grey": 0.23
+   },
+   "chars": [
+    7,
+    12
+   ]
+  },
+  "crossCheck": [
+   {
+    "name": "Johnny_Harris",
+    "frames": 604,
+    "withWords": 0.235,
+    "biggest": [
+     0.04,
+     0.06,
+     0.088,
+     0.113
+    ],
+    "bigShare": 0.02,
+    "lines": [
+     2,
+     7,
+     12.900000000000006
+    ],
+    "align": {
+     "left": 0.29,
+     "centre": 0.1,
+     "right": 0.04,
+     "loose": 0.57
+    },
+    "x": {
+     "left": 0.44,
+     "centre": 0.32,
+     "right": 0.24
+    },
+    "y": {
+     "top": 0.32,
+     "middle": 0.43,
+     "bottom": 0.25
+    },
+    "margin": [
+     0.018,
+     0.188
+    ],
+    "colour": {
+     "dark": 0.28,
+     "light": 0.6,
+     "grey": 0.08,
+     "colour": 0.04
+    },
+    "chars": [
+     7,
+     14
+    ]
+   },
+   {
+    "name": "Ahoy",
+    "frames": 715,
+    "withWords": 0.522,
+    "biggest": [
+     0.061,
+     0.083,
+     0.092,
+     0.1
+    ],
+    "bigShare": 0.028,
+    "lines": [
+     2,
+     2,
+     3
+    ],
+    "align": {
+     "left": 0.09,
+     "centre": 0.05,
+     "right": 0.16,
+     "loose": 0.7
+    },
+    "x": {
+     "left": 0.57,
+     "centre": 0.27,
+     "right": 0.16
+    },
+    "y": {
+     "top": 0.36,
+     "middle": 0.05,
+     "bottom": 0.59
+    },
+    "margin": [
+     0.087,
+     0.241
+    ],
+    "colour": {
+     "colour": 0.15,
+     "grey": 0.46,
+     "light": 0.34,
+     "dark": 0.05
+    },
+    "chars": [
+     4,
+     8
+    ]
+   },
+   {
+    "name": "Nerdwriter1",
+    "frames": 260,
+    "withWords": 0.515,
+    "biggest": [
+     0.053,
+     0.075,
+     0.103,
+     0.163
+    ],
+    "bigShare": 0.096,
+    "lines": [
+     4,
+     7,
+     12
+    ],
+    "align": {
+     "left": 0.15,
+     "centre": 0.17,
+     "right": 0.02,
+     "loose": 0.66
+    },
+    "x": {
+     "left": 0.42,
+     "centre": 0.41,
+     "right": 0.17
+    },
+    "y": {
+     "top": 0.33,
+     "middle": 0.43,
+     "bottom": 0.24
+    },
+    "margin": [
+     0.075,
+     0.17
+    ],
+    "colour": {
+     "colour": 0.17,
+     "light": 0.6,
+     "dark": 0.19,
+     "grey": 0.04
+    },
+    "chars": [
+     11,
+     17
+    ]
+   },
+   {
+    "name": "Suez-now",
+    "frames": 31,
+    "withWords": 0.484,
+    "biggest": [
+     0.052,
+     0.069,
+     0.09,
+     0.111
+    ],
+    "bigShare": 0.032,
+    "lines": [
+     1,
+     2,
+     2
+    ],
+    "align": {
+     "left": 0,
+     "centre": 0,
+     "right": 0.17,
+     "loose": 0.83
+    },
+    "x": {
+     "left": 0.53,
+     "centre": 0.13,
+     "right": 0.33
+    },
+    "y": {
+     "top": 0.47,
+     "middle": 0.13,
+     "bottom": 0.4
+    },
+    "margin": [
+     0.048,
+     0.142
+    ],
+    "colour": {
+     "grey": 0.53,
+     "colour": 0.27,
+     "light": 0.2
+    },
+    "chars": [
+     5,
+     7
+    ]
+   }
+  ]
+ },
+ "layoutVariants": [
+  {
+   "id": "gl-stack-left",
+   "label": "左对齐竖向堆叠",
+   "appliesTo": [
+    "title",
+    "concept"
+   ],
+   "params": {
+    "x": {
+     "min": 0.15,
+     "max": 0.35
+    },
+    "align": {
+     "enum": [
+      "left"
+     ]
+    },
+    "lines": {
+     "min": 2,
+     "max": 6
+    },
+    "sizeFrac": {
+     "min": 0.032,
+     "max": 0.139
+    },
+    "margin": {
+     "min": 0.041,
+     "max": 0.286
+    },
+    "chars": {
+     "min": 4,
+     "max": 12
+    }
+   },
+   "defaults": {
+    "x": 0.26,
+    "align": "left",
+    "lines": 3,
+    "sizeFrac": 0.073,
+    "margin": 0.08,
+    "chars": 9
+   },
+   "contract": {
+    "sizePctOfHeight": [
+     0.032,
+     0.139
+    ],
+    "marginPct": [
+     0.041,
+     0.286
+    ],
+    "linesMax": 6,
+    "charsMax": 12,
+    "align": "left"
+   }
+  },
+  {
+   "id": "gl-centre-hero",
+   "label": "居中英雄字",
+   "appliesTo": [
+    "title"
+   ],
+   "params": {
+    "x": {
+     "min": 0.4,
+     "max": 0.55
+    },
+    "align": {
+     "enum": [
+      "centre"
+     ]
+    },
+    "lines": {
+     "min": 1,
+     "max": 3
+    },
+    "sizeFrac": {
+     "min": 0.073,
+     "max": 0.139
+    },
+    "chars": {
+     "min": 4,
+     "max": 10
+    }
+   },
+   "defaults": {
+    "x": 0.47,
+    "align": "centre",
+    "lines": 2,
+    "sizeFrac": 0.103,
+    "chars": 7
+   },
+   "contract": {
+    "sizePctOfHeight": [
+     0.073,
+     0.139
+    ],
+    "linesMax": 3,
+    "charsMax": 10,
+    "align": "centre"
+   }
+  },
+  {
+   "id": "gl-lower-third",
+   "label": "下三分之一位",
+   "appliesTo": [
+    "concept",
+    "data"
+   ],
+   "params": {
+    "y": {
+     "min": 0.6,
+     "max": 0.85
+    },
+    "lines": {
+     "min": 1,
+     "max": 4
+    },
+    "chars": {
+     "min": 4,
+     "max": 14
+    }
+   },
+   "defaults": {
+    "y": 0.72,
+    "lines": 2,
+    "chars": 9
+   },
+   "contract": {
+    "yPct": [
+     0.6,
+     0.85
+    ],
+    "linesMax": 4,
+    "charsMax": 14,
+    "align": "left"
+   }
+  },
+  {
+   "id": "gl-loose-single",
+   "label": "松散单行",
+   "appliesTo": [
+    "title",
+    "concept"
+   ],
+   "params": {
+    "align": {
+     "enum": [
+      "loose"
+     ]
+    },
+    "chars": {
+     "min": 7,
+     "max": 17
+    },
+    "lines": {
+     "min": 1,
+     "max": 3
+    }
+   },
+   "defaults": {
+    "align": "loose",
+    "chars": 12,
+    "lines": 2
+   },
+   "contract": {
+    "charsMax": 17,
+    "linesMax": 3,
+    "align": "loose"
+   }
+  }
+ ],
+ "colourVariants": [
+  {
+   "id": "ch-dark-analogous",
+   "label": "暗底+同族邻近色",
+   "appliesTo": [
+    "title",
+    "concept"
+   ],
+   "params": {
+    "ground": {
+     "type": "string"
+    },
+    "ink": {
+     "type": "string"
+    },
+    "lead": {
+     "type": "string"
+    },
+    "second": {
+     "type": "string"
+    }
+   },
+   "defaults": {
+    "ground": "#100d0c",
+    "ink": "#f1f0ed",
+    "lead": "#623e1b",
+    "second": "#8c734c"
+   },
+   "contract": {
+    "groundLMax": 0.03,
+    "maxColouredFamilies": 1,
+    "hueRule": "analogous",
+    "hueMaxDeg": 45,
+    "inkContrastMin": 4.5,
+    "leadGroundContrastMin": 2,
+    "accentCoverageMax": 0.12
+   },
+   "measured": {
+    "film": "20241125",
+    "relations": {
+     "hueLeadSecond": 7,
+     "inkContrast": 16.98,
+     "groundL": 0.0042
+    }
+   },
+   "failureModes": [
+    "同族色相差超过 45° 变成两族",
+    "暗底上再用暗色字",
+    "暖色低彩度读成脏棕"
+   ]
+  },
+  {
+   "id": "ch-dark-complementary",
+   "label": "暗底+冷暖互补",
+   "appliesTo": [
+    "title",
+    "data"
+   ],
+   "params": {
+    "ground": {
+     "type": "string"
+    },
+    "ink": {
+     "type": "string"
+    },
+    "warm": {
+     "type": "string"
+    },
+    "cool": {
+     "type": "string"
+    }
+   },
+   "defaults": {
+    "ground": "#0f1113",
+    "ink": "#c2bb9f",
+    "warm": "#fd2828",
+    "cool": "#404d4c"
+   },
+   "contract": {
+    "groundLMax": 0.03,
+    "maxColouredFamilies": 2,
+    "hueRule": "complementary",
+    "hueRangeDeg": [
+     150,
+     210
+    ],
+    "inkContrastMin": 4.5,
+    "warmGroundContrastMin": 3,
+    "coolGroundContrastMin": 2.5
+   },
+   "measured": {
+    "film": "20231027",
+    "relations": {
+     "hueWarmCool": 175.4,
+     "inkContrast": 9.82,
+     "groundL": 0.0055
+    }
+   },
+   "failureModes": [
+    "冷暖两端饱和度都拉满",
+    "互补色面积相等",
+    "把互补当三色用"
+   ]
+  },
+  {
+   "id": "ch-coloured-ground-turn",
+   "label": "彩色底转折",
+   "appliesTo": [
+    "title",
+    "concept"
+   ],
+   "params": {
+    "ground": {
+     "type": "string"
+    },
+    "ink": {
+     "type": "string"
+    },
+    "lead": {
+     "type": "string"
+    },
+    "shareMin": {
+     "min": 0.1,
+     "max": 0.4
+    }
+   },
+   "defaults": {
+    "ground": "#8c734c",
+    "ink": "#0f1113",
+    "lead": "#fd2828",
+    "shareMin": 0.15
+   },
+   "contract": {
+    "colouredGroundShareMin": 0.12,
+    "groundLMax": 0.35,
+    "inkContrastMin": 3,
+    "maxColouredFamilies": 2,
+    "hueRule": "analogous"
+   },
+   "measured": {
+    "film": "20231027",
+    "relations": {
+     "colouredGround": 0.299,
+     "inkContrast": 4.21
+    }
+   },
+   "failureModes": [
+    "彩色底占满全片",
+    "彩色底上字仍用低对比"
+   ]
+  },
+  {
+   "id": "ch-neutral-accent",
+   "label": "中性底+单点色",
+   "appliesTo": [
+    "title",
+    "data"
+   ],
+   "params": {
+    "ground": {
+     "type": "string"
+    },
+    "ink": {
+     "type": "string"
+    },
+    "accent": {
+     "type": "string"
+    }
+   },
+   "defaults": {
+    "ground": "#0f1113",
+    "ink": "#c2bb9f",
+    "accent": "#fd2828"
+   },
+   "contract": {
+    "maxColouredFamilies": 1,
+    "accentCoverageMax": 0.08,
+    "inkContrastMin": 4.5,
+    "accentGroundContrastMin": 3
+   },
+   "measured": {
+    "film": "20231027",
+    "relations": {
+     "accentCoverage": 0.038,
+     "accentGroundContrast": 4.97
+    }
+   },
+   "failureModes": [
+    "点缀色超过两个",
+    "点缀色压过主体"
+   ]
+  },
+  {
+   "id": "ch-noir-single",
+   "label": "近黑+单一情绪色",
+   "appliesTo": [
+    "concept",
+    "data"
+   ],
+   "params": {
+    "ground": {
+     "type": "string"
+    },
+    "ink": {
+     "type": "string"
+    },
+    "lead": {
+     "type": "string"
+    }
+   },
+   "defaults": {
+    "ground": "#111111",
+    "ink": "#87918d",
+    "lead": "#b0700b"
+   },
+   "contract": {
+    "groundLMax": 0.02,
+    "maxColouredFamilies": 1,
+    "inkContrastMin": 4.5,
+    "leadGroundContrastMin": 2.5
+   },
+   "measured": {
+    "film": "20260314",
+    "relations": {
+     "colouredShare": 0.054,
+     "inkContrast": 5.81
+    }
+   },
+   "failureModes": [
+    "单一色也不给，全片灰",
+    "近黑上叠近黑字"
+   ]
+  },
+  {
+   "id": "ch-warm-cool-pair",
+   "label": "暖冷两族并置",
+   "appliesTo": [
+    "title",
+    "concept",
+    "data"
+   ],
+   "params": {
+    "ground": {
+     "type": "string"
+    },
+    "ink": {
+     "type": "string"
+    },
+    "warm": {
+     "type": "string"
+    },
+    "cool": {
+     "type": "string"
+    }
+   },
+   "defaults": {
+    "ground": "#101116",
+    "ink": "#f6f5f2",
+    "warm": "#bc1014",
+    "cool": "#3d6f89"
+   },
+   "contract": {
+    "maxColouredFamilies": 2,
+    "hueRule": "contrast",
+    "hueRangeDeg": [
+     90,
+     210
+    ],
+    "inkContrastMin": 4.5
+   },
+   "measured": {
+    "film": "20210616",
+    "relations": {
+     "hueWarmCool": 158.1,
+     "inkContrast": 17.29
+    }
+   },
+   "failureModes": [
+    "两族面积都大",
+    "暖冷之间夹第三族"
+   ]
+  }
+ ],
+ "harmonyRules": {
+  "darkGroundShare": "0.78-0.88",
+  "colouredGroundTurnShare": "0.15-0.30",
+  "maxColouredFamiliesPerFrame": 2,
+  "analogousMaxDeg": 45,
+  "complementaryDeg": [
+   150,
+   210
+  ],
+  "contrastDeg": [
+   90,
+   150
+  ],
+  "appearFamilyTurnSeconds": [
+   2,
+   8
+  ],
+  "inkContrastMinBody": 4.5,
+  "inkContrastMinLarge": 3,
+  "muddyWarmChromaGuard": "warm 20-100° hue with chroma < 0.04 at low L reads dirty brown; avoid"
+ },
+ "gaps": [
+  "Gawx 的实拍内容不量（按用户要求）",
+  "逐拍主色族轮换时间点未标：palette-arc 只有占比与 2-8 秒一换的结论",
+  "字面像素级 bbox 未逐帧测：type-measures 是采样统计"
+ ]
+}

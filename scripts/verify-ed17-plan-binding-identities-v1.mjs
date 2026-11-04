@@ -1,0 +1,11 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+import {planIdentity} from '../apps/studio-next/src/lib/a1-package-look-master-v1.mjs';
+import {partitionSha as sha} from '../apps/studio-next/src/lib/a1-single-shot-partition-dry-run-v1.mjs';
+const w=JSON.parse(fs.readFileSync('apps/studio-next/public/generated/system-line/editorial-asset-workbench-v1/workspace.json')),r=w.production.shotIntelligence;
+const master=r.packageLookMasterPlans.find(p=>p.shotId==='ED-17'),kit=r.packageAssetKitPlans.find(p=>p.shotId==='ED-17'&&p.current),recipe=r.packageAssemblyRecipes.find(p=>p.shotId==='ED-17'&&p.current);
+const identity=planIdentity(master),recomputed=sha(identity);assert.equal(recomputed,master.planSha256);
+const item=r.wholeFilmStaticBoard.items.find(p=>p.shotId==='ED-17'),seed=r.wholeFilmStaticBoardDecision.boardDecisionSeed.find(p=>p.shotId==='ED-17');
+assert.equal(recomputed,item.planSha256);assert.equal(recomputed,seed.planSha256);assert.equal(recomputed,kit.selectedLookMasterBinding.lookMasterPlanSha256);assert.equal(kit.planSha256,recipe.planSha256);
+const report={conclusion:'DIFFERENT_CONTRACT_HASH_DOMAINS_NOT_REVIEW_METADATA_DRIFT',workspaceSha256:w.workspaceSha256,master:{contract:master.contract,planSha256:master.planSha256,recomputed,identityFields:identity,fieldHashes:Object.fromEntries(Object.entries(identity).filter(([,v])=>v!==undefined).map(([k,v])=>[k,sha(v)]))},kit:{contract:kit.contract,planSha256:kit.planSha256,createdAt:kit.createdAt,fieldHashes:Object.fromEntries(Object.entries(kit).map(([k,v])=>[k,sha(v)])),selectedLookMasterBinding:kit.selectedLookMasterBinding},approvedSeed:seed,recipe:{planSha256:recipe.planSha256,approvalBinding:recipe.approvalBinding},gates:w.gates,defaultSelection:r.currentStoryboardAuthority.shots.filter(s=>s.shotId==='ED-17').map(s=>({shotId:s.shotId,versionId:s.versionId,motionReviewPlan:s.motionReviewPlan,reviewPlaybackSelection:s.reviewPlaybackSelection}))};
+fs.writeFileSync('work/ed17-approved-version-recovery/plan-binding-identities.json',JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({conclusion:report.conclusion,lookMasterRecomputed:recomputed,kitPlan:kit.planSha256,recipePlan:recipe.planSha256}));

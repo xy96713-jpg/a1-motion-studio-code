@@ -1,0 +1,34 @@
+{
+  "contract": "A1EffortTiers/v1",
+  "about": "OVH 01-pipeline effort import (G5): quick|standard|studio as first-class run profiles. Director must not skip stills→animatic→polish under studio.",
+  "source": "OpenVideoHarness/playbook/01-pipeline.md",
+  "tiers": {
+    "quick": {
+      "gates": 0,
+      "stillsBeforePreview": false,
+      "animatic": false,
+      "polishRounds": 0,
+      "blindReview": false,
+      "note": "Fast draft; calm/fill soft under rough-cut when gateProfile=rough-cut"
+    },
+    "standard": {
+      "gates": 3,
+      "stillsBeforePreview": true,
+      "animatic": true,
+      "polishRounds": 1,
+      "blindReview": true,
+      "note": "Default film path"
+    },
+    "studio": {
+      "gates": 3,
+      "stillsBeforePreview": true,
+      "animatic": true,
+      "polishRounds": 3,
+      "blindReview": true,
+      "overnight": true,
+      "fixWorstN": 3,
+      "note": "Overnight multi-round; stills→fix worst-3→animatic→polish; do not skip"
+    }
+  },
+  "default": "standard"
+}

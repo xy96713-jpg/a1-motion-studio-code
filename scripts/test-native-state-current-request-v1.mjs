@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';import{researchStaticSampleIsCurrentV1}from'../apps/studio-next/src/lib/a1-research-static-package-binding-v1.mjs';import{productionFrameGoalShaV1}from'../apps/studio-next/src/lib/a1-production-frame-identity-v1.mjs';
+const source='a'.repeat(64),ref='b'.repeat(64),image='c'.repeat(64),plan={scope:'RESEARCH_ONLY',productionAdmission:false,source:{videoSha256:source},shots:[]},shot={id:'fixture',sourceText:'A source-bound blank entrance',visualJob:'Native entrance crop',sourceInterval:{startFrame:0,endFrameExclusive:100},exactCopy:[],productionLayout:{states:[{state:'ENTRY'}]},referenceProductionDesign:{references:[{state:'ENTRY',sourceFrame:3,sha256:ref}],states:[{state:'ENTRY',visibleCopyIndices:[]}]},sourceNativeLayoutBinding:{contract:'A1SourceBoundNativeLayoutBinding/v1',nativeStates:['ENTRY']},fullFrameRequests:[{state:'ENTRY',reference:{sourceFrame:3,sha256:ref},goalInputSha256:'d'.repeat(64)}]};plan.shots=[shot];const candidate={goalInputSha256:productionFrameGoalShaV1(plan,shot,'ENTRY')},sample={state:'ENTRY',sourceFrame:3};const current=(s=shot,c=candidate,r=ref)=>researchStaticSampleIsCurrentV1({plan,shot:s,candidate:c,sample,imageSha256:image,referenceSha256:r});
+assert.equal(current(),true,'a newly reviewed current native state owns its route; old imagegen request is historical');
+assert.equal(current(shot,{goalInputSha256:'e'.repeat(64)}),false);
+assert.equal(current(shot,candidate,'f'.repeat(64)),false);
+const unselected=structuredClone(shot);unselected.sourceNativeLayoutBinding.nativeStates=['HOLD'];assert.equal(current(unselected),false,'an untouched legacy state still needs its current request');
+const missingLayout=structuredClone(shot);missingLayout.productionLayout.states=[];assert.equal(current(missingLayout),false);
+const pending=structuredClone(shot);pending.fullFrameRebindRequired=true;assert.equal(current(pending),false);
+const reviewedRaster=structuredClone(shot);delete reviewedRaster.sourceNativeLayoutBinding;
+const independentCandidate={...candidate,wholeAnchorPASS:true,currentLocalCandidate:true,localReview:{status:'PASS'},productionAdmission:false};
+assert.equal(current(reviewedRaster,independentCandidate),true,'an independently reviewed current whole anchor survives a historical request goal when its source reference still matches');
+assert.equal(current(reviewedRaster,independentCandidate,'f'.repeat(64)),false,'independently reviewed raster cannot drift to a different source reference');
+console.log('PASS current native goal/reference/layout overrides stale alternative request only for its bound state; old goals, changed references, unselected states and pending repair reject.');

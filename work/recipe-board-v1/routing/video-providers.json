@@ -1,0 +1,182 @@
+{
+ "contract": "A1VideoProviders/v1",
+ "asOf": "2026-11-04",
+ "purpose": "AI video is fallback for non-evidence, non-text art shots after triage; not a default.",
+ "providers": [
+  {
+   "id": "seedance-2.5",
+   "model": "bytedance/seedance-2.5/image-to-video",
+   "route": "Atlas Cloud",
+   "usdPerSecond": 0.134,
+   "fiveSecUsd": 0.67,
+   "resolution": "480p/720p/1080p native; adaptive on i2v",
+   "duration": "4–30s",
+   "audio": true,
+   "strengths": [
+    "best overall image/camera motion at mid price",
+    "native i2v",
+    "long clips"
+   ],
+   "weaknesses": [
+    "not cheapest",
+    "i2v aspect ratio adaptive"
+   ],
+   "use": "quality fallback",
+   "keyAvailable": false
+  },
+  {
+   "id": "seedance-v1.5-pro",
+   "model": "bytedance/seedance-v1.5-pro/image-to-video",
+   "route": "Atlas Cloud",
+   "usdPerSecond": 0.047,
+   "fiveSecUsd": 0.235,
+   "resolution": "up to 1080p",
+   "duration": "4–30s",
+   "audio": false,
+   "strengths": [
+    "about one third of 2.5 price",
+    "good for cheap tests",
+    "i2v"
+   ],
+   "weaknesses": [
+    "older model; less motion/quality than 2.5"
+   ],
+   "use": "cheap test / budget fallback",
+   "keyAvailable": false
+  },
+  {
+   "id": "seedance-v1-pro-1080p",
+   "model": "bytedance/seedance-v1-pro-i2v-1080p",
+   "route": "Atlas Cloud",
+   "usdPerSecond": 0.11,
+   "fiveSecUsd": 0.55,
+   "resolution": "1080p",
+   "duration": "4–30s",
+   "audio": false,
+   "strengths": [
+    "native 1080p at lower than 2.5"
+   ],
+   "weaknesses": [
+    "older model"
+   ],
+   "use": "1080p budget",
+   "keyAvailable": false
+  },
+  {
+   "id": "seedance-v1-pro-480p",
+   "model": "bytedance/seedance-v1-pro-i2v-480p",
+   "route": "Atlas Cloud",
+   "usdPerSecond": 0.022,
+   "fiveSecUsd": 0.11,
+   "resolution": "480p",
+   "duration": "4–30s",
+   "audio": false,
+   "strengths": [
+    "cheapest Seedance test"
+   ],
+   "weaknesses": [
+    "480p only"
+   ],
+   "use": "rough motion tests only",
+   "keyAvailable": false
+  },
+  {
+   "id": "minimax-h3-768p",
+   "model": "MiniMax H3",
+   "route": "MiniMax CN / EmpirioLabs",
+   "usdPerSecond": 0.18,
+   "fiveSecUsd": 0.9,
+   "resolution": "768p",
+   "duration": "4–15s",
+   "audio": true,
+   "strengths": [
+    "native stereo audio",
+    "multimodal image/video/audio refs",
+    "cinematic"
+   ],
+   "weaknesses": [
+    "more expensive than Seedance",
+    "CN account currently insufficient balance"
+   ],
+   "use": "audio/multimodal/2K fallback",
+   "keyAvailable": false
+  },
+  {
+   "id": "minimax-h3-2k",
+   "model": "MiniMax H3",
+   "route": "MiniMax CN / EmpirioLabs",
+   "usdPerSecond": 0.26,
+   "fiveSecUsd": 1.3,
+   "resolution": "2K",
+   "duration": "4–15s",
+   "audio": true,
+   "strengths": [
+    "2K + audio + multimodal"
+   ],
+   "weaknesses": [
+    "highest price in this set"
+   ],
+   "use": "only when 2K/audio is required",
+   "keyAvailable": false
+  },
+  {
+   "id": "kling-v3-i2v",
+   "model": "klingai/kling-v3.0-i2v",
+   "route": "Vercel AI Gateway",
+   "usdPerSecond": 0.17,
+   "fiveSecUsd": 0.85,
+   "resolution": "up to 1080p (4K option)",
+   "duration": "3–15s",
+   "audio": true,
+   "strengths": [
+    "physics-aware motion",
+    "first/last frame",
+    "product shape retention"
+   ],
+   "weaknesses": [
+    "price close to Seedance 2.5"
+   ],
+   "use": "physics/product fallback",
+   "keyAvailable": false
+  },
+  {
+   "id": "kling-v2.6-i2v",
+   "model": "klingai/kling-v2.6-i2v",
+   "route": "Vercel AI Gateway",
+   "usdPerSecond": 0.04,
+   "fiveSecUsd": 0.2,
+   "resolution": "up to 1080p",
+   "duration": "3–10s",
+   "audio": false,
+   "strengths": [
+    "cheapest decent i2v",
+    "first/last frame"
+   ],
+   "weaknesses": [
+    "older; weaker than v3"
+   ],
+   "use": "cheap product/mood test",
+   "keyAvailable": false
+  }
+ ],
+ "selection": {
+  "qualityBalance": "seedance-2.5",
+  "cheapTest": "seedance-v1.5-pro",
+  "cheapestDecent": "kling-v2.6-i2v",
+  "audio2k": "minimax-h3-2k"
+ },
+ "fallbackRules": [
+  "only non-evidence, non-text, non-data, non-real-person art shots",
+  "prefer image-to-video from the selected GPT reference, not text-to-video",
+  "duration 5s max; one isolated shot, not a multi-shot world",
+  "never replace a real archive/photo or a code-set fact",
+  "must have user approval and be marked ai-video in design board"
+ ],
+ "sources": [
+  "https://ask.atlascloud.ai/seedance-2-5-image-to-video-api-provider-pricing",
+  "https://empiriolabs.ai/models/minimax-h3",
+  "https://vercel.com/ai-gateway/models/kling-v3.0-i2v",
+  "https://nanabananapro.com/model-compare/video",
+  "https://platform.minimaxi.com/docs/api-reference/video-generation-v2-create"
+ ]
+}

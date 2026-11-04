@@ -1,0 +1,1017 @@
+{
+ "contract": "A1DirectorRoutingTable/v1",
+ "version": 5,
+ "updated": "2026-10-19",
+ "principle": "凡是事实（新闻、数字、人物、产品、原话），必须用真素材或确定性渲染；生图和 AI 视频只做不需要真实的东西（氛围、隐喻、背景、过桥）。文字一律可编辑排版，不让生图画字。",
+ "researchSource": {
+  "film": "胡泊 BV1a63d6CEBa（52 个包装片段 / 69 镜）",
+  "files": [
+   "work/bv1a63d6ceba-packaging-study-20260923/clip-index.csv",
+   "work/hupo-69-shot-reconstruction-v1/shot-task-plan-v1.json",
+   "work/hupo-69-shot-reconstruction-v1/source-work-orders/whole-frame-closeout-20261015-v1/live-progress-checkpoint.json"
+  ],
+  "headlineFinding": "逐帧手修线把多数镜头（包括证据、聊天、原理图）都做成整帧生图再修字，52 个包装片段的资产里，生图 105 次、真实素材 36 次。生图画不准文字和结构，于是每镜反复返工。本表把这些镜头改派给确定性模块，生图只留给氛围和背景。"
+ },
+ "modules": {
+  "page-capture": {
+   "label": "网页截图/取证",
+   "status": "available",
+   "a1": "scripts/capture-storyboard-article-page.mjs + article-source-discovery 节点",
+   "note": "公开网页定位、整页或元素截图，并保留来源 URL"
+  },
+  "screen-recording": {
+   "label": "录屏",
+   "status": "available",
+   "a1": "recording 节点（Playwright/ffmpeg）、cap-export 节点",
+   "note": "软件操作、网页滚动阅读；静帧阶段用 software-demo-window 卡放截图，加光标、圆环和放大镜"
+  },
+  "official-media": {
+   "label": "官方图片/素材导入",
+   "status": "available",
+   "a1": "media-files、external-media-discovery 节点",
+   "note": "官网图、产品图、新闻配图；记录来源"
+  },
+  "person-cutout": {
+   "label": "人物照片抠图灰度",
+   "status": "available",
+   "a1": "whole-frame-closeout/integrate-native-gray-people（待抽成通用节点）",
+   "note": "保留真实像素，灰度 + 透明遮罩，在胡泊线上已验证可通过"
+  },
+  "editable-typography": {
+   "label": "可编辑排版",
+   "status": "available",
+   "a1": "editable-typography 节点",
+   "note": "所有屏上文字"
+  },
+  "highlight-overlay": {
+   "label": "高亮/框选/黄条覆盖层",
+   "status": "available",
+   "a1": "recipe-board compose（article-highlight-dark 卡）",
+   "note": "在真实截图上叠加，不重画原文"
+  },
+  "data-chart": {
+   "label": "数据图表组件",
+   "status": "available",
+   "a1": "recipe-board components.mjs chartSvg（bar / hbar）",
+   "note": "数字直接从数据画出，竖柱或横条、负值标红、来源小字；动效预设 bar-grow"
+  },
+  "table-component": {
+   "label": "表格组件",
+   "status": "partial",
+   "a1": "recipe-board data-table-grid 卡",
+   "note": "静态表已有，逐行动效待做"
+  },
+  "chat-component": {
+   "label": "聊天/社交帖组件",
+   "status": "available",
+   "a1": "recipe-board components.mjs chatHtml",
+   "note": "头像、气泡、重点句黄条或框选；自己一方用强调色"
+  },
+  "diagram": {
+   "label": "图解/流程图",
+   "status": "available",
+   "a1": "diagram 节点（确定性 SVG）",
+   "note": "节点、连线、步骤展开；recipe-board 的 concept-flow 卡（flow / loop）可以直接出静帧"
+  },
+  "image-generation": {
+   "label": "生图",
+   "status": "available",
+   "a1": "image-generation 节点",
+   "note": "只做氛围、隐喻、无字背景"
+  },
+  "ai-video": {
+   "label": "AI 视频",
+   "status": "available",
+   "a1": "ai-video 节点（XYQ）",
+   "note": "氛围过桥、动态背景；不做事实画面"
+  },
+  "stock-broll": {
+   "label": "B-roll 素材检索",
+   "status": "partial",
+   "a1": "external-media-discovery、NAS 媒体桥",
+   "note": "现金、键盘、城市等通用画面"
+  },
+  "presenter-base": {
+   "label": "口播底板",
+   "status": "needs-input",
+   "a1": "presenter-candidate",
+   "note": "需要用户提供口播底片，否则用无人出镜版式"
+  },
+  "layer-compositor": {
+   "label": "图层合成",
+   "status": "available",
+   "a1": "layer-compositor 节点 / recipe-board 渲染器",
+   "note": "按版式卡合成静帧"
+  },
+  "motion-render": {
+   "label": "动效渲染",
+   "status": "available",
+   "a1": "remotion-render、hypit-render 节点",
+   "note": "按卡上的 motionPreset 出动画"
+  },
+  "stage-teardown": {
+   "label": "拆解模型（3D）",
+   "status": "available",
+   "a1": "recipe-board stage.mjs → style-lab engine/templates/subject.js（主角库 routing/stage-library.json：h100、hdd、drill）",
+   "note": "一个实物的结构模型：转、打开、看里面、部件高亮；库里没有的东西要先在 style-lab 建模（blender/model_*.py 或图转 3D partset.mjs）"
+  },
+  "stage-scene": {
+   "label": "意境场景（3D）",
+   "status": "partial",
+   "a1": "recipe-board stage.mjs → style-lab engine/templates/diorama.js（场景库 routing/stage-library.json：ufo-night）",
+   "note": "生图风格帧拆层 + 推镜视差 + 代码光效 + 胶片介质；新场景要先在 style-lab 搭（art/scene.mjs 出风格帧和分层、art/depth.py 出深度）"
+  },
+  "morph-chapter": {
+   "label": "连续图解（一整章）",
+   "status": "available",
+   "a1": "recipe-board chapter.mjs → style-lab engine/templates/morph.js（agent 按 prompts/morph.md 写场景模块，系统检查、看关键帧自查）",
+   "note": "同一张图跟着口播一步步变；每拍取自己那一段"
+  },
+  "map-osm": {
+   "label": "真实地图（OpenStreetMap）",
+   "status": "available",
+   "a1": "recipe-board maps.mjs（按地名取路网、投影成平面、给口播里的地点定位）→ morph.js kit.mapPlane",
+   "note": "开放数据（ODbL），自动通过；地点找不到真实位置时只能写明示意"
+  }
+ },
+ "intents": [
+  {
+   "id": "title",
+   "label": "标题/章节转折",
+   "signals": [
+    "开场时间锚点",
+    "章节名",
+    "设问句",
+    "一句话总括",
+    "反问"
+   ],
+   "technique": "大字排版压在压暗的背景上，字是主角；背景只给语境",
+   "materialChain": [
+    {
+     "use": "背景",
+     "from": [
+      "official-media",
+      "stock-broll",
+      "image-generation"
+     ],
+     "note": "背景可以生图（不承载事实）"
+    },
+    {
+     "use": "标题字",
+     "from": [
+      "editable-typography"
+     ]
+    }
+   ],
+   "recipes": [
+    "title-hero-over-photo",
+    "stamp-over-evidence",
+    "title-word-broll",
+    "hero-3d"
+   ],
+   "motionPresets": [
+    "type-slam-in",
+    "slow-push"
+   ],
+   "forbidden": [
+    "让生图画标题字"
+   ],
+   "evidence": {
+    "hupoShots": [
+     "P01",
+     "P05",
+     "P07",
+     "P11",
+     "P13",
+     "P16",
+     "P19",
+     "P38"
+    ],
+    "passed": "6/9",
+    "generated": 24,
+    "verified": 5,
+    "lesson": "成功的都是\"生图做底 + 可编辑大字\"。失败的 P07、P11 是想让底图和字一次生成。"
+   },
+   "heroNote": "开场的日子（ticker）或第一次叫出名字（nameplate）可用 hero-3d"
+  },
+  {
+   "id": "evidence-article",
+   "label": "证据：新闻/文章/报告",
+   "signals": [
+    "据报道",
+    "某某文章写道",
+    "新闻",
+    "报告显示",
+    "原文",
+    "《",
+    "论文"
+   ],
+   "technique": "真实页面截图或滚动录屏 + 标题定位 + 黄条/黑条高亮重点句，镜头推近阅读",
+   "materialChain": [
+    {
+     "use": "页面",
+     "from": [
+      "page-capture",
+      "screen-recording"
+     ],
+     "note": "必须是真实页面"
+    },
+    {
+     "use": "重点句",
+     "from": [
+      "highlight-overlay"
+     ]
+    }
+   ],
+   "fallback": "找不到原页：用可编辑排版重排原文段落并注明出处，不生成假页面",
+   "recipes": [
+    "article-highlight-dark",
+    "stamp-over-evidence",
+    "article-highlight-light"
+   ],
+   "motionPresets": [
+    "read-scroll",
+    "highlight-sweep",
+    "push-to-line"
+   ],
+   "forbidden": [
+    "生图重画新闻页面",
+    "改写原文后当原文展示"
+   ],
+   "evidence": {
+    "hupoShots": [
+     "P02",
+     "P04",
+     "P06",
+     "P08",
+     "P17",
+     "P21",
+     "P23",
+     "P25",
+     "P42",
+     "P45"
+    ],
+    "passed": "17/20",
+    "generated": 16,
+    "verified": 4,
+    "lesson": "手修线把文章页整帧生图再修字，能过，但每镜都要反复修。截图加覆盖层可以一次成型。"
+   }
+  },
+  {
+   "id": "data",
+   "label": "数据/数字对比",
+   "signals": [
+    "百分比",
+    "亿",
+    "倍",
+    "增长",
+    "下跌",
+    "排名",
+    "对比"
+   ],
+   "technique": "数字是主角：大数字计数、柱状或对比条；来源小字标注",
+   "materialChain": [
+    {
+     "use": "图表",
+     "from": [
+      "data-chart"
+     ]
+    },
+    {
+     "use": "官方原图（有的话）",
+     "from": [
+      "official-media"
+     ],
+     "note": "官方 benchmark 图可以直接用，再加强调"
+    }
+   ],
+   "fallback": "数据不全时：用 paper-collage-figures 卡只排大数字",
+   "recipes": [
+    "data-bar-chart",
+    "data-hbar-ranking",
+    "paper-collage-figures",
+    "stat-sheet",
+    "hero-3d"
+   ],
+   "motionPresets": [
+    "count-up",
+    "bar-grow"
+   ],
+   "forbidden": [
+    "生图画数字或图表"
+   ],
+   "evidence": {
+    "hupoShots": [
+     "P27",
+     "P28",
+     "P40",
+     "P41"
+    ],
+    "passed": "2/5",
+    "generated": 1,
+    "verified": 1,
+    "lesson": "通过率最低的一类。表格和柱状图要靠确定性组件，手修效率很差。"
+   },
+   "heroNote": "全片最重的一两个数字（一次暴跌、一个总量）可用 hero-3d：分镜写 stage3d {template: monolith|city|flipboard, params, facts}，数字都要带 facts 来源"
+  },
+  {
+   "id": "table",
+   "label": "表格/参数对照",
+   "signals": [
+    "参数",
+    "规格",
+    "对照",
+    "列表",
+    "履历"
+   ],
+   "technique": "网格纸上的可编辑表格，逐行进入，用色块标出优势格",
+   "materialChain": [
+    {
+     "use": "表格",
+     "from": [
+      "table-component",
+      "editable-typography"
+     ]
+    }
+   ],
+   "recipes": [
+    "data-table-grid",
+    "data-table-dark"
+   ],
+   "motionPresets": [
+    "row-cascade",
+    "cell-highlight"
+   ],
+   "forbidden": [
+    "截图表格后再生图修"
+   ],
+   "evidence": {
+    "hupoShots": [
+     "P23",
+     "P27",
+     "P28",
+     "P41"
+    ],
+    "passed": "见数据类",
+    "lesson": "P41 用可编辑表格一次通过；P28 履历矩阵三个状态全挂。"
+   }
+  },
+  {
+   "id": "person",
+   "label": "人物引介",
+   "signals": [
+    "人名 + 身份",
+    "创始人",
+    "研究员",
+    "CEO",
+    "他/她是"
+   ],
+   "technique": "真实照片抠图灰度 + 姓名牌（中文大字、英文、身份小字）",
+   "materialChain": [
+    {
+     "use": "人物",
+     "from": [
+      "official-media",
+      "person-cutout"
+     ],
+     "note": "公开照片，保留真实像素"
+    },
+    {
+     "use": "背景",
+     "from": [
+      "image-generation"
+     ],
+     "note": "无人的空场景可以生成"
+    },
+    {
+     "use": "姓名牌",
+     "from": [
+      "editable-typography"
+     ]
+    }
+   ],
+   "fallback": "没有照片：纯文字姓名牌，绝不生成人脸",
+   "recipes": [
+    "person-nameplate",
+    "person-intro"
+   ],
+   "motionPresets": [
+    "nameplate-wipe",
+    "cutout-parallax"
+   ],
+   "forbidden": [
+    "生成真实人物的脸"
+   ],
+   "evidence": {
+    "hupoShots": [
+     "P12",
+     "P30",
+     "P31",
+     "P46",
+     "P47",
+     "P48"
+    ],
+    "passed": "8/9",
+    "generated": 14,
+    "verified": 19,
+    "lesson": "唯一一类真实素材多于生图，通过率也最高。\"生成办公室底 + 真实人像灰度抠图\"是手修线最后验证出来的好方法。"
+   }
+  },
+  {
+   "id": "quote",
+   "label": "人物原话/引语",
+   "signals": [
+    "说",
+    "表示",
+    "原话",
+    "曾说",
+    "引号"
+   ],
+   "technique": "人物照片固定，引语逐句替换，关键词放大，旧字变暗留影",
+   "materialChain": [
+    {
+     "use": "人物",
+     "from": [
+      "official-media",
+      "person-cutout"
+     ]
+    },
+    {
+     "use": "引语",
+     "from": [
+      "editable-typography"
+     ],
+     "note": "必须是可核实的原话"
+    }
+   ],
+   "recipes": [
+    "quote-portrait-bw",
+    "quote-stack"
+   ],
+   "motionPresets": [
+    "quote-swap",
+    "keyword-lift"
+   ],
+   "forbidden": [
+    "编造或改写引语"
+   ],
+   "evidence": {
+    "hupoShots": [
+     "P49",
+     "P51"
+    ],
+    "passed": "4/5",
+    "generated": 5,
+    "verified": 2,
+    "lesson": "P51 失败过两次，原因是把署名当成主标题，文字压在头上。引语和署名的层级要写进卡里。"
+   }
+  },
+  {
+   "id": "chat",
+   "label": "聊天/社交帖",
+   "signals": [
+    "聊天记录",
+    "推文",
+    "帖子",
+    "评论区",
+    "回复"
+   ],
+   "technique": "头像 + 气泡逐条进入，重点句标红，最后推近",
+   "materialChain": [
+    {
+     "use": "原帖",
+     "from": [
+      "page-capture"
+     ],
+     "note": "有真实链接时用截图"
+    },
+    {
+     "use": "重排",
+     "from": [
+      "chat-component"
+     ],
+     "note": "只有文字内容时用组件重排"
+    }
+   ],
+   "recipes": [
+    "chat-thread"
+   ],
+   "motionPresets": [
+    "bubble-stagger"
+   ],
+   "forbidden": [
+    "生图画聊天界面"
+   ],
+   "evidence": {
+    "hupoShots": [
+     "P14",
+     "P20"
+    ],
+    "passed": "3/3",
+    "generated": 7,
+    "verified": 0,
+    "lesson": "能过，但全部是整帧生图，没法批量复用。缺聊天组件。"
+   }
+  },
+  {
+   "id": "concept",
+   "label": "原理/流程/概念",
+   "signals": [
+    "原理",
+    "流程",
+    "步骤",
+    "怎么做到",
+    "机制",
+    "方法"
+   ],
+   "technique": "确定性图解：节点、连线、步骤依次展开，说明文字可编辑；连着几拍讲同一个原理时，用一张持续变化的图讲完整章（morph-chapter：元素一直在画面上，按拍变形，镜头推拉）",
+   "materialChain": [
+    {
+     "use": "图解",
+     "from": [
+      "morph-chapter",
+      "diagram"
+     ]
+    },
+    {
+     "use": "隐喻插图（可选）",
+     "from": [
+      "image-generation"
+     ],
+     "note": "只做无字的隐喻画面"
+    }
+   ],
+   "recipes": [
+    "morph-chapter",
+    "mechanism-3d",
+    "concept-flow",
+    "concept-steps-hero",
+    "concept-trials",
+    "card-stack",
+    "hero-3d"
+   ],
+   "motionPresets": [
+    "node-reveal",
+    "path-draw"
+   ],
+   "forbidden": [
+    "生图画流程图"
+   ],
+   "evidence": {
+    "hupoShots": [
+     "P26",
+     "P32",
+     "P35",
+     "P36"
+    ],
+    "passed": "1/2",
+    "generated": 7,
+    "verified": 0,
+    "lesson": "全部整帧生图，结构和小字总是错。diagram 节点已经有了，但这次一镜都没用上。"
+   }
+  },
+  {
+   "id": "where-when",
+   "label": "地点分布/时间线/案件经过",
+   "signals": [
+    "发生在",
+    "先后",
+    "年到",
+    "案发",
+    "地点",
+    "城里",
+    "角落",
+    "现场",
+    "证据",
+    "线索",
+    "年间",
+    "起案件"
+   ],
+   "technique": "一张持续变化的图讲完这段经过：真实地图平放成 3D、镜头压低掠过，事件按时间逐个钉在真实位置上（日期、地名、图钉）；或者一条时间轴，证据卡按年份弹出，镜头推近再拉回。连着几拍讲同一段经过时用同一张图（morph-chapter）",
+   "materialChain": [
+    {
+     "use": "地图",
+     "from": [
+      "map-osm"
+     ],
+     "note": "真实路网，不画假地图"
+    },
+    {
+     "use": "图解",
+     "from": [
+      "morph-chapter"
+     ]
+    },
+    {
+     "use": "示意证据图（可选）",
+     "from": [
+      "image-generation"
+     ],
+     "note": "指纹、鞋印这类示意图，标明示意"
+    }
+   ],
+   "recipes": [
+    "morph-chapter",
+    "stamp-over-evidence",
+    "title-hero-over-photo"
+   ],
+   "motionPresets": [
+    "path-draw",
+    "node-reveal"
+   ],
+   "forbidden": [
+    "生图画地图",
+    "把示意图当真实证据"
+   ],
+   "evidence": {
+    "lesson": "回形针 Vol.138 开场 36 秒逐镜复刻（projects/paperclip-138/replica）：真实路网平放 3D + 钉点标签 + 证据时间轴，静帧并排接近原片。"
+   }
+  },
+  {
+   "id": "product",
+   "label": "产品/硬件/品牌对象",
+   "signals": [
+    "型号",
+    "显卡",
+    "芯片",
+    "App",
+    "产品名",
+    "logo"
+   ],
+   "technique": "官方产品图或 logo 放在侧卡上，型号用可编辑字，同一锚点做替换",
+   "materialChain": [
+    {
+     "use": "产品图",
+     "from": [
+      "official-media",
+      "page-capture"
+     ]
+    },
+    {
+     "use": "示意背景",
+     "from": [
+      "image-generation"
+     ],
+     "note": "不指认具体型号的通用硬件画面"
+    }
+   ],
+   "recipes": [
+    "presenter-side-card",
+    "stamp-over-evidence",
+    "product-side-card",
+    "spec-page-card"
+   ],
+   "motionPresets": [
+    "card-swap",
+    "slow-push"
+   ],
+   "forbidden": [
+    "生图冒充具体型号产品"
+   ],
+   "evidence": {
+    "hupoShots": [
+     "P09",
+     "P16",
+     "P18",
+     "P22",
+     "P33",
+     "P34"
+    ],
+    "lesson": "P22/P23 的红绿卡替换是最难的镜头之一，核心是同一锚点替换，不是重画。"
+   }
+  },
+  {
+   "id": "software-demo",
+   "label": "软件/产品操作演示",
+   "signals": [
+    "点击",
+    "输入",
+    "界面",
+    "功能",
+    "演示",
+    "工作台",
+    "快捷键"
+   ],
+   "technique": "真实录屏 + 光标跟随推近 + 操作字幕卡",
+   "materialChain": [
+    {
+     "use": "录屏",
+     "from": [
+      "screen-recording"
+     ],
+     "note": "需要可操作的软件或网页"
+    },
+    {
+     "use": "标注",
+     "from": [
+      "highlight-overlay",
+      "editable-typography"
+     ]
+    }
+   ],
+   "fallback": "暂时录不了：用界面截图 + 光标示意，标 TODO",
+   "recipes": [
+    "software-demo-window"
+   ],
+   "motionPresets": [
+    "cursor-follow",
+    "zoom-to-click"
+   ],
+   "forbidden": [
+    "生图伪造软件界面"
+   ],
+   "evidence": {
+    "hupoShots": [
+     "P37"
+    ],
+    "lesson": "胡泊这期几乎没有，但作者自己的产品类文章会大量需要。recording 和 cap-export 节点已经接好，只是还没用过。。v2 新增 software-demo-window 卡：真实截图放进软件窗口，再加光标、圆环、放大镜和步骤标签。"
+   }
+  },
+  {
+   "id": "presenter-overlay",
+   "label": "口播观点/议题标签",
+   "signals": [
+    "我认为",
+    "其实",
+    "问题是",
+    "两个原因",
+    "第一",
+    "第二"
+   ],
+   "technique": "主讲人为底，侧边纸卡或胸前短标签分次进入，不盖住人",
+   "materialChain": [
+    {
+     "use": "底",
+     "from": [
+      "presenter-base"
+     ],
+     "note": "没有口播底片时改用 title 或 concept 版式"
+    },
+    {
+     "use": "标签",
+     "from": [
+      "editable-typography"
+     ]
+    },
+    {
+     "use": "小道具",
+     "from": [
+      "official-media",
+      "image-generation"
+     ],
+     "note": "奖杯、物件等装饰可以生成"
+    }
+   ],
+   "recipes": [
+    "presenter-side-card",
+    "presenter-tags",
+    "poster-pair"
+   ],
+   "motionPresets": [
+    "paper-tag-pop",
+    "side-card-slide"
+   ],
+   "forbidden": [
+    "满屏面板压住主讲人"
+   ],
+   "evidence": {
+    "hupoShots": [
+     "P03",
+     "P10",
+     "P15",
+     "P18",
+     "P22",
+     "P24",
+     "P29",
+     "P39",
+     "P44",
+     "P50"
+    ],
+    "passed": "21/24",
+    "generated": 25,
+    "verified": 3,
+    "lesson": "数量最多、通过率高。标签是排版，小道具是生图，分工清楚。"
+   }
+  },
+  {
+   "id": "teardown",
+   "label": "实物拆解/结构",
+   "signals": [
+    "拆开",
+    "内部",
+    "里面",
+    "由什么组成",
+    "结构",
+    "零件",
+    "工作原理",
+    "怎么转",
+    "带动"
+   ],
+   "technique": "一个实物的 3D 模型整屏：先看整体，再打开或看里面，被点到的部件高亮，部件名用代码写；同一个模型贯穿几镜，讲清楚东西怎么构成、怎么动",
+   "materialChain": [
+    {
+     "use": "模型",
+     "from": [
+      "stage-teardown"
+     ],
+     "note": "结构示意，不冒充具体产品照片；具体型号的外观用 product 意图的官方图"
+    }
+   ],
+   "fallback": "库里没有这个东西：先显示 TODO，并列为\"要建模\"；赶时间可以改走 concept（机制图）",
+   "recipes": [
+    "teardown-3d",
+    "mechanism-3d"
+   ],
+   "motionPresets": [
+    "footage"
+   ],
+   "forbidden": [
+    "生图画结构图或爆炸图",
+    "把模型当真实产品照片"
+   ],
+   "evidence": {
+    "lesson": "style-lab 的 H100、硬盘、电钻三部拆解片：同一模型用线稿、爆炸、高亮讲结构，比整帧生图稳定，部件名能精确对上。"
+   }
+  },
+  {
+   "id": "scene",
+   "label": "意境/情绪场景",
+   "signals": [
+    "那天晚上",
+    "想象",
+    "仿佛",
+    "孤独",
+    "神秘",
+    "远方",
+    "梦",
+    "超现实"
+   ],
+   "technique": "一个讲情绪的画面：生图风格帧拆成远近几层，镜头慢推出视差，光和雾由代码画，胶片质感；不承载事实，只有字幕",
+   "materialChain": [
+    {
+     "use": "场景",
+     "from": [
+      "stage-scene",
+      "image-generation"
+     ],
+     "note": "只做氛围，不做事实画面"
+    }
+   ],
+   "fallback": "库里没有合适的场景：先显示 TODO，列为\"要搭场景\"；或改用 atmosphere（真实空镜）",
+   "recipes": [
+    "scene-3d",
+    "footage-plate"
+   ],
+   "motionPresets": [
+    "footage"
+   ],
+   "forbidden": [
+    "用生成的场景冒充新闻或历史画面",
+    "在场景里让生图写字"
+   ],
+   "evidence": {
+    "lesson": "style-lab 飞碟夜景：2.5D 分层加胶片介质，6 秒约 80 秒渲完；真 3D（Blender）空间感更好但慢、模型粗。"
+   }
+  },
+  {
+   "id": "atmosphere",
+   "label": "氛围/情绪过桥",
+   "signals": [
+    "钱",
+    "压力",
+    "时代",
+    "震惊",
+    "转场",
+    "场景感"
+   ],
+   "technique": "整屏真实空镜（新闻、档案、通用 B-roll）慢推，只有字幕，不加别的字",
+   "materialChain": [
+    {
+     "use": "画面",
+     "from": [
+      "stock-broll",
+      "official-media",
+      "ai-video"
+     ]
+    }
+   ],
+   "recipes": [
+    "footage-plate",
+    "title-hero-over-photo"
+   ],
+   "motionPresets": [
+    "slow-push",
+    "parallax"
+   ],
+   "forbidden": [],
+   "evidence": {
+    "hupoShots": [
+     "G02-S02",
+     "G09-S02",
+     "G13-S01",
+     "G15-S01",
+     "G16-S01",
+     "G21-S01",
+     "G26-S01",
+     "G26-S02",
+     "G26-S03",
+     "G29-S01",
+     "G29-S02",
+     "G30-S01"
+    ],
+    "lesson": "原片 13 段纯空镜，不加任何包装字，靠画面过桥；生图和 AI 视频只在找不到真实画面时用。"
+   }
+  },
+  {
+   "id": "summary",
+   "label": "总结/回顾",
+   "signals": [
+    "总结",
+    "回顾",
+    "所以",
+    "最后",
+    "关键词"
+   ],
+   "technique": "几个关键词并列或依次点亮，回扣前面镜头的画面",
+   "materialChain": [
+    {
+     "use": "关键词",
+     "from": [
+      "editable-typography"
+     ]
+    },
+    {
+     "use": "回扣画面",
+     "from": [
+      "layer-compositor"
+     ],
+     "note": "复用前文已出的镜头"
+    }
+   ],
+   "recipes": [
+    "paper-collage-figures",
+    "concept-steps-hero",
+    "card-stack"
+   ],
+   "motionPresets": [
+    "keyword-stack"
+   ],
+   "forbidden": [],
+   "evidence": {
+    "hupoShots": [
+     "P43"
+    ],
+    "passed": "1/2",
+    "lesson": "P43 失败了 3 次：名单太密、透视不对。关键词数量要限制。"
+   }
+  },
+  {
+   "id": "presenter-plain",
+   "label": "纯口播（不加包装）",
+   "signals": [
+    "我",
+    "你想象一下",
+    "聊到这儿",
+    "不过",
+    "说白了",
+    "过渡句",
+    "语气词"
+   ],
+   "technique": "只放主讲人画面和字幕，什么都不叠；给观众喘口气，也让后面的包装更有力",
+   "materialChain": [
+    {
+     "use": "画面",
+     "from": [
+      "presenter-base"
+     ]
+    }
+   ],
+   "recipes": [
+    "presenter-plain"
+   ],
+   "motionPresets": [
+    "footage"
+   ],
+   "forbidden": [
+    "为了不空而硬加卡片"
+   ],
+   "evidence": {
+    "hupoShots": [
+     "G09-S01",
+     "G16-S02",
+     "G16-S03",
+     "G26-S04",
+     "G27-S01"
+    ],
+    "lesson": "原片约四分之一的时间完全不加包装。"
+   }
+  }
+ ],
+ "rhythmRules": [
+  "同一张版式卡不连续用超过 2 拍",
+  "连续 3 拍纯文字之后，必须插一拍真实画面",
+  "生图镜头不超过全片的 1/3",
+  "每 4 到 6 拍安排一次标题或氛围过桥，给观众换气",
+  "3D 镜头（teardown、scene）全片不超过 1/4，同一个主角模型的镜头连着放（一段讲完）"
+ ]
+}

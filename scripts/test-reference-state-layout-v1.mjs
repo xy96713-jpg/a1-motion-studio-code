@@ -1,0 +1,34 @@
+import assert from 'node:assert/strict';
+import {prepareReferenceStateLayoutsV1} from '../apps/studio-next/src/lib/a1-reference-state-layout-v1.mjs';
+const ref='a'.repeat(64),font={id:'matched',sha256:'b'.repeat(64)},box={x:.1,y:.1,width:.8,height:.3};
+const layer={id:'numbers',role:'TEXT',copyIndices:[0,1],assetIds:[]};
+const shot={id:'fixture',exactCopy:['1','2'],typographyDirections:[{layerId:'numbers',route:'EDITABLE_LOCAL_TYPE',verifiedMatchingFontSha256:font.sha256}],referenceProductionDesign:{references:[{state:'HOLD',path:'work/reference.png',sha256:ref}],layers:[layer],states:[{state:'HOLD',visibleLayerIds:['numbers'],visibleCopyIndices:[0,1],placements:[{layerId:'numbers',box,z:2,fit:'contain',copyPlacements:[{copyIndex:1,box,fill:'#FF0000',fontSize:70},{copyIndex:0,box,fill:'#111111',fontSize:90}]}]}]}};
+const options={repoRoot:'/repo',shot,resources:{assets:[],fonts:[font]},canvas:{width:1920,height:1080}};
+const result=prepareReferenceStateLayoutsV1(options);assert.equal(result.ready,true,JSON.stringify(result.gaps));
+assert.deepEqual(result.layout.states[0].layers.map(l=>l.copyIndex),[0,1]);
+assert.deepEqual(result.layout.states[0].layers.map(l=>l.fill),['#111111','#FF0000']);
+const missing=structuredClone(shot);delete missing.referenceProductionDesign.states[0].placements[0].copyPlacements;
+assert.equal(prepareReferenceStateLayoutsV1({...options,shot:missing}).gaps[0].code,'PER_COPY_PLACEMENTS_REQUIRED');
+const unknown=structuredClone(shot);unknown.referenceProductionDesign.states[0].placements[0].box=null;
+assert.equal(prepareReferenceStateLayoutsV1({...options,shot:unknown}).gaps[0].code,'REFERENCE_GEOMETRY_REQUIRED');
+const glyph=structuredClone(shot);glyph.typographyDirections[0].route='GENERATED_HERO_GLYPH';
+const unresolved=prepareReferenceStateLayoutsV1({...options,shot:glyph});assert.equal(unresolved.ready,false);assert.equal(unresolved.layout,null);assert.ok(unresolved.gaps.some(g=>g.code==='REFERENCE_GLYPH_ASSET_REQUIRED'));
+const native=structuredClone(shot);native.referenceProductionDesign.layers[0]={...layer,identity:'REAL',assetIds:['real-table']};delete native.typographyDirections;
+const preserved=prepareReferenceStateLayoutsV1({...options,shot:native,resources:{assets:[{assetId:'real-table',kind:'IMAGE',referenceOnly:false,materialClass:'VERIFIED_PAPER',provenance:{status:'VERIFIED',sourceUrl:'fixture://paper'}}],fonts:[]}});
+assert.equal(preserved.ready,true);assert.equal(preserved.layout.states[0].layers[0].kind,'ASSET');
+console.log('PASS per-copy geometry/colour/order, null geometry stays blocked, generated glyphs never fall back to local type, native source type stays an image.');
+
+const invented=prepareReferenceStateLayoutsV1({...options,shot:native,resources:{assets:[{assetId:'real-table',kind:'IMAGE',referenceOnly:false,materialClass:'ORIGINAL_GENERATED_ASSET'}],fonts:[]}});
+assert.equal(invented.ready,false);assert.ok(invented.gaps.some(g=>g.code==='REAL_SOURCE_IDENTITY_REQUIRED'));
+
+const approximatePolicy={contract:'A1StaticVisualQualityPolicy/v1',mode:'WHOLE_FRAME_APPROXIMATE',reviewUnit:'WHOLE_FRAME'};
+const styleGlyph=structuredClone(shot);styleGlyph.referenceProductionDesign.layers[0].assetIds=['generated'];
+styleGlyph.typographyDirections=[{layerId:'numbers',route:'GENERATED_HERO_GLYPH',referenceSha256:ref,editableShadowFontId:font.id}];
+const glyphAsset={assetId:'generated',kind:'IMAGE',referenceOnly:false,materialClass:'ORIGINAL_GENERATED_ASSET',glyphBinding:{referenceSha256:ref,exactCopy:['1','2'],copyReview:'PASS',appearanceReview:'FAIL'}};
+const styleOptions={...options,shot:styleGlyph,resources:{assets:[glyphAsset],fonts:[font]}};
+assert.equal(prepareReferenceStateLayoutsV1(styleOptions).ready,false);
+const approximate=prepareReferenceStateLayoutsV1({...styleOptions,qualityPolicy:approximatePolicy});assert.equal(approximate.ready,true);assert.equal(approximate.styleFindings[0].originalVerdict,'FAIL');
+const wrongCopy=structuredClone(glyphAsset);wrongCopy.glyphBinding.exactCopy=['wrong'];
+assert.equal(prepareReferenceStateLayoutsV1({...styleOptions,qualityPolicy:approximatePolicy,resources:{assets:[wrongCopy],fonts:[font]}}).ready,false);
+assert.equal(prepareReferenceStateLayoutsV1({...options,shot:native,qualityPolicy:approximatePolicy,resources:{assets:[{assetId:'real-table',kind:'IMAGE',referenceOnly:false,materialClass:'ORIGINAL_GENERATED_ASSET'}],fonts:[]}}).ready,false);
+console.log('PASS approximate whole-frame candidates retain standalone style FAIL as advisory; wrong copy and invented evidence remain blocked.');

@@ -1,0 +1,334 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>sidecard</title>
+<style>
+html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: #000; }
+#pres { position: absolute; inset: 0; background-size: cover; background-position: center; transform-origin: 50% 40%; }
+.card { position: absolute; width: 400px; height: 510px; transform-origin: 100% 0; perspective: 900px; }
+.card .in { position: absolute; inset: 0; transform-style: preserve-3d; }
+.card .cface { position: absolute; inset: 0; background-size: 100% 100%; border-radius: 10px; box-shadow: 0 26px 50px rgba(0,0,0,.45); overflow: hidden; }
+.card .gloss { position: absolute; inset: 0; border-radius: 10px; background: linear-gradient(115deg, rgba(255,255,255,.0) 35%, rgba(255,255,255,.22) 50%, rgba(255,255,255,0) 62%); background-size: 260% 100%; mix-blend-mode: screen; }
+.card .big { position: absolute; left: 0; right: 0; top: 64px; text-align: center; font-family: "Harmony Cond"; font-size: 210px; line-height: 1; letter-spacing: -.03em; mix-blend-mode: multiply; }
+.card .let { position: absolute; left: 30px; right: 30px; top: 46px; height: 220px; background-size: contain; background-repeat: no-repeat; background-position: center; filter: drop-shadow(0 8px 10px rgba(0,0,0,.45)); }
+.card .sub { position: absolute; left: 0; right: 0; bottom: 47px; text-align: center; font-family: "SourceHanSans Heavy"; font-size: 18px; letter-spacing: .2em; }
+.card .prod { position: absolute; left: -46px; top: 222px; width: 490px; height: 300px; background-size: contain; background-repeat: no-repeat; background-position: center; filter: drop-shadow(0 22px 22px rgba(0,0,0,.5)); }
+.lab { position: absolute; white-space: nowrap; }
+.paper { position: absolute; padding: 8px 4px 10px; font-family: 'House Gothic', "SourceHanSerif Heavy"; color: #f6f4ef; line-height: 1; white-space: nowrap; text-shadow: 0 .04em 0 rgba(0,0,0,.55), 0 .1em .25em rgba(0,0,0,.45); }   /* (clean heavy white, no paper: as common.js .paper; the bold gothic, a thin white serif on a shirt read as a subtitle, open S5) */
+/* the accent rule under the words themselves, narrowed with them: on the label's box it stuck out at both ends as two
+   red stubs once the words were squeezed (open S5 review) */
+.paper span.t { border-bottom: .07em solid var(--accent, #e0281f); }
+.paper.ink-dark { color: #1a1a1a; text-shadow: 0 1px 0 rgba(255,255,255,.35); }
+/* (no blurred halo under a label: a grey smudge round thin type read as a dirty shadow, open S5 review; a hard drop
+   shadow and the gothic's weight part it from the ground) */
+.paper .q { font-family: "Songti SC"; font-weight: 900; }
+.paper span.t { display: inline-block; transform: scaleX(.9); transform-origin: 50% 50%; }
+</style></head>
+<body>
+<div id="pres"></div>
+<div id="curl" data-screen style="position:absolute;inset:0;display:none"><div id="cpage" style="position:absolute;left:0;top:0;bottom:0;width:1140px;background-color:#fff;overflow:hidden"><img id="cimg" style="position:absolute;left:40px;top:0;height:1080px"><div id="cmark" style="position:absolute;border:5px solid #e0281f;border-radius:6px;box-shadow:0 0 0 3px rgba(255,255,255,.8);display:none"></div></div><div id="clab" style="position:absolute;left:60px;top:44px;z-index:2;display:none"></div><div id="cflap" style="position:absolute;inset:0;background:linear-gradient(135deg,#d9d9d6,#fbfbfa 55%,#e2e2df);filter:drop-shadow(-10px 12px 18px rgba(0,0,0,.45))"></div></div>
+<div id="layer"></div>
+
+<div id="sub" style="position:absolute;left:0;right:0;top:930px;text-align:center;font-family:'SourceHanSans Regular','PingFang SC';font-size:58px;color:#fff;text-shadow:0 0 6px rgba(0,0,0,.55),0 2px 3px rgba(0,0,0,.6);letter-spacing:.01em;z-index:50"></div>
+<script src="marks.js"></script>
+<script>
+// (the words' own width, by a range over them: the name's box runs the card's width, and its scrollWidth read the card,
+// 閉源 set for 340 px of text at 400 came out a third of the card, opensrc S4/S5)
+const textW = (e) => { const r = document.createRange(); r.selectNodeContents(e); const b = e.getBoundingClientRect(), k = e.offsetWidth / (b.width || 1); return r.getBoundingClientRect().width * k; };
+
+// 讲者加侧边卡片 / 撕纸标签 (reference P18, P22, P24). Art: the module kit (modules/kit: card plate, torn paper; image
+// generation, text-free); the product is the real photograph cut out; words are set by code (exact).
+// Card: tone-on-tone giant model name behind the product, a caption line, a torn-paper label off its bottom edge;
+// slides in on its word, swaps in place (a flip, same anchor). Tags: torn paper, condensed heavy Song, red quotes,
+// a fast slide with motion blur. The presenter is untouched (no effect on the presenter, the user's rule).
+const S = window.__spec, TH = S.theme, K = S.kit, $ = (q) => document.querySelector(q);
+const E = { out: (k) => 1 - Math.pow(1 - k, 3), back: (k) => { const c = 1.6; return 1 + (c + 1) * Math.pow(k - 1, 3) + c * Math.pow(k - 1, 2); } };
+const seg = (t, a, b) => Math.min(1, Math.max(0, (t - a) / (b - a)));
+$('#pres').style.backgroundImage = `url("${S.presenter}")`;
+const layer = $('#layer');
+// a plate recoloured from the red master: the ink tone turns it (CSS filter), the accent keeps it
+const Z = 1.18;   // the card's scale on the frame (CSS zoom also scales its left / top, so they are given unscaled)
+const toneFilter = (tone) => tone === 'ink' ? 'hue-rotate(222deg) saturate(1.1) brightness(.9)' : tone === 'green' ? 'hue-rotate(105deg) saturate(1.1)' : 'none';
+// (quote marks on a tag, as the reference's torn labels; none on a label that names a page: it quotes no one, h800-S3)
+// (a label with no paper under it, the user 2026-10-25: 之后也不要这种纸条撕纸设计什么的了 — the shared label of common.js M.torn
+// had dropped its strip, this one had not: h800 S3 still showed 滿血 H100 官方參數 on torn paper)
+const torn = (text, size, accent, quote = true) => `${quote ? `<span class="q" style="color:${accent}">“</span>` : ''}<span class="t">${text}</span>${quote ? `<span class="q" style="color:${accent}">”</span>` : ''}`;
+const cards = (S.cards || []).map((c) => {
+  const el = document.createElement('div'); el.className = 'card';
+  const right = (c.side || 'right') === 'right';
+  el.style.zoom = Z; el.style.left = (right ? 1920 - 150 - 400 * Z : 150) / Z + 'px'; el.style.top = (c.y ?? 240) / Z + 'px';
+  el.innerHTML = `<div class="in"><div class="cface"></div><div class="big"></div><div class="let"></div><div class="sub"></div><div class="prod"></div><div class="list"></div><div class="logo"></div><div class="band"></div><div class="gloss"></div><div class="wash"></div></div><div class="glint"></div>`;
+  layer.appendChild(el);
+  // (the card's label off its foot on its halo, light: set inside the card it lay on the card's props, the gold bars, cards
+  // S1/S2; the halo parts it from the presenter behind, recap S7/S8)
+  const lab = document.createElement('div'); lab.className = 'paper'; lab.style.fontSize = '46px'; layer.appendChild(lab);
+  return { el, lab, c, right, states: [c, ...(c.swap || [])], shown: -1 };
+});
+const REF = TH.style === 'reference';
+// the card's newer design (gradient plate, fitted model name, caption above the product) for every style, in its colours;
+// the old kit plate showed a style's card red with its name cut and its caption under the product (cards-S10)
+const CARD = REF || !!TH.paper;
+if (CARD) document.head.insertAdjacentHTML('beforeend', `<style>
+ .card .cface { border: 2px solid rgba(225,225,225,.85); border-radius: 6px; box-shadow: 0 20px 44px rgba(0,0,0,.45); }
+ .card .big { top: 96px; font-family: 'Harmony Cond'; font-size: 232px; letter-spacing: -.04em; mix-blend-mode: normal; text-shadow: 0 0 1px rgba(0,0,0,.3); }
+ .card .sub { top: 54px; bottom: auto; font-family: 'SourceHanSans Regular'; font-weight: 700; font-size: 34px; letter-spacing: .02em; }   /* the text face: a display face this small read as noise (recap-S7 AI就是) */   /* at least 34 px a line on the frame (framecheck) */
+ /* three bands that never cross: the name, the product, the mark in a strip of its own at the foot (blind review
+    cards-S6: the GPU sat on the name's last 0 and on the NVIDIA mark) */
+ .card .prod { top: 250px; left: 10px; width: 380px; height: 176px; transform-origin: 50% 50%; }
+ .card .big { white-space: nowrap; }
+ /* the card's label printed across its foot under a rule, in the card's own dark ink, as the reference's cards close on
+    their label (who R06 把英伟达干趴下, cards R01 对梁文锋的质疑): off the card, bare on its halo, it read as a footnote (who S7,
+    recap S7/S8 reviews); printed, not on a plate drawn by code (flatPlateErrors) nor a strip of paper (the user's ban) */
+ .card .band { position: absolute; left: 18px; right: 18px; bottom: 8px; height: 58px; border-top: 3px solid rgba(30,24,18,.85); color: #1d1813; font-family: 'SourceHanSerif Heavy'; font-size: 40px; line-height: 60px; text-align: center; white-space: nowrap; overflow: hidden; display: none; z-index: 4; }
+ .card .logo { position: absolute; left: 0; right: 0; bottom: 26px; width: auto; height: 44px; background-position: center !important; background-size: contain; background-repeat: no-repeat; background-position: left center; opacity: .95; }
+ .paper span.t { transform: scaleX(.85); }
+
+ .paper .q { font-family: 'SourceHanSerif Heavy'; font-style: italic; font-size: 1.15em; vertical-align: -.08em; }
+ .paper span.t { transform: scaleX(.85); margin: 0 -.08em; }
+ #sub { transform: scaleX(.86); }
+ .card .wash { position: absolute; inset: 0; background: #fff; border-radius: 6px; pointer-events: none; }
+ .card .list { position: absolute; left: 34px; z-index: 3; font-family: 'SourceHanSerif Heavy'; font-size: 62px; line-height: 1.34; color: #2a241c; }   /* (1.15: a serif's boxes ran into the next line's, who-S7) a list under the name, one line a beat (who R06: OPENAI, 谷歌, XAI under 难道是AI巨头？) */
+ .card .list div { white-space: nowrap; opacity: 0; }
+ .card .glint { position: absolute; top: -20%; height: 140%; width: 34px; background: linear-gradient(90deg, transparent, #fff 45%, #fff 55%, transparent); transform: skewX(-24deg); filter: blur(1px); }
+</style>`);
+const fill = (cd, st) => {
+  const q = (s) => cd.el.querySelector(s);
+  delete q('.prod').dataset.front; q('.prod').style.zIndex = '';   // (each state lays its own picture; the one before's front left on)
+  if (CARD) {   // the reference's card: a red (or green) gradient, a darker tone-on-tone model name, a caption line, the product over it
+    // paper: the reference's opinion card (who R06: 难道是AI巨头？ over a trophy, beige paper, black Song), red / green
+    // for a product (the A100)
+    const silver = st.tone === 'silver', paper = st.tone === 'paper', [hi, lo] = silver ? ['#f6f7f9', '#9aa1ab'] : paper ? (REF ? ['#f1ece1', '#cfc5b2'] : [TH.paper, `color-mix(in srgb, ${TH.paper} 78%, ${TH.ink})`]) : st.tone === 'green' ? (TH.green || ['#3aa63a', '#0f3a12']) : (TH.red || [TH.accent, `color-mix(in srgb, ${TH.accent} 35%, #000)`]);
+    q('.cface').style.cssText = `background:radial-gradient(ellipse 90% 70% at 50% 28%, ${hi} 0%, ${hi} 30%, ${lo} 100%)`;
+    q('.let').style.backgroundImage = 'none'; q('.big').textContent = st.title || ''; if (window.__letter) { delete q('.big').dataset.sf; delete q('.sub').dataset.sf; q('.sub').textContent = st.sub || ''; window.__letter(); }   /* (each state's words in the face they are drawn in before they are measured: set after, 憑什麼轉行去做AI？ wrapped onto its list and its phone, cards S2) */ q('.big').style.color = 'rgba(48,0,0,.86)'; if (S.treat && st.title) window.__treat(q('.big'), S.treat);   /* (the card's title takes the reference's treatment: treat.js) */   /* tone on tone but readable, as the reference's A100 (it measured contrast 54 at .62: framecheck) */ q('.big').style.fontSize = (st.img ? 150 : 232) + 'px'; { const f = st.img ? 150 : 232, w = q('.big').scrollWidth; if (w > 370) q('.big').style.fontSize = `${f * 370 / w}px`; }
+    q('.sub').textContent = st.sub || ''; q('.sub').style.color = paper ? '#2a241c' : '#fff'; if (paper) q('.big').style.color = 'rgba(20,16,10,.9)';
+    // a product card of the red tone on charcoal, the red a rule along its top and the name light (the user 2026-10-26: 不要
+    // 红底的文字 有点丑; H100 was dark wine on a red face, h800 S3 review)
+    if (!silver && !paper && !st.drawn && st.tone !== 'green') { q('.cface').style.cssText = `background:radial-gradient(ellipse 90% 70% at 50% 28%, #3b3e44 0%, #2a2c31 35%, #121316 100%);border-top:8px solid ${TH.accent || '#d9312b'}`; q('.big').style.color = '#f1ede6'; }
+    // an opinion card on paper: the drawn prop fills the card under its words, the words in the heavy serif (recap: a
+    // small prop on an empty sheet; the stencil face split 心)
+    // a drawn prop (not a product photograph) is the card's picture: it fills the lower half (opensrc-S4/S5: the
+    // cabinet doors a small icon in the middle of a red card)
+    // a product card in silver (the reference's A100): the product large across the lower half, the maker's mark on a
+    // dark strip at the foot (cards-S6: a white wordmark vanished on the pale card; the product small in the middle)
+    if (silver) { q('.big').style.color = 'rgba(28,30,34,.92)'; q('.sub').style.color = '#2a2d33'; Object.assign(q('.prod').style, { top: '205px', left: '-20px', width: '440px', height: '250px' }); }
+    if (st.logo) Object.assign(q('.logo').style, { left: '0', right: '0', bottom: '0', height: '64px', backgroundColor: 'rgba(18,20,24,.92)', backgroundOrigin: 'content-box', padding: '12px 0', borderRadius: '0 0 6px 6px' });
+    // a drawn prop on a coloured card sits under the name, never over it (opensrc-S4/S5: the cabinet doors covered the
+    // lower half of 閉源 / 開源), the card in a soft paper tone, not a flat saturated block (the review: a slide's colour chip)
+    // (a lettered page's display face is tall of itself: a name of up to six on one line fills the card's width on every
+    // card, the coloured ones too — 閉源 / 開源 stood at a third of their cards, opensrc S4/S5; a product card's name no
+    // higher than 200 px so its product keeps the card's lower half — A100 at 260 left the chip a scrap, cards S6, h800 S3)
+    if (window.__spec?.letter?.big && !(paper && st.drawn)) { const big = q('.big'), n = [...String(st.title || '')].length; if (n >= 1 && n <= 6) { big.style.scale = ''; big.style.whiteSpace = 'nowrap'; big.style.fontSize = '200px'; const w = textW(big); if (w > 0) big.style.fontSize = `${Math.min(st.drawn ? 180 : st.img ? 200 : 260, Math.floor(200 * 340 / w))}px`; } }
+    // (the picture under the name's ink, not its line box: a tall face's strokes run below the box, and the cabinet's top
+    // covered the foot of 閉源, opensrc S4/S5)
+    const inkFoot = (big) => { const r = document.createRange(); r.selectNodeContents(big); const g = r.getBoundingClientRect(), b = big.getBoundingClientRect(), k = big.offsetHeight / (b.height || 1); return big.offsetTop + (g.bottom - b.top) * k; };
+    if (st.drawn && !paper) { const big = q('.big'), top = Math.max(big.offsetTop + big.offsetHeight * .92, inkFoot(big) + 16); Object.assign(q('.prod').style, { top: `${top}px`, left: '20px', width: '360px', height: `${Math.max(190, 480 - top)}px` });
+      // (the name pressed into the card in its own hue, darker, lit from above: flat black on the pink and green cards read
+      // as stuck on, opensrc S4/S5 reviews; the reference's 闭源 / 开源 are debossed)
+      const soft = st.tone === 'green' ? ['#dcebd3', '#9fbf92'] : ['#f3d3cd', '#d59a92']; q('.cface').style.cssText = `background:radial-gradient(ellipse 90% 70% at 50% 28%, ${soft[0]} 0%, ${soft[0]} 30%, ${soft[1]} 100%)`; q('.big').style.color = st.tone === 'green' ? '#24461c' : '#6e231d'; q('.big').style.textShadow = '0 .025em 0 rgba(255,255,255,.55), 0 -.012em 0 rgba(0,0,0,.35)'; q('.sub').style.color = '#2a241c'; }
+    if (paper && st.drawn) { q('.big').style.fontFamily = "'SourceHanSerif Heavy'"; q('.big').style.zIndex = 2; Object.assign(q('.prod').style, { top: '150px', left: '0px', width: '400px', height: '330px', zIndex: 1 });
+      // a question of many words leads the card, the drawing small at its foot (cards-S1: 憑什麼轉行去做AI？ squeezed above
+      // a gold bar filling the card); a word or two over a drawing filling the card (recap-S8)
+      if ([...String(st.title || '')].length > 6) { q('.big').style.whiteSpace = 'normal'; q('.big').style.lineHeight = '1.1'; q('.big').style.fontSize = `${Math.min(76, Math.floor(370 / Math.ceil([...String(st.title)].length / 2)))}px`;   // (two lines across the card: the question at 44 px read as a footnote, cards-S1)
+        Object.assign(q('.prod').style, { top: '330px', left: '190px', width: '220px', height: '160px' }); }
+      // (a name of five or six stays on one line across the card: set on two it shrank and its second line went behind the
+      // picture, recap S8 review; the reference's 核心技术闭源 runs the card's width)
+      // (narrowed to 72 % so one line of five or six stands large: squeezed to the card's width at full breadth it came out
+      // at half the name the review had passed, under its picture, recap S8; the reference's names are tall and narrow)
+      q('.big').style.scale = ''; const n = [...String(st.title || '')].length;
+      if (n >= 5 && n <= 6) { const big = q('.big'); big.style.whiteSpace = 'nowrap'; big.style.scale = '.72 1'; big.style.transformOrigin = '50% 50%'; big.style.fontSize = '150px'; const w = big.scrollWidth; if (w * .72 > 370) big.style.fontSize = `${150 * 370 / (w * .72)}px`; }
+      // (a lettered page's display face is tall of itself: a name of up to six on one line fills the card's width, as the
+      // reference's 核心技术闭源 and A100 run it — narrowed again it overran nothing but A100 stood at half the card, cards S6)
+      if (window.__spec?.letter?.big && n >= 1 && n <= 6) { const big = q('.big'); big.style.scale = ''; big.style.whiteSpace = 'nowrap'; big.style.fontSize = '200px'; const w = textW(big); if (w > 0) big.style.fontSize = `${Math.min(260, Math.floor(200 * 340 / w))}px`; }
+    }
+    // the overline, the name and the picture in three bands by their ink, not their line boxes (who-S7: the serif's
+    // glyphs rose 30 px above its box onto 难道是, and the trophy stood on the name): the name below the overline, the
+    // picture below the name, down to the card's foot
+    { const ink = (el) => { const r = document.createRange(); r.selectNodeContents(el); const g = r.getBoundingClientRect(), b = el.getBoundingClientRect(), k = el.offsetHeight / (b.height || 1); return { over: (b.top - g.top) * k, under: (g.bottom - b.bottom) * k }; };
+      const big = q('.big'), sub = q('.sub');
+      if (st.sub && st.title) { const s = ink(sub), g = ink(big), top = sub.offsetTop + sub.offsetHeight + Math.max(0, s.under) + Math.max(0, g.over) + 8 + (big.style.scale ? .15 * parseFloat(big.style.fontSize) : 0); if (top > big.offsetTop) big.style.top = `${top}px`; }   // (a narrowed name, taller, a little further: 又難又燒錢 met 為什麼偏要做, cards S1)
+      // (a product card's picture below its name's strokes too: set at 205 px it touched H100 / H800, h800 S3 kissErrors)
+      if ((silver || !st.drawn) && st.title && !(st.list || []).length) { const g = ink(big), top = big.offsetTop + big.offsetHeight + Math.max(0, g.under) + 16, pr = q('.prod'), d = top - pr.offsetTop;
+        // the product laid over the name's foot as the subject in front, as the reference's chips cross H100 / A100 (h800 S3
+        // review: the chip small under a plain name); its box kept, so it is not shrunk (cards S6: moved below, half size)
+        if (d > -24) { const lh = parseFloat(getComputedStyle(big).lineHeight) || parseFloat(getComputedStyle(big).fontSize), y = big.offsetTop + big.offsetHeight - lh * .3; pr.style.top = `${Math.round(Math.max(y, pr.offsetTop - 40))}px`; pr.style.zIndex = 3; pr.dataset.front = '';
+          // (and stops above the maker's strip: moved down under a larger name it covered the n of NVIDIA, cards S6)
+          if (st.logo) { const ch = q('.cface').offsetHeight || 0; if (ch > 0) pr.style.height = `${Math.max(180, Math.min(pr.offsetHeight, ch - 64 - 8 - parseFloat(pr.style.top)))}px`; } } }   // (one just under the name too: 2 px off H800 it touched, h800 S3)
+      if (paper && st.drawn && st.title) { const g = ink(big), top = big.offsetTop + big.offsetHeight + Math.max(0, g.under) + 16, foot = st.logo ? 446 : 500; Object.assign(q('.prod').style, { top: `${top}px`, height: `${Math.max(120, foot - top)}px` }); } }
+    // the label on a dark band across the card's foot (no logo strip there): the card's pictures stand above it
+    const band = !!(st.label && !st.logo && paper), B = band ? 66 : 0;
+    q('.band').style.display = band ? 'block' : 'none'; q('.band').textContent = band ? st.label : ''; q('.band').style.fontSize = '';
+    if (band) { const bw = q('.band').scrollWidth, w = q('.band').clientWidth; if (bw > w) q('.band').style.fontSize = `${Math.max(34, 40 * w / bw)}px`; }
+    // the list: under the name, one line a beat
+    q('.list').innerHTML = (st.list || []).map((x) => `<div><span>${String(x.text).replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]))}</span></div>`).join('');
+    if (window.__letter) window.__letter();   // (the list's lines in their face before they are measured: set after, 實力 ran under the phone, 歸 under the gold, cards S2)
+    const prof = PROF[st.img], cw = cd.el.offsetWidth || 400;
+    cd.pBig = cd.pList = null;
+    // (under the name's last line by its ink: a question set on two lines measured one, and 還真有點實力 lay over its AI？, cards S2)
+    if ((st.list || []).length) { const big = q('.big'), rg = document.createRange(); rg.selectNodeContents(big); const gb = rg.getBoundingClientRect(), bb = big.getBoundingClientRect(), kk = big.offsetHeight / (bb.height || 1), top = Math.max(big.offsetTop + big.offsetHeight, big.offsetTop + (gb.bottom - bb.top) * kk) + 14; q('.list').style.top = `${top}px`;
+      // the card as tall as its list, its band under it (who-S7: xAI ran into 把英偉達拉下馬 on a 510 px card)
+      cd.h = Math.max(510, top + q('.list').offsetHeight + 40 + B); cd.el.style.height = `${cd.h}px`;
+      // the list's picture as large as it fits beside the list's lines, never under their strokes: placed by what of it is
+      // opaque, row by row against each line's own width (a box beside the longest line reached into the list where a
+      // cut-out's margin was assumed: the trophy's handle lay on OpenAI, the gold bars under 血本無歸, who S7 and cards S2
+      // reviews of 2026-10-26); the short lines leave room for a wider picture beside them
+      const L0 = q('.list'), lines = [...L0.children].map((d) => ({ t: L0.offsetTop + d.offsetTop - 6, b: L0.offsetTop + d.offsetTop + d.offsetHeight + 6, r: L0.offsetLeft + d.firstChild.offsetWidth + 18 }));
+      const y0 = big.offsetTop + big.offsetHeight + 4, y1 = cd.h - B - 12;
+      if (prof) { const [bx0, by0, bx1, by1] = prof.box, ar = prof.w / prof.h;
+        const at = (dw) => { const dh = dw / ar, L = cw - 12 - bx1 * dw, T = y1 - by1 * dh; return { dw, dh, L, T, ok: prof.rows.every(([l], i) => { if (l == null) return true; const ya = T + i / prof.rows.length * dh, yb = T + (i + 1) / prof.rows.length * dh, x = L + l * dw; return lines.every((ln) => yb < ln.t || ya > ln.b || x >= ln.r); }) }; };
+        let dw = Math.min((cw - 24) / (bx1 - bx0), (y1 - y0) / (by1 - by0) * ar), p = at(dw);
+        while (!p.ok && dw > cw * .25) { dw *= .97; p = at(dw); }
+        // beside a long line the picture shrinks to a corner (cards S2: a phone beside 還真有點實力): then it goes under the
+        // list, the card grown to hold it at two fifths of its width or more
+        // (no taller than the frame holds above the subtitle band, 800 px with its zoom)
+        const lb = L0.offsetTop + L0.offsetHeight + 8, need = Math.min(260, (cw * .6) / (bx1 - bx0) / ar * (by1 - by0), 800 / (parseFloat(cd.el.style.zoom) || Z) - lb - 12 - B);
+        if ((!p.ok || p.dw < cw * .45) && need >= 140 && need / (by1 - by0) * ar * (bx1 - bx0) > p.dw * (bx1 - bx0)) {
+          cd.h = Math.max(cd.h, lb + need + 12 + B); cd.el.style.height = `${cd.h}px`; const Y1 = cd.h - B - 12, w2 = Math.min((cw - 24) / (bx1 - bx0), (Y1 - lb) / (by1 - by0) * ar);
+          p = { dw: w2, dh: w2 / ar, L: cw / 2 - (bx0 + bx1) / 2 * w2, T: Y1 - by1 * w2 / ar }; }
+        Object.assign(q('.prod').style, { left: `${Math.round(p.L)}px`, top: `${Math.round(p.T)}px`, width: `${Math.round(p.dw)}px`, height: `${Math.round(p.dh)}px`, bottom: 'auto', backgroundSize: '100% 100%', backgroundPosition: '0 0' });
+        // before the list comes the picture stands large in the card under the name, as it would with no list, and gives way
+        // as the first line comes (render): placed for the whole list from the first frame it sat small in a corner over two
+        // thirds of empty paper (cards S2 review)
+        { const Y0 = big.offsetTop + big.offsetHeight + 16, w2 = Math.min((cw - 24) / (bx1 - bx0), (y1 - Y0) / (by1 - by0) * ar);
+          cd.pList = { L: p.L, T: p.T, W: p.dw, H: p.dh }; cd.pBig = { L: cw / 2 - (bx0 + bx1) / 2 * w2, T: y1 - by1 * w2 / ar, W: w2, H: w2 / ar }; cd.listAt = Math.min(...st.list.map((x) => x.at ?? Infinity)); } }
+      else Object.assign(q('.prod').style, { left: '58%', width: '38%', top: 'auto', bottom: `${B + 12}px`, height: '30%', backgroundPosition: 'center' });
+    }
+    else { cd.el.style.height = ''; cd.h = cd.el.offsetHeight || 510;   // (its own height: a paper card is taller than 510, cards-S2)
+      // a drawn picture on a card of a few words fills the card from under the name to the label, as large as it fits
+      // (recap S7/S8 reviews: a strip of a GPU at a blank card's foot)
+      if (paper && st.drawn && st.title && [...String(st.title)].length <= 6 && prof) { const big = q('.big');
+        // laid over the name's foot as the subject in front (data-front: the reference's cabinet doors over 核心技术闭源, its gold
+        // bars across the title, recap S8 reviews: word above, picture below, two posters pasted flat); the checks hold
+        // what it hides of the name (framecheck frontMax); the card grown to give it 300 px
+        const lh = parseFloat(getComputedStyle(big).lineHeight) || parseFloat(getComputedStyle(big).fontSize) * 1.2, y0 = big.offsetTop + big.offsetHeight - lh * .18; cd.h = Math.max(cd.h, y0 + 300 + B + 10); cd.el.style.height = `${cd.h}px`; const y1 = cd.h - B - 10, [bx0, by0, bx1, by1] = prof.box, ar = prof.w / prof.h;
+        q('.prod').dataset.front = '';
+        const dw = Math.min((cw - 24) / (bx1 - bx0), (y1 - y0) / (by1 - by0) * ar), dh = dw / ar, L = cw / 2 - (bx0 + bx1) / 2 * dw, T = y1 - by1 * dh;
+        Object.assign(q('.prod').style, { left: `${Math.round(L)}px`, top: `${Math.round(T)}px`, width: `${Math.round(dw)}px`, height: `${Math.round(dh)}px`, bottom: 'auto', backgroundSize: '100% 100%', backgroundPosition: '0 0', zIndex: 3 }); }
+      else if (B && paper) { const pr = q('.prod'), bt = pr.offsetTop + pr.offsetHeight; if (bt > cd.h - B - 8) pr.style.height = `${Math.max(100, cd.h - B - 8 - pr.offsetTop)}px`; } }
+    // (every card raised so its foot stays above the subtitle band, not only a card with a list: cards-S2's label fell into it)
+    { const Zc = parseFloat(cd.el.style.zoom) || Z, y0 = parseFloat(cd.el.style.top) * Zc; if (y0 + cd.h * Zc > 860) cd.el.style.top = `${Math.max(60, 860 - cd.h * Zc) / Zc}px`; }   // (its zoom is the frame's Z unless it sets its own)
+    q('.prod').style.backgroundImage = `url('${st.img}')`; q('.logo').style.backgroundImage = st.logo ? `url('${st.logo}')` : 'none'; cd.lab.innerHTML = st.label && !band ? torn(st.label, 46, TH.accent) : ''; cd.lab.style.display = st.label && !band ? '' : 'none'; return;   // no label, no torn paper (it showed bare quotes: h800-S3); a banded card's label is its band
+  }
+  q('.cface').style.backgroundImage = `url('${K.card}')`; q('.cface').style.filter = toneFilter(st.tone);
+  // display lettering from the kit when the shot names it (chrome H100), else the model name set tone-on-tone by code
+  const let_ = st.lettering && K.files[st.lettering];
+  q('.let').style.backgroundImage = let_ ? `url('${let_}')` : 'none'; q('.big').textContent = let_ ? '' : st.title || ''; q('.big').style.color = 'rgba(40,0,0,.42)';
+  q('.sub').textContent = st.sub || ''; q('.sub').style.color = 'rgba(255,255,255,.85)';
+  q('.prod').style.backgroundImage = `url('${st.img}')`;
+  cd.lab.innerHTML = st.label ? torn(st.label, 46, TH.accent) : ''; cd.lab.style.display = st.label ? '' : 'none';   // no label, no torn paper (it showed bare quotes: h800-S3)
+};
+// the reference's tags (P24, open R05): no quote marks, the key words in red (mark), set large (the reference's are a
+// tenth of the frame tall: ours read at two thirds of that), and one may be the big closing line across the bottom
+// (side bottom); ours were small and quoted (stillcheck open-S5)
+const tagHtml = (t) => { const tx = String(t.text).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" }[c])), mk = t.mark && String(t.text).includes(t.mark) ? tx.replace(t.mark, `<b style="color:${TH.accent};font-weight:inherit">${t.mark}</b>`) : tx;
+  return REF ? `<span class="t">${mk}</span>` : torn(mk, t.size || 74, TH.accent); };
+const tags = (S.tags || []).map((t) => { const el = document.createElement('div'); el.className = 'paper'; const sz = t.size || Math.round((REF ? (t.side === 'bottom' ? 118 : 92) : 74) * (window.__spec?.letter?.big ? 1.18 : 1));   /* (a lettered page's tall face is .72 across where these sizes were set for .85: the main label came out a quarter of the frame, open S5 review) */ el.style.fontSize = sz + 'px'; el.innerHTML = tagHtml(t); layer.appendChild(el);
+  // (a tag over the presenter glows, and takes the reference's own treatment of the moment: bare on a shirt and a microphone
+  // it read light, open S5)
+  for (const w of el.querySelectorAll('.t')) window.__treat(w, S.treat || ['glow']); return { el, t }; });
+// what of a card's picture is opaque, row by row (48 rows: the leftmost and rightmost opaque column as a share of its
+// width) and its opaque box: the picture is placed by its body, not its box (a cut-out's margins differ, the trophy's
+// handles reach its edge). Unread (a page without file access) leaves the old placement.
+const PROF = {};
+const alphaProfile = (u) => new Promise((res) => { const i = new Image(); i.onerror = () => res(); i.onload = () => { try {
+  const W = 128, H = Math.max(8, Math.round(128 * i.naturalHeight / i.naturalWidth)), c = document.createElement('canvas'); c.width = W; c.height = H; const g = c.getContext('2d'); g.drawImage(i, 0, 0, W, H);
+  const d = g.getImageData(0, 0, W, H).data, N = 48, rows = []; let x0 = 1, y0 = 1, x1 = 0, y1 = 0;
+  for (let k = 0; k < N; k++) { let l = null, r = null; for (let y = Math.floor(k * H / N); y < Math.floor((k + 1) * H / N); y++) for (let x = 0; x < W; x++) if (d[(y * W + x) * 4 + 3] > 48) { if (l == null || x < l) l = x; if (r == null || x > r) r = x; }
+    rows.push(l == null ? [null, null] : [l / W, (r + 1) / W]); if (l != null) { x0 = Math.min(x0, l / W); x1 = Math.max(x1, (r + 1) / W); y0 = Math.min(y0, k / N); y1 = Math.max(y1, (k + 1) / N); } }
+  if (x1 > x0) PROF[u] = { w: i.naturalWidth, h: i.naturalHeight, rows, box: [x0, y0, x1, y1] }; } catch (e) {} res(); }; i.src = u; });
+Promise.all([document.fonts.ready, ...[K.card].map((u) => new Promise((r) => { const i = new Image(); i.onload = i.onerror = r; i.src = u; })), ...cards.flatMap((cd) => cd.states.map((st) => st.img)).filter(Boolean).map(alphaProfile)]).then(() => {
+  const n = { left: 0, right: 0 };
+  for (const g of tags) {
+    const side = g.t.side || 'right', w = g.el.offsetWidth, h = g.el.offsetHeight;
+    if (side === 'bottom') { g.x = g.t.x ?? (960 - w / 2); g.y = g.t.y ?? (790 - h); }   // clear of the subtitle band with the camera's push (open-S5)
+    // with a closing line across the bottom the side tags go up beside the head, as the reference stacks them (open R05)
+    else { g.x = g.t.x ?? (side === 'right' ? 1920 - 230 - w : 230); g.y = g.t.y ?? (REF ? ((S.tags || []).some((x) => x.side === 'bottom') ? 300 : 560) + n[side]++ * (h + 40) + (side === 'left' ? -50 : 0) : 250 + n[side]++ * (h + 50) + (side === 'left' ? -40 : 0)); }
+    // never across the presenter's head (S.face, found on the plate): out to its side, else under it (cards-S5)
+    const F = S.face, hit = () => F && g.x < F.x + F.w && g.x + w > F.x && g.y < F.y + F.h && g.y + h > F.y;
+    if (side !== 'bottom' && g.t.x == null && hit()) { g.x = side === 'left' ? Math.max(40, F.x - w - 30) : Math.min(1880 - w, F.x + F.w + 30); if (hit()) g.y = Math.min(790 - h, F.y + F.h + 30); }
+    g.el.style.left = g.x + 'px'; g.el.style.top = g.y + 'px'; g.dir = side === 'right' ? 1 : side === 'left' ? -1 : 0; g.rot = g.t.rot ?? (side === 'right' ? -1.5 : side === 'left' ? 1.5 : -.8);
+  }
+  // tags never cover the row the page marks: a tag over it moves up above it (stacked)
+  const mk = document.getElementById('cmark');
+  if (CU?.mark && mk) { const m = { top: parseFloat(mk.style.top), bottom: parseFloat(mk.style.top) + parseFloat(mk.style.height) }; let y = m.top - 40;
+    // every tag at or below the row goes above it, stacked upward in reading order (the last said nearest the row)
+    const low = tags.filter((g) => g.y + g.el.offsetHeight > m.top - 20);
+    for (const g of [...low].reverse()) { y -= g.el.offsetHeight + 24; g.y = y; g.el.style.top = `${g.y}px`; }
+    // then no two tags on a side overlap: from the lowest up, each sits above the one below it
+    for (const side of [-1, 1]) { const col = tags.filter((g) => g.dir === side).sort((a, b) => b.t.at - a.t.at);   // the last said lowest
+      for (let i = 1; i < col.length; i++) { const below = col[i - 1], h = col[i].el.offsetHeight; if (col[i].y + h > below.y - 16) { col[i].y = below.y - h - 24; col[i].el.style.top = `${col[i].y}px`; } } } }
+  window.__ready = true; render(S.at);
+});
+const CU = S.curl;
+if (CU) { $('#curl').style.display = 'block'; $('#cimg').src = CU.src;
+  // the page shown at frame height on the left (the card keeps the right); its mark scaled from page pixels
+  // read as the reference shows it: rows large enough to read (page width ~1.25 frames), the marked row at 2/3 height
+  // the marked row whole within the left 1100 px, clear of the card (from x 1175) (the card keeps the right: h800-S3, the table ran under the card and
+  // off the frame's edge at 2300 px wide)
+  const [PWc, PHc] = CU.size || [1920, 1080], k = CU.mark ? Math.min(2300 / PWc, 1060 / (CU.mark.x + CU.mark.w + 40)) : 1080 / PHc, oy0 = CU.mark ? 700 - (CU.mark.y + CU.mark.h / 2) * k : 0, oy = PHc * k <= 1020 ? Math.max(oy0, 40) : oy0;   // (a page short enough to show whole keeps its top in the frame: h800-S3 lost its first row)
+  Object.assign($('#cimg').style, { left: '20px', top: `${oy}px`, height: 'auto', width: `${PWc * k}px` });
+  // the red box round the marked row (marks.js; measured by the line like every mark on page words)
+  if (CU.mark) { window.__cframe = TextMarks.frame(null, CU.mark, { el: $('#cmark'), s: k, ox: 20, oy, label: (CU.highlight || []).join(' / '), at: CU.at + (CU.dur || .9) + .2, end: CU.at + (CU.dur || .9) + .6 }); $('#cmark').style.display = 'block'; }
+  window.__curlK = k;
+  // (the label names the page, so it lies on the page's corner: over the card at x 1180 it named the card, h800-S3)
+  if (CU.label) { $('#clab').style.display = 'block'; $('#clab').className = 'paper ink-dark';   /* (on the light curled page: white with no paper under it read at 3, h800 S3) */ $('#clab').style.fontSize = '50px'; $('#clab').innerHTML = torn(CU.label, 50, TH.accent, false); } }
+// a card on the cut is carried over from the shot before: whole from the first frame, never entering again (cards-S2
+// popped both cards in afresh at the cut, a crossfaded double of the shot before, film review 1:51)
+for (const cd of cards) if (cd.c.at != null && cd.c.at - S.at < .05) cd.c = { ...cd.c, at: S.at - 1 };
+window.render = (t) => {
+  if (CU) {   // the fold line x + y = d sweeps from the top-left corner to beyond the bottom-right
+    const k = seg(t, CU.at, CU.at + (CU.dur || .9)), d = (k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2) * 3200;
+    $('#curl').style.visibility = k > 0 ? 'visible' : 'hidden';
+    $('#cpage').style.clipPath = `polygon(0 0, ${d}px 0, 0 ${d}px)`;
+    $('#cflap').style.clipPath = `polygon(${d}px 0, 0 ${d}px, ${d * .62}px ${d * .62}px)`;
+    $('#cflap').style.opacity = 1 - seg(k, .75, 1);
+    { const d = seg(t, CU.at, S.end); $('#cimg').parentElement.style.transform = `translate(${-30 * d}px, ${-24 * d}px) scale(${1 + .04 * d})`; $('#cimg').parentElement.style.transformOrigin = '0 0'; }
+    const mk = seg(t, CU.at + (CU.dur || .9) + .2, CU.at + (CU.dur || .9) + .6); if (window.__cframe) window.__cframe.draw(mk);
+    const lk = seg(t, CU.at + (CU.dur || .9), CU.at + (CU.dur || .9) + .15); $('#clab').style.opacity = lk; $('#clab').style.transform = `rotate(-2deg) scale(${1.2 - .2 * lk})`;
+  }
+  { const sb = (S.subs || []).find((x) => t >= x.at && t < x.end); document.getElementById('sub').textContent = sb ? sb.text : ''; }
+  $('#pres').style.transform = `scale(${1 + .03 * seg(t, S.at, S.end)})`;
+  for (const cd of cards) {
+    const k = seg(t, cd.c.at, cd.c.at + .42), gone = cd.c.end != null && t >= cd.c.end, vis = k > 0 && !gone;
+    let idx = 0, flip = 0;
+    cd.states.forEach((st, j) => { if (j && t >= st.at) idx = j; });
+    for (const [j, st] of cd.states.entries()) if (j && Math.abs(t - st.at) < .16) { flip = 1 - Math.abs(t - st.at) / .16; idx = t < st.at ? j - 1 : j; }
+    if (idx !== cd.shown) { fill(cd, cd.states[idx]); cd.shown = idx; }
+    // in (reference P22, 15 fps): the card stays put and is uncovered by a slanted white glint sweeping left to right, ~0.5 s
+    const w = E.out(k) * 140 - 20, off = 0;
+    cd.el.style.visibility = vis ? 'visible' : 'hidden';
+    cd.el.style.clipPath = k < 1 ? `polygon(-30% 0, ${w + 12}% 0, ${w - 12}% 100%, -30% 100%)` : 'none';
+    const gl = cd.el.querySelector('.glint'); gl.style.left = `calc(${w}% - 17px)`; gl.style.opacity = k > 0 && k < 1 ? 1 : 0;
+    // at rest the card keeps moving: it rises slowly over its stay, its label with it, and a long stay gets a second
+    // glint half way (a card and the still stand-in stood 12 s without a pixel moving, film review 16, 5:36 and 6:40)
+    const life = seg(t, cd.c.at + .42, Math.max(cd.c.at + .5, cd.c.end ?? S.end)), rise = -12 * life;
+    cd.el.style.transform = `translateY(${rise.toFixed(2)}px)`; cd.el.querySelector('.in').style.transform = 'none'; cd.rise = rise;
+    // swap (reference: the new card comes up out of white): a white wash over the card, the content changes under it
+    let wash = 0; for (const [j, st] of cd.states.entries()) if (j) { if (t >= st.at - .12 && t < st.at) wash = seg(t, st.at - .12, st.at); else if (t >= st.at && t < st.at + .45) wash = 1 - seg(t, st.at, st.at + .45); }
+    cd.el.querySelector('.wash').style.opacity = wash;
+    const stay = (cd.c.end ?? S.end) - cd.c.at, mid = cd.c.at + stay / 2, gk = stay > 6 && t >= mid - .1 ? seg(t, mid, mid + .9) : seg(t, cd.c.at + .2, cd.c.at + .9); cd.el.querySelector('.gloss').style.backgroundPosition = `${100 - 100 * gk}% 0`;
+    cd.el.querySelector('.prod').style.transform = `translate(${-6 * seg(t, cd.c.at, S.end)}px, 0) rotate(${cd.states[idx].rot ?? 0}deg)`;
+    if (cd.pBig && cd.pList && isFinite(cd.listAt)) { const u = seg(t, cd.listAt - .2, cd.listAt + .3), k = u < .5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2, a = cd.pBig, b = cd.pList, pr = cd.el.querySelector('.prod');
+      Object.assign(pr.style, { left: `${(a.L + (b.L - a.L) * k).toFixed(1)}px`, top: `${(a.T + (b.T - a.T) * k).toFixed(1)}px`, width: `${(a.W + (b.W - a.W) * k).toFixed(1)}px`, height: `${(a.H + (b.H - a.H) * k).toFixed(1)}px` }); }
+    (cd.states[idx].list || []).forEach((x, j) => { const li = cd.el.querySelectorAll('.list div')[j]; if (li) { const a = seg(t, x.at, x.at + .3); li.style.opacity = a; li.style.transform = `translateX(${(1 - a) * -16}px)`; } });
+    // the label: lands after the card, hanging off its bottom edge
+    const lk = seg(t, (cd.states[idx].at ?? cd.c.at) + .35, (cd.states[idx].at ?? cd.c.at) + .5);
+    const r = cd.el.getBoundingClientRect();
+    cd.lab.style.visibility = vis && lk > 0 && wash < .5 ? 'visible' : 'hidden';
+    { const bd = cd.el.querySelector('.band'); if (bd) bd.style.visibility = lk >= 1 && wash < .5 ? '' : 'hidden'; }   // (the printed label too, not while the card swells in or out: it swept the subtitle band, who S7)   // (not while the card swells on its way in or out: its label swept through the subtitle band, cards-S2)
+    // (held above the subtitle band when the card's foot reaches it under a push — hidden there, the label of a pushed-in
+    // card came and went between frames, cards-S2 review)
+    cd.lab.style.left = `${(parseFloat(cd.el.style.left) + 30 + off) * Z}px`; cd.lab.style.top = `${Math.min((parseFloat(cd.el.style.top) + (cd.h || 510)) * Z - 40, 860 / Math.max(1, (window.__cameraState && (S.camera || []).length ? window.__cameraState(S.camera, t).zoom || 1 : 1)) - 30)}px`;
+    cd.lab.style.transform = `translateY(${((cd.rise || 0) * Z).toFixed(2)}px) rotate(-1.5deg) scale(${1.2 - .2 * E.out(lk)})`;   /* (rising with its card) */
+    // a card the camera has pushed past (in on the other card, as the reference's cards R01 at 102 s) steps back: no
+    // half a question at the frame's edge (cards-S1)
+    const cs = (S.camera || []).length && window.__cameraState ? window.__cameraState(S.camera, t) : null;
+    if (cs) { const z = Math.max(1, cs.zoom || 1), L = 960 + (cs.x || 0) * 1920 - 960 / z, R = 960 + (cs.x || 0) * 1920 + 960 / z, x0 = parseFloat(cd.el.style.left) * Z, x1 = x0 + 400 * Z, share = Math.max(0, Math.min(R, x1) - Math.max(L, x0)) / (x1 - x0);
+      const k2 = share >= .97 ? 1 : Math.max(0, (share - .55) / .42) * .5; cd.el.style.opacity = k2; cd.lab.style.opacity = k2; }
+  }
+  for (const g of tags) {
+    const k = seg(t, g.t.at, g.t.at + .12), gone = g.t.end != null && t >= g.t.end;
+    g.el.style.visibility = k > 0 && !gone ? 'visible' : 'hidden';
+    // slammed on (from 1.35 to its size in 0.12 s: the reference's tags land as a beat of their own)
+    g.el.style.transform = `rotate(${g.rot}deg) scale(${1.35 - .35 * E.out(k)})`;
+  }
+};
+</script>
+</body></html>

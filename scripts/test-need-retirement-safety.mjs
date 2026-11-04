@@ -1,0 +1,32 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import {updateMaterialNeeds} from '../apps/studio-next/src/lib/recipe-board/writer.mjs';
+import {needPrint, retireChangedNeeds, fetchApproved} from '../apps/studio-next/src/lib/recipe-board/materials.mjs';
+import {renderProject} from '../apps/studio-next/src/lib/recipe-board/render.mjs';
+const root=fs.mkdtempSync(path.join(os.tmpdir(),'need-safety-'));
+try {
+ const cfg={dataDir:root,repoRoot:root,sourceRoot:root}, id='fixture', dir=path.join(root,'projects',id,'materials'); fs.mkdirSync(dir,{recursive:true});
+ fs.writeFileSync(path.join(root,'projects',id,'project.json'),JSON.stringify({id}));
+ const a={shotId:'B01',kind:'news',form:'photo',original:'a'}, b={...a,shotId:'B02'};
+ const files={'needs.json':{needs:[a,b]},'candidates.json':{shots:{B01:{need:a},B02:{need:b}}},'bindings.json':{shots:{B01:{needPrint:needPrint(a)},B02:{needPrint:needPrint(b)}}},'approvals.json':{batches:[{items:[{shotId:'B01',status:'approved'},{shotId:'B02',status:'approved'}]}]}};
+ for(const [f,v] of Object.entries(files)) fs.writeFileSync(path.join(dir,f),JSON.stringify(v));
+ const snapshot=()=>Object.fromEntries(Object.keys(files).map(f=>[f,fs.readFileSync(path.join(dir,f),'utf8')]));
+ const before=snapshot();
+ await assert.rejects(updateMaterialNeeds(cfg,id,[{...a,original:'changed'}],new Set(['B01'])),/disabled|blocked/i);
+ assert.deepEqual(snapshot(),before,'no partial writes or changes to other shots/approvals');
+ fs.writeFileSync(path.join(dir,'needs.json'),JSON.stringify({needs:[{...a,original:'changed'},b]}));
+ const after=snapshot();
+ assert.throws(()=>retireChangedNeeds(cfg,id),/disabled|blocked/i);
+ assert.deepEqual(snapshot(),after,'retirement never mutates historical selections');
+ await fetchApproved(cfg,id);
+ const fetched=snapshot();
+ assert.deepEqual(JSON.parse(fetched['approvals.json']).batches[0].items[0],files['approvals.json'].batches[0].items[0],'stale approval preserved');
+ assert.equal(JSON.parse(fetched['approvals.json']).batches[0].items[1].status,'failed','invalid unrelated approval is processed, not silently skipped');
+ assert.deepEqual(JSON.parse(fetched['bindings.json']),files['bindings.json']);
+ assert.equal(fetched['needs.json'],after['needs.json']); assert.equal(fetched['candidates.json'],after['candidates.json']);
+ await assert.rejects(renderProject(cfg,id,{only:new Set(['B01'])}),/disabled|blocked/i,'ordinary render refuses known stale slot');
+ assert.deepEqual(snapshot(),fetched);
+ console.log('need retirement safety brake: passed');
+} finally { fs.rmSync(root,{recursive:true,force:true}); }

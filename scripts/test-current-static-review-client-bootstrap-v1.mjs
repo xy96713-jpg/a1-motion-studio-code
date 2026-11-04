@@ -1,0 +1,28 @@
+#!/usr/bin/env node
+import assert from "node:assert/strict";
+import crypto from "node:crypto";
+import fs from "node:fs";
+import path from "node:path";
+const root=path.resolve(import.meta.dirname,"..");
+const publicRoot=path.join(root,"apps/studio-next/public");
+const bootstrap=JSON.parse(fs.readFileSync(path.join(publicRoot,"generated/system-line/editorial-asset-workbench-v1/client-bootstrap.json"),"utf8"));
+const production=bootstrap.workspace?.production;
+const wholeFilmReviewReady=production?.authority?.nextAction?.id==="review-current-whole-film-540p";
+const wholeFilmStaticBoardReady=production?.authority?.nextAction?.id==="review-whole-film-static-board";
+const board=production?.shotIntelligence?.wholeFilmStaticBoard;
+assert.equal(bootstrap.snapshotKind,"PACKAGING_ONLY");
+assert.equal(wholeFilmStaticBoardReady||wholeFilmReviewReady,true);
+assert.equal(production?.authority?.currentStage,wholeFilmReviewReady?"whole-film-540p-review":"whole-film-static-board-review");
+assert.equal(board?.contract,"A1WholeFilmStaticBoard/v1");
+assert.equal(board?.status,"PENDING_USER_APPROVAL");
+assert.equal(board?.approvalAllowed,true);
+assert.equal(board?.generationPerformed,false);
+assert.equal(board?.assemblyCreated,false);
+assert.equal(board?.timelineBoard?.itemCount,34);
+const boardFile=path.join(publicRoot,board.publicUrl.replace(/^\//u,""));
+assert.equal(crypto.createHash("sha256").update(fs.readFileSync(boardFile)).digest("hex"),board.sha256);
+const source=fs.readFileSync(path.join(root,"apps/studio-next/src/app/system-line-visual-workbench/PackagingWorkbenchSurface.tsx"),"utf8");
+assert.ok(source.indexOf("if (ledgerStaticReviewCurrent)")<source.indexOf("if (packagingDeliveryContractReview)"));
+for(const marker of ["data-a1-current-visual-ledger","data-a1-static-storyboard-rework","data-a1-motion-frozen","data-a1-current-static-board-sha"])assert.ok(source.includes(marker));
+for(const marker of ["data-a1-current-whole-film-540p-review","data-a1-current-whole-film-video","data-a1-current-whole-film-contact-sheet","data-a1-motion-spec-ready-count"])assert.ok(source.includes(marker));
+console.log(JSON.stringify({status:"PASS",contract:"A1CurrentStaticReviewClientBootstrapTest/v1",workspaceSha256:bootstrap.workspaceSha256,boardSha256:board.sha256,timelineBoardSha256:board.timelineBoard.sha256,historicalUiPrecedenceBlocked:true,motionFrozen:true,userApprovalRequired:true},null,2));

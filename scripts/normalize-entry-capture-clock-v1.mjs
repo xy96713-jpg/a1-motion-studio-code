@@ -1,0 +1,25 @@
+import fs from "node:fs";
+import path from "node:path";
+import crypto from "node:crypto";
+import {execFileSync} from "node:child_process";
+import {auditContinuousSourceFrameClock} from "../apps/studio-next/src/lib/a1-continuous-screen-source-mapping-v1.mjs";
+const root=path.resolve(import.meta.dirname,".."),file=process.argv[2];
+const read=p=>JSON.parse(fs.readFileSync(path.resolve(root,p))),hash=p=>crypto.createHash("sha256").update(fs.readFileSync(path.resolve(root,p))).digest("hex");
+const report=read(file),source=path.resolve(root,report.output.path);
+if(report.demonstrationScope!=="ENTRY_PREVIEW"||hash(source)!==report.output.sha256)throw new Error("ENTRY_CLOCK_SOURCE_UNVERIFIED");
+const info=JSON.parse(execFileSync("ffprobe",["-v","error","-select_streams","v:0","-show_entries","stream=time_base,nb_frames:frame=best_effort_timestamp_time","-of","json",source],{encoding:"utf8"}));
+const times=info.frames.map(f=>Number(f.best_effort_timestamp_time)),offsetMs=times[0]*1000;
+const [n,d]=info.streams[0].time_base.split("/").map(Number);
+if(offsetMs<0||offsetMs>1000/60)throw new Error("ENTRY_CLOCK_OFFSET_OUT_OF_BOUND");
+auditContinuousSourceFrameClock({timestamps:times.map(t=>t-times[0]),fps:60,timeBaseSeconds:n/d});
+const dir=path.join(root,"work/screen-production-integration-v1",`entry-clock-${report.output.sha256.slice(0,16)}`),output=path.join(dir,"source.mp4"),reportPath=path.join(dir,"report.json");
+if(fs.existsSync(reportPath)){const cached=read(reportPath);if(hash(cached.output.path)!==cached.output.sha256)throw new Error("ENTRY_CLOCK_CACHE_CORRUPT");console.log(JSON.stringify({status:"CACHE_HIT",reportPath:path.relative(root,reportPath)}));process.exit(0);}
+fs.mkdirSync(dir,{recursive:true});
+execFileSync("ffmpeg",["-v","error","-y","-i",source,"-vf","setpts=N/(60*TB)","-fps_mode","passthrough","-an","-c:v","libx264","-preset","veryfast","-crf","0","-pix_fmt","yuv420p","-video_track_timescale","15360",output]);
+const pixelHashes=p=>execFileSync("ffmpeg",["-v","error","-i",p,"-map","0:v:0","-vsync","0","-f","framemd5","-"],{encoding:"utf8"}).split("\n").filter(l=>l&&!l.startsWith("#")).map(l=>l.split(",").at(-1).trim());
+const before=pixelHashes(source),after=pixelHashes(output);
+if(before.length!==after.length||before.some((v,i)=>v!==after[i]))throw new Error("ENTRY_CLOCK_PIXELS_CHANGED");
+const map=t=>Math.max(0,t-offsetMs),durationMs=after.length/60*1000;
+const mapped={...report,status:"INTERNAL_CLOCK_NORMALIZED_ENTRY",normalization:{contract:"A1EntryFrameClockNormalization/v1",sourceReportPath:file,sourceReportSha256:hash(file),sourceVideoSha256:report.output.sha256,removedStartOffsetMs:offsetMs,subFrameJitterBoundMs:1000*n/d,frameCount:after.length,allDecodedFrameHashesEqual:true,playbackRate:1},events:report.events.map(e=>({...e,sourceOutputTimeMs:e.outputTimeMs,outputTimeMs:map(e.outputTimeMs)})),domTargets:report.domTargets.map(t=>({...t,capturedAtMs:map(t.capturedAtMs)})),pointerTargets:report.pointerTargets.map(t=>({...t,atMs:map(t.atMs)})),layoutStability:{...report.layoutStability,samples:report.layoutStability.samples.map(s=>({...s,sourceOutputTimeMs:s.outputTimeMs,outputTimeMs:map(s.outputTimeMs)}))},cursorTelemetry:Object.fromEntries(Object.entries(report.cursorTelemetry).map(([k,v])=>[k,v.map(p=>({...p,sourceOutputTimeMs:p.tMs,tMs:map(p.tMs)}))])),caretTelemetry:report.caretTelemetry.map(p=>({...p,sourceOutputTimeMs:p.tMs,tMs:map(p.tMs)})),textRangeEvidence:[],sourceTextRangeEvidenceReport:file,evidence:null,output:{...report.output,path:path.relative(root,output),sha256:hash(output),durationMs,frameCount:after.length,fullDecodePass:true}};
+fs.writeFileSync(reportPath,JSON.stringify(mapped,null,2));
+console.log(JSON.stringify({status:"CLOCK_NORMALIZED_PIXELS_IDENTICAL",reportPath:path.relative(root,reportPath),offsetMs,frames:after.length}));

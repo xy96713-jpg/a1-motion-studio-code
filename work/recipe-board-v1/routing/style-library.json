@@ -1,0 +1,439 @@
+{
+ "about": "Style library from the user's Pinterest (style-lab/pinterest-v1: 289 pins, OpenCLIP clusters, palettes.json). One film picks ONE ink set and two to four families; every family prints with that ink set, only the process changes. Rules and their reasons: DESIGN-harmony.md. A family dresses the packaging parts of the director's cards (roles); only metaphor shots get a whole drawn or 3D plate. Evidence is never restyled beyond grade and highlight.",
+ "refsDir": "style-lab/pinterest-v1/img",
+ "inkSets": {
+  "newsprint-red": {
+   "name": "报纸红",
+   "paper": "#E6DFD2",
+   "ink": "#1E1B1C",
+   "accent": "#D23A2A",
+   "second": "#D9A93A",
+   "mood": "news, money, crisis, history",
+   "from": "clusters 4, 5"
+  },
+  "klein": {
+   "name": "克莱因蓝",
+   "paper": "#E6DFD2",
+   "ink": "#1E1B1C",
+   "accent": "#2B3FB0",
+   "second": "#D23A2A",
+   "mood": "technology, science, calm explanation",
+   "from": "clusters 2, 3, 8"
+  },
+  "showa": {
+   "name": "昭和三色",
+   "paper": "#E4D9C6",
+   "ink": "#2A211F",
+   "accent": "#C9342A",
+   "second": "#3B4CA4",
+   "third": "#C69F34",
+   "mood": "culture, business stories, East Asian history",
+   "from": "cluster 5"
+  },
+  "night-screen": {
+   "name": "夜屏",
+   "paper": "#151718",
+   "ink": "#D2D3D0",
+   "accent": "#4C3EDB",
+   "second": "#85A025",
+   "mood": "AI, computing, the future; dark base",
+   "from": "clusters 2, 3, 7"
+  },
+  "riso-pink": {
+   "name": "粉蓝套印",
+   "paper": "#EDE7DE",
+   "ink": "#232026",
+   "accent": "#CB699C",
+   "second": "#505FAF",
+   "mood": "light topics, youth culture, consumer products",
+   "from": "cluster 1"
+  }
+ },
+ "families": {
+  "xerox-halftone": {
+   "name": "黑白网点海报",
+   "clusters": [
+    4
+   ],
+   "base": "paper",
+   "process": {
+    "process": "halftone",
+    "inks": [
+     "paper",
+     "ink"
+    ],
+    "cell": 8
+   },
+   "fits": [
+    "presenter-tags",
+    "title"
+   ],
+   "look": "one bold object or head in coarse black halftone on paper, a slogan in heavy condensed type, tiny mono captions in the corners",
+   "type": {
+    "display": "heavy condensed sans, all caps for Latin",
+    "small": "mono"
+   },
+   "avoid": "more than one ink besides black; soft gradients",
+   "refs": [
+    "board-1cd20809c0ba78a2d88233a455f64dda.jpg",
+    "board-96c2a1de6ad39553b6bd6c09f77fd811.jpg",
+    "board-5b3ad8e66ee7712f2738a42cd76a3739.jpg",
+    "home-b3050a44b3210b097e1691e7899b179b.jpg",
+    "home-ebfcbcf972633db583ca988a62199a56.jpg",
+    "home-29d42e10788e75ad24b7b3721c278762.jpg"
+   ]
+  },
+  "riso-two-ink": {
+   "name": "双色套印",
+   "clusters": [
+    1,
+    2
+   ],
+   "base": "paper",
+   "process": {
+    "process": "riso",
+    "inks": [
+     "paper",
+     "ink",
+     "accent"
+    ],
+    "cell": 7,
+    "register": 4
+   },
+   "fits": [
+    "presenter-tags",
+    "diagram",
+    "data"
+   ],
+   "look": "a real or modelled object printed in two screened inks, slightly off register; flat paper around it",
+   "type": {
+    "display": "heavy serif or condensed sans",
+    "small": "mono"
+   },
+   "avoid": "on screenshots and readable pages (dots eat text)",
+   "refs": [
+    "board-e9453b064e85f9e4b7fd559212572782.jpg",
+    "board-5632cdd966e4da91d081cba2fbf1d741.jpg",
+    "board-d0af9347e05cdd1eda11913f27f7ddeb.jpg",
+    "board-1236e55925ee4c929d62be7aa60c2446.jpg",
+    "home-9acb754a1a39ddc9b0c50f3bb5561cb7.jpg",
+    "home-73c732dfe6e367d85d811e50addc133a.jpg"
+   ]
+  },
+  "showa-poster": {
+   "name": "昭和丝网海报",
+   "clusters": [
+    5
+   ],
+   "base": "paper",
+   "process": {
+    "process": "screen",
+    "inks": [
+     "paper",
+     "ink",
+     "accent",
+     "second",
+     "third"
+    ],
+    "register": 3
+   },
+   "fits": [
+    "metaphor"
+   ],
+   "look": "one strong central figure in flat screen-print colour, big vertical Chinese type, a thin rule and small caption block",
+   "type": {
+    "display": "heavy serif, vertical for Chinese",
+    "small": "mono or light serif"
+   },
+   "avoid": "two in a row (it is a chapter mark, not body); photo-real lighting",
+   "refs": [
+    "board-1cbe495185c0d8eff94264f11de40425.jpg",
+    "board-74de25a34875176d65b5de9c28cab257.jpg",
+    "board-be8ac39267c5292395fb3958e5f7dc3d.jpg",
+    "home-2ff1c7dbd418608fb123a1eaef52f4c8.jpg",
+    "home-01ee0c91d4e93c6edcf6dd2320684b31.jpg",
+    "home-3aaf7ddfe81bae49a22b4b567603b973.jpg"
+   ]
+  },
+  "bitmap-screen": {
+   "name": "像素抖动屏",
+   "clusters": [
+    2,
+    7
+   ],
+   "base": "dark",
+   "process": {
+    "process": "dither",
+    "inks": [
+     "paper",
+     "ink"
+    ],
+    "pixel": 3
+   },
+   "fits": [
+    "presenter-tags",
+    "data",
+    "diagram"
+   ],
+   "look": "1-bit dithered image in the light ink on the dark base (the old Mac look); the accent only for small marks and readouts; old OS window chrome drawn in code",
+   "type": {
+    "display": "pixel or mono",
+    "small": "mono"
+   },
+   "avoid": "faces of real people at small size (dither breaks them); long Chinese text in pixel fonts",
+   "refs": [
+    "board-bcd86df219cbfd135f5c121964c40b5e.jpg",
+    "board-f9223809b9fc438f4f64beb1fc152ec5.jpg",
+    "board-0df0238f6df300f18e32544cc51c2596.jpg",
+    "home-996dde2e69ccd5c5ac587d19147a4fc2.jpg",
+    "home-3d59462319ab9a86d9a9736c03f7b76c.jpg",
+    "home-c4856a15d5aae72641fc8bc8b01b5084.jpg"
+   ]
+  },
+  "retro-future": {
+   "name": "复古未来空间",
+   "clusters": [
+    3
+   ],
+   "base": "dark",
+   "process": {
+    "process": "screen",
+    "inks": [
+     "paper",
+     "ink",
+     "accent"
+    ],
+    "register": 2
+   },
+   "fits": [
+    "metaphor"
+   ],
+   "look": "a quiet surreal space (grid floor, arch, old computer in a landscape), one small figure, cold light; few flat value bands",
+   "type": {
+    "display": "light wide sans or mono",
+    "small": "mono"
+   },
+   "avoid": "busy scenes; more than one subject",
+   "refs": [
+    "board-1194269fb9b86fb0d778fa77622a149a.jpg",
+    "board-e68ada4995908144e1e8ccfbd0d5923e.jpg",
+    "board-91f39919bd419f6fe51ec3e249822219.jpg",
+    "home-af30ee64354f05800e2725e95f835e56.jpg",
+    "home-89a046fffa31b08fd284118c4168b590.jpg",
+    "home-83e2ce7f461cd72a5e6d21d8aac3a4fb.jpg"
+   ]
+  },
+  "flat-surreal": {
+   "name": "迷幻平涂插画",
+   "clusters": [
+    8
+   ],
+   "base": "paper",
+   "process": {
+    "process": "screen",
+    "inks": [
+     "paper",
+     "ink",
+     "accent",
+     "second"
+    ],
+    "register": 3
+   },
+   "fits": [
+    "metaphor"
+   ],
+   "look": "a flat illustrated metaphor with a stippled texture, framed by a thin border; strong outline shapes",
+   "type": {
+    "display": "heavy serif",
+    "small": "mono"
+   },
+   "avoid": "for facts (it is clearly drawn); more than once a chapter",
+   "refs": [
+    "board-7af5307bda4e96076997f9b2e9b86dbd.jpg",
+    "board-455433e65307ea4c29aad7378640ce72.jpg",
+    "board-40443ff38a403df3c13159e3435deb4f.jpg",
+    "home-4ba76d4a4fc4fa7c69371518c0e84295.jpg",
+    "home-459e2c3d96ab2d3de2fdb47d2b011b24.jpg",
+    "home-e6d126fdb3261f5e3a3ed0f06d835947.jpg"
+   ]
+  },
+  "matte-surreal": {
+   "name": "哑光超现实 3D",
+   "clusters": [
+    3
+   ],
+   "base": "paper",
+   "process": null,
+   "fits": [
+    "metaphor",
+    "diagram"
+   ],
+   "look": "a real-looking 3D scene photographed on film: matte plaster, concrete or stone with surface wear, soft daylight and long shadows, a vast calm space, one tiny human figure for scale, one accent colour only on one surface",
+   "avoid": "glossy CG, plastic, neon, bloom, sci-fi glow, busy detail; text in the image",
+   "type": {
+    "display": "heavy serif in the empty sky or ground the plate leaves free",
+    "small": "mono"
+   },
+   "refs": [
+    "home-b3abdd21738eba95cf455811cf0ea02e.jpg",
+    "home-789a875fa5667b22489fbd79f500e6fe.jpg",
+    "home-f55ba8873858f7b7b265073372a81dff.jpg",
+    "home-af30ee64354f05800e2725e95f835e56.jpg",
+    "home-55f91b5b2f6deca0511d1a40079b820c.jpg"
+   ]
+  },
+  "chrome-object": {
+   "name": "铬金属物件",
+   "clusters": [
+    1
+   ],
+   "base": "paper",
+   "process": null,
+   "fits": [
+    "presenter-tags",
+    "title"
+   ],
+   "look": "a product photograph of a polished chrome object with real studio reflections, dust and film grain on a plain seamless background",
+   "avoid": "rainbow holographic gradients, neon, toy-like plastic shine; more than one per chapter",
+   "type": {
+    "display": "heavy serif",
+    "small": "mono"
+   },
+   "refs": [
+    "board-6dd2639dc2ff5525b0004bdd8ae0213e.jpg"
+   ]
+  }
+ },
+ "harmony": {
+  "valueRangeMin": 55,
+  "chromaShareMax": 0.35,
+  "inkDeltaMax": 14,
+  "familiesPerFilm": [
+   2,
+   4
+  ],
+  "sameFamilyRunMax": 3,
+  "chapterMarkFamilies": [
+   "showa-poster",
+   "flat-surreal"
+  ],
+  "offInkMax": 0.15
+ },
+ "roles": {
+  "about": "What a style may change in each director category (style-lab/reference-hupo/DIRECTOR-GRAMMAR.md). The director picks the category and the card; the style only changes the look of the card's packaging parts. Evidence stays real; a whole drawn frame is only for metaphor.",
+  "P": {
+   "name": "纯口播",
+   "hupo": "presenter only, subtitles",
+   "style": [
+    "subtitle"
+   ]
+  },
+  "PT": {
+   "name": "口播 + 叠加",
+   "hupo": "scanned paper tags with a red keyword; aged paper side card with a gold halftone prop; left/right poster cards; brushed-metal product card",
+   "style": [
+    "card",
+    "prop",
+    "type",
+    "accent"
+   ]
+  },
+  "T": {
+   "name": "大字",
+   "hupo": "bone-white 3D metal letters over the presenter or real b-roll, crossing the cut",
+   "style": [
+    "titleMaterial",
+    "type"
+   ],
+   "keep": "the plate under it is real (presenter or footage)"
+  },
+  "EN": {
+   "name": "新闻 / 网页",
+   "hupo": "the real page, push to the sentence, black reverse highlight; numbers typed out",
+   "style": [
+    "highlight",
+    "grade"
+   ],
+   "keep": "the page itself"
+  },
+  "ED": {
+   "name": "数据",
+   "hupo": "real ticker table; paper data collage (logos + big numbers); spec tables beside a dark product render",
+   "style": [
+    "card",
+    "type",
+    "accent",
+    "grade"
+   ],
+   "keep": "every number from the sources"
+  },
+  "EP": {
+   "name": "人物",
+   "hupo": "real photos, fast cuts with torn-paper / scan transitions; nameplate",
+   "style": [
+    "transition",
+    "nameplate",
+    "grade"
+   ],
+   "keep": "the photo"
+  },
+  "EO": {
+   "name": "公司 / 产品",
+   "hupo": "real logo, building, product photo",
+   "style": [
+    "grade",
+    "badge"
+   ],
+   "keep": "the logo and the product"
+  },
+  "B": {
+   "name": "空镜",
+   "hupo": "real stock footage; one motif (dollars) six times",
+   "style": [
+    "grade"
+   ],
+   "keep": "the footage"
+  },
+  "D": {
+   "name": "原理图",
+   "hupo": "one plane, parts added step by step (3D mechanism)",
+   "style": [
+    "diagramMaterial",
+    "inks"
+   ]
+  },
+  "C": {
+   "name": "聊天",
+   "hupo": "chat bubbles one by one, push in on the last",
+   "style": [
+    "bubble",
+    "type"
+   ]
+  },
+  "Q": {
+   "name": "原话",
+   "hupo": "big black-and-white portrait, heavy serif quote",
+   "style": [
+    "type",
+    "grade"
+   ],
+   "keep": "the portrait"
+  },
+  "R": {
+   "name": "回顾",
+   "hupo": "big words over footage used before",
+   "style": [
+    "type"
+   ]
+  },
+  "M": {
+   "name": "隐喻",
+   "hupo": "none in this film (0 drawn frames)",
+   "style": [
+    "plate",
+    "type"
+   ],
+   "note": "the only category where a whole drawn or 3D plate may fill the frame"
+  }
+ }
+}

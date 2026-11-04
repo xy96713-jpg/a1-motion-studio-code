@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';import fs from 'node:fs';
+import {readShotTaskRuntimeV1,verifyResearchCopyAuthoritiesV1} from '../apps/studio-next/src/lib/a1-shot-task-runtime-v1.mjs';
+import {compileShotTaskWorkspaceV1} from '../apps/studio-next/src/lib/a1-shot-task-graph-v1.mjs';import {compileNodeWorkflow,nodeDependencyBlockers} from '../apps/studio-next/src/lib/a1-node-workflow-v1.mjs';import {nodeWorkflowInput} from '../apps/studio-next/src/lib/a1-node-workflow-runtime-v1.mjs';import {createNodeAdapterRegistry} from '../apps/studio-next/src/lib/a1-node-module-execution-v1.mjs';
+const r=readShotTaskRuntimeV1({repoRoot:process.cwd(),taskId:'person-card-content-layout-static-two-input-v1'});const plan=JSON.parse(fs.readFileSync('work/module-development-launch-v1/person-card-content-layout-v1/native-two-input-prepared-v1/next-shot-task-plan-v1.json'));
+const compile=(p,w=r.workflow)=>compileNodeWorkflow(nodeWorkflowInput(compileShotTaskWorkspaceV1(p,{verifiedSourceFacts:verifyResearchCopyAuthoritiesV1({taskRoot:r.taskRoot,plan:p})})),w,{moduleDefinitions:createNodeAdapterRegistry().definitions});
+let good=compile(plan);assert.equal(good.nodes.filter(n=>n.module==='hypit-render'&&n.input.need===true).length,2);
+for(let n of r.workflow.nodes.filter(n=>n.input.need===true)){let found=good.nodes.find(x=>x.id===n.id);assert.equal(found.inputSha256,n.inputSha256);assert.equal(found.acceptance.manifestSha256,n.acceptance.manifestSha256);assert.equal(found.state,'succeeded');}
+let count=0;
+for(const mutate of [t=>{t.crossShotDependencies=t.crossShotDependencies.filter(b=>!b.nodeId.endsWith(':editable-typography'));},t=>{t.crossShotDependencies.find(b=>b.nodeId.endsWith(':editable-typography')).artifactKinds=['IMAGE'];},t=>{t.parameters.request.typographyNodeId=t.crossShotDependencies[0].nodeId;}]){
+ let bad=structuredClone(plan);const shot=bad.shots.find(s=>s.tasks.some(t=>t.module==='hypit-render'));mutate(shot.tasks[0]);let rejected=false;try{const w=compile(bad);rejected=w.nodes.some(n=>n.shotId===shot.id&&n.input.need==='unknown');}catch{rejected=true;}assert(rejected,'Missing/wrong external typography remains blocked');count++;
+}
+let bad=structuredClone(r.workflow);bad.nodes.find(n=>n.module==='editable-typography'&&n.input.need===true).state='needs-review';const denied=compile(plan,bad);assert(denied.nodes.filter(n=>n.module==='hypit-render').some(n=>nodeDependencyBlockers(denied,n).length>0),'Unaccepted original type dependency prevents claim');count++;
+console.log(JSON.stringify({status:'PASS',negativeChecks:count,retainedActualStaticInputsAndManifests:6,newHypitNodes:2,noLocalTypeRebuild:true,renderBrowserProviderCalls:0}));

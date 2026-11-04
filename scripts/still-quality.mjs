@@ -1,0 +1,11 @@
+#!/usr/bin/env node
+// Still-frame gate before motion: same pixel thresholds as canaries, applied to a small frame set.
+import fs from 'node:fs'; import path from 'node:path'; import sharp from 'sharp';
+const ROOT=process.cwd(); const cfg=JSON.parse(fs.readFileSync(path.join(ROOT,'work/recipe-board-v1/routing/quality-gates.json'),'utf8')); const t=cfg.thresholds;
+const dir=process.argv[process.argv.indexOf('--dir')+1]; if(!dir) { console.error('usage: still-quality.mjs --dir <stills-dir> [--out path]'); process.exit(2); }
+const files=fs.readdirSync(path.join(ROOT,dir)).filter(f=>f.endsWith('.png')).sort().slice(0,4); if(files.length<3){console.error('need >=3 stills');process.exit(2);} 
+let acc={mean:0,std:0,dark:0,edge:0,clip:0,n:0};
+for(const f of files){const {data,info}=await sharp(path.join(ROOT,dir,f)).resize(480,270,{fit:'fill'}).removeAlpha().raw().toBuffer({resolveWithObject:true});const n=info.width*info.height;let sum=0,sq=0,dark=0,clip=0,edge=0;const cur=new Float32Array(n);for(let i=0;i<n;i++){const r=data[i*3],g=data[i*3+1],b=data[i*3+2];const l=(r*.2126+g*.7152+b*.0722)/255;cur[i]=l;sum+=l;sq+=l*l;if(l<.08)dark++;if(r>=252||g>=252||b>=252)clip++;if(i>=info.width+1)edge+=Math.abs(l-cur[i-1])+Math.abs(l-cur[i-info.width]);}const mean=sum/n;acc.mean+=mean;acc.std+=Math.sqrt(Math.max(0,sq/n-mean*mean));acc.dark+=dark/n;acc.clip+=clip/n;acc.edge+=edge/(n*2);acc.n++;}
+const m={meanL:acc.mean/acc.n,stdL:acc.std/acc.n,darkPct:acc.dark/acc.n,clippedPct:acc.clip/acc.n,edge:acc.edge/acc.n};const errors=[];
+if(m.meanL<t.minMeanL)errors.push('too dark');if(m.meanL>t.maxMeanL)errors.push('too bright');if(m.darkPct>t.maxDarkPct)errors.push('dark area '+(m.darkPct*100).toFixed(1)+'%');if(m.stdL<t.minStdL)errors.push('flat contrast');if(m.edge<t.minEdge)errors.push('too few edges');if(m.clippedPct>t.maxClippedPct)errors.push('clipped');
+const out={contract:'A1StillQualityReport/v1',dir,files,metrics:m,verdict:errors.length?'fail':'pass',errors};const outp=process.argv.includes('--out')?process.argv[process.argv.indexOf('--out')+1]:path.join(dir,'still-quality.json');fs.writeFileSync(path.join(ROOT,outp),JSON.stringify(out,null,1)+'\n');console.log('STILL QUALITY',outp,out.verdict,JSON.stringify(m),errors.join('; '));process.exit(errors.length?1:0);

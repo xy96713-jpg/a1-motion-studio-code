@@ -1,0 +1,60 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>screen</title>
+<style>
+#stage { position: absolute; inset: 0; perspective: 2600px; }
+#cam { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; }
+#win { position: absolute; border-radius: 14px; overflow: hidden; box-shadow: 0 40px 90px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.08); background: #fff; transform-origin: 50% 50%; }
+#win img { display: block; width: 100%; height: 100%; }
+#cur { position: absolute; width: 34px; height: 50px; z-index: 30; filter: drop-shadow(0 3px 4px rgba(0,0,0,.45)); }
+.ring { position: absolute; border: 4px solid #fff; border-radius: 50%; z-index: 29; }
+.box { position: absolute; border: 5px solid #e0281f; border-radius: 8px; box-shadow: 0 0 0 3px rgba(255,255,255,.8); z-index: 28; transform-origin: 50% 50%; }
+.mk { position: absolute; background: #f2d43a; mix-blend-mode: multiply; transform-origin: 0 50%; z-index: 27; }
+#lab { position: absolute; left: 110px; top: 90px; z-index: 35; }
+</style></head>
+<body>
+<div class="dark"></div><div id="stage"><div id="cam"><div id="win"><img id="img"><div id="marks" style="position:absolute;inset:0"></div></div><svg id="cur" viewBox="0 0 34 50"><path d="M2 2 L2 40 L11 31 L17 46 L23 43 L17 29 L30 29 Z" fill="#fff" stroke="#111" stroke-width="2.5" stroke-linejoin="round"/></svg></div></div>
+<div id="lab"></div><div id="vig"></div><div id="sub"></div>
+<script>window.__spec = window.__spec || {};</script>
+<script src="common.js"></script>
+<script src="marks.js"></script>
+<script>
+// 界面演示 (网页 / 软件界面做成动画): a real captured page or screen on a dark stage, a little in perspective; on its
+// words the cursor glides to the thing being said (found on the page by OCR, never placed by hand), clicks (a ring), the
+// camera pushes in so it sits in the reading area, and it is marked (a red box, or a yellow bar for a phrase). The camera
+// eases between beats and never holds. Beats: point (cursor only), click (cursor and ring), mark (box), bar (yellow),
+// zoom (camera only), wide (back to the whole page).
+const S = M.S, $ = M.$, [PW, PH] = S.size, B = S.boxes || {}, beats = S.beats || [];
+const fit = Math.min(1500 / PW, 860 / PH), W = PW * fit, H = PH * fit, X0 = (1920 - W) / 2, Y0 = (1080 - H) / 2 + 20;
+$('#win').style.cssText += `left:${X0}px;top:${Y0}px;width:${W}px;height:${H}px`; $('#img').src = S.src;
+if (S.label) $('#lab').innerHTML = M.torn(S.label, { size: 40 });
+const at = (p) => { const b = B[p]; return b ? { x: X0 + b.x * fit, y: Y0 + b.y * fit, w: b.w * fit, h: b.h * fit } : null; };
+// marks on the words (marks.js), inside the window so they tilt with the page (drawn outside it, they slid off the
+// words as the window turned)
+const marks = beats.filter((b) => ['mark', 'bar'].includes(b.do) && B[b.phrase]).map((b) => { const o = { s: fit, label: b.phrase, at: b.at + .1, end: b.at + .5 };
+  return b.do === 'bar' ? { b, sw: TextMarks.sweep($('#marks'), B[b.phrase], { ...o, kind: 'yellow', color: '#f2d43a' }) } : { b, els: TextMarks.frame($('#marks'), B[b.phrase], o).els }; });
+const rings = beats.filter((b) => b.do === 'click' && at(b.phrase)).map((b) => { const el = document.createElement('div'); el.className = 'ring'; $('#cam').appendChild(el); return { el, b }; });
+// the camera's key poses: the whole page, then each beat's target (zoom: target in the middle at `scale`)
+const poses = [{ t: S.at, x: 960, y: 540, z: 1 }];
+for (const b of beats) { const r = at(b.phrase); if (b.do === 'wide' || !r) { poses.push({ t: b.at, x: 960, y: 540, z: 1 }); continue; } if (['click', 'mark', 'bar', 'zoom'].includes(b.do)) poses.push({ t: b.at, x: r.x + r.w / 2, y: r.y + r.h / 2, z: b.scale || 1.7 }); }
+const pose = (t) => { let p = poses[0]; for (let i = 1; i < poses.length; i++) { const q = poses[i], k = M.E.inout(M.seg(t, q.t - .15, q.t + .75)); if (t < q.t - .15) break; p = { x: p.x + (q.x - p.x) * k, y: p.y + (q.y - p.y) * k, z: p.z + (q.z - p.z) * k }; } return p; };
+// the cursor: from below right, to each beat's target, gliding (eased) and arriving a little before the word
+const cpts = [{ t: S.at, x: 1500, y: 900 }, ...beats.filter((b) => at(b.phrase) && b.do !== 'zoom' && b.do !== 'wide').map((b) => { const r = at(b.phrase); return { t: b.at - .1, x: r.x + Math.min(r.w * .6, 120), y: r.y + r.h * .65 }; })];
+const cur = (t) => { let p = cpts[0]; for (let i = 1; i < cpts.length; i++) { const q = cpts[i], k = M.E.inout(M.seg(t, q.t - .55, q.t)); if (t < q.t - .55) break; p = { x: p.x + (q.x - p.x) * k, y: p.y + (q.y - p.y) * k }; } return p; };
+window.render = (t) => {
+  M.subs(t);
+  const a = M.seg(t, S.at, S.end), e = M.E.out(M.seg(t, S.at, S.at + .6));
+  // the window comes up in perspective and turns toward flat as the camera works in; a drift all the while
+  $('#win').style.transform = `rotateY(${(-14 + 10 * e) * (1 - .6 * a)}deg) rotateX(${(5 - 3 * e) * (1 - .6 * a)}deg) translateY(${(1 - e) * 60}px)`;
+  $('#win').style.opacity = Math.min(1, e * 1.5);
+  const p = pose(t), z = p.z * (1 + .04 * a);
+  $('#cam').style.transform = `translate(${960 - p.x * z - 30 * a}px, ${540 - p.y * z}px) scale(${z})`;
+  const c = cur(t); $('#cur').style.left = `${c.x}px`; $('#cur').style.top = `${c.y}px`; $('#cur').style.opacity = cpts.length > 1 && t > S.at + .3 ? 1 : 0;
+  for (const r of rings) { const k = M.seg(t, r.b.at, r.b.at + .5), q = at(r.b.phrase), cx = q.x + Math.min(q.w * .6, 120), cy = q.y + q.h * .65, d = 10 + 80 * M.E.out(k);
+    r.el.style.cssText = `position:absolute;left:${cx - d / 2}px;top:${cy - d / 2}px;width:${d}px;height:${d}px;opacity:${t >= r.b.at && k < 1 ? 1 - k : 0}`; r.el.className = 'ring'; }
+  for (const m of marks) { const k = M.E.out(M.seg(t, m.b.at + .1, m.b.at + .5));
+    if (m.sw) m.sw.draw(k); else for (const el of m.els) { el.style.opacity = k; el.style.transform = `scale(${1.25 - .25 * k})`; } }
+  if (S.label) M.fade($('#lab .paper'), t, S.at + .3, .3, -60);
+};
+M.ready([S.src]);
+</script>
+</body></html>

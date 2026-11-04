@@ -1,0 +1,195 @@
+{
+ "contract": "A1Mainline/v1",
+ "updated": "2026-11-04",
+ "purpose": "Single machine-readable source for authoritative docs, deprecated docs, gates and project state. MD is generated from this; code checks read it.",
+ "authorities": [
+  {
+   "path": "work/recipe-board-v1/HOUSE.md",
+   "role": "house-rules"
+  },
+  {
+   "path": "work/recipe-board-v1/ART-DIRECTION.md",
+   "role": "design-preflight"
+  },
+  {
+   "path": "docs/analysis/BANANA-DESIGN-BIBLE-20261103.md",
+   "role": "banana-film-design"
+  },
+  {
+   "path": "work/recipe-board-v1/DIRECTOR.md",
+   "role": "director"
+  },
+  {
+   "path": "work/recipe-board-v1/SHOT-DIRECTION.md",
+   "role": "camera-and-seams"
+  },
+  {
+   "path": "docs/analysis/WORKFLOW-V2-20261103.md",
+   "role": "workflow"
+  },
+  {
+   "path": "docs/analysis/GENRE-PIPELINE-20261103.md",
+   "role": "medium-choice"
+  },
+  {
+   "path": "docs/analysis/MAINLINE-CONSTRAINT-20261103.md",
+   "role": "constraints"
+  },
+  {
+   "path": "work/recipe-board-v1/routing/look-lock.json",
+   "role": "look-lock-policy"
+  },
+  {
+   "path": "work/recipe-board-v1/routing/packaging-workflow.json",
+   "role": "packaging-closed-loop"
+  },
+  {
+   "path": "docs/analysis/PACKAGING-CLOSED-LOOP-20261104.md",
+   "role": "packaging-closed-loop-guide"
+  },
+  {
+   "path": "docs/analysis/WORLD-BOARD-HEADLESS-20261104.md",
+   "role": "world-board-headless"
+  },
+  {
+   "path": "work/recipe-board-v1/routing/world-board.json",
+   "role": "world-board-policy"
+  },
+  {
+   "path": "docs/analysis/REPRODUCTION-MATRIX-20261104.md",
+   "role": "reproduction-matrix"
+  },
+  {
+   "path": "work/recipe-board-v1/MAINLINE.md",
+   "role": "generated-index"
+  },
+  {
+   "path": "docs/analysis/TECH-STACK-TRIAGE-20261104.md",
+   "role": "tech-stack-triage"
+  },
+  {
+   "path": "work/recipe-board-v1/routing/video-providers.json",
+   "role": "video-provider-policy"
+  },
+  {
+   "path": "work/recipe-board-v1/routing/tech-stack.json",
+   "role": "tech-stack-catalog"
+  },
+  {
+   "path": "docs/analysis/DIRECTOR-TECH-STACK-20261104.md",
+   "role": "director-tech-stack"
+  },
+  {
+   "path": "work/recipe-board-v1/routing/effects.json",
+   "role": "effect-catalog"
+  },
+  {
+   "path": "docs/analysis/MOTION-EFFECT-STACK-20261104.md",
+   "role": "motion-effect-stack"
+  },
+  {
+   "path": "work/recipe-board-v1/routing/quality-gates.json",
+   "role": "quality-gates"
+  },
+  {
+   "path": "docs/analysis/QUALITY-FIRST-WORKFLOW-20261104.md",
+   "role": "quality-first-workflow"
+  },
+  {
+   "path": "work/recipe-board-v1/routing/benchmarks.json",
+   "role": "benchmark-gate"
+  },
+  {
+   "path": "work/recipe-board-v1/routing/composition-gate.json",
+   "role": "composition-gate"
+  },
+  {
+   "path": "work/recipe-board-v1/WORKING-MODE.md",
+   "role": "agent-working-mode"
+  },
+  {
+   "path": "work/recipe-board-v1/routing/project-routes.json",
+   "role": "project-routes"
+  },
+  {
+   "path": "work/recipe-board-v1/routing/occlusion-rules.json",
+   "role": "occlusion-rules"
+  },
+  {
+   "path": "work/recipe-board-v1/routing/media-policy.json",
+   "role": "media-policy"
+  },
+  {
+   "path": "work/recipe-board-v1/routing/scene-unit-rules.json",
+   "role": "scene-unit-gate"
+  }
+ ],
+ "deprecated": [
+  {
+   "path": "docs/analysis/BANANA-SHOT-SCHEDULE-20261103.md",
+   "supersededBy": "docs/analysis/BANANA-DESIGN-BIBLE-20261103.md",
+   "reason": "old paperclip-style shot table; design bible 20 shots / 19 seams is authoritative"
+  }
+ ],
+ "stages": [
+  {
+   "id": "intake",
+   "label": "文案/事实/参考",
+   "required": [
+    "episode.md"
+   ]
+  },
+  {
+   "id": "semantic",
+   "label": "语义切分/镜数/缝",
+   "required": [
+    "BANANA-DESIGN-BIBLE-20261103.md"
+   ]
+  },
+  {
+   "id": "art-direction",
+   "label": "视觉论点/≥6 方案/选中锁图/帧/动态",
+   "required": [
+    "ART-DIRECTION.md"
+   ]
+  },
+  {
+   "id": "design-gate",
+   "label": "设计门（用户）",
+   "required": []
+  },
+  {
+   "id": "previz",
+   "label": "真 3D previz",
+   "required": []
+  },
+  {
+   "id": "shots",
+   "label": "逐镜设计/3s/接缝",
+   "required": []
+  },
+  {
+   "id": "final",
+   "label": "全片/盲审/final 门",
+   "required": []
+  }
+ ],
+ "gates": [
+  "design",
+  "shot",
+  "final"
+ ],
+ "projects": {
+  "banana-design": {
+   "phase": "design",
+   "next": "B01",
+   "authoritativeShotDoc": "docs/analysis/BANANA-DESIGN-BIBLE-20261103.md",
+   "deprecatedShotDocs": [
+    "docs/analysis/BANANA-SHOT-SCHEDULE-20261103.md"
+   ],
+   "designGate": "rejected",
+   "note": "用户 2026-11-03 退回：三版 B01 不叫设计；20 镜/19 缝为设计圣经，B01 未过。",
+   "designBoard": "work/recipe-board-v1/projects/banana-design/design-board.json"
+  }
+ }
+}

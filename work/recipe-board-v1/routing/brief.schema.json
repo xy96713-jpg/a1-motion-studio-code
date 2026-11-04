@@ -1,0 +1,466 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "A1RecipeBoardBrief/v1 (agent answer)",
+  "description": "Whole-film director brief. Rules: work/recipe-board-v1/prompts/brief.md. Checked by brief.mjs before it is accepted.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "film",
+    "chapters",
+    "motif",
+    "rhythm",
+    "style",
+    "heroMoments",
+    "mediumShots",
+    "callbacks",
+    "banned",
+    "risks"
+  ],
+  "properties": {
+    "contract": {
+      "type": "string",
+      "enum": [
+        "A1RecipeBoardBrief/v1"
+      ]
+    },
+    "film": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "logline",
+        "question",
+        "feeling",
+        "takeaway"
+      ],
+      "properties": {
+        "logline": {
+          "type": "string",
+          "description": "一句话影片：讲的是什么"
+        },
+        "question": {
+          "type": "string",
+          "description": "推动全片的问题"
+        },
+        "feeling": {
+          "type": "string",
+          "description": "观众该感受到什么"
+        },
+        "takeaway": {
+          "type": "string",
+          "description": "看完带走什么"
+        }
+      }
+    },
+    "chapters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "title",
+          "role",
+          "from",
+          "to",
+          "purpose",
+          "tension",
+          "pace",
+          "accent",
+          "look"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "C1, C2, …"
+          },
+          "title": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "hook",
+              "story",
+              "setup",
+              "rise",
+              "turn",
+              "climax",
+              "resolution",
+              "coda"
+            ]
+          },
+          "from": {
+            "type": "string",
+            "description": "first beat id"
+          },
+          "to": {
+            "type": "string",
+            "description": "last beat id"
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "tension": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10
+          },
+          "pace": {
+            "type": "string",
+            "enum": [
+              "slow",
+              "steady",
+              "fast"
+            ]
+          },
+          "accent": {
+            "type": "string",
+            "description": "#RRGGBB chapter accent"
+          },
+          "look": {
+            "type": "string",
+            "description": "这一章的画面基调"
+          }
+        }
+      }
+    },
+    "motif": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "idea",
+        "visual",
+        "appears",
+        "broll"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "idea": {
+          "type": "string",
+          "description": "母题代表什么"
+        },
+        "visual": {
+          "type": "string",
+          "description": "画面上是什么（同一个场景 / 道具 / 图形）"
+        },
+        "appears": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "chapter",
+              "beat",
+              "state"
+            ],
+            "properties": {
+              "chapter": {
+                "type": "string"
+              },
+              "beat": {
+                "type": "string"
+              },
+              "state": {
+                "type": "string",
+                "description": "这一次出现时母题的状态"
+              }
+            }
+          }
+        },
+        "broll": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "what",
+            "queryEn",
+            "lines"
+          ],
+          "properties": {
+            "what": {
+              "type": "string",
+              "description": "全片反复用的那一种真实空镜（同一种场景 / 物件），中文一句"
+            },
+            "queryEn": {
+              "type": "string",
+              "description": "英文检索词，3–6 个词"
+            },
+            "lines": {
+              "type": "string",
+              "description": "什么样的句子切到它（情绪、夸张、讲到这个主题时）"
+            }
+          }
+        }
+      }
+    },
+    "rhythm": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fps",
+        "bpm",
+        "breathingBeats",
+        "notes"
+      ],
+      "properties": {
+        "fps": {
+          "type": "integer",
+          "enum": [
+            30,
+            60
+          ]
+        },
+        "bpm": {
+          "type": "integer",
+          "minimum": 60,
+          "maximum": 140
+        },
+        "breathingBeats": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "留白的拍：只放主讲人或空镜"
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "style": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "theme",
+        "sixCell",
+        "palette",
+        "typography",
+        "stage",
+        "world"
+      ],
+      "properties": {
+        "theme": {
+          "type": "string"
+        },
+        "sixCell": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "medium",
+            "typeOn",
+            "annotation",
+            "color",
+            "transition",
+            "motion"
+          ],
+          "properties": {
+            "medium": {
+              "type": "string"
+            },
+            "typeOn": {
+              "type": "string"
+            },
+            "annotation": {
+              "type": "string"
+            },
+            "color": {
+              "type": "string"
+            },
+            "transition": {
+              "type": "string"
+            },
+            "motion": {
+              "type": "string"
+            }
+          }
+        },
+        "palette": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "base",
+            "ink",
+            "accent"
+          ],
+          "properties": {
+            "base": {
+              "type": "string"
+            },
+            "ink": {
+              "type": "string"
+            },
+            "accent": {
+              "type": "string"
+            }
+          }
+        },
+        "typography": {
+          "type": "string"
+        },
+        "stage": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": false,
+          "required": [
+            "look",
+            "subject",
+            "sceneMedium"
+          ],
+          "properties": {
+            "look": {
+              "type": "string"
+            },
+            "subject": {
+              "type": "string",
+              "enum": [
+                "dark",
+                "paper",
+                "red",
+                "ink"
+              ]
+            },
+            "sceneMedium": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "enum": [
+                "clean",
+                "film",
+                "filmday",
+                "paper",
+                "halftone",
+                "crt",
+                "vhs",
+                null
+              ]
+            }
+          }
+        },
+        "world": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": false,
+          "required": [
+            "base",
+            "display",
+            "texture",
+            "medium"
+          ],
+          "properties": {
+            "base": {
+              "type": "string",
+              "enum": [
+                "dark",
+                "paper"
+              ]
+            },
+            "display": {
+              "type": "string",
+              "enum": [
+                "sans-heavy",
+                "serif-heavy",
+                "condensed",
+                "pixel",
+                "mono"
+              ]
+            },
+            "texture": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "grain",
+                  "vignette",
+                  "vignette-light",
+                  "dots",
+                  "rulers",
+                  "chromatic"
+                ]
+              }
+            },
+            "medium": {
+              "type": "string",
+              "enum": [
+                "tube",
+                "none",
+                "film"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "heroMoments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "beat",
+          "why",
+          "treatment"
+        ],
+        "properties": {
+          "beat": {
+            "type": "string"
+          },
+          "why": {
+            "type": "string"
+          },
+          "treatment": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "mediumShots": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "callbacks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "from",
+          "to",
+          "what"
+        ],
+        "properties": {
+          "from": {
+            "type": "string"
+          },
+          "to": {
+            "type": "string"
+          },
+          "what": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "banned": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "risks": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

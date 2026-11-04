@@ -1,0 +1,1908 @@
+{
+ "contract": "A1PackagingBenchmarks/v1",
+ "version": "2026-11-03",
+ "purpose": "三组对标拆解：回形针 11 段（46 beat/133 元素/51 设备）、胡泊 139 切分（69 镜位/12 label 时长与 roomDiff）、Gawx 四部片（字/底色/主色族/精确 hex 与和谐关系）。包装配方的对标区间从这里取。",
+ "films": {
+  "paperclip": {
+   "title": "回形针 Vol.138",
+   "project": "paperclip-138-full",
+   "sourceTasks": "projects/paperclip-138-full/tasks/breakdown-*.answer.json",
+   "sections": 11,
+   "beats": 46,
+   "totalElements": 133,
+   "elementsPerBeat": 2.89,
+   "deviceFrequency": {
+    "title-to-texture": 10,
+    "carrier": 9,
+    "word-cue": 6,
+    "literal-metaphor": 6,
+    "term-biggest": 6,
+    "mark-in-red": 5,
+    "black-pause": 4,
+    "narrowing-frames": 4,
+    "scale-jump": 3,
+    "callout-line": 3,
+    "rhyme": 3,
+    "real-in-frame": 3,
+    "number-grows": 3,
+    "letter-to-structure": 3,
+    "symmetry": 2,
+    "callback": 2,
+    "banner-verdict": 2,
+    "letter-as-set": 2,
+    "dim-keep-red": 2,
+    "bar-length-ratio": 2,
+    "sort-to-rank": 2,
+    "dots-as-people": 2,
+    "zoom-out-whole": 2,
+    "pan-distance": 2,
+    "tilt-into-space": 1,
+    "map-pin-count": 1,
+    "colour-mood": 1,
+    "evidence-on-timeline": 1,
+    "cycle-compare": 1,
+    "table-grows": 1,
+    "glitch-cut": 1,
+    "clipping-stack": 1,
+    "zoom-into": 1,
+    "bracket-group": 1,
+    "mark-follows-line": 1,
+    "tape-sweep": 1,
+    "subject-stays": 1,
+    "real-doc-callout": 1,
+    "signal-break": 1,
+    "data-to-people": 1,
+    "shrink-to-reality": 1,
+    "climb-tree": 1,
+    "screen-workflow": 1,
+    "age-morph": 1,
+    "lineup-row": 1,
+    "countdown-object": 1,
+    "presenter-close": 1,
+    "unwind-3d-to-flat": 1,
+    "copy-to-repeat": 1,
+    "label-swap": 1,
+    "quadrant-compare": 1
+   },
+   "evidence": [
+    {
+     "section": "0-37 s",
+     "beats": 5,
+     "from": 0,
+     "to": 37,
+     "devices": [
+      "tilt-into-space",
+      "map-pin-count",
+      "word-cue",
+      "colour-mood",
+      "black-pause",
+      "title-to-texture",
+      "evidence-on-timeline",
+      "scale-jump",
+      "cycle-compare",
+      "literal-metaphor",
+      "carrier"
+     ],
+     "carrier": "案件的日期：地图上每根针旁的日期 → 时间轴上证据卡的红色日期签 → 结尾标题下的残影"
+    },
+    {
+     "section": "134-162 s",
+     "beats": 3,
+     "from": 135.5,
+     "to": 162,
+     "devices": [
+      "title-to-texture",
+      "table-grows",
+      "symmetry",
+      "literal-metaphor",
+      "glitch-cut",
+      "callback",
+      "carrier",
+      "banner-verdict",
+      "clipping-stack"
+     ],
+     "carrier": "证据卡：坐标里的 DNA → 四张现场卡和它们的位点表 → 地图上的 DNA 卡 → 案名横幅下的残影；影子贯穿（开场阴影→巨手→报纸上的墨影）"
+    },
+    {
+     "section": "162-191 s",
+     "beats": 4,
+     "from": 162,
+     "to": 191,
+     "devices": [
+      "black-pause",
+      "zoom-into",
+      "title-to-texture",
+      "bracket-group",
+      "callout-line",
+      "letter-as-set",
+      "mark-follows-line",
+      "carrier",
+      "dim-keep-red",
+      "term-biggest"
+     ],
+     "carrier": "红色的 Y：精子核的红点 → 第 23 条 → Y 形光柱 → 张大木头上的 Y → 家谱男性一支 → Y-STR 标题 → 下一段左侧底纹"
+    },
+    {
+     "section": "231-262 s",
+     "beats": 5,
+     "from": 231,
+     "to": 262,
+     "devices": [
+      "rhyme",
+      "symmetry",
+      "tape-sweep",
+      "banner-verdict",
+      "subject-stays",
+      "title-to-texture",
+      "real-in-frame",
+      "real-doc-callout",
+      "word-cue",
+      "number-grows"
+     ],
+     "carrier": "DNA 卡：排查队列里变红的方块 → 身高墙前的照片 → 他的 DNA 卡（白）对现场的 DNA 卡（红） → 户籍表旁的卡 → 数据库横幅"
+    },
+    {
+     "section": "262-296 s",
+     "beats": 4,
+     "from": 262,
+     "to": 295.5,
+     "devices": [
+      "rhyme",
+      "signal-break",
+      "literal-metaphor",
+      "term-biggest",
+      "title-to-texture",
+      "mark-in-red",
+      "bar-length-ratio",
+      "dim-keep-red",
+      "carrier"
+     ],
+     "carrier": "红色的那段基因：一根红条 → 到 2 代缩短 → 3 代更短 → 被框起来叫 IBD；前面是剪影被信号抹掉（\"如果没有\"）"
+    },
+    {
+     "section": "296-330 s",
+     "beats": 5,
+     "from": 295.5,
+     "to": 330,
+     "devices": [
+      "term-biggest",
+      "title-to-texture",
+      "sort-to-rank",
+      "carrier",
+      "narrowing-frames",
+      "mark-in-red",
+      "letter-as-set",
+      "data-to-people",
+      "word-cue",
+      "shrink-to-reality",
+      "rhyme"
+     ],
+     "carrier": "横条：框住的 IBD 红段 → 每个人一根横条 → 按长短排好分档 → 数据库里 10 根柱 → 变短的几根；中心的\"我\""
+    },
+    {
+     "section": "330-368 s",
+     "beats": 6,
+     "from": 330,
+     "to": 368,
+     "devices": [
+      "literal-metaphor",
+      "term-biggest",
+      "real-in-frame",
+      "scale-jump",
+      "dots-as-people",
+      "climb-tree",
+      "carrier",
+      "screen-workflow",
+      "narrowing-frames",
+      "age-morph",
+      "word-cue",
+      "black-pause"
+     ],
+     "carrier": "家谱：我的家谱 → 两三个远亲 → 网站匹配列表 → 圆点家谱 → 共同祖先 → 往下长满的家谱 → 嫌疑人文件夹 → 他的照片 → 栏杆"
+    },
+    {
+     "section": "368-412 s",
+     "beats": 2,
+     "from": 367.5,
+     "to": 412,
+     "devices": [
+      "lineup-row",
+      "title-to-texture",
+      "countdown-object",
+      "presenter-close"
+     ],
+     "carrier": "凶手的脸：一排证件照 → 倒计时的炸弹 → 作者出镜"
+    },
+    {
+     "section": "37-64 s",
+     "beats": 4,
+     "from": 37,
+     "to": 64,
+     "devices": [
+      "letter-to-structure",
+      "term-biggest",
+      "word-cue",
+      "carrier",
+      "title-to-texture",
+      "mark-in-red",
+      "zoom-out-whole"
+     ],
+     "carrier": "字母 A T C G：白色方块翻出字母 → 配对成碱基对 → 无间隔的序列 → 双螺旋 → 螺旋上的红色差异标记"
+    },
+    {
+     "section": "64-96 s",
+     "beats": 3,
+     "from": 64,
+     "to": 96,
+     "devices": [
+      "unwind-3d-to-flat",
+      "callout-line",
+      "copy-to-repeat",
+      "mark-in-red",
+      "term-biggest",
+      "title-to-texture",
+      "label-swap",
+      "pan-distance",
+      "carrier"
+     ],
+     "carrier": "那一段红色的重复序列：螺旋上的红段 → 展平的字母梯里的 TCAT → 复制成串 → STR → 位点（标签跟着它换说法）"
+    },
+    {
+     "section": "96-134 s",
+     "beats": 5,
+     "from": 95.5,
+     "to": 135.5,
+     "devices": [
+      "pan-distance",
+      "mark-in-red",
+      "callout-line",
+      "number-grows",
+      "dots-as-people",
+      "narrowing-frames",
+      "scale-jump",
+      "carrier",
+      "zoom-out-whole",
+      "quadrant-compare",
+      "callback"
+     ],
+     "carrier": "一个白点：1000 人里的一个 → 框里剩下的那个 → 星空中心的那一点 → 坐标里右上角的 DNA"
+    }
+   ]
+  },
+  "hupo": {
+   "title": "胡泊 BV1a63d6CEBa",
+   "project": "hupo-69",
+   "sourceSegments": "style-lab/reference-hupo/cuts-labelled.json",
+   "sourceFilm": "style-lab/reference-hupo/full-v2.json",
+   "shots": 139,
+   "chapters": 9,
+   "labels": {
+    "B": {
+     "count": 20,
+     "durSec": [
+      0.33,
+      1.75,
+      7.05
+     ],
+     "roomDiff": [
+      46.7,
+      65.96,
+      103.7
+     ],
+     "examples": [
+      "K-line footage",
+      "money b-roll",
+      "money b-roll"
+     ]
+    },
+    "C": {
+     "count": 4,
+     "durSec": [
+      1.6,
+      3.61,
+      5.73
+     ],
+     "roomDiff": [
+      90,
+      96.45,
+      99.5
+     ],
+     "examples": [
+      "chat: 宣布做AGI",
+      "chat bubble close-up",
+      "chat: 出事了"
+     ]
+    },
+    "D": {
+     "count": 5,
+     "durSec": [
+      2.67,
+      12.68,
+      41.03
+     ],
+     "roomDiff": [
+      49.9,
+      66.28,
+      81.2
+     ],
+     "examples": [
+      "H800 vs optimized",
+      "H800 vs optimized",
+      "H800 vs optimized"
+     ]
+    },
+    "ED": {
+     "count": 9,
+     "durSec": [
+      1.68,
+      4.77,
+      9.2
+     ],
+     "roomDiff": [
+      63.3,
+      77.22,
+      102.3
+     ],
+     "examples": [
+      "real ticker table",
+      "data collage with logos",
+      "efficiency table"
+     ]
+    },
+    "EN": {
+     "count": 18,
+     "durSec": [
+      0.27,
+      2.2,
+      4.13
+     ],
+     "roomDiff": [
+      52.9,
+      81.53,
+      102.8
+     ],
+     "examples": [
+      "news page → push to highlight",
+      "exact number typed in news text",
+      "exact number typed in news text"
+     ]
+    },
+    "EO": {
+     "count": 6,
+     "durSec": [
+      0.63,
+      1.42,
+      2.67
+     ],
+     "roomDiff": [
+      50,
+      65.38,
+      101.9
+     ],
+     "examples": [
+      "White House",
+      "DeepSeek R1-Zero page",
+      "Nvidia building"
+     ]
+    },
+    "EP": {
+     "count": 19,
+     "durSec": [
+      0.28,
+      1.79,
+      6
+     ],
+     "roomDiff": [
+      53,
+      65.18,
+      85.6
+     ],
+     "examples": [
+      "person montage (not ... not ...)",
+      "person montage (not ... not ...)",
+      "person montage (not ... not ...)"
+     ]
+    },
+    "P": {
+     "count": 26,
+     "durSec": [
+      0.6,
+      4.61,
+      9.93
+     ],
+     "roomDiff": [
+      5.8,
+      10.38,
+      21.2
+     ],
+     "examples": [
+      "一家在那之前连绝大多数美国人都没有听过名字的中国公司",
+      "群人一个周末让整个硅谷同时失眠了",
+      "真正让我到现在还没有搞清楚的不是英伟达那天跌了多少是另外"
+     ]
+    },
+    "PT": {
+     "count": 11,
+     "durSec": [
+      2.88,
+      9.04,
+      15.38
+     ],
+     "roomDiff": [
+      8.7,
+      28,
+      56.7
+     ],
+     "examples": [
+      "3D date over presenter, crosses the cut",
+      "three paper tags",
+      "side card"
+     ]
+    },
+    "Q": {
+     "count": 3,
+     "durSec": [
+      1.85,
+      6.96,
+      10.9
+     ],
+     "roomDiff": [
+      43.1,
+      55.37,
+      65
+     ],
+     "examples": [
+      "quote over person",
+      "quote over person",
+      "quote over b-roll"
+     ]
+    },
+    "R": {
+     "count": 10,
+     "durSec": [
+      0.55,
+      2.25,
+      4.32
+     ],
+     "roomDiff": [
+      54.6,
+      74.75,
+      97
+     ],
+     "examples": [
+      "recap: big word over earlier visuals",
+      "recap: big word over earlier visuals",
+      "recap: big word over earlier visuals"
+     ]
+    },
+    "T": {
+     "count": 8,
+     "durSec": [
+      0.51,
+      2.64,
+      5
+     ],
+     "roomDiff": [
+      52.1,
+      74.41,
+      105.8
+     ],
+     "examples": [
+      "name typed in news text",
+      "3D title + logo",
+      "凭什么 over DeepSeek page"
+     ]
+    }
+   },
+   "evidence": [
+    {
+     "label": "B",
+     "count": 20,
+     "durSec": [
+      0.33,
+      1.75,
+      7.05
+     ],
+     "roomDiff": [
+      46.7,
+      65.96,
+      103.7
+     ],
+     "examples": [
+      "K-line footage",
+      "money b-roll",
+      "money b-roll"
+     ]
+    },
+    {
+     "label": "C",
+     "count": 4,
+     "durSec": [
+      1.6,
+      3.61,
+      5.73
+     ],
+     "roomDiff": [
+      90,
+      96.45,
+      99.5
+     ],
+     "examples": [
+      "chat: 宣布做AGI",
+      "chat bubble close-up",
+      "chat: 出事了"
+     ]
+    },
+    {
+     "label": "D",
+     "count": 5,
+     "durSec": [
+      2.67,
+      12.68,
+      41.03
+     ],
+     "roomDiff": [
+      49.9,
+      66.28,
+      81.2
+     ],
+     "examples": [
+      "H800 vs optimized",
+      "H800 vs optimized",
+      "H800 vs optimized"
+     ]
+    },
+    {
+     "label": "ED",
+     "count": 9,
+     "durSec": [
+      1.68,
+      4.77,
+      9.2
+     ],
+     "roomDiff": [
+      63.3,
+      77.22,
+      102.3
+     ],
+     "examples": [
+      "real ticker table",
+      "data collage with logos",
+      "efficiency table"
+     ]
+    },
+    {
+     "label": "EN",
+     "count": 18,
+     "durSec": [
+      0.27,
+      2.2,
+      4.13
+     ],
+     "roomDiff": [
+      52.9,
+      81.53,
+      102.8
+     ],
+     "examples": [
+      "news page → push to highlight",
+      "exact number typed in news text",
+      "exact number typed in news text"
+     ]
+    },
+    {
+     "label": "EO",
+     "count": 6,
+     "durSec": [
+      0.63,
+      1.42,
+      2.67
+     ],
+     "roomDiff": [
+      50,
+      65.38,
+      101.9
+     ],
+     "examples": [
+      "White House",
+      "DeepSeek R1-Zero page",
+      "Nvidia building"
+     ]
+    },
+    {
+     "label": "EP",
+     "count": 19,
+     "durSec": [
+      0.28,
+      1.79,
+      6
+     ],
+     "roomDiff": [
+      53,
+      65.18,
+      85.6
+     ],
+     "examples": [
+      "person montage (not ... not ...)",
+      "person montage (not ... not ...)",
+      "person montage (not ... not ...)"
+     ]
+    },
+    {
+     "label": "P",
+     "count": 26,
+     "durSec": [
+      0.6,
+      4.61,
+      9.93
+     ],
+     "roomDiff": [
+      5.8,
+      10.38,
+      21.2
+     ],
+     "examples": [
+      "一家在那之前连绝大多数美国人都没有听过名字的中国公司",
+      "群人一个周末让整个硅谷同时失眠了",
+      "真正让我到现在还没有搞清楚的不是英伟达那天跌了多少是另外"
+     ]
+    },
+    {
+     "label": "PT",
+     "count": 11,
+     "durSec": [
+      2.88,
+      9.04,
+      15.38
+     ],
+     "roomDiff": [
+      8.7,
+      28,
+      56.7
+     ],
+     "examples": [
+      "3D date over presenter, crosses the cut",
+      "three paper tags",
+      "side card"
+     ]
+    },
+    {
+     "label": "Q",
+     "count": 3,
+     "durSec": [
+      1.85,
+      6.96,
+      10.9
+     ],
+     "roomDiff": [
+      43.1,
+      55.37,
+      65
+     ],
+     "examples": [
+      "quote over person",
+      "quote over person",
+      "quote over b-roll"
+     ]
+    },
+    {
+     "label": "R",
+     "count": 10,
+     "durSec": [
+      0.55,
+      2.25,
+      4.32
+     ],
+     "roomDiff": [
+      54.6,
+      74.75,
+      97
+     ],
+     "examples": [
+      "recap: big word over earlier visuals",
+      "recap: big word over earlier visuals",
+      "recap: big word over earlier visuals"
+     ]
+    },
+    {
+     "label": "T",
+     "count": 8,
+     "durSec": [
+      0.51,
+      2.64,
+      5
+     ],
+     "roomDiff": [
+      52.1,
+      74.41,
+      105.8
+     ],
+     "examples": [
+      "name typed in news text",
+      "3D title + logo",
+      "凭什么 over DeepSeek page"
+     ]
+    }
+   ],
+   "labeledShots": 69,
+   "description": "139 个切分片段（69 个标注镜位 + 子段），9 章，逐镜 label/note/时长/roomDiff"
+  },
+  "gawx": {
+   "title": "Gawx（4 部，24 Styles / How To PRO / Anatomy / Artist Athlete）",
+   "project": "style-lab/research-gawx-20261027",
+   "films": 4,
+   "typeFrames": 812,
+   "measured": {
+    "typography": {
+     "name": "Gawx",
+     "frames": 812,
+     "withWords": 0.213,
+     "biggest": [
+      0.032,
+      0.044,
+      0.073,
+      0.139
+     ],
+     "bigShare": 0.026,
+     "lines": [
+      2,
+      3,
+      6
+     ],
+     "align": {
+      "left": 0.13,
+      "centre": 0.08,
+      "right": 0,
+      "loose": 0.79
+     },
+     "x": {
+      "left": 0.26,
+      "centre": 0.47,
+      "right": 0.27
+     },
+     "y": {
+      "top": 0.31,
+      "middle": 0.49,
+      "bottom": 0.2
+     },
+     "margin": [
+      0.041,
+      0.286
+     ],
+     "colour": {
+      "light": 0.34,
+      "colour": 0.2,
+      "dark": 0.24,
+      "grey": 0.23
+     },
+     "chars": [
+      7,
+      12
+     ]
+    },
+    "harmony": {
+     "darkGroundShare": "0.78-0.88",
+     "colouredGroundTurnShare": "0.15-0.30",
+     "maxColouredFamiliesPerFrame": 2,
+     "analogousMaxDeg": 45,
+     "complementaryDeg": [
+      150,
+      210
+     ],
+     "contrastDeg": [
+      90,
+      150
+     ],
+     "appearFamilyTurnSeconds": [
+      2,
+      8
+     ],
+     "inkContrastMinBody": 4.5,
+     "inkContrastMinLarge": 3,
+     "muddyWarmChromaGuard": "warm 20-100° hue with chroma < 0.04 at low L reads dirty brown; avoid"
+    },
+    "palettes": {
+     "20210616": {
+      "ground": "#101116",
+      "groundL": 0.0057,
+      "ink": "#f6f5f2",
+      "inkContrast": 17.29,
+      "darkShare": 0.614,
+      "lightShare": 0.058,
+      "colouredShare": 0.28,
+      "leads": [
+       [
+        "blue",
+        "#242939",
+        0.222
+       ],
+       [
+        "cyan",
+        "#3d6f89",
+        0.038
+       ],
+       [
+        "red",
+        "#bc1014",
+        0.02
+       ]
+      ]
+     },
+     "20231027": {
+      "ground": "#0f1113",
+      "groundL": 0.0055,
+      "ink": "#c2bb9f",
+      "inkContrast": 9.82,
+      "darkShare": 0.683,
+      "lightShare": 0,
+      "colouredShare": 0.208,
+      "leads": [
+       [
+        "orange",
+        "#726b58",
+        0.076
+       ],
+       [
+        "orange",
+        "#59321d",
+        0.069
+       ],
+       [
+        "red",
+        "#fd2828",
+        0.038
+       ]
+      ]
+     },
+     "20241125": {
+      "ground": "#100d0c",
+      "groundL": 0.0042,
+      "ink": "#f1f0ed",
+      "inkContrast": 16.98,
+      "darkShare": 0.618,
+      "lightShare": 0.027,
+      "colouredShare": 0.246,
+      "leads": [
+       [
+        "orange",
+        "#623e1b",
+        0.087
+       ],
+       [
+        "orange",
+        "#8c734c",
+        0.077
+       ],
+       [
+        "orange",
+        "#bdab85",
+        0.045
+       ]
+      ]
+     },
+     "20260314": {
+      "ground": "#111111",
+      "groundL": 0.0056,
+      "ink": "#87918d",
+      "inkContrast": 5.81,
+      "darkShare": 0.842,
+      "lightShare": 0,
+      "colouredShare": 0.054,
+      "leads": [
+       [
+        "red",
+        "#582615",
+        0.033
+       ],
+       [
+        "orange",
+        "#b0700b",
+        0.021
+       ]
+      ]
+     }
+    }
+   },
+   "evidence": [
+    {
+     "film": "20210616",
+     "palette": {
+      "ground": "#101116",
+      "groundL": 0.0057,
+      "ink": "#f6f5f2",
+      "inkContrast": 17.29,
+      "darkShare": 0.614,
+      "lightShare": 0.058,
+      "colouredShare": 0.28,
+      "leads": [
+       [
+        "blue",
+        "#242939",
+        0.222
+       ],
+       [
+        "cyan",
+        "#3d6f89",
+        0.038
+       ],
+       [
+        "red",
+        "#bc1014",
+        0.02
+       ]
+      ]
+     },
+     "arc": {
+      "darkGround": 0.782,
+      "lightGround": 0.074,
+      "colouredGround": 0.148,
+      "leads": {
+       "orange": 0.258,
+       "indigo": 0.175,
+       "blue": 0.052,
+       "amber": 0.044,
+       "red": 0.031,
+       "violet": 0.031,
+       "yellow": 0.022,
+       "magenta": 0.013,
+       "teal": 0.013,
+       "green": 0.009,
+       "olive": 0.004,
+       "cyan": 0.004
+      }
+     }
+    },
+    {
+     "film": "20231027",
+     "palette": {
+      "ground": "#0f1113",
+      "groundL": 0.0055,
+      "ink": "#c2bb9f",
+      "inkContrast": 9.82,
+      "darkShare": 0.683,
+      "lightShare": 0,
+      "colouredShare": 0.208,
+      "leads": [
+       [
+        "orange",
+        "#726b58",
+        0.076
+       ],
+       [
+        "orange",
+        "#59321d",
+        0.069
+       ],
+       [
+        "red",
+        "#fd2828",
+        0.038
+       ]
+      ]
+     },
+     "arc": {
+      "darkGround": 0.802,
+      "lightGround": 0.026,
+      "colouredGround": 0.299,
+      "leads": {
+       "orange": 0.259,
+       "amber": 0.235,
+       "yellow": 0.16,
+       "olive": 0.076,
+       "indigo": 0.073,
+       "teal": 0.038,
+       "cyan": 0.012,
+       "green": 0.012,
+       "violet": 0.006,
+       "blue": 0.006,
+       "red": 0.003,
+       "magenta": 0.003
+      }
+     }
+    },
+    {
+     "film": "20241125",
+     "palette": {
+      "ground": "#100d0c",
+      "groundL": 0.0042,
+      "ink": "#f1f0ed",
+      "inkContrast": 16.98,
+      "darkShare": 0.618,
+      "lightShare": 0.027,
+      "colouredShare": 0.246,
+      "leads": [
+       [
+        "orange",
+        "#623e1b",
+        0.087
+       ],
+       [
+        "orange",
+        "#8c734c",
+        0.077
+       ],
+       [
+        "orange",
+        "#bdab85",
+        0.045
+       ]
+      ]
+     },
+     "arc": {
+      "darkGround": 0.846,
+      "lightGround": 0.041,
+      "colouredGround": 0.271,
+      "leads": {
+       "amber": 0.339,
+       "orange": 0.154,
+       "yellow": 0.094,
+       "green": 0.034,
+       "olive": 0.032,
+       "cyan": 0.025,
+       "indigo": 0.025,
+       "violet": 0.018,
+       "teal": 0.016,
+       "red": 0.016,
+       "blue": 0.014,
+       "magenta": 0.002
+      }
+     }
+    },
+    {
+     "film": "20260314",
+     "palette": {
+      "ground": "#111111",
+      "groundL": 0.0056,
+      "ink": "#87918d",
+      "inkContrast": 5.81,
+      "darkShare": 0.842,
+      "lightShare": 0,
+      "colouredShare": 0.054,
+      "leads": [
+       [
+        "red",
+        "#582615",
+        0.033
+       ],
+       [
+        "orange",
+        "#b0700b",
+        0.021
+       ]
+      ]
+     },
+     "arc": {
+      "darkGround": 0.796,
+      "lightGround": 0.031,
+      "colouredGround": 0.117,
+      "leads": {
+       "orange": 0.24,
+       "red": 0.112,
+       "amber": 0.097,
+       "blue": 0.041,
+       "olive": 0.026,
+       "cyan": 0.02,
+       "yellow": 0.01,
+       "indigo": 0.005,
+       "green": 0.005
+      }
+     }
+    }
+   ]
+  }
+ },
+ "categories": {
+  "type-surface": {
+   "films": [
+    "paperclip",
+    "hupo"
+   ],
+   "paperclip": {
+    "devices": [
+     "title-to-texture",
+     "term-biggest",
+     "word-cue",
+     "callout-line",
+     "mark-in-red",
+     "narrowing-frames"
+    ]
+   },
+   "hupo": {
+    "labels": [
+     "T",
+     "PT",
+     "EN",
+     "D",
+     "EP"
+    ],
+    "measured": {
+     "T": {
+      "count": 8,
+      "durSec": [
+       0.51,
+       2.64,
+       5
+      ],
+      "roomDiff": [
+       52.1,
+       74.41,
+       105.8
+      ],
+      "examples": [
+       "name typed in news text",
+       "3D title + logo",
+       "凭什么 over DeepSeek page"
+      ]
+     },
+     "PT": {
+      "count": 11,
+      "durSec": [
+       2.88,
+       9.04,
+       15.38
+      ],
+      "roomDiff": [
+       8.7,
+       28,
+       56.7
+      ],
+      "examples": [
+       "3D date over presenter, crosses the cut",
+       "three paper tags",
+       "side card"
+      ]
+     },
+     "EN": {
+      "count": 18,
+      "durSec": [
+       0.27,
+       2.2,
+       4.13
+      ],
+      "roomDiff": [
+       52.9,
+       81.53,
+       102.8
+      ],
+      "examples": [
+       "news page → push to highlight",
+       "exact number typed in news text",
+       "exact number typed in news text"
+      ]
+     },
+     "D": {
+      "count": 5,
+      "durSec": [
+       2.67,
+       12.68,
+       41.03
+      ],
+      "roomDiff": [
+       49.9,
+       66.28,
+       81.2
+      ],
+      "examples": [
+       "H800 vs optimized",
+       "H800 vs optimized",
+       "H800 vs optimized"
+      ]
+     },
+     "EP": {
+      "count": 19,
+      "durSec": [
+       0.28,
+       1.79,
+       6
+      ],
+      "roomDiff": [
+       53,
+       65.18,
+       85.6
+      ],
+      "examples": [
+       "person montage (not ... not ...)",
+       "person montage (not ... not ...)",
+       "person montage (not ... not ...)"
+      ]
+     }
+    }
+   }
+  },
+  "evidence-card": {
+   "films": [
+    "paperclip",
+    "hupo"
+   ],
+   "paperclip": {
+    "devices": [
+     "real-in-frame",
+     "real-doc-callout",
+     "clipping-stack",
+     "bracket-group",
+     "carrier"
+    ]
+   },
+   "hupo": {
+    "labels": [
+     "EN",
+     "EO",
+     "EP",
+     "C"
+    ],
+    "measured": {
+     "EN": {
+      "count": 18,
+      "durSec": [
+       0.27,
+       2.2,
+       4.13
+      ],
+      "roomDiff": [
+       52.9,
+       81.53,
+       102.8
+      ],
+      "examples": [
+       "news page → push to highlight",
+       "exact number typed in news text",
+       "exact number typed in news text"
+      ]
+     },
+     "EO": {
+      "count": 6,
+      "durSec": [
+       0.63,
+       1.42,
+       2.67
+      ],
+      "roomDiff": [
+       50,
+       65.38,
+       101.9
+      ],
+      "examples": [
+       "White House",
+       "DeepSeek R1-Zero page",
+       "Nvidia building"
+      ]
+     },
+     "EP": {
+      "count": 19,
+      "durSec": [
+       0.28,
+       1.79,
+       6
+      ],
+      "roomDiff": [
+       53,
+       65.18,
+       85.6
+      ],
+      "examples": [
+       "person montage (not ... not ...)",
+       "person montage (not ... not ...)",
+       "person montage (not ... not ...)"
+      ]
+     },
+     "C": {
+      "count": 4,
+      "durSec": [
+       1.6,
+       3.61,
+       5.73
+      ],
+      "roomDiff": [
+       90,
+       96.45,
+       99.5
+      ],
+      "examples": [
+       "chat: 宣布做AGI",
+       "chat bubble close-up",
+       "chat: 出事了"
+      ]
+     }
+    }
+   }
+  },
+  "data-number": {
+   "films": [
+    "paperclip",
+    "hupo"
+   ],
+   "paperclip": {
+    "devices": [
+     "number-grows",
+     "bar-length-ratio",
+     "table-grows",
+     "sort-to-rank",
+     "countdown-object"
+    ]
+   },
+   "hupo": {
+    "labels": [
+     "ED"
+    ],
+    "measured": {
+     "ED": {
+      "count": 9,
+      "durSec": [
+       1.68,
+       4.77,
+       9.2
+      ],
+      "roomDiff": [
+       63.3,
+       77.22,
+       102.3
+      ],
+      "examples": [
+       "real ticker table",
+       "data collage with logos",
+       "efficiency table"
+      ]
+     }
+    }
+   }
+  },
+  "graphic-hero": {
+   "films": [
+    "paperclip",
+    "hupo"
+   ],
+   "paperclip": {
+    "devices": [
+     "title-to-texture",
+     "term-biggest",
+     "literal-metaphor",
+     "rhyme"
+    ]
+   },
+   "hupo": {
+    "labels": [
+     "T",
+     "Q"
+    ],
+    "measured": {
+     "T": {
+      "count": 8,
+      "durSec": [
+       0.51,
+       2.64,
+       5
+      ],
+      "roomDiff": [
+       52.1,
+       74.41,
+       105.8
+      ],
+      "examples": [
+       "name typed in news text",
+       "3D title + logo",
+       "凭什么 over DeepSeek page"
+      ]
+     },
+     "Q": {
+      "count": 3,
+      "durSec": [
+       1.85,
+       6.96,
+       10.9
+      ],
+      "roomDiff": [
+       43.1,
+       55.37,
+       65
+      ],
+      "examples": [
+       "quote over person",
+       "quote over person",
+       "quote over b-roll"
+      ]
+     }
+    }
+   }
+  },
+  "transition": {
+   "films": [
+    "paperclip",
+    "hupo"
+   ],
+   "paperclip": {
+    "devices": [
+     "glitch-cut",
+     "black-pause",
+     "zoom-into",
+     "scale-jump",
+     "pan-distance"
+    ]
+   },
+   "hupo": {
+    "labels": [
+     "B",
+     "R"
+    ],
+    "measured": {
+     "B": {
+      "count": 20,
+      "durSec": [
+       0.33,
+       1.75,
+       7.05
+      ],
+      "roomDiff": [
+       46.7,
+       65.96,
+       103.7
+      ],
+      "examples": [
+       "K-line footage",
+       "money b-roll",
+       "money b-roll"
+      ]
+     },
+     "R": {
+      "count": 10,
+      "durSec": [
+       0.55,
+       2.25,
+       4.32
+      ],
+      "roomDiff": [
+       54.6,
+       74.75,
+       97
+      ],
+      "examples": [
+       "recap: big word over earlier visuals",
+       "recap: big word over earlier visuals",
+       "recap: big word over earlier visuals"
+      ]
+     },
+     "cuts": 139
+    }
+   }
+  },
+  "motion-type": {
+   "films": [
+    "paperclip",
+    "hupo"
+   ],
+   "paperclip": {
+    "devices": [
+     "zoom-into",
+     "zoom-out-whole",
+     "unwind-3d-to-flat",
+     "letter-to-structure",
+     "copy-to-repeat",
+     "mark-follows-line",
+     "dim-keep-red"
+    ]
+   },
+   "hupo": {
+    "labels": [
+     "T",
+     "PT",
+     "D",
+     "R"
+    ],
+    "measured": {
+     "T": {
+      "count": 8,
+      "durSec": [
+       0.51,
+       2.64,
+       5
+      ],
+      "roomDiff": [
+       52.1,
+       74.41,
+       105.8
+      ],
+      "examples": [
+       "name typed in news text",
+       "3D title + logo",
+       "凭什么 over DeepSeek page"
+      ]
+     },
+     "PT": {
+      "count": 11,
+      "durSec": [
+       2.88,
+       9.04,
+       15.38
+      ],
+      "roomDiff": [
+       8.7,
+       28,
+       56.7
+      ],
+      "examples": [
+       "3D date over presenter, crosses the cut",
+       "three paper tags",
+       "side card"
+      ]
+     },
+     "D": {
+      "count": 5,
+      "durSec": [
+       2.67,
+       12.68,
+       41.03
+      ],
+      "roomDiff": [
+       49.9,
+       66.28,
+       81.2
+      ],
+      "examples": [
+       "H800 vs optimized",
+       "H800 vs optimized",
+       "H800 vs optimized"
+      ]
+     },
+     "R": {
+      "count": 10,
+      "durSec": [
+       0.55,
+       2.25,
+       4.32
+      ],
+      "roomDiff": [
+       54.6,
+       74.75,
+       97
+      ],
+      "examples": [
+       "recap: big word over earlier visuals",
+       "recap: big word over earlier visuals",
+       "recap: big word over earlier visuals"
+      ]
+     }
+    }
+   }
+  },
+  "material": {
+   "films": [
+    "paperclip",
+    "hupo"
+   ],
+   "paperclip": {
+    "devices": [
+     "title-to-texture",
+     "tape-sweep",
+     "mark-in-red",
+     "clipping-stack"
+    ]
+   },
+   "hupo": {
+    "labels": [
+     "T",
+     "PT",
+     "EN",
+     "Q"
+    ],
+    "measured": {
+     "T": {
+      "count": 8,
+      "durSec": [
+       0.51,
+       2.64,
+       5
+      ],
+      "roomDiff": [
+       52.1,
+       74.41,
+       105.8
+      ],
+      "examples": [
+       "name typed in news text",
+       "3D title + logo",
+       "凭什么 over DeepSeek page"
+      ]
+     },
+     "PT": {
+      "count": 11,
+      "durSec": [
+       2.88,
+       9.04,
+       15.38
+      ],
+      "roomDiff": [
+       8.7,
+       28,
+       56.7
+      ],
+      "examples": [
+       "3D date over presenter, crosses the cut",
+       "three paper tags",
+       "side card"
+      ]
+     },
+     "EN": {
+      "count": 18,
+      "durSec": [
+       0.27,
+       2.2,
+       4.13
+      ],
+      "roomDiff": [
+       52.9,
+       81.53,
+       102.8
+      ],
+      "examples": [
+       "news page → push to highlight",
+       "exact number typed in news text",
+       "exact number typed in news text"
+      ]
+     },
+     "Q": {
+      "count": 3,
+      "durSec": [
+       1.85,
+       6.96,
+       10.9
+      ],
+      "roomDiff": [
+       43.1,
+       55.37,
+       65
+      ],
+      "examples": [
+       "quote over person",
+       "quote over person",
+       "quote over b-roll"
+      ]
+     }
+    }
+   }
+  },
+  "gawx-layout": {
+   "films": [
+    "gawx"
+   ],
+   "gawx": {
+    "variants": [
+     "gl-stack-left",
+     "gl-centre-hero",
+     "gl-lower-third",
+     "gl-loose-single"
+    ],
+    "typography": {
+     "name": "Gawx",
+     "frames": 812,
+     "withWords": 0.213,
+     "biggest": [
+      0.032,
+      0.044,
+      0.073,
+      0.139
+     ],
+     "bigShare": 0.026,
+     "lines": [
+      2,
+      3,
+      6
+     ],
+     "align": {
+      "left": 0.13,
+      "centre": 0.08,
+      "right": 0,
+      "loose": 0.79
+     },
+     "x": {
+      "left": 0.26,
+      "centre": 0.47,
+      "right": 0.27
+     },
+     "y": {
+      "top": 0.31,
+      "middle": 0.49,
+      "bottom": 0.2
+     },
+     "margin": [
+      0.041,
+      0.286
+     ],
+     "colour": {
+      "light": 0.34,
+      "colour": 0.2,
+      "dark": 0.24,
+      "grey": 0.23
+     },
+     "chars": [
+      7,
+      12
+     ]
+    }
+   }
+  },
+  "colour-harmony": {
+   "films": [
+    "gawx"
+   ],
+   "gawx": {
+    "variants": [
+     "ch-dark-analogous",
+     "ch-dark-complementary",
+     "ch-coloured-ground-turn",
+     "ch-neutral-accent",
+     "ch-noir-single",
+     "ch-warm-cool-pair"
+    ],
+    "harmony": {
+     "darkGroundShare": "0.78-0.88",
+     "colouredGroundTurnShare": "0.15-0.30",
+     "maxColouredFamiliesPerFrame": 2,
+     "analogousMaxDeg": 45,
+     "complementaryDeg": [
+      150,
+      210
+     ],
+     "contrastDeg": [
+      90,
+      150
+     ],
+     "appearFamilyTurnSeconds": [
+      2,
+      8
+     ],
+     "inkContrastMinBody": 4.5,
+     "inkContrastMinLarge": 3,
+     "muddyWarmChromaGuard": "warm 20-100° hue with chroma < 0.04 at low L reads dirty brown; avoid"
+    },
+    "palettes": {
+     "20210616": {
+      "ground": "#101116",
+      "groundL": 0.0057,
+      "ink": "#f6f5f2",
+      "inkContrast": 17.29,
+      "darkShare": 0.614,
+      "lightShare": 0.058,
+      "colouredShare": 0.28,
+      "leads": [
+       [
+        "blue",
+        "#242939",
+        0.222
+       ],
+       [
+        "cyan",
+        "#3d6f89",
+        0.038
+       ],
+       [
+        "red",
+        "#bc1014",
+        0.02
+       ]
+      ]
+     },
+     "20231027": {
+      "ground": "#0f1113",
+      "groundL": 0.0055,
+      "ink": "#c2bb9f",
+      "inkContrast": 9.82,
+      "darkShare": 0.683,
+      "lightShare": 0,
+      "colouredShare": 0.208,
+      "leads": [
+       [
+        "orange",
+        "#726b58",
+        0.076
+       ],
+       [
+        "orange",
+        "#59321d",
+        0.069
+       ],
+       [
+        "red",
+        "#fd2828",
+        0.038
+       ]
+      ]
+     },
+     "20241125": {
+      "ground": "#100d0c",
+      "groundL": 0.0042,
+      "ink": "#f1f0ed",
+      "inkContrast": 16.98,
+      "darkShare": 0.618,
+      "lightShare": 0.027,
+      "colouredShare": 0.246,
+      "leads": [
+       [
+        "orange",
+        "#623e1b",
+        0.087
+       ],
+       [
+        "orange",
+        "#8c734c",
+        0.077
+       ],
+       [
+        "orange",
+        "#bdab85",
+        0.045
+       ]
+      ]
+     },
+     "20260314": {
+      "ground": "#111111",
+      "groundL": 0.0056,
+      "ink": "#87918d",
+      "inkContrast": 5.81,
+      "darkShare": 0.842,
+      "lightShare": 0,
+      "colouredShare": 0.054,
+      "leads": [
+       [
+        "red",
+        "#582615",
+        0.033
+       ],
+       [
+        "orange",
+        "#b0700b",
+        0.021
+       ]
+      ]
+     }
+    }
+   }
+  },
+  "type-effect": {
+   "films": [
+    "hupo"
+   ],
+   "hupo": {
+    "sheet": "style-lab/reference-hupo/aesthetics/sheet-by-kind.jpg",
+    "examples": [
+     "T: DeepSeek 白字叠 logo",
+     "EP: 人脸旁超大年份",
+     "T: 深度求索白/红渐变字",
+     "R: 开源 巨字",
+     "R: 人员/员工 大字透出画面",
+     "T: 大字压照片",
+     "EP: 2025年 竖排出画",
+     "ED: 526.5億美元 压满",
+     "PT: 2025年 竖排在主讲人旁",
+     "R: 思考/开源 多层巨字",
+     "T: 大字带印刷颗粒",
+     "ED: 数据图上的巨字"
+    ]
+   }
+  }
+ },
+ "gaps": [
+  "字在画面里的高度占比/边距/字面占比：这两套拆解没有像素测量，下一步用 breakdown 的密集帧补测",
+  "对比度与颗粒密度：需要取样帧的像素统计",
+  "每个变体的最短/最长文案：需要 bench 帧",
+  "转场类型（cut/whip/flash/match/push）的逐刀标注：cuts-labelled 目前只有 roomDiff 与时长",
+  "Gawx: Gawx 的实拍内容不量（按用户要求）",
+  "Gawx: 逐拍主色族轮换时间点未标：palette-arc 只有占比与 2-8 秒一换的结论",
+  "Gawx: 字面像素级 bbox 未逐帧测：type-measures 是采样统计"
+ ],
+ "requirements": {
+  "defaultFilms": [
+   "paperclip",
+   "hupo"
+  ],
+  "categoryFilms": {
+   "gawx-layout": [
+    "gawx"
+   ],
+   "colour-harmony": [
+    "gawx"
+   ],
+   "type-effect": [
+    "hupo"
+   ]
+  }
+ }
+}

@@ -1,0 +1,32 @@
+#!/usr/bin/env node
+import fs from "node:fs";
+import path from "node:path";
+import {execFileSync} from "node:child_process";
+import {fileURLToPath} from "node:url";
+
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),"..");
+const shellProject=path.join(root,process.argv[2]||"work/cap-native-production-v2/a1-virtual-display-recording-canary-v3.cap");
+const cfrVideo=path.join(root,process.argv[3]||"work/cap-native-production-v2/a1-project-window-cfr60.mp4");
+const outputProject=path.join(root,process.argv[4]||"work/cap-native-production-v2/a1-cfr-cap-adapter-canary.cap");
+if (!fs.existsSync(shellProject)||!fs.existsSync(cfrVideo)) throw new Error("cap-cfr-adapter-input-missing");
+if (fs.existsSync(outputProject)) throw new Error("cap-cfr-adapter-output-exists");
+const ffprobe=path.join(root,".tools/bin/ffprobe");
+const probe=JSON.parse(execFileSync(ffprobe,["-v","error","-show_entries","stream=width,height,r_frame_rate,avg_frame_rate,nb_frames:format=duration,size","-of","json",cfrVideo],{encoding:"utf8"}));
+const video=probe.streams[0];
+if (video.width===1920&&video.height===1080) throw new Error("cap-cfr-adapter-full-display-forbidden:provide-project-window-only-pixels");
+if (video.width<640||video.height<360||video.r_frame_rate!=="60/1"||Number(video.nb_frames)<Math.floor(Number(probe.format.duration)*59.5)) throw new Error(`cap-cfr-adapter-source-not-project-window-cfr60:${JSON.stringify(probe)}`);
+fs.cpSync(shellProject,outputProject,{recursive:true,errorOnExist:true});
+const metaPath=path.join(outputProject,"recording-meta.json");
+const meta=JSON.parse(fs.readFileSync(metaPath,"utf8"));
+const displayRelative=meta.segments?.[0]?.display?.path||"content/segments/segment-0/display.mp4";
+const displayPath=path.join(outputProject,displayRelative);
+fs.copyFileSync(cfrVideo,displayPath);
+meta.segments[0].display={...meta.segments[0].display,path:displayRelative,fps:60,start_time:0};
+meta.cfrDisplayAdapter={contract:"A1CapCfrDisplayAdapter/v2",captureScope:"PROJECT_WINDOW_ONLY",fullDisplayForbidden:true,source:"PRE_CROPPED_PROJECT_WINDOW",width:video.width,height:video.height,fps:60,frameCount:Number(video.nb_frames),durationSeconds:Number(probe.format.duration)};
+fs.writeFileSync(metaPath,`${JSON.stringify(meta,null,2)}\n`);
+const configPath=path.join(outputProject,"project-config.json");
+const config=JSON.parse(fs.readFileSync(configPath,"utf8"));
+config.timeline.segments=[{recordingSegment:0,timescale:1,start:0,end:Number(probe.format.duration),name:"A1 CFR60 project-window canary"}];
+config.timeline.audioSegments=[];
+fs.writeFileSync(configPath,`${JSON.stringify(config,null,2)}\n`);
+console.log(JSON.stringify({status:"READY_FOR_CAP_VALIDATION",contract:"A1CapCfrDisplayAdapter/v2",captureScope:"PROJECT_WINDOW_ONLY",outputProject:path.relative(root,outputProject),sourceVideo:path.relative(root,cfrVideo),probe},null,2));

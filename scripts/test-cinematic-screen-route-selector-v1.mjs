@@ -1,0 +1,6 @@
+#!/usr/bin/env node
+import assert from "node:assert/strict";
+import {selectCinematicScreenRoutes} from "../apps/studio-next/src/lib/a1-cinematic-screen-route-selector-v1.mjs";
+const families=["SELECTION_REPLACEMENT","JUDGMENT_STATE_COMPARE","GAP_EXPANSION","RESULT_PANEL_REVEAL","FULLSCREEN_RESULT_TRANSITION","DOCUMENT_EDIT_HOLD","STATE_SWITCH_HARD_CUT","JUDGMENT_STATE_COMPARE","GAP_EXPANSION","JUDGMENT_STATE_COMPARE","FULLSCREEN_RESULT_TRANSITION","RESULT_PANEL_REVEAL"],fixtures=families.map((directorFamily,index)=>({fixtureId:`GENRE-${index+1}`,order:index+1,directorFamily,durationMs:3000+index*250})),plan=selectCinematicScreenRoutes(fixtures);
+assert.equal(plan.status,"PASS");assert.ok(plan.counts.CLEAN_HOLD>=5);assert.ok(plan.counts.CINEMATIC_DOLLY_PUSH<=4);assert.ok(plan.counts.WHIP_REFRAME<=3);assert.ok(plan.counts.OBLIQUE_2_5D<=2);assert.equal(plan.items.some((item)=>item.whiteFocusWindowAllowed!==false),false);let run=0;for(const item of plan.items){run=item.route==="CLEAN_HOLD"?0:run+1;assert.ok(run<=2);if(item.route!=="CLEAN_HOLD")assert.equal(item.motionBlurPolicy,"TEMPORAL_CAMERA_ONLY");}
+console.log(JSON.stringify({status:"PASS",contract:"A1CinematicScreenRouteSelectorTest/v1",counts:plan.counts,routePlanSha256:plan.routePlanSha256},null,2));

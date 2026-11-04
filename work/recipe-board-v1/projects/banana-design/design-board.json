@@ -1,0 +1,584 @@
+{
+ "contract": "A1DesignBoard/v2",
+ "project": "banana-design",
+ "line": "同一棵香蕉",
+ "visualThesis": "同一棵香蕉是一万个复制品：黄是地面，重复是主角，感染是褐。",
+ "world": {
+  "name": "TODO: 世界名",
+  "space": "TODO: 空间/材质",
+  "material": "TODO: 材质与表面",
+  "light": "TODO: 主光/补光/轮廓光",
+  "cameraGrammar": "TODO: 镜头组/机位/运动语法",
+  "typeSystem": "TODO: 字级/字位/字与物关系",
+  "seamGrammar": "TODO: 接缝类型与动机"
+ },
+ "worldTest": null,
+ "heroAsset": null,
+ "directions": [
+  {
+   "id": "A",
+   "thesis": "克隆货架：香蕉不是商品，是一条无限复制的建筑走廊。",
+   "medium": "3d",
+   "build": "3d",
+   "world": "Clone Shelf",
+   "material": "蜡质纸板货架、香蕉皮、冷白灯池",
+   "camera": "35mm 低机位横移，沿货架弧线推进",
+   "type": "巨大竖排「同一棵」，压在货架纵深上",
+   "seam": "香蕉曲线 → 货架弧线",
+   "reproduction": {
+    "mode": "3d",
+    "fidelity": "high",
+    "needs": [
+     "hero banana mesh",
+     "shelf set",
+     "contact shadows"
+    ]
+   },
+   "reference": "work/recipe-board-v1/projects/banana-design/out/design-directions-20261104/A.png",
+   "frame": "",
+   "motion": "",
+   "checks": {
+    "composite": "pending"
+   },
+   "status": "draft",
+   "referenceRole": "gpt-image-direction-reference",
+   "promptFile": "DESIGN-IMAGE-PROMPTS-20261104.md",
+   "referenceSheet": "out/design-directions-20261104/six-directions.jpg",
+   "role": "main-spine",
+   "triage": {
+    "complexity": 3,
+    "consistentWorld": true,
+    "camera": true,
+    "parallax": true,
+    "contactShadow": true,
+    "exactGeometry": true,
+    "organicRandom": false,
+    "assetReady": true,
+    "tooHard": false,
+    "durationSec": 5,
+    "needs": [
+     "shelf set",
+     "hero banana mesh",
+     "contact shadows",
+     "light pools"
+    ]
+   },
+   "techStack": [
+    "webgl-three",
+    "blender",
+    "ffmpeg"
+   ],
+   "effects": [
+    "camera-parallax",
+    "instancing-array",
+    "shader-material",
+    "post-chain"
+   ],
+   "canary": "work/recipe-board-v1/projects/banana-design/canaries/A-camera/out/clean.mp4",
+   "canaryVerdict": "mechanical-pass (design not reviewed)",
+   "benchmark": {
+    "id": "B12-old-card",
+    "status": "fail",
+    "note": "B12 old card still stronger: 4 vs new 2; fix hero asset before expansion"
+   },
+   "buildPlan": {
+    "contract": "A1BuildPlan/v1",
+    "direction": "A",
+    "reference": "work/recipe-board-v1/projects/banana-design/out/design-directions-20261104/A.png",
+    "status": "blocked",
+    "lookLock": {
+     "composition": "左侧单排货架，右侧 40% 黑负空间；前景一束香蕉在左下，近景空槽；一点透视向黑处消失",
+     "subject": "真实或高质量 hero banana 成束，不是低模 GLB 复制",
+     "camera": "35mm 低机位，沿左侧货架向黑处推进；起止景别明确",
+     "light": "左上方硬顶光池；右侧纯黑；香蕉有接触阴影；冷暗底",
+     "color": "香蕉黄主色、骨白高光、墨黑负空间；不要满屏黄",
+     "foregroundBackground": "前景一束大、货架中景、右侧黑背景；不得改成对称走廊",
+     "seam": "香蕉曲线 → 货架弧线；为 match cut 留线"
+    },
+    "assets": [
+     {
+      "id": "hero-banana",
+      "kind": "real-or-highpbr",
+      "status": "missing",
+      "need": "真实香蕉/高质量 hero mesh + 接触阴影"
+     },
+     {
+      "id": "shelf-set",
+      "kind": "3d",
+      "status": "missing",
+      "need": "左侧单排货架、灯条、真实材质"
+     },
+     {
+      "id": "contact-shadows",
+      "kind": "3d",
+      "status": "missing",
+      "need": "每束香蕉接地阴影"
+     },
+     {
+      "id": "type-code",
+      "kind": "code",
+      "status": "ready",
+      "need": "后续代码字，不进 still"
+     },
+     {
+      "id": "camera-rig",
+      "kind": "code",
+      "status": "ready",
+      "need": "低机位推进"
+     }
+    ],
+    "gaps": [
+     "hero banana asset",
+     "shelf material/lookdev",
+     "contact shadows",
+     "reference composition match"
+    ],
+    "steps": [
+     "fix assets",
+     "3-frame still + lookMatch SSIM >=0.55",
+     "5s canary",
+     "10s world",
+     "20s previz"
+    ],
+    "occlusion": {
+     "layers": [
+      "foreground: hero bunch lower-left",
+      "midground: left shelf rows",
+      "background: black void right"
+     ],
+     "order": "foreground bunch > shelf > void; type plane later, never under a 3D object",
+     "subjectBox": "foreground bunch lower-left, shelf rows receding; right 40% empty",
+     "typeOwner": "code later; do not place type under the bunch or shelf",
+     "contact": "each bunch has an ellipse contact shadow on the shelf",
+     "checks": [
+      "depth order",
+      "projected bbox",
+      "objectMask",
+      "contact shadow",
+      "mesh intersection",
+      "type owner",
+      "frame edge"
+     ]
+    },
+    "referenceMetrics": {
+     "verdict": "fail",
+     "delta": {
+      "meanL": 0.03882900246460097,
+      "darkPct": 0.06866705246913579,
+      "edge": 0.004850684339839153,
+      "edgeRatio": 0.5239529583937113,
+      "clippedPct": 0.019656635802469135,
+      "gridMean": 0.06348947678075162,
+      "grid": [
+       0.13285876895429777,
+       0.013703539065885312,
+       0.0006162417483660873,
+       0.10825037407404181,
+       0.034973484763032414,
+       0.029135260838777214,
+       0.06813333451806414,
+       0.16035570469772215,
+       0.023378582366577638
+      ]
+     },
+     "file": "work/recipe-board-v1/projects/banana-design/out/look-match/A-composition.json",
+     "note": "edgeRatio/clipped now part of gate"
+    },
+    "assetCandidates": [
+     {
+      "id": "synthetic-banana-calibration-20261031",
+      "kind": "image-to-3d",
+      "qa": "A1ModelCheck 5/6 recognizable",
+      "verdict": "geometry candidate only; uniform cream material, capsule top, no peel detail; not hero",
+      "path": "work/recipe-board-v1/style-lab/engine/subjects/parts/synthetic-banana-calibration-20261031.glb"
+     }
+    ],
+    "generatedHeroCandidates": [
+     {
+      "id": "generated-banana-hero-20261104",
+      "image": "work/recipe-board-v1/projects/banana-design/canaries/A-gen/assets/banana-hero.png",
+      "cutout": "work/recipe-board-v1/projects/banana-design/canaries/A-gen/assets/banana-hero-cutout-v2.png",
+      "source": "ChatGPT project 视觉模板 生图; scripts/chatgpt-imagegen-fixed.sh",
+      "prompt": "single Cavendish banana, black background, 3/4 view, realistic peel",
+      "verdict": "clean alpha hero cutout v2; still not 3D/contact-shadow sufficient"
+     },
+     {
+      "id": "hunyuan-single-banana-20261104",
+      "glb": "work/recipe-board-v1/style-lab/engine/subjects/parts/banana-hero-single-20261104.glb",
+      "faces": 80000,
+      "source": "Codex image_gen side view + Hunyuan3D-2 single view",
+      "verdict": "3D candidate generated; A-3d reads as white vase, fails SSIM/composition; not ready"
+     },
+     {
+      "id": "hunyuan-tex-banana-20261104",
+      "glb": "work/recipe-board-v1/style-lab/engine/subjects/parts/banana-hero-tex-20261104.glb",
+      "faces": 80000,
+      "texture": "2K baked from left/right views",
+      "verdict": "real 3D textured hero candidate; still composition fail, not ready"
+     }
+    ],
+    "sceneUnits": {
+     "contract": "A1SceneUnit/v1",
+     "unit": "bunch",
+     "fingersMin": 3,
+     "fingersMax": 4,
+     "sharedCrown": true,
+     "recurring": true,
+     "evidence": "货架上重复排列着香蕉串；前景较清晰的香蕉串可见约三至四根香蕉汇合于同一个冠部，部分香蕉被遮挡。",
+     "confidence": 0.78,
+     "whatToModel": "建模具有共享冠部的多根香蕉串，并沿货架重复排列；香蕉数量和轮廓作适度变化。",
+     "image": "work/recipe-board-v1/style-lab/banana-3d/gen/clone-shelf.png",
+     "source": "work/recipe-board-v1/projects/banana-design/materials/hero-views/clone-shelf.unit.json"
+    }
+   },
+   "lookMatch": {
+    "status": "fail",
+    "ssim": 0.276731,
+    "reference": "work/recipe-board-v1/projects/banana-design/out/design-directions-20261104/A.png",
+    "render": "work/recipe-board-v1/projects/banana-design/canaries/A-3d-final/out/stills/clean-225.png",
+    "composition": {
+     "verdict": "fail",
+     "delta": {
+      "meanL": 0.19907668285355495,
+      "darkPct": 0.3371141975308642,
+      "edge": 0.00544557729468324,
+      "edgeRatio": 0.46557005582055766,
+      "clippedPct": 0.0008217592592592593,
+      "gridMean": 0.20598716388737137,
+      "grid": [
+       0.33996736945805534,
+       0.0676056476443232,
+       0.011309847045210588,
+       0.39096024321892453,
+       0.1839847433414701,
+       0.019787317606210133,
+       0.2611037639297424,
+       0.45430225307737165,
+       0.12486328966503436
+      ]
+     },
+     "file": "work/recipe-board-v1/projects/banana-design/out/look-match/A-composition.json"
+    },
+    "note": "textured 3D hero + staged foreground; composition/grid/edge still fail"
+   }
+  },
+  {
+   "id": "B",
+   "thesis": "一与一万：先给一根孤立的香蕉，再拉出一整片相同的黄。",
+   "medium": "3d",
+   "build": "3d",
+   "world": "Yellow Room / Clone Field",
+   "material": "黄墙、地板、单一顶光；远景重复剪影",
+   "camera": "固定 → 缓慢后拉/俯拍，尺度从一根到一万",
+   "type": "「一根」到「一万」的尺寸对比",
+   "seam": "香蕉曲线 → 阵列缺口",
+   "reproduction": {
+    "mode": "3d",
+    "fidelity": "high",
+    "needs": [
+     "single banana hero",
+     "clone field",
+     "scale transition"
+    ]
+   },
+   "reference": "out/design-directions-20261104/B.png",
+   "frame": "",
+   "motion": "",
+   "checks": {
+    "composite": "pending"
+   },
+   "status": "draft",
+   "referenceRole": "gpt-image-direction-reference",
+   "promptFile": "DESIGN-IMAGE-PROMPTS-20261104.md",
+   "referenceSheet": "out/design-directions-20261104/six-directions.jpg",
+   "role": "scale-motif",
+   "triage": {
+    "complexity": 4,
+    "consistentWorld": true,
+    "camera": true,
+    "parallax": true,
+    "contactShadow": true,
+    "exactGeometry": true,
+    "organicRandom": false,
+    "assetReady": true,
+    "tooHard": false,
+    "durationSec": 5,
+    "needs": [
+     "yellow room",
+     "clone field",
+     "scale transition"
+    ]
+   },
+   "techStack": [
+    "webgl-three",
+    "blender",
+    "ffmpeg"
+   ],
+   "effects": [
+    "camera-parallax",
+    "instancing-array",
+    "post-chain"
+   ]
+  },
+  {
+   "id": "C",
+   "thesis": "档案室：真实木箱、货运标签和病株照片才是证据，包装只负责把它们摆成一条证据链。",
+   "medium": "real",
+   "build": "real",
+   "world": "Archive Room",
+   "material": "旧木、纸张、金属标签、灰尘；真实档案光",
+   "camera": "55mm 横移/俯拍，推入标签",
+   "type": "档案编号与大字标题并置",
+   "seam": "标签条 → 果皮条",
+   "reproduction": {
+    "mode": "real",
+    "fidelity": "high",
+    "needs": [
+     "real crate/label evidence",
+     "archive page captures"
+    ]
+   },
+   "reference": "out/design-directions-20261104/C.png",
+   "frame": "",
+   "motion": "",
+   "checks": {
+    "composite": "pending"
+   },
+   "status": "draft",
+   "referenceRole": "gpt-image-direction-reference",
+   "promptFile": "DESIGN-IMAGE-PROMPTS-20261104.md",
+   "referenceSheet": "out/design-directions-20261104/six-directions.jpg",
+   "role": "optional-evidence",
+   "triage": {
+    "complexity": 5,
+    "evidence": true,
+    "consistentWorld": false,
+    "camera": true,
+    "contactShadow": true,
+    "exactGeometry": false,
+    "organicRandom": false,
+    "assetReady": false,
+    "tooHard": false,
+    "durationSec": 5,
+    "needs": [
+     "real crate",
+     "real paper labels",
+     "real specimen photos"
+    ]
+   },
+   "techStack": [
+    "real-assets",
+    "webgl-three",
+    "blender",
+    "ffmpeg"
+   ],
+   "effects": [
+    "camera-parallax",
+    "post-chain"
+   ]
+  },
+  {
+   "id": "D",
+   "thesis": "果皮即地图：把褐斑、裂纹和腐烂做成田垄、道路与疫区边界。",
+   "medium": "3d",
+   "build": "3d",
+   "world": "Peel Rot",
+   "material": "香蕉皮微距、褐斑、湿润纤维；侧光",
+   "camera": "微距固定/缓慢横移，焦平面沿裂纹走",
+   "type": "病名与地名压在斑纹上",
+   "seam": "褐斑裂纹 → 田垄道路",
+   "reproduction": {
+    "mode": "3d",
+    "fidelity": "high",
+    "needs": [
+     "peel macro shader",
+     "lesion texture",
+     "field map"
+    ]
+   },
+   "reference": "out/design-directions-20261104/D.png",
+   "frame": "",
+   "motion": "",
+   "checks": {
+    "composite": "pending"
+   },
+   "status": "draft",
+   "referenceRole": "gpt-image-direction-reference",
+   "promptFile": "DESIGN-IMAGE-PROMPTS-20261104.md",
+   "referenceSheet": "out/design-directions-20261104/six-directions.jpg",
+   "role": "material-motif",
+   "triage": {
+    "complexity": 3,
+    "consistentWorld": false,
+    "camera": true,
+    "parallax": false,
+    "contactShadow": true,
+    "exactGeometry": false,
+    "organicRandom": true,
+    "assetReady": true,
+    "tooHard": false,
+    "durationSec": 5,
+    "needs": [
+     "peel macro shader",
+     "lesion texture"
+    ]
+   },
+   "techStack": [
+    "blender",
+    "webgl-three",
+    "glsl-shader",
+    "ffmpeg"
+   ],
+   "effects": [
+    "shader-material",
+    "camera-parallax",
+    "post-chain"
+   ],
+   "canary": "work/recipe-board-v1/projects/banana-design/canaries/D-shader/out/clean.mp4",
+   "canaryVerdict": "mechanical-pass (design not reviewed)"
+  },
+  {
+   "id": "E",
+   "thesis": "字就是克隆：版口本身重复、裁切、增生，观众先看见“同一”再看见香蕉。",
+   "medium": "graphic",
+   "build": "graphic",
+   "world": "Type Field",
+   "material": "黄纸/黑墨/骨白，印刷网点与套印误差",
+   "camera": "平面推拉与字块蒙版转场",
+   "type": "同一棵/同一種病/再复制一次 三级巨字",
+   "seam": "字块裁切 → 货架/田垄",
+   "reproduction": {
+    "mode": "code",
+    "fidelity": "high",
+    "needs": [
+     "type system",
+     "print texture",
+     "mask transitions"
+    ]
+   },
+   "reference": "out/design-directions-20261104/E.png",
+   "frame": "",
+   "motion": "",
+   "checks": {
+    "composite": "pending"
+   },
+   "status": "draft",
+   "referenceRole": "gpt-image-direction-reference",
+   "promptFile": "DESIGN-IMAGE-PROMPTS-20261104.md",
+   "referenceSheet": "out/design-directions-20261104/six-directions.jpg",
+   "role": "type-motif",
+   "triage": {
+    "complexity": 2,
+    "text": true,
+    "consistentWorld": false,
+    "camera": true,
+    "parallax": false,
+    "contactShadow": false,
+    "exactGeometry": false,
+    "organicRandom": false,
+    "assetReady": true,
+    "tooHard": false,
+    "durationSec": 5,
+    "needs": [
+     "house type",
+     "paper texture",
+     "code layout"
+    ]
+   },
+   "techStack": [
+    "dom-css",
+    "svg-canvas",
+    "ffmpeg"
+   ],
+   "effects": [
+    "kinetic-type",
+    "svg-type",
+    "post-chain"
+   ],
+   "canary": "work/recipe-board-v1/projects/banana-design/canaries/E-type/out/clean.mp4",
+   "canaryVerdict": "needs-type"
+  },
+  {
+   "id": "F",
+   "thesis": "种植园即矩阵：航拍田垄是克隆阵列，土壤里的真菌是唯一不可见的敌人。",
+   "medium": "3d",
+   "build": "3d",
+   "world": "Field Grid",
+   "material": "红褐土壤、绿色叶冠、雾；航拍尺度",
+   "camera": "28mm 俯拍横移，消失线推进",
+   "type": "公顷数字作为地面刻度",
+   "seam": "田垄消失线 → 标签透视",
+   "reproduction": {
+    "mode": "3d",
+    "fidelity": "high",
+    "needs": [
+     "plantation grid",
+     "soil/fungus shader",
+     "aerial camera"
+    ]
+   },
+   "reference": "out/design-directions-20261104/F.png",
+   "frame": "",
+   "motion": "",
+   "checks": {
+    "composite": "pending"
+   },
+   "status": "draft",
+   "referenceRole": "gpt-image-direction-reference",
+   "promptFile": "DESIGN-IMAGE-PROMPTS-20261104.md",
+   "referenceSheet": "out/design-directions-20261104/six-directions.jpg",
+   "role": "field-scale",
+   "triage": {
+    "complexity": 4,
+    "consistentWorld": true,
+    "camera": true,
+    "parallax": true,
+    "contactShadow": true,
+    "exactGeometry": true,
+    "organicRandom": true,
+    "assetReady": true,
+    "tooHard": false,
+    "durationSec": 5,
+    "needs": [
+     "plantation grid",
+     "soil/leaf shader",
+     "aerial camera"
+    ]
+   },
+   "techStack": [
+    "webgl-three",
+    "blender",
+    "ffmpeg"
+   ],
+   "effects": [
+    "instancing-array",
+    "camera-parallax",
+    "shader-material",
+    "post-chain"
+   ]
+  }
+ ],
+ "selected": "A",
+ "userDecision": {
+  "status": "direction-selected",
+  "by": "user",
+  "at": "2026-11-04",
+  "reason": "A 可以；按参考复刻，构图不一致直接退回。"
+ },
+ "lookLock": {
+  "status": "draft",
+  "selected": "A",
+  "reference": "work/recipe-board-v1/projects/banana-design/out/design-directions-20261104/A.png",
+  "rules": [
+   "composition",
+   "subject",
+   "camera",
+   "light",
+   "color",
+   "foreground-background",
+   "seam"
+  ],
+  "delivery": "no-different-delivery",
+  "evidence": {}
+ }
+}

@@ -1,0 +1,46 @@
+{
+  "contract": "A1GroundLibrary/v1",
+  "about": "Text-free photographic grounds every chapter gets as images.ground_<name> (chapter.mjs prepareAssets, generated once by imagegen and cached by prompt). Blind review round four of paperclip-138-full: 8 of 10 beats under 4 were flat shapes on an even dark ground (像幻灯片) where the reference lays figures on paper, pages, a desk or film. A chapter lays them with type.flat.plate (graded to the film's look: grey, dark, vignetted) and sets its figures on them; the figures and all type stay code.",
+  "grounds": [
+    {
+      "name": "paper",
+      "use": "a sheet's close texture under a form, a record, a chart",
+      "prompt": "Extreme close-up of a sheet of slightly aged off-white printing paper filling the whole frame, fine fibres and faint creases, soft raking light from the top left, photographed flat from directly above, neutral colour, no text, no letters, no numbers, no marks, no objects"
+    },
+    {
+      "name": "pages",
+      "use": "an open book under body text the module sets on its pages (the film's own text). Bare, its blank pages read as empty paper (blind review 2026-10-23, a hard fault): never as the ground of a time line or a figure — take desk or board",
+      "prompt": "An open hardback book lying flat, two blank cream pages filling most of the frame, the gutter curving down the middle, soft window light from the left, shallow depth of field at the edges, photographed from slightly above, the pages completely blank with no printing at all, no text, no letters, no numbers"
+    },
+    {
+      "name": "desk",
+      "use": "evidence, cards, strips laid on a table",
+      "prompt": "An empty dark wooden desk top filling the frame, fine grain, worn varnish, a pool of soft lamp light in the middle falling off to dark edges, photographed from above at a slight angle, nothing on it, no text, no letters, no numbers, no objects"
+    },
+    {
+      "name": "board",
+      "use": "an investigation wall: photographs pinned, lines between them",
+      "prompt": "An empty dark grey felt pinboard filling the frame, fine fibre texture, a few small pin holes, soft light from the top, photographed straight on, nothing pinned on it, no text, no letters, no numbers, no paper"
+    },
+    {
+      "name": "folder",
+      "use": "a case file: a record, a mugshot, a sheet clipped in",
+      "prompt": "An open empty manila case folder lying flat on a dark table, the inside of the folder filling most of the frame, worn edges, soft light from above, photographed from directly above, completely blank, no labels, no text, no letters, no numbers, no papers inside"
+    },
+    {
+      "name": "lightbox",
+      "use": "film, gels, sequencing strips, anything read against light",
+      "prompt": "A dim lightbox surface glowing softly in a dark room, an even milky white panel filling the frame with a slight falloff to the corners, faint dust, photographed from directly above, nothing on it, no text, no letters, no numbers, no objects"
+    },
+    {
+      "name": "concrete",
+      "use": "a cold wall behind people, a line-up, a cell",
+      "prompt": "A bare dark concrete wall filling the frame, fine pores and stains, a soft light falling from the top making a gentle gradient to dark at the bottom, photographed straight on, nothing on it, no text, no letters, no numbers, no objects"
+    },
+    {
+      "name": "archive",
+      "use": "many cases, records, a database: the mass of what is kept (一桩桩、库里)",
+      "prompt": "Long rows of identical closed grey cardboard archive boxes on tall metal shelves receding into a dim archive room, soft light from above, deep perspective, photographed at eye level, the boxes completely plain with no labels, no text, no letters, no numbers, no people"
+    }
+  ]
+}

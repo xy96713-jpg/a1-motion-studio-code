@@ -1,0 +1,10 @@
+import fs from "node:fs/promises";
+import path from "node:path";
+import { paperEditorialRveQuoteFixture } from "../lib/storyboard-paper-editorial-rve-quote-fixture.js";
+import { buildPaperEditorialRveQuoteAdapterTimeline } from "../lib/storyboard-paper-editorial-rve-quote-adapter.js";
+const outDir = path.join(process.cwd(), ".codex-artifacts", "paper-editorial-rve-quote-adapter");
+await fs.mkdir(outDir, { recursive: true });
+const props = buildPaperEditorialRveQuoteAdapterTimeline(paperEditorialRveQuoteFixture);
+const out = path.join(outDir, "timeline-props.json");
+await fs.writeFile(out, JSON.stringify(props, null, 2)+"\n");
+console.log(out);

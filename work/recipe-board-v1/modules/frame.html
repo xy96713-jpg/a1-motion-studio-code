@@ -1,0 +1,224 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>frame</title>
+<style>
+html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: #111; }
+#ground { position: absolute; inset: 0; }
+#gimg { position: absolute; inset: -4%; background-size: cover; background-position: center; background-repeat: no-repeat; transform-origin: 50% 50%; }
+#layers { position: absolute; inset: 0; }
+.ly { position: absolute; transform-origin: 50% 50%; will-change: transform, opacity; }
+.img { background-repeat: no-repeat; }
+.card { box-sizing: border-box; }
+.tx { white-space: nowrap; line-height: 1.08; }
+.tx .bar { position: absolute; left: -.12em; right: -.12em; z-index: -1; transform-origin: 0 50%; }
+.tx .w { position: relative; display: inline-block; }
+#vig { position: absolute; inset: 0; pointer-events: none; }
+#sub { position: absolute; left: 0; right: 0; top: 930px; text-align: center; font-family: 'SourceHanSans Regular', 'PingFang SC'; font-size: 58px; color: #fff; text-shadow: 0 0 6px rgba(0,0,0,.55), 0 2px 3px rgba(0,0,0,.6); transform: scaleX(.86); z-index: 50; }
+</style></head>
+<body>
+<div id="ground"><div id="gimg"></div><div id="gimg2" style="position:absolute;inset:-4%;background-size:cover;background-position:center;background-repeat:no-repeat;transform-origin:50% 50%;opacity:0"></div></div><div id="layers"></div><div id="vig"></div><div id="sub"></div>
+<script>window.__spec = window.__spec || {};</script>
+<script src="common.js"></script>
+<script>
+// 合成帧 (a designed frame, built from parts): the design-frame stage composes a frame from layers instead of fitting
+// one of the fixed layouts (user, 2026-10-23: 先设计好 —— 设计帧阶段, 用真实零件拼, 生图辅助). Bottom to top:
+//   ground   a colour, a gradient { from, to, angle }, or a picture (material path, { art }, { module }) with blur,
+//            dim, focus { x, y, zoom } (the part of it in view); a { module } ground plays its module's motion (play: false holds
+//            its last frame)
+//   parts    [{ kind: 'image' | 'text' | 'shape', box: { x, y, w, h? } in % of the frame (top left), at, in, dur }]
+//     image  src (a material, { art }), crop { x, y, w, h } fractions of the picture, card { bg, pad, radius },
+//            phrase (cut to those words on the page, or [first, last] of a block; bar { color, h, at } then marks them),
+//            shadow, blur, dim, gray, invert, opacity, rot, fade (an edge melting into the ground), glow (a colour lit round its ink)
+//     text   text, role display | text | accent (the shot's house faces), size px (else fitted to box.w), color,
+//            align, italic, stroke, shadow, bar { color, h } (a marker bar behind its lower part)
+//     shape  color, radius, opacity, gradient { from, to, angle }
+//   in: fade | rise | slide | type | wipe | pop | none (default fade); dur (default .45); until (it leaves then); blend
+//   bleed: true lets a part run off the frame on purpose (else every part is kept inside at the camera's closest framing)
+// Words are code, set in the house faces; pictures are real material or text-free art; numbers carry facts.
+const S = M.S, $ = M.$, L = S.parts || [], G = S.ground || {};
+// gothic: the heavy square gothic (スミカク) for figures and formulas the reference sets in a heavy sans (r1 R07 「算式白色粗黑体」;
+// set in the Mincho they read old and muddy, film comparison 2026-10-25 4:51)
+const ROLE = { display: "'SourceHanSerif Heavy'", text: "'SourceHanSans Regular'", accent: "'Times New Roman'", gothic: "'House Sumikaku', 'SourceHanSerif Heavy'" };
+const grad = (g) => `linear-gradient(${g.angle ?? 135}deg, ${g.from}, ${g.to})`;
+if (G.color) $('#ground').style.background = G.color;
+if (G.gradient) $('#ground').style.background = grad(G.gradient);
+if (G.src) {
+  const gi = $('#gimg'); gi.style.backgroundImage = `url("${G.src}")`;
+  gi.style.filter = `${G.blur ? `blur(${G.blur}px) ` : ''}brightness(${1 - (G.dim ?? 0)})${G.gray ? ' grayscale(1)' : ''}`;
+  if (G.focus) Object.assign(gi.style, { backgroundSize: `${(G.focus.zoom || 1) * 100}% auto`, backgroundPosition: `${(G.focus.x ?? .5) * 100}% ${(G.focus.y ?? .5) * 100}%` });
+  if (G.opacity != null) gi.style.opacity = G.opacity;
+  // frames: a module's own motion (modules.mjs moduleFrames), each frame crossfaded into the next
+  if (G.frames) { const g2 = $('#gimg2'); g2.style.filter = gi.style.filter; if (G.focus) Object.assign(g2.style, { backgroundSize: gi.style.backgroundSize, backgroundPosition: gi.style.backgroundPosition }); }
+}
+if (G.vignette) $('#vig').style.background = `radial-gradient(ellipse 75% 70% at 50% 48%, transparent 45%, rgba(0,0,0,${G.vignette}))`;
+let plates = 0;
+const els = L.map((l, i) => {
+  const d = document.createElement('div'), b = l.box || { x: 10, y: 10, w: 40 };
+  d.className = 'ly'; d.style.left = `${b.x * 19.2}px`; d.style.top = `${b.y * 10.8}px`; d.style.zIndex = i + 1;
+  if (l.kind === 'image') {
+    d.classList.add('img'); d.style.width = `${b.w * 19.2}px`; if (b.h != null) d.style.height = `${b.h * 10.8}px`;
+    // front: the picture of a person laid over the words, the words behind the head (user 2026-10-23: 分层出来放在人像后面;
+    // ending S11 review: the name crosses behind the back of a head); the checks hold what it hides (framecheck frontMax)
+    if (l.front) { d.dataset.front = ''; d.style.zIndex = 100; }
+    const inner = l.card ? document.createElement('div') : d;
+    if (l.card) { d.classList.add('card'); Object.assign(d.style, { background: l.card.bg || '#fff', padding: `${l.card.pad ?? 28}px`, borderRadius: `${l.card.radius ?? 18}px` }); inner.style.cssText = 'position:relative;width:100%;height:100%;background-repeat:no-repeat'; d.appendChild(inner); }
+    // bar: a marker under the phrase's own glyphs (marks, from the words' boxes), the page's paper dropping out over it
+    if (l.bar && l.marks) { for (const m of l.marks) { const bar = document.createElement('div'); bar.className = 'pbar'; bar.style.cssText = `position:absolute;left:${(m.x - .01) * 100}%;width:${(m.w + .02) * 100}%;top:${(m.y + m.h * (1 - (l.bar.h ?? .5))) * 100}%;height:${m.h * (l.bar.h ?? .5) * 100 + 1}%;background:${l.bar.color || '#f3d21a'};transform-origin:0 50%;z-index:0`; (l.card ? inner : d).appendChild(bar); }
+      const pic = document.createElement('div'); pic.style.cssText = 'position:absolute;inset:0;background-repeat:no-repeat;mix-blend-mode:multiply;z-index:1'; (l.card ? inner : d).appendChild(pic); inner.__pic = pic; }
+    const target = inner.__pic || inner;
+    target.style.backgroundImage = `url("${l.src}")`;
+    const c = l.crop || { x: 0, y: 0, w: 1, h: 1 };
+    // the crop fills the box without stretching (scaled to cover it, centred on the crop): a portrait set in a tall box
+    // was drawn out sideways (meta-S6); the box's height follows the crop when it gives none
+    { const im = new Image(); im.onload = () => { const pad = l.card ? 2 * (l.card.pad ?? 28) : 0, W = b.w * 19.2 - pad, cw = im.naturalWidth * c.w, ch = im.naturalHeight * c.h, H = b.h != null ? b.h * 10.8 - pad : W * ch / cw, k = Math.max(W / cw, H / ch);
+      if (b.h == null) d.style.height = `${H + pad}px`;
+      target.style.backgroundSize = `${im.naturalWidth * k}px ${im.naturalHeight * k}px`;
+      const ox = -(c.x * im.naturalWidth * k) - (cw * k - W) / 2, oy = -(c.y * im.naturalHeight * k) - (ch * k - H) / 2;
+      target.style.backgroundPosition = `${ox}px ${oy}px`;
+      // a cut-out is its opaque part: clipped to it (with room for its shadow and glow) so the clear margin covers
+      // nothing, and measured by it in the layout (d.__solid, a box over it that turns with the part)
+      if (l.alpha && !l.card) { const pd = l.shadow || l.glow ? 48 : 4, [a0, b0, a1, b1] = l.alpha, rx0 = ox + a0 * im.naturalWidth * k - pad / 2, ry0 = oy + b0 * im.naturalHeight * k, rx1 = ox + a1 * im.naturalWidth * k, ry1 = oy + b1 * im.naturalHeight * k, Wd = W, Hd = H;
+        d.style.clipPath = `inset(${Math.max(0, ry0 - pd)}px ${Math.max(0, Wd - rx1 - pd)}px ${Math.max(0, Hd - ry1 - pd)}px ${Math.max(0, rx0 - pd)}px)`;
+        const sb = document.createElement('div'); sb.style.cssText = `position:absolute;left:${Math.max(0, rx0)}px;top:${Math.max(0, ry0)}px;width:${Math.max(1, Math.min(Wd, rx1) - Math.max(0, rx0))}px;height:${Math.max(1, Math.min(Hd, ry1) - Math.max(0, ry0))}px;pointer-events:none;visibility:hidden`; d.appendChild(sb); d.__solid = sb; } }; im.src = l.src; }
+    d.style.filter = [l.shadow ? 'drop-shadow(0 24px 40px rgba(0,0,0,.45))' : '', l.blur ? `blur(${l.blur}px)` : '', l.dim ? `brightness(${1 - l.dim})` : '', l.gray ? 'grayscale(1)' : '', l.invert ? 'invert(1)' : '', l.glow ? `drop-shadow(0 0 14px ${l.glow}) drop-shadow(0 0 4px ${l.glow})` : ''].filter(Boolean).join(' ');
+    // fade: the picture's edge melts into the ground (right | left | bottom | top), as a photo beside the words does
+    if (l.fade) { const m = `linear-gradient(to ${l.fade}, #000 ${l.fadeAt ?? 55}%, transparent)`; d.style.webkitMaskImage = m; d.style.maskImage = m; }
+
+  } else if (l.kind === 'text') {
+    d.classList.add('tx'); d.style.fontFamily = ROLE[l.role || 'display'] || ROLE.display; d.style.color = l.color || '#151515';
+    d.style.textAlign = l.align || 'left';
+    if (l.stroke) Object.assign(d.style, { webkitTextStroke: `${l.stroke}px ${l.strokeColor || d.style.color}`, paintOrder: 'stroke fill' });
+    if (l.shadow) d.style.textShadow = l.shadow === true ? '0 6px 24px rgba(0,0,0,.55)' : l.shadow;
+    // a bar the word's own height or more is its plate (a tag, an answer's board): a paper prop of the label family, a
+    // member of its own for each plate on the frame (M.plate); a lower bar is a marker stroke under the word
+    // (on a lettered page a red plate is the words alone in its red, no block and no rule under them — the user 2026-10-26:
+    // 不要红底的文字; 不要加字描边阴影 下面或者侧面的红线; the other plates stay: the equations' black boards and the yellow and
+    // blue tags went with the red, r1 S8 review)
+    const redPlate = (c) => { const m = String(c || '').match(/^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})/i); return !!m && parseInt(m[1], 16) > 150 && parseInt(m[2], 16) < 100 && parseInt(m[3], 16) < 100; };
+    const ruled = !!(window.__spec?.letter && l.bar && (l.bar.h ?? .45) >= .9 && redPlate(l.bar.color));
+    const plate = l.bar && (l.bar.h ?? .45) >= .9 && !ruled ? M.plate(plates++, l.bar.color || '#f3d21a') : null;
+    d.innerHTML = `<span class="w">${l.bar ? `<span class="bar${plate ? ' plate' : ''}" style="${ruled ? `display:none;` : plate ? `${plate}top:-.08em;bottom:-.06em;left:-.22em;right:-.22em` : `background:${l.bar.color || '#f3d21a'};top:${(1 - (l.bar.h ?? .45)) * 100}%;bottom:-.04em`}"></span>` : ''}<span class="t"></span></span>`;
+    d.querySelector('.t').textContent = l.text;
+    // (a lettered page lays no plate under words — its plate a rule under them, the user 2026-10-26: 不要红底的文字: the
+    // words take the plate's colour, as kit2's tags do; left white they stood bare on the paper, r1 S7's 錯 at 66 of 70)
+    // (only light words set for the plate: dark words keep their ink over the rule — 有推理 in black on a yellow plate
+    // turned yellow on the white board, contrast 18, r1 S8)
+    if (ruled) { const m = String(l.color || '#ffffff').match(/^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})/i), lum = m ? (.299 * parseInt(m[1], 16) + .587 * parseInt(m[2], 16) + .114 * parseInt(m[3], 16)) / 255 : 1; if (lum > .6) d.querySelector('.t').style.color = l.bar.color || '#f3d21a'; }
+    if (l.italic) d.querySelector('.w').style.transform = 'skewX(-9deg)';
+    // face: a house face by the name the line knows it (the reference's display face at the moment: shotplan faceOf)
+    if (l.face && M.FACE[l.face]) d.style.fontFamily = `'${M.FACE[l.face]}', 'House Kokka'`;
+    if (l.treat) M.treat(d.querySelector('.t'), l.treat);   // (metal, extrude, glow: common.js M.treat)
+    if (l.size) d.style.fontSize = `${l.size}px`;
+    if (l.align === 'center') d.style.width = `${b.w * 19.2}px`;
+  } else {
+    Object.assign(d.style, { width: `${b.w * 19.2}px`, height: `${(b.h ?? 10) * 10.8}px`, background: l.gradient ? grad(l.gradient) : (l.color || '#000'), borderRadius: `${l.radius ?? 0}px`, opacity: l.opacity ?? 1 });
+  }
+  // a picture cut to a page's words reads as words: the frame check holds it to the frame's edges as it does type
+  if (l.kind === 'image' && l.phrase) d.dataset.words = [].concat(l.phrase).join(' … ');
+  if (l.blend) d.style.mixBlendMode = l.blend;   // (multiply: a white page's paper drops out, a marker bar under it shows through)
+  if (l.rot) d.dataset.rot = l.rot;
+  // tilt [x, y]: the part turned in perspective, degrees about its horizontal and vertical axes; depth 0-1: how far behind
+  // the frame's focus it stands, softened and dimmed by it — cards laid at an angle and over one another, the nearest sharp
+  // (the reference's company cards, open R06: names, figures and notes on tilted sheets overlapping, ours flat and sparse)
+  if (l.depth) d.style.filter = `blur(${(l.depth * 7).toFixed(1)}px) brightness(${(1 - .25 * l.depth).toFixed(2)})`;
+  $('#layers').appendChild(d); return { d, l };
+});
+// a text layer without a size is fitted to its box's width (at most 420 px a character line)
+// a text part's words whole, measured on a copy holding them all in the face they are set in (the words come in a
+// character at a time: the part itself read 0 px at the settle)
+const fullWidth = (d, l) => { const c = d.cloneNode(true), cw = c.querySelector('.w'); if (!cw) return 0; cw.textContent = l.text;
+  Object.assign(c.style, { position: 'absolute', left: '0px', top: '0px', transform: 'none', visibility: 'hidden', width: 'auto', maxWidth: 'none' }); for (const x of c.querySelectorAll('*')) x.style.transform = 'none';
+  d.parentElement.appendChild(c); const w = cw.getBoundingClientRect().width; c.remove(); return w; };
+M.settle(() => { for (const { d, l } of els) if (l.kind === 'text' && !l.size) { d.style.fontSize = '200px'; const w = d.querySelector('.w').getBoundingClientRect().width, bw = (l.box?.w || 40) * 19.2; if (w > 0) d.style.fontSize = `${Math.min(420, 200 * bw / w)}px`; } });
+// the parts' words never lie over each other and stay inside the frame through the camera's push (r1-S8: 對's plate
+// on the last digit of 144, the 12×12=? board run off the corner by the push): a part whose words or plate cross an
+// earlier one on its row moves past it (a fifth of the row's height apart), and every part is kept MARGIN px inside
+// the frame at the camera's closest framing while the part is on screen (shared camera, spec.camera: its largest zoom
+// about the centre from the part's at; a pull-out from ×1.2 squeezed every line into the opening's narrow view and the
+// stack piled up, ending S11)
+const MARGIN = 40, BAND = 900;   // (words above the subtitle band at the closest framing too: a pull-out from ×1.3 set r1 S8's last row in it)
+M.settle(() => {
+  const cams = [].concat(S.camera || []).filter((c) => c.from && c.to), st = window.__cameraState;
+  // (what the camera shows from the part's coming to its going (until) or the end, its pan too, as M.view frames it: one rect on the page and
+  // the screen pixels a page pixel takes at the closest framing)
+  const viewOf = (l) => { let L0 = 0, R0 = 1920, T0 = 0, B0 = 1080, z = 1; const keep = (q) => { const zz = Math.max(1, q.zoom || 1), lim = (zz - 1) / 2, x = Math.max(-lim, Math.min(lim, q.x || 0)), y = Math.max(-lim * 9 / 16, Math.min(lim * 9 / 16, q.y || 0)); z = Math.max(z, zz);
+      L0 = Math.max(L0, 960 + x * 1920 - 960 / zz); R0 = Math.min(R0, 960 + x * 1920 + 960 / zz); T0 = Math.max(T0, 540 + y * 1920 - 540 / zz); B0 = Math.min(B0, 540 + y * 1920 + 540 / zz); };
+    if (!cams.length || !st || S.end == null) [].concat(S.camera || []).flatMap((c) => [c.from, c.to, c]).filter((q) => q && q.zoom > 0).forEach(keep);
+    else for (let t = Math.max(l.at ?? -1e9, S.at ?? -1e9, cams[0].at); t <= Math.min(S.end, l.until ?? Infinity) + 1e-6; t += .05) keep(st(cams, t));   // (to its going, not the shot's end: a line gone before a closing push was squeezed onto the rows it pushes in on, r1 S7)
+    return { L: L0, R: R0, T: T0, B: B0, z }; };
+  // (a text part by its words whole, on a copy in its place — slant, plate and all: the words come in a character at a time,
+  // and placed by the few shown at the settle, the slant of 5900億美元's whole line put its 5 19 px off the edge, open S16)
+  const partOf = new Map(els.map((e) => [e.d, e.l]));
+  const box = (d0) => { const l = partOf.get(d0); let d = d0, c = null; const w0 = d0.querySelector('.w');
+    if (l?.kind === 'text' && w0 && l.text && w0.textContent.replace(/\s/g, '') !== String(l.text).replace(/\s/g, '')) { c = d0.cloneNode(true); const cw = c.querySelector('.w'); for (const n of [...cw.childNodes]) if (!(n.classList && n.classList.contains('bar'))) n.remove(); cw.appendChild(document.createTextNode(l.text)); c.style.visibility = 'hidden'; d0.after(c); d = c; }
+    try { return box1(d); } finally { if (c) c.remove(); } };
+  const box1 = (d) => { const p = d.querySelector('.bar.plate'), w = d.querySelector('.w') || d, r = w.getBoundingClientRect(); if (!p) return r; const q = p.getBoundingClientRect(); return { left: Math.min(r.left, q.left), right: Math.max(r.right, q.right), top: Math.min(r.top, q.top), bottom: Math.max(r.bottom, q.bottom), width: Math.max(r.right, q.right) - Math.min(r.left, q.left), height: Math.max(r.bottom, q.bottom) - Math.min(r.top, q.top) }; };
+  const move = (d, dx, dy) => { d.style.left = `${parseFloat(d.style.left) + dx}px`; d.style.top = `${parseFloat(d.style.top) + dy}px`; };
+  // inside at the closest framing first (a point x on the page lands at 960 + (x - 960) * zmax), then apart: a part
+  // crossing an earlier one moves past it, right when they share the row, else down; then inside again
+  // (measured on the page as laid out: the camera's wrapper may already carry the opening framing, and its zoom counted
+  // twice pushed ending S11's lead 180 px into the line under it)
+  const held = []; for (let e = $('#layers'); e && e !== document.documentElement; e = e.parentElement) if (e.style.transform) { held.push([e, e.style.transform]); e.style.transform = 'none'; }
+  // (a lettered page's tall face is .72 of the width a size was chosen for: a part set to span its box comes back to that
+  // span, up to the face's own narrowing — 1/.72 — measured on its words whole; left as sized, r1 S7/S8 carried a quarter of
+  // the frame against the reference's half and stood still)
+  if (window.__spec?.letter?.big) for (const { d, l } of els) if (l.kind === 'text' && l.size && l.box?.w && !l.bleed) { const ems = [...String(l.text)].reduce((a, c) => a + (/[\u3400-\u9fff]/.test(c) ? 1 : .5), 0), span = ems * l.size, box = l.box.w * 19.2;
+    // (Chinese only: the figure face is not narrowed, and $294,000 grown so lay over the table's caption, opensrc S9)
+    // (a line part figures grows by its Chinese share alone, the figures not being narrowed; and no taller than the room under
+    // its top before the subtitle band — 5900億美元 at 330 grown went into the band, open S16, where 顯卡 at 470 held back
+    // stood a corner of its frame, recap S2)
+    if (span < box * .6 || !/[\u3400-\u9fff]/.test(String(l.text))) continue;
+    const cj = [...String(l.text)].filter((c) => /[\u3400-\u9fff]/.test(c)).length / Math.max(.5, ems), top = (l.box.y ?? 0) * 10.8, kmax = Math.min(1 + (1 / .72 - 1) * cj, Math.max(1, (900 - top) / (l.size * 1.25))); const w = fullWidth(d, l), fs = parseFloat(getComputedStyle(d).fontSize); if (!(w > 0 && fs > 0)) continue; const k = Math.min(kmax, Math.min(span, box) / w); if (k > 1.02) d.style.fontSize = `${Math.floor(fs * k)}px`; }
+  // a sized part no wider than the camera's closest framing holds less its margins (a size chosen for one face ran past
+  // both edges in a narrower view or a wider face: open S1's 2025年1月 at 520 px, 1788 px under a push to ×1.1)
+  for (const { d, l } of els) if (l.kind === 'text' && l.size && !l.bleed) { const v = viewOf(l), m = MARGIN / v.z, room = v.R - v.L - 2 * m, w = fullWidth(d, l), fs = parseFloat(getComputedStyle(d).fontSize); if (w > room && fs > 0) d.style.fontSize = `${Math.floor(fs * room / w)}px`; }
+  const inside = () => { for (const { d, l } of els) { if (l.bleed) continue; const v = viewOf(l), m = MARGIN / v.z, X0 = v.L + m, X1 = v.R - m, Y0 = v.T + m, Y1 = l.kind === 'text' ? v.T + (v.B - v.T) * BAND / 1080 : v.B - m; const r = l.kind === 'text' ? box(d) : (d.__solid || d).getBoundingClientRect(); if (r.width > X1 - X0 || r.height > Y1 - Y0 || r.width * r.height > 1920 * 1080 / 3) continue;
+    move(d, r.left < X0 ? X0 - r.left : r.right > X1 ? X1 - r.right : 0, r.top < Y0 ? Y0 - r.top : r.bottom > Y1 ? Y1 - r.bottom : 0); } };
+  inside();
+  M.apart(els.filter(({ l }) => l.kind === 'text').map(({ d }) => d), box);
+  inside();
+  for (const [e, v] of held) e.style.transform = v;
+});
+window.render = (t) => {
+  { const sb = (S.subs || []).find((x) => t >= x.at && t < x.end); $('#sub').textContent = sb ? sb.text : ''; }
+  const a = M.seg(t, S.at, S.end);
+  // (pull: the ground starts that much larger and settles to its size, the deep pull-out the frame's own bound leaves:
+  // the reference ×0.84 over a picture, ours held to ×0.92, ending-S5)
+  // (groundMove: the rest of the reference's move the layout's bound left over, carried by the ground alone)
+  if (G.src) { $('#gimg').style.transform = $('#gimg2').style.transform = S.groundMove ? M.groundMove(S.groundMove, M.E.inout(a)) : `scale(${G.pull ? 1 + G.pull * (1 - M.E.out(a)) : 1 + (G.push ?? .05) * a})`; }
+  if (G.frames) { const fs = G.frames, x = Math.max(0, Math.min(fs.length - 1, (t - S.at) * (G.fps || 8))), i = Math.floor(x), k = x - i, op = G.opacity ?? 1;
+    $('#gimg').style.backgroundImage = `url("${fs[i]}")`; $('#gimg2').style.backgroundImage = `url("${fs[Math.min(fs.length - 1, i + 1)]}")`; $('#gimg2').style.opacity = k * op; }
+  for (const { d, l } of els) {
+    // (turn: degrees the part turns over the rest of the shot, eased from rest: the reference's card turns slowly where
+    // ours stood still, cards-S3)
+    // (a part that lands on the cut is half in at the cut and settles after it: fading in from the cut, r1-S8's board stood
+    // as empty paper on the frame the film was sampled at, film review 4:49; all in before it, h800-S8 stood still at
+    // the cut where the reference moves at once; a fade only: a slide or a rise is the cut's motion, cards-S3; L43)
+    const at0 = l.at ?? S.at, dur = l.dur ?? .45, at = at0 - S.at < .15 && (!l.in || l.in === 'fade') ? S.at - dur * .5 : at0, k = M.E.out(M.seg(t, at, at + dur)), how = l.in || 'fade', ang = (l.rot || 0) + (l.turn || 0) * M.seg(t, at, S.end), rot0 = (l.tilt ? ` perspective(1800px) rotateX(${l.tilt[0]}deg) rotateY(${l.tilt[1]}deg)` : '') + (ang ? ` rotate(${ang.toFixed(3)}deg)` : '');
+    // (travel [dx, dy]: px the part moves over the rest of the shot, evenly, as turn turns it — the reference's card slides
+    // on through the frame where ours stood after its pop, cards-S3 moving a third of the reference)
+    const go = l.travel ? M.seg(t, at, S.end) : 0, rot = l.travel ? ` translate(${(l.travel[0] * go).toFixed(2)}px, ${((l.travel[1] || 0) * go).toFixed(2)}px)${rot0}` : rot0;
+    d.style.opacity = t < at ? 0 : how === 'none' ? (l.opacity ?? 1) : (l.kind === 'shape' ? (l.opacity ?? 1) * k : k);
+    if (how === 'rise') d.style.transform = `translateY(${(1 - k) * 40}px)${rot}`;
+    else if (how === 'slide') d.style.transform = `translateX(${(1 - k) * -80}px)${rot}`;
+    else if (how === 'pop') d.style.transform = `scale(${.86 + .14 * k})${rot}`;
+    else d.style.transform = rot.trim();
+    if (how === 'wipe') { d.style.opacity = t < at ? 0 : 1; d.style.clipPath = `inset(0 ${(1 - k) * 100}% 0 0)`; }
+    // until: the part leaves (a tweet before the table it leads to, as the reference's sequence)
+    if (l.until != null && t >= l.until) d.style.opacity = Math.max(0, 1 - M.seg(t, l.until, l.until + .25)) * (parseFloat(d.style.opacity) || 0);
+    // recede { at, scale, dim }: the line steps back when the next one comes, smaller and dimmer, held at its top (ending
+    // S11: the lead stayed as large as the words after it and four lines fought for the eye; the reference shrinks it)
+    if (l.recede && t >= l.recede.at) { const r = M.E.inout(M.seg(t, l.recede.at, l.recede.at + (l.recede.dur ?? .5))), sc = 1 - (1 - (l.recede.scale ?? .55)) * r;
+      d.style.transformOrigin = l.align === 'center' ? '50% 0' : l.align === 'right' ? '100% 0' : '0 0';
+      d.style.transform = `${d.style.transform || ''} scale(${sc.toFixed(4)})`.trim(); d.style.opacity = (parseFloat(d.style.opacity) || 0) * (1 - (l.recede.dim ?? .45) * r); }
+    if (l.kind === 'text') {
+      const n = [...l.text].length, ch = how === 'type' ? Math.round(M.seg(t, at, at + Math.max(.3, n * .06)) * n) : n;
+      if (how === 'type') { d.style.opacity = t < at ? 0 : 1; d.querySelector('.t').textContent = [...l.text].slice(0, ch).join(''); }
+      const bar = d.querySelector('.bar'); if (bar) bar.style.transform = `scaleX(${M.E.out(M.seg(t, at, at + .4))})`;
+    }
+    if (l.kind === 'image' && l.bar) { const bt = l.bar.at ?? at + .2; d.querySelectorAll('.pbar').forEach((b) => { b.style.transform = `scaleX(${M.E.out(M.seg(t, bt, bt + (l.bar.dur ?? .5)))})`; });
+    }
+  }
+};
+M.ready([G.src, ...(G.frames || []), ...L.filter((l) => l.kind === 'image').map((l) => l.src)]);
+</script>
+</body></html>

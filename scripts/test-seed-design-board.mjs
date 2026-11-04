@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';
+import { seedBoard } from './seed-design-board.mjs';
+import { buildOptions } from './design-options.mjs';
+import { validateDesignBoard } from './design-gate.mjs';
+const o = buildOptions({ text: '任意文字', title: '任意文字' });
+const b = seedBoard({ options: o, project: 'x', line: '任意文字', visualThesis: '文字不是装饰，是有方向的视觉论点' });
+assert.equal(b.directions.length, 6);
+assert.equal(b.sourceOptions, 'A1DesignOptions/v1');
+assert.ok(validateDesignBoard(b).some((e) => e.includes('frame missing')));
+console.log('seed design board tests pass');

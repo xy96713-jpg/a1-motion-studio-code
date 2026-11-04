@@ -1,0 +1,410 @@
+{
+ "type": "object",
+ "additionalProperties": false,
+ "required": [
+  "notes",
+  "revisions"
+ ],
+ "properties": {
+  "notes": {
+   "type": "array",
+   "items": {
+    "type": "string"
+   },
+   "description": "what the director sees in the cut as a whole, chapter by chapter; short"
+  },
+  "revisions": {
+   "type": "array",
+   "maxItems": 12,
+   "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "beat",
+     "chapter",
+     "intent",
+     "intentReason",
+     "card",
+     "why",
+     "hero",
+     "secondary",
+     "camera",
+     "in",
+     "out",
+     "seconds",
+     "isHero",
+     "motifState",
+     "callbackFrom",
+     "medium",
+     "treatment",
+     "evidence",
+     "noEvidence",
+     "scenes",
+     "fixes",
+     "stage3d",
+     "diagram",
+     "reads"
+    ],
+    "properties": {
+     "beat": {
+      "type": "string"
+     },
+     "chapter": {
+      "type": "string"
+     },
+     "intent": {
+      "type": "string",
+      "description": "the plan's intent, or a corrected one"
+     },
+     "intentReason": {
+      "type": "string",
+      "description": "why the intent changed; empty when unchanged"
+     },
+     "card": {
+      "type": "string",
+      "description": "a candidate card of the intent, or presenter-plain / footage-plate / title-hero-over-photo"
+     },
+     "why": {
+      "type": "string",
+      "description": "one sentence: why this shot looks and moves like this"
+     },
+     "hero": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+       "action",
+       "target",
+       "at"
+      ],
+      "properties": {
+       "action": {
+        "type": "string"
+       },
+       "target": {
+        "type": "string"
+       },
+       "at": {
+        "type": "number",
+        "minimum": 0
+       }
+      }
+     },
+     "secondary": {
+      "type": "array",
+      "maxItems": 2,
+      "items": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "action",
+        "target",
+        "at"
+       ],
+       "properties": {
+        "action": {
+         "type": "string"
+        },
+        "target": {
+         "type": "string"
+        },
+        "at": {
+         "type": "number",
+         "minimum": 0
+        }
+       }
+      }
+     },
+     "camera": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+       "move",
+       "amount",
+       "at"
+      ],
+      "properties": {
+       "move": {
+        "type": "string",
+        "enum": [
+         "locked",
+         "push",
+         "reframe",
+         "punch"
+        ]
+       },
+       "amount": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 0.2
+       },
+       "at": {
+        "type": "number",
+        "minimum": 0
+       }
+      }
+     },
+     "in": {
+      "type": "string",
+      "enum": [
+       "cut",
+       "flash",
+       "whip",
+       "match"
+      ]
+     },
+     "out": {
+      "type": "string",
+      "enum": [
+       "cut",
+       "whip"
+      ]
+     },
+     "seconds": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 20
+     },
+     "isHero": {
+      "type": "boolean"
+     },
+     "motifState": {
+      "type": "string",
+      "description": "the motif's state when this beat is a motif appearance in the brief; empty otherwise"
+     },
+     "callbackFrom": {
+      "type": "string",
+      "description": "the beat this shot pays off when it is a callback target in the brief; empty otherwise"
+     },
+     "medium": {
+      "type": "boolean"
+     },
+     "treatment": {
+      "type": "string",
+      "enum": [
+       "evidence",
+       "presenter-tags",
+       "data",
+       "diagram",
+       "title",
+       "presenter",
+       "metaphor"
+      ],
+      "description": "the treatment ladder in prompts/visual-director.md: evidence first, metaphor last"
+     },
+     "evidence": {
+      "type": "array",
+      "description": "real pictures to find through the materials step (never generated, never file paths)",
+      "items": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "kind",
+        "what",
+        "entity",
+        "queryEn",
+        "form"
+       ],
+       "properties": {
+        "kind": {
+         "type": "string",
+         "enum": [
+          "person",
+          "org",
+          "product",
+          "event",
+          "place",
+          "stock",
+          "software"
+         ]
+        },
+        "what": {
+         "type": "string",
+         "description": "what the picture shows (Chinese, one sentence)"
+        },
+        "entity": {
+         "type": "string",
+         "description": "person / company / product / place name; empty when none"
+        },
+        "queryEn": {
+         "type": "string",
+         "description": "3–6 English search words"
+        },
+        "form": {
+         "type": "string",
+         "enum": [
+          "photo",
+          "video",
+          "webpage",
+          "paper",
+          "logo",
+          "chart",
+          "recording"
+         ],
+         "description": "what form the real picture takes: photo, video footage, a web page (news report, official page: captured and archived), a paper page or figure, a logo, a market / data chart, the author's own screen recording"
+        }
+       }
+      }
+     },
+     "noEvidence": {
+      "type": "string",
+      "description": "why a beat with facts on it shows no real picture; empty otherwise"
+     },
+     "scenes": {
+      "type": "array",
+      "description": "cuts inside the beat (montage); empty for one cut",
+      "items": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "at",
+        "card",
+        "visual",
+        "evidence",
+        "recall"
+       ],
+       "properties": {
+        "at": {
+         "type": "number",
+         "minimum": 0
+        },
+        "card": {
+         "type": "string"
+        },
+        "visual": {
+         "type": "string",
+         "description": "what this cut shows"
+        },
+        "evidence": {
+         "type": "integer",
+         "minimum": -1,
+         "description": "index into evidence, -1 for none"
+        },
+        "recall": {
+         "type": "string",
+         "description": "an earlier beat id whose shot this cut replays (recap / callback montage), empty for none"
+        }
+       }
+      }
+     },
+     "fixes": {
+      "type": "string",
+      "description": "which problem this revision fixes (a sequence issue, a rhythm target, a weak still, a line the picture misses), in one sentence"
+     },
+     "stage3d": {
+      "type": [
+       "object",
+       "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+       "template",
+       "params",
+       "facts"
+      ],
+      "description": "hero-3d only (null on every other card): the engine template and its params (a JSON object written as text); every number shown is in facts",
+      "properties": {
+       "template": {
+        "type": "string",
+        "enum": [
+         "flipboard",
+         "monolith",
+         "city",
+         "nameplate",
+         "ticker",
+         "tunnel",
+         "blender:chromosome"
+        ]
+       },
+       "params": {
+        "type": "string",
+        "description": "the template params as JSON object text, e.g. {\"value\":\"8000\",\"unit\":\"万\"}"
+       },
+       "facts": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "text",
+          "source"
+         ],
+         "properties": {
+          "text": {
+           "type": "string"
+          },
+          "source": {
+           "type": "string"
+          }
+         }
+        }
+       }
+      }
+     },
+     "diagram": {
+      "type": [
+       "object",
+       "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+       "form",
+       "figure",
+       "camera",
+       "keys"
+      ],
+      "description": "morph-chapter only (null on every other card): how the continuous diagram shows this beat",
+      "properties": {
+       "form": {
+        "type": "string",
+        "enum": [
+         "2d",
+         "2.5d",
+         "3d",
+         "map"
+        ],
+        "description": "2d: a flat diagram; 2.5d: flat figures laid on a table the camera moves over (letters, grids, strips, trees); 3d: an object with volume that turns (a helix, a chromosome, a model); map: the real map plane"
+       },
+       "figure": {
+        "type": "string",
+        "description": "the kit figure or object that carries the beat: helix / seq / dots / tree / map / own (and what it shows)"
+       },
+       "camera": {
+        "type": "string",
+        "description": "the camera through the beat in words: from where to where, close or wide, when it pushes in"
+       },
+       "keys": {
+        "type": "string",
+        "description": "the camera as numbers, a JSON array text: [{\"at\":0,\"dist\":9,\"elev\":10,\"azim\":-35,\"dur\":0,\"look\":\"the helix's middle\"}, ...] in beat-local seconds (dist in scene units, elev/azim in degrees, dur seconds to arrive, look in words); \"[]\" for a flat 2d diagram"
+       }
+      }
+     },
+     "reads": {
+      "type": "array",
+      "description": "what the viewer has to understand in this beat, in order: each read its own span of beat-local seconds, at least 0.8 s, never two at once, all inside the beat",
+      "items": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "from",
+        "to",
+        "what"
+       ],
+       "properties": {
+        "from": {
+         "type": "number"
+        },
+        "to": {
+         "type": "number"
+        },
+        "what": {
+         "type": "string",
+         "description": "what the viewer understands (Chinese, a few words)"
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}

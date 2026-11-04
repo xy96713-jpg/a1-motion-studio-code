@@ -1,0 +1,159 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "A1EngineCapabilities/v1",
+  "description": "Executable engine-capabilities catalog: capabilities (chapter|card|retired) + routes with device/kitPath/codeSymbol for dispatch. Opus55 G4 / PIPELINE B4+I1.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "about",
+    "capabilities",
+    "lineTools",
+    "routes"
+  ],
+  "properties": {
+    "contract": {
+      "const": "A1EngineCapabilities/v1"
+    },
+    "about": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "capabilities": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "status",
+          "what",
+          "files",
+          "chapter"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": [
+              "chapter",
+              "card",
+              "retired"
+            ]
+          },
+          "what": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "files": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "string"
+            }
+          },
+          "chapter": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "lineTools": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "about",
+        "tools"
+      ],
+      "properties": {
+        "about": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tools": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "file",
+              "what",
+              "use"
+            ],
+            "properties": {
+              "file": {
+                "type": "string"
+              },
+              "what": {
+                "type": "string"
+              },
+              "use": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "routes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "need",
+          "route",
+          "device",
+          "kitPath",
+          "codeSymbol",
+          "never"
+        ],
+        "properties": {
+          "need": {
+            "type": "string",
+            "minLength": 1
+          },
+          "route": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "device": {
+            "type": "string",
+            "minLength": 1
+          },
+          "kitPath": {
+            "type": "string",
+            "minLength": 1
+          },
+          "codeSymbol": {
+            "type": "string",
+            "minLength": 1
+          },
+          "never": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

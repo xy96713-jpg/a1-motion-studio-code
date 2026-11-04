@@ -1,0 +1,39 @@
+{
+ "contract": "A1LookLock/v1",
+ "rationale": "设计阶段多方案选图，用户选定后锁图；下游只复刻，不允许改设计后交付。",
+ "minOptions": 6,
+ "requiredRules": [
+  "composition",
+  "subject",
+  "camera",
+  "light",
+  "color",
+  "foreground-background",
+  "seam"
+ ],
+ "selection": {
+  "requireUserDecision": true,
+  "selectedField": "selected",
+  "lockField": "lookLock"
+ },
+ "delivery": {
+  "noDifferentDelivery": true,
+  "evidence": [
+   "still",
+   "motion",
+   "review"
+  ]
+ },
+ "generated": {
+  "allowedAs": "reference",
+  "forbiddenAs": "final-frame"
+ },
+ "note": "生图只能作为参考/参考纹理；最终画面仍由 3d|real|procedural|graphic 构建。",
+ "compare": {
+  "tool": "ffmpeg",
+  "metric": "ssim",
+  "min": 0.55,
+  "script": "scripts/look-lock-check.mjs",
+  "note": "lockedFrame/renderFrame when present must pass"
+ }
+}

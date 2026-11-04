@@ -1,0 +1,417 @@
+{
+  "contract": "A1DirectorRoutes/v1",
+  "about": "旁白语义 / beat kind → composition → ready device(s) → gold。总导演/filmdesign/beatdesign/greybox/session-brief 按此表路由，不从菜单空想；只点 kit.status===\"ready\" 的装置，或真实章节引擎路径 mapPlane/subject/orbit。gaps 里的项不得当 ready。与 routing-table-v1（素材模块链）和 engine-capabilities.routes（引擎 API）互补，不替代。",
+  "updated": "2026-10-29",
+  "visualLanguages": [
+    {
+      "id": "dither-relief",
+      "label": "抖色干涉浮雕",
+      "purposes": [
+        "concept",
+        "signal"
+      ],
+      "cues": [
+        "訊號",
+        "信号",
+        "雜訊",
+        "噪声",
+        "干涉"
+      ],
+      "use": "有限色阶、量化、从杂讯辨认结构的概念表达",
+      "avoid": "真实影像证据、精确数据读数、细小文字底",
+      "status": "ready",
+      "entry": "type.dev.visualLanguage",
+      "export": "visualLanguage",
+      "module": "templates/visual-language.js",
+      "optional": true,
+      "medium": "clean",
+      "parameters": [
+        "id",
+        "purpose",
+        "palette",
+        "box",
+        "geometry",
+        "density",
+        "progress"
+      ],
+      "reference": "style-lab/samples/visual-language-comparison-20261030/scene.mjs"
+    },
+    {
+      "id": "scan-sections",
+      "label": "扫描断层",
+      "purposes": [
+        "concept",
+        "structure"
+      ],
+      "cues": [
+        "断层",
+        "斷層",
+        "剖面",
+        "层次",
+        "層次",
+        "内部结构"
+      ],
+      "use": "用逐层偏移与选中截面解释层次关系（示意）",
+      "avoid": "医学/科学成像证据、未绑定真实数据的测量结果",
+      "status": "ready",
+      "entry": "type.dev.visualLanguage",
+      "export": "visualLanguage",
+      "module": "templates/visual-language.js",
+      "optional": true,
+      "medium": "clean",
+      "parameters": [
+        "id",
+        "purpose",
+        "palette",
+        "box",
+        "geometry",
+        "density",
+        "progress"
+      ],
+      "reference": "style-lab/samples/visual-language-comparison-20261030/scene.mjs"
+    },
+    {
+      "id": "technical-editorial",
+      "label": "千禧技术编辑",
+      "purposes": [
+        "concept",
+        "editorial"
+      ],
+      "cues": [
+        "技术编辑",
+        "技術編輯",
+        "数字文化",
+        "數位文化"
+      ],
+      "use": "技术主题的章节分隔、方向性裁切与高密度线场",
+      "avoid": "把装饰线场当图表、真假界面混淆、阅读密集证据",
+      "status": "ready",
+      "entry": "type.dev.visualLanguage",
+      "export": "visualLanguage",
+      "module": "templates/visual-language.js",
+      "optional": true,
+      "medium": "clean",
+      "parameters": [
+        "id",
+        "purpose",
+        "palette",
+        "box",
+        "geometry",
+        "density",
+        "progress"
+      ],
+      "reference": "style-lab/samples/visual-language-comparison-20261030/scene.mjs"
+    }
+  ],
+  "requiredKinds": [
+    "opening",
+    "evidence",
+    "numbers",
+    "map",
+    "compare"
+  ],
+  "related": {
+    "compositions": "routing/compositions.json",
+    "devices": "routing/devices.json",
+    "engine": "routing/engine-capabilities.json",
+    "materialTable": "routing/routing-table-v1.json",
+    "house": "HOUSE.md#文案→包装"
+  },
+  "chapterEnginePaths": {
+    "mapPlane": {
+      "how": "greybox shape map|globe|chart → kit.mapPlane",
+      "status": "ready"
+    },
+    "subject": {
+      "how": "block.model / kit.engine.subject",
+      "status": "ready"
+    },
+    "orbit": {
+      "how": "model + camera.move=orbit / kit.orbit",
+      "status": "ready"
+    }
+  },
+  "routes": [
+    {
+      "kind": "opening",
+      "label": "开场",
+      "semantics": [
+        "开场",
+        "act=open",
+        "hero 首镜",
+        "标题压场",
+        "先让观众看清主体"
+      ],
+      "composition": "title-footage",
+      "altCompositions": [
+        "hero-object",
+        "queue"
+      ],
+      "devices": [
+        {
+          "id": "lineup-row",
+          "status": "ready"
+        },
+        {
+          "id": "copy-to-repeat",
+          "status": "ready"
+        },
+        {
+          "id": "table-grows",
+          "status": "ready"
+        }
+      ],
+      "altDevices": [
+        {
+          "id": "product-hero",
+          "status": "ready",
+          "note": "实物开场可选；硬门仍认 lineup-row/copy-to-repeat/table-grows 或章节路径"
+        }
+      ],
+      "chapterPaths": [
+        "mapPlane",
+        "subject",
+        "orbit"
+      ],
+      "gaps": [
+        {
+          "id": "array-build",
+          "status": "none",
+          "note": "未接线空壳，禁止当开场"
+        },
+        {
+          "id": "stagger-reveal",
+          "status": "none",
+          "note": "未接线空壳，禁止当开场"
+        },
+        {
+          "id": "light-3d",
+          "status": "none",
+          "note": "未接线空壳，禁止当开场"
+        },
+        {
+          "id": "presenter-close",
+          "status": "none",
+          "note": "未接线空壳（作者出镜由作者提供）；禁止当开场/系统装置"
+        }
+      ],
+      "gold": [
+        "work/recipe-board-v1/projects/paperclip-138-open/chapters/B01.mjs",
+        "work/recipe-board-v1/projects/paperclip-138-full/chapters/B01.mjs"
+      ],
+      "engineNeed": "开场有模型/地图时走 kit.props.model / kit.mapPlane / kit.orbit；禁止静帧海报硬切"
+    },
+    {
+      "kind": "evidence",
+      "label": "证据",
+      "semantics": [
+        "报道",
+        "文件",
+        "照片",
+        "原文",
+        "据报道",
+        "论文",
+        "公告",
+        "medium=evidence"
+      ],
+      "composition": "evidence-card",
+      "altCompositions": [
+        "figure-card"
+      ],
+      "devices": [
+        {
+          "id": "real-in-frame",
+          "status": "ready"
+        },
+        {
+          "id": "real-doc-callout",
+          "status": "ready"
+        },
+        {
+          "id": "real-page-mark",
+          "status": "ready"
+        },
+        {
+          "id": "evidence-on-timeline",
+          "status": "ready"
+        },
+        {
+          "id": "filmed-screen",
+          "status": "ready"
+        },
+        {
+          "id": "clipping-stack",
+          "status": "ready"
+        }
+      ],
+      "chapterPaths": [],
+      "gaps": [],
+      "gold": [
+        "work/recipe-board-v1/projects/paperclip-138-full/chapters/B01.mjs",
+        "work/recipe-board-v1/projects/paperclip-138-full/chapters/B18.mjs"
+      ],
+      "note": "证据默认构图 evidence-card（HOUSE）；胡泊线证据参考 work/hupo-69-shot-reconstruction-v1（研究金样，非 recipe-board 章节引擎模块）",
+      "engineNeed": "answer.pages + kit.engine.filmedScreen / type.flat.evidenceCard；禁止生图冒充真报道"
+    },
+    {
+      "kind": "numbers",
+      "label": "数字",
+      "semantics": [
+        "多少",
+        "几分之几",
+        "数量",
+        "比例",
+        "概率",
+        "涨到",
+        "库容量",
+        "人数"
+      ],
+      "composition": "count-field",
+      "altCompositions": [
+        "figure-card",
+        "queue"
+      ],
+      "devices": [
+        {
+          "id": "number-grows",
+          "status": "ready"
+        },
+        {
+          "id": "data-to-people",
+          "status": "ready"
+        },
+        {
+          "id": "dots-as-people",
+          "status": "ready"
+        },
+        {
+          "id": "scale-jump",
+          "status": "ready"
+        },
+        {
+          "id": "bar-length-ratio",
+          "status": "ready"
+        },
+        {
+          "id": "countdown-object",
+          "status": "ready"
+        },
+        {
+          "id": "table-grows",
+          "status": "ready"
+        }
+      ],
+      "chapterPaths": [],
+      "gaps": [],
+      "gold": [
+        "work/recipe-board-v1/projects/paperclip-138-full/chapters/B10.mjs",
+        "work/recipe-board-v1/projects/paperclip-138-full/chapters/B32.mjs"
+      ],
+      "engineNeed": "kit.scene.countField / type.flat.dataToPeople / type.flat.peakType"
+    },
+    {
+      "kind": "map",
+      "label": "地图",
+      "semantics": [
+        "在哪里",
+        "从哪到哪",
+        "路线",
+        "散落",
+        "多少起",
+        "跨洲",
+        "全球"
+      ],
+      "composition": "map-table",
+      "altCompositions": [
+        "globe-route"
+      ],
+      "devices": [
+        {
+          "id": "map-pin-count",
+          "status": "ready"
+        },
+        {
+          "id": "pan-distance",
+          "status": "ready"
+        },
+        {
+          "id": "chapter-map",
+          "status": "ready"
+        },
+        {
+          "id": "zoom-out-whole",
+          "status": "ready"
+        }
+      ],
+      "chapterPaths": [
+        "mapPlane"
+      ],
+      "gaps": [],
+      "gold": [
+        "work/recipe-board-v1/projects/paperclip-138-open/chapters/B01.mjs",
+        "work/recipe-board-v1/projects/paperclip-138-full/chapters/B01.mjs",
+        "work/recipe-board-v1/projects/paperclip-138-full/chapters/B18.mjs"
+      ],
+      "engineNeed": "answer.maps → kit.mapPlane / kit.scene.chartTable / kit.scene.globeRoute"
+    },
+    {
+      "kind": "compare",
+      "label": "对比",
+      "semantics": [
+        "比较",
+        "前后",
+        "这边那边",
+        "优劣",
+        "一致",
+        "并排",
+        "位点比对"
+      ],
+      "composition": "split-compare",
+      "altCompositions": [
+        "sequence-line"
+      ],
+      "devices": [
+        {
+          "id": "quadrant-compare",
+          "status": "ready"
+        },
+        {
+          "id": "cycle-compare",
+          "status": "ready"
+        },
+        {
+          "id": "table-grows",
+          "status": "ready"
+        },
+        {
+          "id": "sort-to-rank",
+          "status": "ready"
+        },
+        {
+          "id": "bar-length-ratio",
+          "status": "ready"
+        },
+        {
+          "id": "symmetry",
+          "status": "ready"
+        }
+      ],
+      "chapterPaths": [],
+      "gaps": [],
+      "gold": [
+        "work/recipe-board-v1/projects/paperclip-138-full/chapters/B10.mjs",
+        "work/recipe-board-v1/projects/paperclip-138-full/chapters/B18.mjs"
+      ],
+      "engineNeed": "type.flat / kit 对比零件；对称与表格用已接线装置，不手写两列幻灯"
+    }
+  ],
+  "graduateToEngine": {
+    "rule": "灰盒≠成片。设计关（greybox + 风格帧 + 设计板）批准后，线必须继续 session-brief → 逐章 morph/章节引擎（engine-capabilities），不得把灰盒当终态停住。用户关仍只有 design 与 final。",
+    "afterDesignGate": [
+      "session-brief",
+      "chapter/morph",
+      "engine-capabilities routes"
+    ],
+    "notTheFilm": "greybox"
+  }
+}

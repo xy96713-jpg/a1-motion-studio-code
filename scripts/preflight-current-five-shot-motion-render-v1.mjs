@@ -1,0 +1,7 @@
+#!/usr/bin/env node
+import fs from "node:fs";
+import path from "node:path";
+import {auditRenderableAgainstShotMotionSpec} from "../apps/studio-next/src/lib/a1-shot-motion-spec-v1.mjs";
+const root=path.resolve(import.meta.dirname,"..");const reportFile=path.join(root,"apps/studio-next/public/generated/system-line/editorial-asset-workbench-v1/current-five-shot-motion-specs-v1/report.json");const report=JSON.parse(fs.readFileSync(reportFile,"utf8"));
+const failures=[];if(report.status!=="READY")failures.push(...report.results.filter((item)=>item.status!=="READY").map((item)=>`${item.shotId}:${item.failure}`));for(const item of report.results.filter((candidate)=>candidate.status==="READY")){const spec=item.spec;const planned={shotId:spec.shotId,sourceAssetSha256:spec.renderPolicy.primarySourceSha256,cameraLockSha256:spec.cameraLockSha256};const audit=auditRenderableAgainstShotMotionSpec(planned,spec);if(audit.status!=="PASS")failures.push(...audit.failures.map((failure)=>`${spec.shotId}:${failure}`));}
+const result={contract:"A1CurrentFiveShotMotionRenderPreflight/v1",status:failures.length?"BLOCKED":"PASS",sourceWorkspaceSha256:report.sourceWorkspaceSha256,sourceVisualLedgerSha256:report.sourceVisualLedgerSha256,sourceActionStoryboardSha256:report.sourceActionStoryboardSha256,readyShotIds:report.readyShotIds,blockedShotIds:report.blockedShotIds,failures,renderAllowed:failures.length===0};console.log(JSON.stringify(result,null,2));if(failures.length)process.exitCode=2;

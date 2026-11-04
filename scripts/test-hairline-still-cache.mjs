@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import { prepareHairlineFrames } from './hairline-still-cache.mjs';
+const calls=[];
+const cache=await prepareHairlineFrames([{id:'diagram',spec:{intensity:0.8},times:[0.192,0.512,0.192]}],async (spec,time)=>{calls.push(time);return `${spec.intensity}:${time}`});
+assert.equal(cache.get('diagram',0.192),'0.8:0.192');
+assert.equal(cache.get('diagram',0.512),'0.8:0.512');
+assert.equal(cache.get('diagram',0.192),'0.8:0.192');
+assert.deepEqual(calls,[0.192,0.512]);
+assert.throws(()=>cache.get('diagram',0.3),/unprepared Hairline frame/);
+await assert.rejects(()=>prepareHairlineFrames([{id:'x',times:[NaN]}],async()=>1),/invalid Hairline time/);
+await assert.rejects(()=>prepareHairlineFrames([{id:'x',times:[0]},{id:'x',times:[0]}],async()=>1),/duplicate Hairline id/);
+console.log('Hairline still cache: pass');

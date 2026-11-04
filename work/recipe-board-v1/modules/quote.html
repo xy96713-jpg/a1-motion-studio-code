@@ -1,0 +1,222 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>quote</title>
+<style>
+#photo { position: absolute; right: 0; top: 0; width: 62%; height: 100%; background-size: cover; background-position: center 30%; filter: grayscale(1) contrast(1.08) brightness(.92); -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 38%); transform-origin: 70% 40%; }
+#pres { position: absolute; inset: 0; background-size: cover; background-position: center; }
+#lines { position: absolute; left: 130px; top: 0; width: 1100px; height: 1080px; }
+.ln { position: absolute; left: 0; white-space: nowrap; }
+.ln .t { font-size: 96px; color: #f1efea; }
+.ln .t b { font-weight: normal; font-size: 2.2em; line-height: .95; vertical-align: -.12em; color: var(--accent, #e0281f); font-family: 'SourceHanSerif Heavy'; text-shadow: 0 .04em .12em rgba(0,0,0,.6); }   /* (no red-and-blue fringe: a second treatment over the line's own, the user 2026-10-26: 字效不叠) */   /* (twice and more the line, fringed, the small words around it: 1.6× only coloured the word, ending-S6 review; in the poster face 國 read as two dots, who-S2) */   /* the key words set large in the accent, as the reference's 快钱 / AI (ending-S6) */
+.ln .e { display: block; font-family: 'Times New Roman', serif; font-style: italic; font-size: 34px; color: rgba(255,255,255,.75); margin-top: 8px; }
+#qm { position: absolute; left: 70px; top: 190px; font-family: 'SourceHanSerif Heavy'; font-size: 260px; line-height: 1; color: rgba(255,255,255,.26); }   /* (larger, as the reference frames its quotes: ending S6 review) */
+.color .ln .t { color: #fff; -webkit-text-stroke: 2.5px #fff; paint-order: stroke fill; text-shadow: 0 6px 24px rgba(0,0,0,.7), 0 0 2px rgba(0,0,0,.5); }   /* (heavier strokes and pure white: the house faces have one weight, the reference's quote is heavy, meta-S8 read thin and grey) */   /* (the words lift off a photograph's light and haze: meta-S8 read grey on the stage light) */
+.color .ln .t { letter-spacing: -.04em; }   /* (set tight as the reference's heavy line: spaced it ran into the face and was shrunk, meta-S8) */
+.color #qm { display: none; }   /* (the house face's full-width quote mark read as two grey squares beside a photograph: meta-S8; the reference sets none there) */
+.over .ln .t { font-size: 64px; text-shadow: 0 4px 18px rgba(0,0,0,.55); }
+.over .ln .e { width: fit-content; margin-top: 22px; font-size: 40px; color: rgba(255,255,255,.92); padding: 0 40px 10px 0; border-bottom: 1.5px solid rgba(255,255,255,.75); text-shadow: 0 2px 10px rgba(0,0,0,.6); }
+.over #qm { display: none; }
+/* scatter: what many said, on the dark stage (who R02: the media's words for DeepSeek, one sentence typed large in the
+   middle with its key words in the accent, the others smaller round it, each in its turn) */
+.scatter #photo, .scatter #qm { display: none; }
+.scatter #lines { left: 0; width: 1920px; }
+.scatter .ln .t { font-size: 78px; color: rgba(241,239,234,.9); }   /* (the reference's quotes round the sentence stand 80-90 px; at 58 they read as faint captions, film review 14 0:52) */   /* (its stage is dark whatever the style: the style's ink was black on the light reference style) */
+.scatter .ln.main .t { font-size: 118px; color: #f4f2ee; }
+.scatter .ln .t b { color: var(--accent, #e0281f); font-size: 1em; }
+.ln .t b.latin { font-family: 'SourceHanSerif Heavy'; }
+.scatter .cur { display: inline-block; width: .06em; height: .9em; background: #f4f2ee; vertical-align: -.08em; margin-left: .06em; }
+</style></head>
+<body>
+<div class="dark"></div><div id="pres"></div><div id="photobg" style="position:absolute;inset:-6%;background-size:cover;background-position:center;filter:blur(34px) brightness(.35) grayscale(.4);display:none"></div><div id="photo"></div><div id="qm" data-deco>“</div><div id="lines"></div>
+<div id="vig"></div><div id="sub"></div>
+<script>window.__spec = window.__spec || {};</script>
+<script src="common.js"></script>
+<script>
+// 引语排字 (reference P49, P29, P51, G27): what someone said, set as type.
+//   portrait  (P49) a dark stage, the person in black and white on the right (real photograph), the quote on the left in
+//             groups on the words they are said; an older group stays dimmed above the new one; `big` words set larger
+//   presenter (P29) the presenter as filmed, the words in white either side at mouth height, a small English line under
+const S = M.S, $ = M.$, over = !!S.presenter, scatter = !!S.scatter;
+/* (the face further right, at 1560: at 1450 a seven-character line beside it was shrunk to two thirds of the reference's, meta-S8) */
+const FACE_X = 1560;
+document.body.className = over ? 'over' : scatter ? 'scatter' : S.color ? 'color' : '';
+if (over) { $('#pres').style.backgroundImage = `url("${S.presenter}")`; $('#photo').style.display = 'none'; $('.dark').style.display = 'none'; }
+else if (!scatter) $('#photo').style.backgroundImage = `url("${S.photo}")`;
+// color: the photograph in colour across the frame (the reference's P51 / meta R09: Andreessen in colour, the quote over
+// the dark side of the picture; ours was always black and white and two thirds wide); stack: every group stays lit,
+// one under the other (its two lines read as one sentence); size: the quote's type in px (default 96)
+if (S.color && !over) Object.assign($('#photo').style, { filter: 'contrast(1.05) saturate(1.15)', width: '100%', webkitMaskImage: 'linear-gradient(90deg, transparent 8%, #000 46%)' });
+// (the words' side is the picture's own background blurred and dimmed, as the reference's interview: a painted haze
+// there read as a template effect, meta-S8)
+if (S.color && !over && !scatter) Object.assign($('#photobg').style, { display: 'block', backgroundImage: `url("${S.photo}")`, filter: 'blur(16px) brightness(.78) saturate(1.2)' });
+// a portrait-shaped photograph: at the frame's height on the right, its own picture blurred and dimmed behind the words
+// (cover-filling the frame blew Andreessen's face across the middle and the quote shrank into a corner to miss it:
+// meta-S8, the blind review; the reference gives the words the dark left half)
+if (!over && !scatter && S.photoSize && S.photoSize[1] > S.photoSize[0] * .9) {
+  const w = Math.round(1080 * S.photoSize[0] / S.photoSize[1]);
+  Object.assign($('#photo').style, { width: `${w}px`, right: '0', left: 'auto', webkitMaskImage: 'linear-gradient(90deg, transparent 0%, #000 25%)' });
+  Object.assign($('#photobg').style, { display: 'block', backgroundImage: `url("${S.photo}")` }); }
+// a landscape photograph whose face stands in the middle: set a little larger and slid so the face comes to the right
+// third (x 1300), the left half dark for the words (meta-S8: the face mid-frame left the quote a corner)
+else if (S.color && !over && !scatter && S.faceN && S.photoSize) { const [iw, ih] = S.photoSize, fx = S.faceN[0] + S.faceN[2] / 2, W = 1920;
+  // (zoomed until the face can sit on the right third: a face left of the middle left the words a quarter of the frame and
+  // they shrank under the face check, meta-S8)
+  const cover = Math.max(1, (1080 / ih) / (W / iw)), sc = Math.max(cover, 1.25, Math.min(2.2, FACE_X / Math.max(1, fx * W))), dw = W * sc, px = dw > W ? (FACE_X - fx * dw) / (W - dw) : .5;
+  if (fx * W * cover < 1300 && px >= 0 && px <= 1) Object.assign($('#photo').style, { backgroundSize: `${(sc * 100).toFixed(1)}% auto`, backgroundPosition: `${(px * 100).toFixed(1)}% 30%` }); }
+// over the presenter the words as large as the reference's own line at this moment (talent-S5: a fixed 64 px read a
+// size under the reference's 90), the English larger, with the thin rule the reference sets under it
+if (over && !S.size && S.refType?.h) document.head.insertAdjacentHTML('beforeend', `<style>.over .ln .t { font-size: ${Math.round(Math.min(110, Math.max(64, S.refType.h * .95)))}px; }</style>`);
+if (S.size) document.head.insertAdjacentHTML('beforeend', `<style>.ln .t { font-size: ${+S.size}px; } .ln .t b { font-size: 1em; }</style>`);
+// (a key word in Latin or of more than six characters keeps the Mincho: the poster face drew 「AI」 as a red block, ending S6)
+// the main line takes the reference's treatment at the moment (treat.js; shotplan withRefTreat), applied once the lines are set
+// (a quote of groups said one after another has no main line: every group takes the treatment, else none showed it, ending S6)
+window.__quoteTreat = () => { if (!S.treat) return; const m = document.querySelectorAll('.ln.main .t, .ln .t.main'); for (const el of (m.length ? m : document.querySelectorAll('.ln .t'))) window.__treat(el, S.treat); };
+// where a group may stand on the layer: inside every framing the camera rests in, 60 px from the top and above the
+// subtitle band (935 px of the frame) at its zoom (ending S6: at x1.25 panning down the frame's top is the layer's 223)
+// (each group by the framings over its own time on screen, sampled every 0.1 s: held to every framing of the whole shot, a
+// wide pan left a strip the words shrank into, ending S6 at two fifths of the reference's line, and the pan was cut)
+const band = (g) => { const key = g ? L.indexOf(g) : -1, C = (window.__qband = window.__qband || {}); if (C[key]) return C[key];
+  const ms = S.camera || [], st = window.__cameraState; let T = 0, B = 1080, z = 1;
+  if (ms.length && st) { const i = g ? L.indexOf(g) : -1, a = g ? g.l.at : S.at, b = g && L[i + 1] ? L[i + 1].l.at : S.end;
+    for (let t = a; t <= b + 1e-6; t += .1) { const q = st(ms, t), zz = Math.max(1, q.zoom || 1), lim = (zz - 1) / 2, y = Math.max(-lim * 9 / 16, Math.min(lim * 9 / 16, q.y || 0)); z = Math.max(z, zz); T = Math.max(T, 540 + y * 1920 - 540 / zz); B = Math.min(B, 540 + y * 1920 + 540 / zz); } }
+  return (C[key] = { top: T + 60 / z, bot: Math.min(840, B - 160 / z) }); };
+// a group's height by its ink: the key words set large overhang the line's box (ending S6)
+const inkH = (el) => { const r0 = el.getBoundingClientRect(), k = r0.height / (el.offsetHeight || 1) || 1; let b = r0.bottom, a = r0.top; for (const d of el.querySelectorAll('*')) { const r = d.getBoundingClientRect(); if (r.height) { b = Math.max(b, r.bottom); a = Math.min(a, r.top); } } return el.offsetHeight + (Math.max(0, b - r0.bottom) + Math.max(0, r0.top - a)) / k; };
+const big = (text, words) => { let h = M.esc(text); for (const w of words || []) h = h.replace(M.esc(w), `<b${/^[\u3400-\u9fff]{1,6}$/.test(w) ? '' : ' class="latin"'}>${M.esc(w)}</b>`); return h; };
+const L0 = S.lines || [];
+const L = L0.map((l, i) => {
+  const el = document.createElement('div'); el.className = 'ln';
+  el.innerHTML = `<span class="t song${S.color && !over ? '' : ' cond'}">${big(l.text, l.big)}</span>${l.en ? `<span class="e">${M.esc(l.en)}</span>` : ''}`;
+  // a group fills the words' column (1060 px; two lines past 8 characters) at up to 150 px a character: 96 px left the quotes small in a corner (ending-S6)
+  // a long group is set on two balanced lines (never splitting a key word), each as large as the column allows (up to
+  // 150 px): 96 px on one line left the quotes small in a corner (ending-S6)
+  // (stacked groups too: left at 96 px they read at half the reference's height, ending-S11)
+  if (!S.size && !over && !S.scatter) { const ch = [...l.text], n = ch.length; let cut = 0;
+    // (stacked groups run one line each across the frame, as the reference's ending R11: a 1060 px column split them
+    // and three groups of two lines had to shrink to fit)
+    const COL = S.stack ? 1500 : 1060;
+    if (n > (S.stack ? 12 : 8)) { const ok = (k) => !(l.big || []).some((w) => { const a = l.text.indexOf(w); return a >= 0 && k > a && k < a + [...w].length; }); for (let d = 0; d < n; d++) { if (ok(Math.ceil(n / 2) + d)) { cut = Math.ceil(n / 2) + d; break; } if (ok(Math.ceil(n / 2) - d)) { cut = Math.ceil(n / 2) - d; break; } } }
+    const parts = cut ? [ch.slice(0, cut).join(''), ch.slice(cut).join('')] : [l.text], longest = Math.max(...parts.map((p) => [...p].length + (l.big || []).filter((w) => p.includes(w)).join('').length * .6));
+    el.querySelector('.t').innerHTML = parts.map((p) => big(p, (l.big || []).filter((w) => p.includes(w)))).join('<br>');
+    // (a character .86 em across, as .cond draws the house serif; .74 on an eva-lettered page, whose tall face is .72 em
+    // of itself and no .cond: at .86 it set the ending's lines a fifth under the reference's, 219 px of 280)
+    // (refType: the reference's own line here, its height as OCR boxes it: the type no larger than that, so a short
+    // quote is not blown up past the reference's: the column fit alone set 150 px where the reference set 110)
+    const cap = S.refType?.h ? Math.round(S.refType.h * .95) : 150; el.__col = COL; el.__cap = cap; el.__brk = cut;
+    Object.assign(el.querySelector('.t').style, { fontSize: `${Math.min(cap, Math.floor(COL / ((S.letter?.big ? .74 : .86) * longest)))}px`, lineHeight: '1.1' }); }
+  if (over) { const right = (l.side || (i % 2 ? 'right' : 'left')) === 'right'; el.style.left = right ? '1080px' : '0px'; el.style.top = `${right ? 330 : 250}px`; }
+  // (scatter: the main sentence, `main` or the first, in the middle; the others at fixed places round it, clear of it and
+  // of the subtitle band)
+  if (scatter) { const SLOT = [[.56, .2], [.2, .27], [.18, .68], [.6, .7], [.72, .4], [.08, .45]], mi = Math.max(0, L0.findIndex((x) => x.main)), j = i === mi ? -1 : (i < mi ? i : i - 1);
+    if (j < 0) { el.classList.add('main'); el.dataset.main = '1'; } else { const [x, y] = SLOT[j % SLOT.length]; el.style.left = `${x * 1920}px`; el.style.top = `${y * 1080}px`; } }
+  $('#lines').appendChild(el); return { el, l };
+});
+// beside the presenter: each line inside what the camera shows (60 px in at least), the pair set at one size (smaller
+// together only when one does not fit); big type may lie over the face (user 2026-10-23: 压脸也可以 — shrinking the left
+// line to clear the hair put it a size under the right one, talent-S5 review; the right line ran to 2 % of the edge
+// under the pull-out's start, film review 3:44)
+const fitOver = () => { if (!over || scatter) return; const v = (S.camera || []).length ? M.view() : { L: 0, R: 1920 }, cx = $('#lines').offsetLeft;
+  const side = (l, i) => (l.side || (i % 2 ? 'right' : 'left')) === 'right', k = Math.min(1, ...L.map(({ el, l }, i) => { const w = el.scrollWidth, x = el.offsetLeft + cx; return side(l, i) ? (v.R - 60 - Math.max(v.L + 60, Math.min(x, v.R - 60 - w))) / Math.max(1, w) : (v.R - 60 - (v.L + 60)) / Math.max(1, w); }));
+  L.forEach(({ el, l }, i) => { const w = el.scrollWidth, right = side(l, i); el.style.transformOrigin = right ? '100% 0' : '0 0'; el.style.scale = String(+(k * (el.__fk || 1)).toFixed(4));   /* (__fk: given way to a head in front, __frontFit) */
+    if (!el.dataset.x0) el.dataset.x0 = el.offsetLeft; const x0 = +el.dataset.x0 + cx;
+    el.style.left = `${Math.round((right ? Math.min(x0 + w, v.R - 60) - w : Math.max(x0, v.L + 60)) - cx)}px`; }); };
+window.render = (t) => {
+  fitOver();
+  M.subs(t);
+  const a = M.seg(t, S.at, S.end);
+  $('#photo').style.transform = `scale(${1.03 + .05 * a})`; $('#pres').style.transform = `scale(${1 + .03 * a})`;
+  // the newest shown group sits in the middle; each older one moves up and dims (portrait); over the presenter each stays
+  const shown = L.filter((g) => t >= g.l.at);
+  L.forEach((g) => {
+    const k = M.E.out(M.seg(t, g.l.at, g.l.at + .4)), age = shown.length - 1 - shown.indexOf(g);
+    if (over) { g.el.style.opacity = k; g.el.style.filter = `blur(${(1 - k) * 10}px)`; return; }
+    if (scatter) { if (g.el.dataset.main) { const n = [...g.l.text].length, c = Math.min(n, Math.floor(Math.max(0, t - g.l.at) / .07));
+        if (g.c !== c) { g.c = c; const ch = [...g.l.text].slice(0, c), set = (x) => { const w = x.join(''); return big(w, (g.l.big || []).filter((b) => w.includes(b))); };
+          g.el.querySelector('.t').innerHTML = (g.brk && c > g.brk ? set(ch.slice(0, g.brk)) + '<br>' + set(ch.slice(g.brk)) : set(ch)) + (c < n && t >= g.l.at ? '<span class="cur"></span>' : ''); }
+        if (g.w !== g.place) { const p = g.place || { left: 0, width: 1920, top: 440 }; g.el.style.left = `${p.left}px`; g.el.style.width = `${p.width}px`; g.el.style.textAlign = 'center'; g.el.style.top = `${p.top}px`; g.w = g.place; }   /* (again once the settle has placed it in the camera's view: the first frame set it before)*/
+        g.el.style.opacity = t >= g.l.at ? 1 : 0; return; }
+      g.el.style.opacity = k * .9; g.el.style.filter = `blur(${(1 - k) * 8}px)`; g.el.style.translate = `0 ${(1 - k) * 20}px`; return; }
+    if (t < g.l.at) { g.el.style.opacity = 0; return; }
+    // (stacked by each group's own height: a group set larger or on two lines ran into the next at a fixed pitch,
+    // ending-S11)
+    if (S.stack) { const i = L.indexOf(g), hs = L.map((x) => x.el.offsetHeight || (S.size || 96) * 1.2), gap = 24, total = hs.reduce((a, b) => a + b, 0) + gap * (L.length - 1), top0 = Math.max(80, Math.min(880 - total, (S.color && !over ? 540 : 470) - total / 2)); /* beside a photograph the lines sit on the middle, as the reference's meta R09 */ g.el.style.top = `${top0 + hs.slice(0, i).reduce((a, b) => a + b + gap, 0) + (1 - k) * 30}px`; g.el.style.opacity = k; g.el.style.filter = `blur(${(1 - k) * 10}px)`; return; }
+    // the said group in the middle, the one before it dimmed above; older ones gone (they went off the top: ending-S6)
+    // (heights measured: a group set on two lines is taller; the said group centred, the one before right above it)
+    // (by its ink, not its box: the key words set 2.2× ran 60 px below the line's box into the subtitle band, ending S6)
+    const cur = L.filter((x) => t >= x.l.at).at(-1), ch = cur ? inkH(cur.el) : 200, V = band(cur), cy = Math.min(V.bot - ch, Math.max(V.top, Math.min(520, (V.top + V.bot) / 2) - ch / 2));
+    const y = age === 0 ? cy : cy - g.el.offsetHeight - 30, room = age === 1 && y >= V.top;
+    // the open quote rides above the said group's first line, not at a fixed spot the group moved onto (ending S6: the
+    // mark stood on 我 once the groups were kept in the camera's view)
+    // (with no room above it in the camera's view the mark is left out, not cut by the frame's edge)
+    if (age === 0) { const qm = $('#qm'), qy = $('#lines').offsetTop + cy - qm.offsetHeight * .62; qm.style.top = `${qy}px`; qm.style.visibility = qy + qm.offsetHeight * .2 < V.top - 60 ? 'hidden' : ''; }
+    g.el.style.top = `${y + (1 - k) * 40}px`; g.el.style.opacity = age === 0 ? k : room ? .28 : 0; g.el.style.filter = `blur(${(1 - k) * 10}px)`;
+  });
+};
+// stacked groups fit the frame together: set smaller all alike when their heights run past 760 px (the third group of
+// ending-S11 fell off the foot); a group marked small (a lead-in: 有採訪者這樣評價) at a little over half the size
+M.settle(() => { if (!S.stack) return; for (const g of L) if (g.l.small) { const t = g.el.querySelector('.t'); t.style.fontSize = `${parseFloat(getComputedStyle(t).fontSize) * .55}px`; }
+  const total = L.reduce((a, g) => a + g.el.offsetHeight, 0) + 24 * (L.length - 1); if (total > 760) for (const g of L) { const t = g.el.querySelector('.t'); t.style.fontSize = `${parseFloat(getComputedStyle(t).fontSize) * 760 / total}px`; } });
+// the words kept off the face: a group that would reach it is set smaller, down to 34 px, its end 40 px short of the
+// face (the module bench: a 14-character group ran across the speaker's face)
+// a scatter's main sentence wider than what the camera shows is set on two lines at its comma nearest the middle, then
+// made smaller if it still runs over (who-S2 in the wider house faces: 「DeepSeek，可能是國運級別的科技成果」 ran 7 % off the
+// frame at 118 px)
+M.settle(() => { if (!scatter) return; const g = L.find((x) => x.el.dataset.main); if (!g) return;
+  const v = (S.camera || []).length ? M.view() : { L: 0, R: 1920 }, room = v.R - v.L - 160, t = g.el.querySelector('.t'), ch = [...g.l.text];
+  const wide = (html) => { t.innerHTML = html; const w = t.getBoundingClientRect().width; return w; };
+  const one = (x) => big(x.join(''), g.l.big || []);
+  if (wide(one(ch)) > room) { const cuts = ch.map((c, i) => (/[，,、；：]/.test(c) ? i + 1 : 0)).filter((i) => i > 1 && i < ch.length - 1);
+    if (cuts.length) g.brk = cuts.reduce((a, b) => (Math.abs(b - ch.length / 2) < Math.abs(a - ch.length / 2) ? b : a));
+    const w = g.brk ? Math.max(wide(one(ch.slice(0, g.brk))), wide(one(ch.slice(g.brk)))) : wide(one(ch));
+    if (w > room) t.style.fontSize = `${Math.floor(parseFloat(getComputedStyle(t).fontSize) * room / w)}px`; }
+  // the sentence in the middle of what the camera shows at rest, the others round it in that view, clear of it and of
+  // the subtitle band (fixed places on the whole frame put all of it in the top 40 % once the camera pushed up into it,
+  // the bottom 60 % black: film review 14, who 0:52)
+  { const fs = parseFloat(getComputedStyle(t).fontSize), mw = g.brk ? Math.max(wide(one(ch.slice(0, g.brk))), wide(one(ch.slice(g.brk)))) : wide(one(ch)), mh = fs * 1.15 * (g.brk ? 2 : 1);
+    const vt = v.T ?? 0, vh = v.h ?? 1080, vl = v.L, vw = v.R - v.L, band = vt + vh * .83, my = vt + vh * .48 - mh / 2;
+    g.place = { left: Math.round(vl), width: Math.round(vw), top: Math.round(my) };
+    const others = L.filter((x) => !x.el.dataset.main), SL = [[.56, .1], [.06, .18], [.08, .7], [.55, .72], [.74, .2], [.04, .44]];
+    // each in the first place round it that is clear of the sentence and of the ones set before it, a step smaller when no
+    // place is (the module bench: at their longest two of them stood over each other — they kept clear of the sentence only)
+    const placed = [{ x0: vl + (vw - mw) / 2 - 20, y0: my - 20, x1: vl + (vw + mw) / 2 + 20, y1: my + mh + 20 }], hit = (b) => placed.some((p) => b.x0 < p.x1 && b.x1 > p.x0 && b.y0 < p.y1 && b.y1 > p.y0);
+    const spot = (k, r) => { const [sx, sy] = SL[k % SL.length]; let top = vt + sy * vh; if (top + r.height > my - 20 && top < my + mh + 20) top = sy < .48 ? my - r.height - 30 : my + mh + 30;
+      top = Math.max(vt + 30, Math.min(top, band - r.height)); const left = Math.max(vl + 40, Math.min(vl + sx * vw, vl + vw - 40 - r.width)); return { x0: left, y0: top, x1: left + r.width, y1: top + r.height }; };
+    others.forEach((x, k) => { const te = x.el.querySelector('.t'); let b = null;
+      for (let shrink = 0; shrink < 5 && !b; shrink++) { if (shrink) te.style.fontSize = `${Math.max(48, Math.floor(parseFloat(getComputedStyle(te).fontSize) * .88))}px`; const r = te.getBoundingClientRect();
+        for (let j = 0; j < SL.length && !b; j++) { const c = spot(k + j, r); if (!hit({ x0: c.x0 - 20, y0: c.y0 - 16, x1: c.x1 + 20, y1: c.y1 + 16 })) b = c; } }
+      if (!b) b = spot(k, te.getBoundingClientRect());
+      placed.push(b); Object.assign(x.el.style, { left: `${Math.round(b.x0)}px`, top: `${Math.round(b.y0)}px` }); }); }
+  t.innerHTML = ''; g.c = -1; });
+M.settle(() => { if (!S.faceN || over || scatter || S.color) return;   /* (beside a photograph the words keep their size and may cross the face, user 2026-10-23: 压脸也可以) */ const ph = $('#photo'), was = ph.style.transform; ph.style.transform = 'scale(1.08)'; const f = M.faceOn(ph); ph.style.transform = was; if (!f) return;   // (the face where the photo's push ends, its largest)
+  // (across only: stacked groups are placed by render, after this; a group in the face's columns is at risk)
+  for (const g of L) { const t = g.el.querySelector('.t'), r = t.getBoundingClientRect(); const m = Math.max(60, f.w * (S.color && !over ? .3 : .6)); /* beside a photograph the words come up to the shoulder, as the reference's: at .6 they shrank to half its size, meta-S8; the frame check still holds them off the head */   // (a face box holds the features, not the head: the frame check found the head 150 px further)
+    if (r.left >= f.x + f.w || r.right <= f.x - m) continue;
+    const fs = parseFloat(getComputedStyle(t).fontSize), k = Math.max(34 / fs, (f.x - m - r.left) / r.width); if (k > 0 && k < 1) t.style.fontSize = `${fs * k}px`; } });
+// the said group whole fits between the top and the subtitle band, in the camera's view (band()): set whole and measured
+// by its ink, a group too tall is set smaller (ending S6: two lines with 快錢 at 2.2x stood 900 px, pushed off the top)
+M.settle(() => { if (S.stack || scatter) return; for (const g of L) { const t = g.el.querySelector('.t'); if (!t || !g.l.text) continue; const was = t.innerHTML, ch = [...g.l.text], set = (x) => { const w = x.join(''); return big(w, (g.l.big || []).filter((b) => w.includes(b))); };
+  // (the two lines the group was set on kept: rebuilt on one, 中國公司習慣了別人做創新 ran 1910 px and the camera's view
+  // shrank it to 174 px, ending S6)
+  const brk = g.brk || g.el.__brk; t.innerHTML = brk && ch.length > brk ? set(ch.slice(0, brk)) + '<br>' + set(ch.slice(brk)) : set(ch);
+  // (grown to its column as set, measured: the size above is reckoned at a guessed width a character, and a narrow face
+  // or a narrow Latin key word filled 740 px of 1060 and stood a fifth under the reference's line, ending S6)
+  if (g.el.__col) { const fs = parseFloat(getComputedStyle(t).fontSize), w = t.offsetWidth; if (w > 0) { const nf = Math.min(g.el.__cap, Math.floor(fs * g.el.__col / w)); if (nf > fs) t.style.fontSize = `${nf}px`; } }
+  const h = inkH(g.el);
+  const room = band(g).bot - band(g).top; if (h > room) t.style.fontSize = `${parseFloat(getComputedStyle(t).fontSize) * room / h}px`;
+  // (and no wider than the camera's view, 60 px in each side: a wider house face ran 4 % past the frame, bench ending-S6;
+  // the words may cross the picture beside them, so the column's own width is not the limit)
+  { const v = (S.camera || []).length ? M.view() : { L: 0, R: 1920 }, room = v.R - v.L - 120, ww = t.scrollWidth; if (ww > room) t.style.fontSize = `${parseFloat(getComputedStyle(t).fontSize) * room / ww}px`; } t.innerHTML = was; g.c = -1; } });
+// the words' column inside what the camera shows while they are up (M.view): a pull-out from x1.8 cut the lead-in's
+// first characters at the left edge (ending-S11), as the title and the steps already keep theirs
+if ((S.camera || []).length && !scatter) { const v = M.view();   /* (every framing of the moves, the slow pull's start too: the frame check reads it at rest) */ { const lx = Math.max(130, Math.round(v.L + 60)); $('#lines').style.left = `${lx}px`; $('#lines').style.width = `${Math.min(1100, Math.round(v.R - 60 - lx))}px`; } $('#qm').style.left = `${Math.max(70, Math.round(v.L + 10))}px`; }
+window.__quoteTreat();
+// with the subject in front (spec.front, camera.js), the words beside the presenter give way to the head where they would
+// lose a character behind it: each line shrinks from its outer edge, measured over the shot's moments (talent S5: 地方
+// went behind the head, We behind a shoulder)
+window.__frontFit = async () => { if (!over) return; const ts = [S.at + (S.end - S.at) * .35, S.at + (S.end - S.at) * .7, S.end - .1];
+  for (const { el } of L) { el.__fk = 1;
+    for (let n = 0; n < 12; n++) { let w = 0; for (const t of ts) { window.render(t); w = Math.max(w, window.__frontHidden(el)); } if (w <= .4 || el.__fk < .55) break; el.__fk *= .93; } }
+  { const m = Math.min(...L.map((x) => x.el.__fk || 1)); for (const x of L) x.el.__fk = m; }   // (the pair at one size, as fitOver keeps it)
+  window.render(S.at); };
+M.ready([S.photo, S.presenter]);
+</script>
+</body></html>

@@ -1,0 +1,140 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>chart</title>
+<style>
+#cam { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; }
+.it { position: absolute; white-space: nowrap; }
+.it .lab { font-family: 'SourceHanSerif Heavy'; font-size: 92px; color: #1a1a1a; display: inline-block; transform: scaleX(.88); transform-origin: 0 50%; }
+.it .en { font-family: 'Archivo Black'; font-size: 40px; color: #1a1a1a; margin-left: 4px; font-variant: small-caps; letter-spacing: .02em; }
+.it .row { display: block; margin-top: 4px; }
+.it .note { font-family: 'SourceHanSerif Heavy'; font-size: 46px; color: #333; }
+.it .v { font-family: 'Harmony Cond'; font-size: 150px; color: #111; line-height: .9; margin-left: 10px; }
+.it .u { font-family: 'SourceHanSerif Heavy'; font-size: 52px; color: #333; margin-left: 6px; }
+.it .arrow { display: block; width: 330px; height: 0; border-top: 4px solid #222; margin: 18px 0 10px; position: relative; transform-origin: 0 50%; }
+.it .arrow:after { content: ''; position: absolute; right: -4px; top: -12px; border-left: 22px solid #222; border-top: 10px solid transparent; border-bottom: 10px solid transparent; }
+.it.red .v, .it.red .note { color: #d42a24; }
+.bars .it .v { font-size: 92px; }
+/* stack: the companies one above the other, large (the reference's page of four: each line the width of the frame) */
+.stack .it .lab { font-size: 128px; } .stack .it .en { font-size: 52px; } .stack .it .note { font-size: 62px; }
+.stack .it .v { font-size: 250px; font-family: 'House Kinkaku', 'SourceHanSerif Heavy';   /* (the reference's figures tall and narrow, Impact-like: the condensed house face, open R06) */ color: #0d0d0d; letter-spacing: -.02em; text-shadow: 0 2px 0 rgba(0,0,0,.25), 0 0 1.5px rgba(0,0,0,.6); }   /* (the figure the heaviest thing on its line, ink pressed into the paper: ours read thin and grey, open-S6 review) */
+.stack .it.red .v { color: #c4241e; }
+.stack .it { white-space: normal; width: 720px; } .stack .it .row { white-space: nowrap; } .stack .it .lab { line-height: 1.2; display: inline; } .stack .it .en { display: inline-block; line-height: 1.2; }   /* (each column within its half: a long name or line wraps there, never across the other column or off the frame; bench longest words) */ .stack .it .u { font-size: 72px; } .stack .it .desc { font-size: 58px; margin-top: 56px; } .stack .it .row { line-height: 1.05; } .stack .it .arrow { width: 460px; }
+/* a line saying what the company is (the reference's P04 / open R06: 'AI应用与云服务巨头，当天跌幅在4%到6%' under each name) */
+.it .desc { display: block; margin-top: 8px; font-family: 'SourceHanSerif Heavy'; font-size: 44px; color: #2b2b2b; }
+.bar { position: absolute; height: 70px; background: linear-gradient(90deg, #262626, #4a4a4a); transform-origin: 0 50%; }
+.bar.red { background: linear-gradient(90deg, #b11d18, #e2362e); }
+/* a film whose world is dark (filmworld.mjs: the ground taken from the subject, 2026-10-26 Vol.047): its own ink and its one
+   colour, never the grey paper's dark type (#1a1a1a on #0e0e0e read as nothing: the look frames' contrast check) */
+:root[data-ground=dark] body, :root[data-ground=dark] #cam { background: var(--paper, #0e0e0e); }
+:root[data-ground=dark] .it .lab, :root[data-ground=dark] .it .en { color: var(--ink, #f2efe8); }
+:root[data-ground=dark] .it .note, :root[data-ground=dark] .it .u, :root[data-ground=dark] .it .desc { color: var(--ink, #f2efe8); opacity: .72; }
+:root[data-ground=dark] .it .v, :root[data-ground=dark] .stack .it .v { color: var(--accent, #c9a35a); text-shadow: none; }
+:root[data-ground=dark] .it.red .v, :root[data-ground=dark] .it.red .note, :root[data-ground=dark] .stack .it.red .v { color: var(--accent, #c9a35a); opacity: 1; }
+:root[data-ground=dark] .it .arrow { border-top-color: var(--ink, #f2efe8); opacity: .5; }
+:root[data-ground=dark] .it .arrow:after { border-left-color: var(--ink, #f2efe8); }
+:root[data-ground=dark] .bar { background: var(--bar, #2a2a2a); }
+:root[data-ground=dark] .bar.red { background: var(--accent, #c9a35a); }
+</style></head>
+<body>
+<div id="cam"></div><div id="vig"></div><div id="sub"></div>
+<script>window.__spec = window.__spec || {};</script>
+<script src="common.js"></script>
+<script>
+// 图表 (reference P04: 四家公司跌幅; P40 is a real chart image, which goes in as material through brand / insert):
+//   figures  grey paper; each item comes on its word: the name in heavy Song with its English name in small capitals,
+//            an arrow drawn out, the figure set huge in a condensed face with its unit; the camera moves from item to
+//            item (a pan and a slight push), the earlier ones staying on the paper, out of focus. A red item is the loss.
+//   bars     the same items as horizontal bars to scale, the figure at the bar's end, drawn out on their words.
+// Every figure is a fact (modules.mjs).
+const S = M.S, $ = M.$, I = S.items || [], bars = S.kind === 'bars';
+M.paper(document.body); document.body.className = bars ? 'bars' : S.stack ? 'stack' : '';
+const TILT = S.tilt || [18, 0];   // (leaning back; turned about the view axis the lines' boxes met each other in the frame check)
+// paperArt: a painted sheet (creased, lit from one side, text-free) laid into the paper: the plain paper read as a flat
+// grey slide against the reference's crumpled page (open-S6 review)
+if (S.paperArt) { const t = document.querySelector('.paperbg .tex'); if (t) Object.assign(t.style, { backgroundImage: `url("${S.paperArt}")`, opacity: '.9', mixBlendMode: 'multiply' }); }
+// light falling across the paper from the upper left (the reference's P04 / open R06: a slanted light, the far corner
+// in shade); on the camera's page so it moves with it
+{ const L = document.createElement('div'); L.setAttribute('data-deco', ''); L.style.cssText = 'position:absolute;left:-600px;top:-400px;width:3200px;height:2000px;pointer-events:none;background:linear-gradient(118deg, rgba(255,255,255,.22) 0%, rgba(255,255,255,0) 38%, rgba(0,0,0,.10) 62%, rgba(0,0,0,.28) 100%);mix-blend-mode:multiply'; $('#cam').appendChild(L); }
+const max = Math.max(...I.map((x) => Math.abs(+x.value) || 0), 1);
+// the items close together in a staggered column, so the one in close-up has its neighbours in the frame (spread
+// across the page, the last one stood alone on bare paper: open-S4, framecheck sparse)
+// flow 'up': the column climbs (the reference's camera rises over the page to each next company: open R06)
+// (a bar's figure no taller than its row allows: six rows at 92 px lay over each other, opensrc-S7)
+const PITCH = 720 / Math.max(1, I.length), VF = Math.round(Math.min(92, PITCH * .58));
+// stack: two columns climbing the page in turn, each company 300 px above the one before and across from it, so the
+// frame is filled side to side with it and the one said before (open-S6:
+// set apart diagonally, the one said before left the frame and the frame carried a third of the reference's)
+const pos = (i) => { if (S.stack && !bars) return [i % 2 ? 980 : 130, 560 - i * 300]; const p = bars ? [180, 170 + i * PITCH] : [[360, 230], [900, 330], [460, 520], [1000, 620], [560, 810], [1100, 900]][i % 6]; return S.flow === 'up' && !bars ? [p[0], 1130 - p[1]] : p; };
+const els = I.map((x, i) => {
+  const el = document.createElement('div'); el.className = `it${x.tone === 'red' ? ' red' : ''}`; const [l, t] = pos(i); el.style.left = `${l}px`; el.style.top = `${t}px`;
+  el.innerHTML = bars
+    ? `<span class="lab" style="font-size:54px">${M.esc(x.label)}</span><div class="bar${x.tone === 'red' ? ' red' : ''}" style="left:330px;top:0;width:${1050 * Math.abs(+x.value) / max}px"></div><span class="v" style="position:absolute;top:${-14 * VF / 92}px;font-size:${VF}px;left:${360 + 1050 * Math.abs(+x.value) / max}px">${M.esc(x.shown ?? x.value)}<span class="u">${M.esc(x.unit || '')}</span></span>`
+    : `<span class="lab">${M.esc(x.label)}</span>${x.en ? `<span class="en">${M.esc(x.en)}</span>` : ''}<span class="arrow"></span><span class="row">${x.note ? `<span class="note">${M.esc(x.note)}</span>` : ''}<span class="v">${M.esc(x.shown ?? x.value)}</span><span class="u">${M.esc(x.unit || '')}</span></span>${x.desc ? `<span class="desc">${M.esc(x.desc)}</span>` : ''}`;
+  $('#cam').appendChild(el);
+  // behind each item its name set huge and faint, a layer of the page the camera moves over (the reference's P04 has
+  // 博通 / BROADCOM ghosted behind the figures; bare paper read as empty: open-S4, framecheck)
+  let gh = null; if (!bars) { gh = document.createElement('div'); gh.setAttribute('data-deco', ''); gh.textContent = x.label;
+    gh.style.cssText = `position:absolute;left:${l - 120}px;top:${t - 210}px;font-family:'SourceHanSerif Heavy';font-size:330px;line-height:1;color:rgba(30,30,30,.13);white-space:nowrap;filter:blur(1.5px);pointer-events:none`;
+    $('#cam').insertBefore(gh, $('#cam').firstChild); }
+  return { el, x, gh };
+});
+// the items apart by their words (the staggered places are where they start: a long note or line ran under the next
+// item, open-S6), each item's huge faint name following it
+// (stack: an item longer than its half or taller than its step is set smaller as a whole, its figure still the
+// heaviest: the longest words ran off the frame and into the subtitle band, bench)
+M.settle(() => { if (!S.stack || bars) return; for (const e of els) { const k = Math.min(1, 720 / Math.max(1, e.el.scrollWidth), 560 / Math.max(1, e.el.offsetHeight)); if (k < 1) { e.el.style.transformOrigin = '0 0'; e.el.style.transform = `scale(${k.toFixed(3)})`; } } });   // (a transform, not CSS zoom: zoom scaled the item's place too and put it at the top edge)
+M.settle(() => { if (bars || S.stack) return; const r = document.createRange(), ink = (el) => { r.selectNodeContents(el); return r.getBoundingClientRect(); };
+  const at = els.map((e) => [parseFloat(e.el.style.left), parseFloat(e.el.style.top)]);
+  M.apart(els.map((e) => e.el), ink);
+  els.forEach((e, i) => { if (!e.gh) return; const dx = parseFloat(e.el.style.left) - at[i][0], dy = parseFloat(e.el.style.top) - at[i][1]; e.gh.style.left = `${parseFloat(e.gh.style.left) + dx}px`; e.gh.style.top = `${parseFloat(e.gh.style.top) + dy}px`; }); });
+window.render = (t) => {
+  for (const e of els) for (const c of e.el.children) c.style.visibility = '';   // (each frame from all shown: a line let go at a later moment, below)
+  M.subs(t);
+  const a = M.seg(t, S.at, S.end), on = els.filter((e) => t >= e.x.at), cur = on.at(-1);
+  // (stack: a company lands once the column has risen to it; until then the one before keeps the frame, solid: in the
+  // gap neither was, open-S6 review at 14.6 s)
+  const landAt = (e) => e.x.at + (S.stack && !bars && els.indexOf(e) > 0 ? .15 : 0), lit = els.filter((e) => t >= landAt(e)).at(-1);
+  els.forEach((e) => {
+    // each item lands on its word in a fifth of a second (faded in over half a second while the camera moved, nothing
+    // was seen to appear: open R06 has four arrivals, ours measured none)
+    const t0 = landAt(e), k = M.E.out(M.seg(t, t0, t0 + (S.stack && !bars ? .08 : .2))), old = lit && e !== lit && !bars;   /* (stack: the company lands once the column has risen to it, an arrival of its own and not the camera's, open R06) */
+    // (stack: it drops the last 36 px onto the paper as it lands: a thin serif line fading in place changed the picture
+    // too little to be seen arriving, open-S6 measured as starting 1.1 s in with NVIDIA in at 0.35 s)
+    if (S.stack && !bars) e.el.style.translate = `0 ${(-36 * (1 - M.E.out(M.seg(t, t0, t0 + .25)))).toFixed(2)}px`;
+    // the earlier items stay on the paper, faded and out of focus behind the one being said (the reference's P04)
+    e.el.style.opacity = t >= e.x.at ? k * (old ? .4 : 1) : 0; e.el.style.filter = `blur(${(1 - k) * 12 + (old ? (S.stack && !bars ? 6 : 3) : 0)}px)`;   /* (stack: the one before well out of focus, as the reference's lens leaves it) */   // (recede: at .55 and 2 px they still read as a line set over the next)
+    if (e.gh) { e.gh.style.opacity = t >= e.x.at ? M.E.out(M.seg(t, e.x.at, e.x.at + .8)) : 0; e.gh.style.transform = S.stack ? `translate(${-90 * M.seg(t, e.x.at, S.end)}px, ${160 * M.seg(t, e.x.at, S.end)}px)` : `translateX(${-40 * M.seg(t, e.x.at, S.end)}px)`;   /* (stack: the huge names a layer deeper, drifting against the column, as the reference's groups lie at several depths, open R06) */ }
+    const ar = e.el.querySelector('.arrow'); if (ar) ar.style.transform = `scaleX(${M.E.out(M.seg(t, e.x.at + .2, e.x.at + .6))})`;
+    const b = e.el.querySelector('.bar'); if (b) b.style.transform = `scaleX(${M.E.out(M.seg(t, e.x.at + .1, e.x.at + .7))})`;
+  });
+  // the camera (figures): close on the item being said, the figure filling the frame as the reference's does (P04: one
+  // company and its figure at a time; ours showed all four small, a third as full: open-S4, framecheck), moving to the
+  // next on its word and drifting all the while; a slow push over all (bars)
+  let z = 1.05 + .06 * a, cx = 960, cy = 540;
+  if (cur && !bars) {
+    const box = (e) => ({ x: parseFloat(e.el.style.left) + e.el.offsetWidth / 2, y: parseFloat(e.el.style.top) + e.el.offsetHeight / 2, w: e.el.offsetWidth, h: e.el.offsetHeight });
+    const zf = (e) => Math.min(1.7, 1100 / Math.max(1, box(e).w), 560 / Math.max(1, box(e).h));
+    const i = els.indexOf(cur), prev = els[i - 1], k = prev ? M.E.inout(M.seg(t, cur.x.at - .15, cur.x.at + .55)) : 1, A = prev ? box(prev) : box(cur), B = box(cur);
+    const za = prev ? zf(prev) : zf(cur), zb = zf(cur), d = t - cur.x.at;
+    z = (za + (zb - za) * k) * (1 + .03 * Math.min(1, d)); cx = A.x + (B.x - A.x) * k + 12 * d; cy = A.y + (B.y - A.y) * k + 110 / z;   // the item a little above the middle: its figure clear of the subtitle band
+  }
+  // (the sheet laid at an angle, leaning back and turned up to the right, as the reference's page of companies is shot:
+  // set square to the frame it read as a slide, film comparison 2026-10-25 0:14)
+  // stack: the column rises to each company on its word, the one being said near the top, the one before under it,
+  // faded; the ones before that gone (they would sit in the subtitle band); a slow drift and push all the while
+  if (S.stack && !bars && cur) { const i = els.indexOf(cur), top = (e) => parseFloat(e.el.style.top), prev = els[i - 1];
+    const k = prev ? M.E.inout(M.seg(t, cur.x.at - .15, cur.x.at + .55)) : 1, oy = (prev ? 120 : 170) - (prev ? top(prev) + (top(cur) - top(prev)) * k : top(cur)) + (prev ? 190 * (1 - k) : 0), zz = 1.3 - .12 * M.E.out(a);   /* (closer: the reference's companies fill the frame, ours stood a wide shot of small type, film comparison 0:14) */   // (a slow pull back over the page, as the reference's camera leaves the companies said: open R06 ×0.865)
+    els.forEach((e, j) => { if (j < i - 1) e.el.style.opacity = String((parseFloat(e.el.style.opacity) || 0) * (1 - M.seg(t, cur.x.at, cur.x.at + .4))); });
+    $('#cam').style.transformOrigin = '50% 30%'; const cxOf = (e) => parseFloat(e.el.style.left) + 360, ox = -((prev ? cxOf(prev) + (cxOf(cur) - cxOf(prev)) * k : cxOf(cur)) - 960) * zz * .8;   // (closer, the camera goes across to the company said: at ×1.3 the columns ran off the frame's sides)
+    $('#cam').style.transform = `perspective(2400px) translate(${(ox - 18 * a).toFixed(1)}px, ${oy.toFixed(1)}px) scale(${zz.toFixed(4)}) rotateX(${TILT[0]}deg) rotateZ(${TILT[1]}deg)`;
+    // (a line of the one before that the column has carried into the subtitle band is let go: short words set the page
+    // closer and 深度 sat in the band, bench open-S6)
+    for (const e of els) for (const c of e.el.children) if (c.getBoundingClientRect().bottom > 925) c.style.visibility = 'hidden';   // (the one said too, while the column is still rising to it: its foot shows once it is up)
+    return; }
+  $('#cam').style.transform = `translate(${960 - cx * z}px, ${540 - cy * z}px) scale(${z})`;
+};
+// the names and figures take the shot's treatment (treat.js): written in the plan they never showed, the module had no hook
+// for them (open S6 review: company names upright where the plan asked them slanted); a name's own narrowing kept under it
+if (S.treat) for (const el of document.querySelectorAll('.it .lab, .it .v')) { const tf = getComputedStyle(el).transform; if (tf && tf !== 'none') el.style.transform = tf; window.__treat(el, S.treat); }
+M.ready();
+</script>
+</body></html>

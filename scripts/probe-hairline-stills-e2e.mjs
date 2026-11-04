@@ -1,0 +1,21 @@
+// Explicit isolated fixture only; no user gate is approved.
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import { boardConfig } from '../apps/studio-next/src/lib/recipe-board/store.mjs';
+import { stepStills } from '../apps/studio-next/src/lib/recipe-board/stills.mjs';
+import { submitTaskAnswer } from '../apps/studio-next/src/lib/recipe-board/agenttask.mjs';
+const cfg=boardConfig(), id='banana-design';
+assert(cfg.repoRoot.includes('/scratch/hairline-e2e-20261031'));
+const root=path.join(cfg.dataDir,'projects',id), task=path.join(root,'tasks/stills.task.json'), answer=path.join(root,'tasks/stills.answer.json');
+const orig=JSON.parse(fs.readFileSync(answer));
+await stepStills(cfg,id,{log(){}});
+const t=JSON.parse(fs.readFileSync(task));
+const candidate={...orig,sourceTaskInputHash:t.inputHash,hairline:{key:'hairline_test',figure:'exploded',phaseMs:192,intensity:0.8}};
+const needle="if(t<8){f.typeBlock"; assert(candidate.code.includes(needle));
+candidate.code=candidate.code.replace(needle,"if(t<8){g.drawImage(W.images.hairline_test,1300,490,400,320);f.typeBlock");
+const file=path.join(root,'tasks/hairline-candidate.json');fs.writeFileSync(file,JSON.stringify(candidate,null,2));
+const receipt=submitTaskAnswer(cfg,id,'stills',file);
+const r=await stepStills(cfg,id,{log(){}});fs.writeFileSync(path.join(cfg.repoRoot,'hairline-e2e-result.json'),JSON.stringify({receipt,result:r},null,2));
+console.log(JSON.stringify({state:r.state,errors:r.errors,keyframes:r.keyframes,receipt:receipt.contract}));
+assert(r.keyframes?.length>0,'real runtime must produce frames');

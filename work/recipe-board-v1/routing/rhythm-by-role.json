@@ -1,0 +1,251 @@
+{
+ "contract": "A1RecipeBoardRhythmByRole/v1",
+ "source": "measured on BV1a63d6CEBa (胡泊, 521 s, 139 cuts): work/recipe-board-v1/style-lab/reference-hupo/DIRECTOR-GRAMMAR.md",
+ "how": "Targets per chapter role, checked on the storyboard. cutSeconds: mean length of one cut (a shot with scenes counts each cut). presenter: share of chapter time with the presenter on screen (plain or with overlays). plain: share of plain presenter. overlay: share of presenter with overlays (tags, side cards, poster pairs, product cards). evidence: share of time on real pictures and data (news, people, companies, places, footage, tables). awayMax: longest stretch without the presenter, in seconds (a diagram shot may run longer).",
+ "film": {
+  "presenter": [
+   0.3,
+   0.55
+  ],
+  "cutSeconds": [
+   2.8,
+   4.8
+  ]
+ },
+ "roles": {
+  "hook": {
+   "label": "开场钩子",
+   "cutSeconds": [
+    1.6,
+    3.0
+   ],
+   "presenter": [
+    0.25,
+    0.55
+   ],
+   "plain": [
+    0.1,
+    0.4
+   ],
+   "evidence": [
+    0.35,
+    1
+   ],
+   "awayMax": 12,
+   "measured": "C1 2.0 s/cut, presenter 40%, evidence 42%, away 8 s",
+   "overlay": [
+    0,
+    0.3
+   ]
+  },
+  "setup": {
+   "label": "交代 / 抛问题",
+   "cutSeconds": [
+    2.4,
+    3.6
+   ],
+   "presenter": [
+    0.4,
+    0.65
+   ],
+   "plain": [
+    0.15,
+    0.65
+   ],
+   "evidence": [
+    0.1,
+    1
+   ],
+   "awayMax": 15,
+   "measured": "C2 2.6 s, presenter 60% (no overlays); C3 3.0 s, presenter 54% (overlays 38%); C2+C3 together 53%",
+   "overlay": [
+    0,
+    0.4
+   ]
+  },
+  "story": {
+   "label": "讲经历 / 叙事",
+   "cutSeconds": [
+    2.4,
+    4.2
+   ],
+   "presenter": [
+    0.15,
+    0.5
+   ],
+   "plain": [
+    0.1,
+    0.45
+   ],
+   "evidence": [
+    0.3,
+    1
+   ],
+   "awayMax": 25,
+   "measured": "Clara BV11Ren6REA4 31–70 s 3.3 s/cut, presenter 23%; 130–190 s 3.2 s/cut, presenter 41%, the rest period footage and photos of the place, the time, the person",
+   "overlay": [
+    0,
+    0.2
+   ]
+  },
+  "rise": {
+   "label": "推进 / 讲原因",
+   "cutSeconds": [
+    3.4,
+    6.0
+   ],
+   "presenter": [
+    0.25,
+    0.65
+   ],
+   "plain": [
+    0,
+    0.35
+   ],
+   "evidence": [
+    0.15,
+    1
+   ],
+   "awayMax": 25,
+   "measured": "C4 4.6 s, presenter 55%; C5 3.6 s, presenter 22%, evidence 53%",
+   "overlay": [
+    0,
+    0.5
+   ]
+  },
+  "climax": {
+   "label": "高潮 / 机制",
+   "cutSeconds": [
+    4.0,
+    7.0
+   ],
+   "presenter": [
+    0.15,
+    0.5
+   ],
+   "plain": [
+    0.1,
+    0.4
+   ],
+   "evidence": [
+    0,
+    1
+   ],
+   "awayMax": 45,
+   "measured": "C6 5.9 s, presenter 27%, one 41 s diagram",
+   "overlay": [
+    0,
+    0.3
+   ]
+  },
+  "turn": {
+   "label": "反转 / 后果",
+   "cutSeconds": [
+    2.6,
+    4.2
+   ],
+   "presenter": [
+    0.2,
+    0.45
+   ],
+   "plain": [
+    0.05,
+    0.25
+   ],
+   "evidence": [
+    0.35,
+    1
+   ],
+   "awayMax": 27,
+   "measured": "C7 3.9 s, presenter 37%; C8 3.0 s, presenter 33%, evidence 52%",
+   "overlay": [
+    0,
+    0.35
+   ]
+  },
+  "resolution": {
+   "label": "收束",
+   "cutSeconds": [
+    3.8,
+    6.5
+   ],
+   "presenter": [
+    0.45,
+    0.85
+   ],
+   "plain": [
+    0.35,
+    0.8
+   ],
+   "evidence": [
+    0,
+    0.25
+   ],
+   "awayMax": 15,
+   "measured": "C9 4.7 s, presenter 52%, no data",
+   "overlay": [
+    0,
+    0.25
+   ]
+  },
+  "coda": {
+   "label": "尾声",
+   "cutSeconds": [
+    4.0,
+    8.0
+   ],
+   "presenter": [
+    0.5,
+    1
+   ],
+   "plain": [
+    0.4,
+    1
+   ],
+   "evidence": [
+    0,
+    0.2
+   ],
+   "awayMax": 12,
+   "measured": "last 20 s of C9: presenter only",
+   "overlay": [
+    0,
+    0.25
+   ]
+  }
+ },
+ "cutLength": {
+  "evidence": [
+   1.0,
+   2.5
+  ],
+  "newsPushIn": [
+   2.0,
+   4.0
+  ],
+  "presenterOverlay": [
+   6.0,
+   15.0
+  ],
+  "diagram": [
+   5.0,
+   45.0
+  ],
+  "quote": [
+   6.0,
+   11.0
+  ],
+  "title": [
+   2.0,
+   3.5
+  ],
+  "montageItem": [
+   0.4,
+   0.8
+  ],
+  "plainPresenter": [
+   3.0,
+   10.0
+  ]
+ }
+}

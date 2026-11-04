@@ -1,0 +1,282 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>article</title>
+<style>
+html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; }
+body { background: var(--paper); }
+#cam { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+#page { position: absolute; left: 0; top: 0; }
+#page img { display: block; }
+.bar { position: absolute; transform-origin: 0 50%; }
+#vig { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse at 50% 48%, transparent 42%, rgba(0,0,0,.34)); }
+#blur, #blur2 { position: absolute; left: 0; top: 0; filter: blur(3.2px); }
+#cursor { position: absolute; width: 6px; }
+</style></head>
+<body>
+<div id="cam"><div id="page"><img id="img"><div id="ink"></div></div><img id="blur"><img id="blur2"><div id="marks"></div></div>
+<div id="big" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none"><div id="bigt" style="font-family:'SourceHanSans Heavy';font-size:150px;letter-spacing:-.01em;white-space:nowrap;position:relative"></div></div>
+<div id="vig"></div><div id="grid" style="position:absolute;inset:0;pointer-events:none;display:none;background-image:linear-gradient(rgba(0,0,0,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.05) 1px,transparent 1px);background-size:7px 7px"></div><img id="grain" style="position:absolute;inset:0;width:1920px;height:1080px;mix-blend-mode:multiply;opacity:.55;pointer-events:none">
+
+<div id="sub" style="position:absolute;left:0;right:0;top:930px;text-align:center;font-family:'SourceHanSans Regular','PingFang SC';font-size:58px;color:#fff;text-shadow:0 0 6px rgba(0,0,0,.55),0 2px 3px rgba(0,0,0,.6);letter-spacing:.01em;z-index:50"></div>
+<style>#sub { transform: scaleX(.86); }</style>
+<script src="marks.js"></script>
+<script>
+// 报道逐段高亮推进 (reference P02, P06, P08, P17, P21, P25, P45): a real captured page. Beats on the words:
+//   title     the headline types in behind a cursor, a marker stroke sweeps under it
+//   focus     the camera moves so the phrase sits in the reading area (other text stays, the eye is led)
+//   highlight a bar sweeps across the phrase over the beat (black bar with the words knocked out, or a marker)
+//   hold      the camera rests
+// Phrase boxes come from OCR of the page (modules.mjs locatePhrases), never coordinates by hand.
+const S = window.__spec, TH = S.theme, B = S.boxes, [PW, PH] = S.size;
+const E = { inout: (k) => (k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2), out: (k) => 1 - Math.pow(1 - k, 3) };
+const seg = (t, a, b) => Math.min(1, Math.max(0, (t - a) / (b - a)));
+document.body.style.setProperty('--paper', TH.paper);
+const img = document.getElementById('img'); img.src = S.src; img.width = PW; img.height = PH;
+// the page printed in the ink (theme.print 'ink'): grey page multiplied by the ink colour; 'none' keeps the screenshot
+if (TH.print === 'ink') { img.style.filter = 'grayscale(1) contrast(1.35) brightness(1.08)'; const ink = document.getElementById('ink');
+  ink.style.cssText = `position:absolute;inset:0;background:${TH.ink};mix-blend-mode:screen`; }
+const beats = (S.beats || []).map((b, i, a) => ({ ...b, end: b.end ?? (b.do === 'callout' ? (a.slice(i + 1).find((x) => x.do !== 'hold')?.at ?? S.end) : (a[i + 1]?.at ?? S.end)) }));   // (a callout stays through the hold after it: it vanished before the shot's end, recap-S6)
+const marks = document.getElementById('marks');
+// names of the site and its masthead are covered with the page colour (no site names on screen, the line's rule)
+// (OCR boxes run short at the ends: the cover reaches a third of the line height past them, h800-S2 left the last stroke)
+for (const r of S.hidden || []) { const px = Math.max(6, r.h * .35), d = document.createElement('div'); d.style.cssText = `position:absolute;left:${r.x - px}px;top:${r.y - 6}px;width:${r.w + 2 * px}px;height:${r.h + 12}px;background:${S.pageBg || '#fff'}`; marks.appendChild(d); }
+// the bar's sweep over a beat: a character about every 0.09 s (at least 0.45 s), done before the camera leaves for the
+// next phrase (it starts a third of a second early, eased): a bar still sweeping as the camera left ran out of the
+// frame (meta-S3, measured by markErrors)
+// (the reference sweeps a line in about 0.6 s, measured by the pace of the packaging: ours took 1.26 s for 14 characters,
+// open-S3 still building at 2.1 s where the reference had settled at 0.7)
+// (a beat may set its own: the references sweep at their own pace, h800 R04 over 1.3 s against open's 0.6)
+const sweepDur = (b) => Math.min(Math.max(.3, (b.end ?? Infinity) - b.at - .5), b.dur ?? Math.max(.35, [...b.phrase].length * .045));
+for (const b of beats) {
+  if (!['title', 'highlight'].includes(b.do) || b.big) continue;
+  const r = B[b.phrase], el = document.createElement('div'); el.className = 'bar';
+  const pad = r.h * .18;
+  // the marks on the words (marks.js: fitted to the glyphs, one per line when the phrase wraps, measured by the line)
+  if (b.do === 'highlight') {
+    b.mk = TextMarks.sweep(marks, r, { kind: b.style === 'yellow' ? 'yellow' : b.style === 'marker' ? 'marker' : 'black', color: TH.mark, label: b.phrase, at: b.at + .1, end: b.at + .1 + sweepDur(b) });
+    b.el = el; continue;
+  }
+  if (b.do === 'title' || b.style === 'marker') {   // a marker stroke under the words
+    el.style.cssText += `left:${r.x - pad}px;top:${r.y + r.h * .62}px;width:${r.w + 2 * pad}px;height:${r.h * .38}px;background:${TH.mark};opacity:.85;mix-blend-mode:multiply`;
+  }
+  marks.appendChild(el); b.el = el;
+  if (b.do === 'title') { const c = document.createElement('div'); c.id = 'cursor'; c.style.cssText = `position:absolute;top:${r.y - pad * .5}px;height:${r.h + pad}px;width:${Math.max(4, r.h * .08)}px;background:${TH.accent}`; marks.appendChild(c); b.cursor = c; b.cover = document.createElement('div');
+    b.cover.style.cssText = `position:absolute;top:${r.y - pad}px;height:${r.h + 2 * pad}px;background:${S.pageBg || '#fff'}`; marks.appendChild(b.cover); }
+}
+// callout (the reference's 5926.58亿美元, recap R05/open R16): the camera pushes on the phrase, and its figure (b.text,
+// or the phrase) is typed over it a character at a time, huge, heavy and slanted, blue on a yellow bar, the line it
+// stands for covered and the rest of the page left soft around it. Set in the frame, not on the page: its size is the
+// frame's (a headline typed on the page came out at a third of the reference's size on body lines, recap-S6)
+for (const b of beats) if (b.do === 'callout') {
+  const txt = [...(b.text || b.phrase)], F = Math.round(Math.min(380, 1700 / (txt.length * .72)))   /* (the reference's figure fills the middle third of the frame: at 300 it read a fifth, open-S16) */, el = document.createElement('div');
+  el.style.cssText = `position:absolute;left:110px;top:${540 - F * .62}px;transform-origin:30% 50%;height:${F * 1.24}px;width:1720px;pointer-events:none;z-index:6;display:none`;
+  el.innerHTML = `<div class="cv" style="position:absolute;left:-40px;right:-60px;top:${F * .22}px;bottom:${F * .16}px;background:${S.pageBg || '#fff'};-webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 92%,transparent)"></div><div class="cb" style="position:absolute;left:-14px;top:${F * .62}px;height:${F * .52}px;background:#f3d21a;transform-origin:0 50%"></div><div class="ct" style="position:absolute;left:0;top:${F * .08}px;font-family:'SourceHanSerif Heavy';font-size:${F}px;line-height:1;color:#1b22c4;white-space:nowrap;transform:skewX(-9deg);letter-spacing:-.02em"></div>`;
+  document.body.appendChild(el); b.co = { el, txt, F };
+}
+// camera: each focus / title / highlight beat frames its phrase (zoom so the line reads big, phrase a little left of centre)
+const frameOf = (r, z) => REF ? { z, x: 230 - r.x * z, y: 520 - (r.y + r.h / 2) * z } : { z, x: 820 - (r.x + r.w / 2) * z, y: 470 - (r.y + r.h / 2) * z };
+const REF = TH.style === 'reference';
+const zoomFor = REF ? ((r) => Math.min(4.5, Math.max(2, 150 / r.h))) : (r, title) => Math.min(2.8, Math.max(1.2, (title ? 1750 : 1250) / Math.max(r.w, 480)));
+// the page always covers the frame (the camera never shows past its edges)
+const clampF = (f) => ({ z: f.z, x: Math.min(0, Math.max(1920 - PW * f.z, f.x)), y: Math.min(TH.style === 'reference' ? 420 : 0, Math.max(1080 - PH * f.z, f.y)) });
+const fit = { z: Math.min(1920 / PW, 1080 / PH) * 1.02, x: 0, y: 0 }; fit.x = (1920 - PW * fit.z) / 2; fit.y = (1080 - PH * fit.z) / 2;
+const shots = [];
+for (const b of beats) if (b.do !== 'hold' && !b.big) shots.push({ at: b.at, f: clampF(frameOf(B[b.phrase], b.zoom ?? zoomFor(B[b.phrase], b.do === 'title'))) });
+// a shot that only types its headline (open-S16: the reference types the number, then pushes on it) frames the
+// headline; with nothing to frame at all, the page fitted (an empty camera crashed the page)
+if (!shots.length) { const hb = beats.find((b) => b.big && B[b.phrase]); shots.push({ at: S.at, f: hb ? clampF(frameOf(B[hb.phrase], zoomFor(B[hb.phrase], true))) : fit }); }
+// the shot opens on its first phrase (never on the whole page with its masthead), slightly wider
+if (shots.length) shots.unshift({ at: S.at - 1, f: { ...shots[0].f } });
+// the reference's camera (P21 at 6 fps): one continuous move. After the big headline it scrolls down the page from
+// the headline to the line being read (paragraph's left edge near the frame's left), keeps scrolling to each next line,
+// and pushes in slowly all the while; it never jumps phrase to phrase.
+const refCam = (() => {
+  // (a shot that only types its headline is one canvas too: the headline is its first line: open-S16)
+  const lines = beats.filter((b) => b.phrase && B[b.phrase] && b.do !== 'hold'), first = lines.find((b) => !b.big) || lines.find((b) => b.big), head = lines.find((b) => b.big) || first;
+  if (!first) return null;
+  const left = Math.min(...lines.map((b) => B[b.phrase].lineX ?? B[b.phrase].x)), right = Math.max(...lines.filter((b) => !b.big).map((b) => B[b.phrase].x + B[b.phrase].w));
+  // as big as the reference reads it (the line about 118 px high on screen): the zoom fits the widest single phrase,
+  // not all of them at once (long English phrases spread over a paragraph read at half the reference's size: h800-S8,
+  // meta-S3); the camera moves across to each phrase so its end stays in the frame
+  // (a phrase wrapping onto the next line is left out: the camera pulls back for it, below)
+  const partsOf = (b) => B[b.phrase].parts || [B[b.phrase]], wraps = (b) => partsOf(b).length > 1;
+  // phrases said less than a second apart are framed together, one stop holding them all: the camera cannot leave
+  // one for the next before its bar is drawn (h800-S8: two phrases 0.6 s apart on two lines, the first ran off)
+  const units = [];
+  for (const b of lines) if (!b.big) { const u = units.at(-1), r = B[b.phrase];
+    if (u && !u.wrap && !wraps(b) && b.at - u.last < 1) { const x0 = Math.min(u.box.x, r.x), y0 = Math.min(u.box.y, r.y);
+      u.box = { x: x0, y: y0, w: Math.max(u.box.x + u.box.w, r.x + r.w) - x0, h: Math.max(u.box.y + u.box.h, r.y + r.h) - y0 }; u.last = b.at; }
+    else units.push({ at: b.at, last: b.at, box: { ...r }, wrap: wraps(b), b }); }
+  const single = units.filter((u) => !u.wrap);
+  const widest = Math.max(...(single.length ? single.map((u) => u.box.w) : lines.filter((b) => !b.big).flatMap((b) => partsOf(b).map((q) => q.w))), 1);
+  const z0 = Math.min(4.2, Math.max(1.6, 118 / (B[first.phrase].parts || [B[first.phrase]])[0].h), 1780 / 1.1 / widest); window.__z0 = z0; window.__left = left;
+  // each stop pins a page point to a screen point (the paragraph's left edge at 70 px, or the phrase's end at 1850 px
+  // when the phrase would run out of the frame), so the push in never pushes the phrase's end off (h800-S8, meta-S3)
+  // a beat may ask to be read closer (scale: the reference reads one figure from a hand's breadth away, open R17): the
+  // phrase is then held by its middle when the paragraph's edge would push its end out
+  const anchorFor = (r, k = 1) => { const z = z0 * 1.16 * k; return (r.x + r.w - left) * z <= 1780 ? { ax: left, sx: 70, z: k } : r.w * z <= 1780 ? { ax: r.x + r.w / 2, sx: 960, z: k } : { ax: r.x + r.w, sx: 1850, z: k }; };
+  // without a big headline the shot opens already framed on its first phrase (h800-S8 cut the phrase while moving)
+  const stops = [head.big ? { at: head.end - .05, y: B[head.phrase].y + B[head.phrase].h / 2 + 110 / z0, ax: left, sx: 70 } : { at: S.at - .05, ...(units[0].wrap ? { y: partsOf(first)[0].y + partsOf(first)[0].h / 2, ...anchorFor(partsOf(first)[0]) } : { y: units[0].box.y + units[0].box.h / 2, ...anchorFor(units[0].box) }) }];
+  // a wrapped phrase: the camera pulls back just enough to hold the paragraph's left edge (where the bar runs on) and
+  // the bar's start on the line above with a few characters of it; the end of that line may run out of the frame, as
+  // in the reference (P21 at 154 s: 当地时间10月7日… wrapping); then it pushes in again on the next phrase
+  for (const { b, at, box, wrap } of units) {
+    if (!wrap) { stops.push({ at, y: box.y + box.h / 2, ...anchorFor(box, b.scale ?? 1) }); continue; }
+    // (its own paragraph's left edge, where its next line starts: the headline above may start further left)
+    const r = B[b.phrase], p0 = partsOf(b)[0], pl = Math.min(...partsOf(b).slice(1).map((q) => q.x)), wide = Math.max(p0.x + Math.min(p0.w, p0.h * 5), ...partsOf(b).slice(1).map((q) => q.x + q.w)) - pl;
+    stops.push({ at: b.at - .2, y: r.y + r.h / 2, ax: pl, sx: 90, z: Math.min(1, 1740 / 1.16 / (wide * z0)) });
+  }
+  return (t) => {
+    let y = stops[0].y, ax = stops[0].ax, sx = stops[0].sx, zf = stops[0].z ?? 1;
+    for (let i = 1; i < stops.length; i++) { const a = stops[i - 1], c = stops[i];
+      // a gap of more than a screen between two lines (a picture taken out of the page) is crossed fast, not scrolled
+      // (the first move, from the headline, is slow but lands as the first bar is drawn: it still moved under it, meta-S3)
+      const far = Math.abs(c.y - a.y) * z0 > 900, dur = far ? .3 : i === 1 ? Math.max(.6, Math.min(1.2, c.at + .45 - a.at)) : .6, st = far ? c.at - .35 : i === 1 ? a.at : c.at - .25;
+      const k = E.inout(seg(t, st, st + dur)); y = y + (c.y - y) * k; ax = ax + (c.ax - ax) * k; sx = sx + (c.sx - sx) * k; zf = zf + ((c.z ?? 1) - zf) * k; }
+    const z = z0 * zf * (1 + .14 * seg(t, stops[0].at, S.end));
+    return clampF({ z, x: sx - ax * z, y: 560 - y * z });
+  };
+})();
+// the camera path smoothed as a whole (a gaussian over ±0.3 s of the raw path): speed is continuous, it never brakes
+// to a halt between lines, starts and stops ease over a long stretch (the reference's camera is never jerky)
+const TAPS = [-.3, -.2, -.1, 0, .1, .2, .3].map((d) => [d, Math.exp(-((d / .15) ** 2) / 2)]), TW = TAPS.reduce((a, [, w]) => a + w, 0);
+const smooth = (f) => (t) => { const o = { z: 0, x: 0, y: 0 }; for (const [d, w] of TAPS) { const c = f(Math.min(S.end, Math.max(S.at, t + d))); o.z += c.z * w; o.x += c.x * w; o.y += c.y * w; } return clampF({ z: o.z / TW, x: o.x / TW, y: o.y / TW }); };
+const refSmooth = refCam && smooth(refCam);
+// the director's page camera (spec.pageCamera): moves between framings of the page as one canvas, { page: true } the
+// whole page, { phrase } that phrase framed as a reading stop, zoom a factor on that framing; between and after the
+// moves it holds; the frame's centre travels in page coordinates and the zoom in log space, so a pull-out to the whole
+// page and a travel down to a line read as one move (the reference's R03, R17: the module could only frame phrases)
+const PC = (S.pageCamera || []).filter((m) => m.from && m.to);
+// (q.abs: the zoom as such, the same for every framing: a page read down at one size instead of each phrase's own, which
+// jumped near and far between lines: meta-S4)
+const pcFrame = (q) => { let f = q.page ? fit : B[q.phrase] ? clampF(frameOf(B[q.phrase], zoomFor(B[q.phrase], false))) : fit; const k = q.zoom ?? 1, z = q.abs ?? f.z * k, cx = (960 - f.x) / f.z + (q.x || 0) * 1920 / z, cy = (540 - f.y) / f.z + (q.y || 0) * 1920 / z;   // (x, y: the frame's centre moved by frame widths, as spec.camera)
+  const g = { z, x: 960 - cx * z, y: 540 - cy * z }; return q.page && k <= 1 ? g : clampF(g); };
+const pcAt = (t) => { let s = pcFrame(PC[0].from);
+  for (const m of PC) { if (t < m.at) break; const k = (E[m.ease] || E.inout)(seg(t, m.at, m.end)), a = pcFrame(m.from), c = pcFrame(m.to);
+    const ca = [(960 - a.x) / a.z, (540 - a.y) / a.z], cc = [(960 - c.x) / c.z, (540 - c.y) / c.z], z = Math.exp(Math.log(a.z) + (Math.log(c.z) - Math.log(a.z)) * k), cx = ca[0] + (cc[0] - ca[0]) * k, cy = ca[1] + (cc[1] - ca[1]) * k;
+    s = { z, x: 960 - cx * z, y: 540 - cy * z }; }
+  return s; };
+// the phrase being read stays whole in the frame whatever the drift (opensrc-S9: "ully open-source", its start drifted
+// off the left edge; S10: "achieves"): the camera is moved back just enough, never past the page's edges
+const keepIn = (c, t) => { const b = [...beats].reverse().find((x) => x.phrase && x.at <= t && B[x.phrase]); if (!b) return c; const r = B[b.phrase], m = 70;
+  const l = c.x + r.x * c.z, rt = c.x + (r.x + r.w) * c.z; let x = c.x;
+  if (rt - l <= 1920 - 2 * m) { if (l < m) x += m - l; else if (rt > 1920 - m) x -= rt - (1920 - m); return clampF({ ...c, x }); }
+  // a phrase wider than the frame at this zoom: the camera steps back until it fits, its start at the margin, the
+  // page's point at the frame's middle height kept where it was (opensrc-S9: "ully open-source…")
+  const z = c.z * (1920 - 2 * m) / (rt - l), py = (540 - c.y) / c.z;
+  return clampF({ z, x: m - r.x * z, y: 540 - py * z }); };
+const camAt = (t) => keepIn(camAt0(t), t);
+const camAt0 = (t) => {
+  if (PC.length) return pcAt(t);
+  // the reference's page never rests: a slow drift down and along the reading line on top of the moves (ours stood
+  // still between phrases two thirds of the time: motion check, meta-S3)
+  // (none under the director's camera, spec.camera: it pulled the page left where the reference moves right, open-S3)
+  const dr = (S.camera || []).length ? 0 : 1;
+  if (REF && refSmooth) { const c = refSmooth(t), d = t - S.at; return clampF({ z: c.z, x: c.x - 15 * d * dr, y: c.y - 9 * d * dr }); }
+  let a = shots[0], nx = null;
+  for (const s of shots) { if (s.at <= t) a = s; else { nx = s; break; } }
+  const prev = shots[shots.indexOf(a) - 1] || a, k = E.inout(seg(t, a.at, a.at + .55));
+  const from = prev.f, to = a.f; let z = from.z + (to.z - from.z) * k, x = from.x + (to.x - from.x) * k, y = from.y + (to.y - from.y) * k;
+  // a slow drift while resting, toward reading direction
+  const rest = seg(t, a.at + .55, nx ? nx.at : S.end) * ((S.camera || []).length ? 0 : 1); x -= 18 * rest; z *= 1 + .02 * rest;
+  return clampF({ z, x, y });
+};
+// depth of field: a blurred copy of the page over it, cut away around the line being read
+const blur = document.getElementById('blur'); blur.src = S.src; blur.width = PW; blur.height = PH; const BLUR_BASE = img.style.filter || ''; blur.style.filter = BLUR_BASE;
+// (a second, farther zone: lines well away from the reading line lie softer, as the reference's page does — the page sharp
+// edge to edge read as a slide, hupo-auto2 open-S3/S4, meta-S3: no soft layer where the reference has a third of its frame)
+const blur2 = document.getElementById('blur2'); blur2.src = S.src; blur2.width = PW; blur2.height = PH;
+if (S.paperTex) document.getElementById('grain').src = S.paperTex;
+const bigBeat = beats.find((b) => b.do === 'title' && b.big);
+if (bigBeat) document.getElementById('bigt').textContent = bigBeat.text || bigBeat.phrase;
+// the headline's treatment and face, as the reference sets its own at the moment (treat.js; shotplan withRefTreat)
+if (bigBeat && S.face && window.__FACE[S.face]) document.getElementById('bigt').style.fontFamily = `'${window.__FACE[S.face]}', 'House Kokka'`;
+// (the treatment on a wrapper laid each frame, under the headline's own per-frame colour, shadow and squeeze: set on the
+// headline once at load it was wiped by them and the slant never showed, h800 S2 review)
+// reference P21 is one canvas: the headline is typed big in its own place at the top of the page, then the whole page
+// moves on down to the paragraphs (no cut between a title card and the page). So in the reference look the big
+// headline sits on the page, in page coordinates, over the page's own small headline (covered).
+const ONE = REF && bigBeat && B[bigBeat.phrase] && refCam;
+if (ONE) {
+  const hb = B[bigBeat.phrase], z0 = window.__z0, big = document.getElementById('big');
+  const cover = document.createElement('div'); cover.style.cssText = `position:absolute;left:${hb.x - 20}px;top:${hb.y - hb.h * .3}px;width:${PW - hb.x - 140}px;height:${hb.h * 1.6}px;background:${S.pageBg || '#fff'}`;
+  document.body.style.background = S.pageBg || '#fff';
+  marks.appendChild(cover);
+  big.style.cssText = `position:absolute;inset:auto;left:${window.__left}px;top:${hb.y + hb.h / 2}px;width:auto;height:auto;display:block;transform-origin:0 0`;
+  marks.appendChild(big);
+  // as big as the reference types it: the headline across about four fifths of the frame (at 120 px it read at a third
+  // of the reference's size, h800-S2), at most 200 px a character
+  window.__bigF = Math.min(200, 1520 / (Math.max(4, [...(bigBeat.text || bigBeat.phrase)].length) * .86));
+  document.getElementById('bigt').style.fontSize = `${window.__bigF / z0}px`;
+}
+const bigMark = document.createElement('div'); bigMark.style.cssText = `position:absolute;height:.32em;bottom:.04em;background:${TH.style === 'reference' ? '#1f5cf2' : TH.mark};z-index:-1;transform-origin:0 50%`;
+if (REF) {   // the reference's screen look: a fine screen grid, colour fringes, heavy vignette, black bars, big black headline
+  document.getElementById('grid').style.display = 'block';
+  document.getElementById('vig').style.background = 'radial-gradient(ellipse 75% 70% at 50% 50%, transparent 40%, rgba(0,0,0,.42))';
+  document.getElementById('cam').style.filter = 'drop-shadow(3px 0 0 rgba(255,0,60,.28)) drop-shadow(-3px 0 0 rgba(0,180,255,.28)) contrast(1.06)';
+  document.getElementById('bigt').style.cssText += (ONE ? '' : ';font-size:140px') + ';transform:scaleX(.86);filter:drop-shadow(4px 0 0 rgba(255,0,60,.3)) drop-shadow(-4px 0 0 rgba(0,190,255,.3))';   /* (the headline's size set above is kept: 140 px here overrode it, h800-S2 at a third of the reference) */
+}
+img.onload = () => document.fonts.ready.then(() => {
+  // the one-canvas headline measured in its own font and set to about four fifths of the frame's width (1500 px on
+  // screen at the opening zoom; a character-count guess left it at half: the house fonts are condensed)
+  // (the text's own box, its condensing included, before the camera is set: page pixels; on screen times the zoom)
+  if (ONE) { const el = document.getElementById('bigt'); el.textContent = bigBeat.text || bigBeat.phrase; el.style.fontSize = `${window.__bigF / window.__z0}px`; const r = document.createRange(); r.selectNodeContents(el);
+    const onScreen = r.getBoundingClientRect().width * window.__z0; if (onScreen > 0) window.__bigF = Math.min(240, window.__bigF * 1500 / onScreen); el.style.fontSize = `${window.__bigF / window.__z0}px`; }
+  window.__ready = true; render(S.at); });
+window.render = (t) => {
+  { const sb = (S.subs || []).find((x) => t >= x.at && t < x.end); document.getElementById('sub').textContent = sb ? sb.text : ''; }
+  // the big headline: typed a character every 2 frames with a cursor, a ghost of itself shaking off, then it lifts away
+  if (bigBeat) {
+    const el = document.getElementById('bigt'), txt = bigBeat.text || bigBeat.phrase, n = [...txt].length;
+    const k = Math.round(seg(t, bigBeat.at, bigBeat.at + n * .067) * n), out = seg(t, bigBeat.end - .3, bigBeat.end);
+    const mk = bigBeat.mark || '', mi = mk ? txt.indexOf(mk) : -1;
+    el.innerHTML = (mi >= 0 && k > mi ? [...txt].slice(0, mi).join('') + `<span style="position:relative">${[...txt].slice(mi, Math.min(k, mi + [...mk].length)).join('')}<i style="position:absolute;left:0;right:0;bottom:.02em;height:.3em;background:${REF ? '#1f5cf2' : TH.mark};z-index:-1;transform-origin:0 50%;transform:scaleX(${E.out(seg(t, bigBeat.at + mi * .067, bigBeat.at + (mi + [...mk].length) * .067 + .2))})"></i></span>` + [...txt].slice(mi + [...mk].length, k).join('') : [...txt].slice(0, k).join('')) + (k < n || Math.floor(t * 4) % 2 ? `<span style="display:inline-block;width:${REF ? 4 : 8}px;height:.9em;background:${REF ? TH.ink : TH.accent};vertical-align:-.1em;margin-left:6px"></span>` : '');
+    if (S.treat) { el.innerHTML = `<span class="tw" style="display:inline-block">${el.innerHTML}</span>`; window.__treat(el.firstChild, S.treat); }
+    if (ONE) el.style.fontSize = `${window.__bigF / window.__z0}px`;
+    el.style.position = 'relative'; el.style.zIndex = 0; el.style.color = TH.ink; el.style.textShadow = `${6 * (1 - seg(t, bigBeat.at, bigBeat.at + .8))}px 0 ${TH.accent}55`;
+    // one canvas: the headline fades as the camera leaves it for the body (the page is closed up, so it would otherwise
+    // be left half cropped at the top edge: h800-S2, framecheck; the reference's headline leaves the frame whole)
+    document.getElementById('big').style.opacity = ONE ? (t >= bigBeat.at ? 1 - seg(t, bigBeat.end - .05, bigBeat.end + .45) : 0) : (t >= bigBeat.at && t < bigBeat.end ? 1 - out : 0);
+    const gl = seg(t, bigBeat.end - .22, bigBeat.end); document.getElementById('big').style.transform = ONE ? `translate(0, -50%) translateX(${gl > 0 && gl < 1 ? (Math.round(t * 60) % 2 ? 6 : -5) / window.__z0 : 0}px)` : REF ? `translate(${gl > 0 ? (Math.round(t * 30) % 2 ? 14 : -10) * gl : 0}px, ${-30 * gl}px) scale(${1 - .18 * gl})` : `translateY(${-160 * out}px)`;
+    if (REF) { const g2 = ONE ? (gl > 0 && gl < 1 ? 1 : 0) : gl; el.style.filter = `drop-shadow(${(4 + 20 * g2) / (ONE ? window.__z0 : 1)}px 0 0 rgba(255,0,60,.35)) drop-shadow(${-(4 + 20 * g2) / (ONE ? window.__z0 : 1)}px 0 0 rgba(0,190,255,.35))`; }
+    document.getElementById('cam').style.opacity = ONE ? 1 : (t < bigBeat.end - .15 ? 0 : seg(t, bigBeat.end - .15, bigBeat.end + .1));
+    if (ONE) { const mk2 = el.querySelector('i'); if (mk2) mk2.style.opacity = 1 - seg(t, bigBeat.end - .1, bigBeat.end + .15); }
+  }
+  const c = camAt(t); document.getElementById('cam').style.transform = `translate(${c.x}px, ${c.y}px) scale(${c.z})`;
+  // depth of field follows the camera, not the phrase: sharp around the reading line (screen y 560), soft above and below,
+  // so the band glides with the move and never cuts through a line of text
+  // the blur is a few pixels on the screen, whatever the zoom (set in page pixels it grew with the 4x push into grey
+  // smears: h800-S2); neighbouring lines stay readable, only softer, and the softness grows gradually away from the
+  // reading line, as the reference's lens does (P21)
+  { const yc = (560 - c.y) / c.z, half = 140 / c.z, fe = 260 / c.z;
+    blur.style.filter = BLUR_BASE + ` blur(${(TH.style === 'reference' ? 2.6 : 2) / c.z}px)`;
+    blur.style.webkitMaskImage = `linear-gradient(to bottom, #000 ${yc - half - fe}px, transparent ${yc - half}px, transparent ${yc + half}px, #000 ${yc + half + fe}px)`;
+    blur.style.webkitMaskSize = `${PW}px ${PH}px`; blur.style.webkitMaskRepeat = 'no-repeat'; blur.style.opacity = 1;
+    const half2 = 250 / c.z, fe2 = 220 / c.z;
+    blur2.style.filter = BLUR_BASE + ` blur(${5.5 / c.z}px)`;
+    blur2.style.webkitMaskImage = `linear-gradient(to bottom, #000 ${yc - half2 - fe2}px, transparent ${yc - half2}px, transparent ${yc + half2}px, #000 ${yc + half2 + fe2}px)`;
+    blur2.style.webkitMaskSize = `${PW}px ${PH}px`; blur2.style.webkitMaskRepeat = 'no-repeat'; blur2.style.opacity = blur.style.opacity; }
+  for (const b of beats) {
+    if (b.co) { const on = t >= b.at + .1 && t < b.end + .05, n = b.co.txt.length, ch = Math.round(seg(t, b.at + .15, b.at + .15 + n * .06) * n);
+      b.co.el.style.display = on ? 'block' : 'none'; b.co.el.style.transform = `scale(${1 + .07 * E.inout(seg(t, b.at + .15, b.end))})`;   /* (it keeps pushing in once typed, as the reference's) */ b.co.el.querySelector('.ct').textContent = b.co.txt.slice(0, ch).join('');
+      const cb = b.co.el.querySelector('.cb'), w = b.co.el.querySelector('.ct').getBoundingClientRect().width; cb.style.width = `${w + 40}px`; cb.style.transform = `scaleX(${E.out(seg(t, b.at + .1, b.at + .45))})`; continue; }
+    if (!b.el) continue;
+    const r = B[b.phrase], dur = sweepDur(b);
+    const k = seg(t, b.at + .1, b.at + .1 + dur);
+    if (b.do === 'title' && b.big) continue;
+    if (b.do === 'title') {   // typing: a paper cover recedes a character at a time, cursor ahead of it, marker after
+      const n = [...b.phrase].length, ch = Math.round(seg(t, b.at, b.at + n * .067) * n), x = r.x + r.w * ch / n;
+      b.cover.style.left = `${x}px`; b.cover.style.width = `${Math.max(0, r.x + r.w - x + 8)}px`;
+      b.cursor.style.left = `${x + 2}px`; b.cursor.style.opacity = t >= b.at && (ch < n || Math.floor(t * 4) % 2) && t < b.end ? 1 : 0;
+      b.el.style.transform = `scaleX(${E.out(seg(t, b.at + .1, b.at + n * .067 + .25))})`;
+      b.cover.style.display = t < b.at ? 'block' : 'block';
+    } else {   // the parts in turn, at one speed (a wrapped phrase runs on to the next line's start)
+      b.mk.draw(E.out(k));
+      // one bar at a time, as the reference reads: the one before fades as the next is swept (left on, it was cut by the
+      // frame's edge once the camera moved on, …运行Deep, meta-S4 review 106; three bars side by side read as one weight)
+      const nx = beats.find((x) => x.do === 'highlight' && !x.big && x.at > b.at), o = nx ? 1 - seg(t, nx.at + .1, nx.at + .5) : 1;
+      for (const p of b.mk.parts || []) if (p.d) { p.d.style.opacity = o; p.m.shown *= o; }
+    }
+  }
+};
+</script>
+</body></html>

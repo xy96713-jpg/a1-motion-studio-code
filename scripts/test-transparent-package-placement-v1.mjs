@@ -1,0 +1,24 @@
+import assert from 'node:assert/strict';
+import sharp from '../apps/studio-next/node_modules/sharp/lib/index.js';
+import {resolveTransparentPackagePlacementV1,assertTransparentPackagePlacementV1} from '../apps/studio-next/src/lib/a1-transparent-package-placement-v1.mjs';
+const canvas={width:1920,height:1080},placement={box:{x:.65,y:.2,width:.25,height:.6}};
+const pixels=Buffer.alloc(100*80*4);
+for(let y=10;y<70;y++)for(let x=20;x<60;x++)pixels.set([20,90,200,255],(y*100+x)*4);
+// Even a very faint shadow must survive trimming.
+pixels.set([0,0,0,1],(9*100+20)*4);
+const bytes=await sharp(pixels,{raw:{width:100,height:80,channels:4}}).png().toBuffer();
+const before=Buffer.from(bytes),r=await resolveTransparentPackagePlacementV1({bytes,placement,canvas});
+assert.deepEqual(r.sourcePixelBounds,{left:20,top:9,width:40,height:61});
+assert.ok(Math.abs(r.box.width*1920/(r.box.height*1080)-40/61)<1e-12);
+assert.deepEqual(r.contentPixelBounds,{left:20,top:10,width:40,height:60});
+assert.ok(r.box.y<.2,'faint shadow is retained outside the fitted solid body');
+const bodyTop=r.box.y+r.box.height/61;
+assert.ok(Math.abs(bodyTop-.2)<1e-12);
+assert.ok(r.box.x>=.65&&r.box.x+r.box.width<=.9&&r.box.y+r.box.height<=.8);
+assert.deepEqual(bytes,before);
+assert.throws(()=>assertTransparentPackagePlacementV1({box:{x:.9,y:0,width:.2,height:1}}),/INVALID/);
+const blank=await sharp({create:{width:20,height:20,channels:4,background:'#00000000'}}).png().toBuffer();
+await assert.rejects(resolveTransparentPackagePlacementV1({bytes:blank,placement,canvas}),/EMPTY/);
+const opaque=await sharp({create:{width:20,height:20,channels:3,background:'#ffffff'}}).png().toBuffer();
+await assert.rejects(resolveTransparentPackagePlacementV1({bytes:opaque,placement,canvas}),/ALPHA_REQUIRED/);
+console.log('PASS transparent placement preserves aspect, faint alpha and input bytes; rejects empty, opaque and out-of-bounds inputs.');

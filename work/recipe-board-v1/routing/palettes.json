@@ -1,0 +1,119 @@
+{
+ "contract": "A1FilmPalettes/v1",
+ "decided": "2026-10-28 用户：可以各种配色 但要和谐 比如 gawx 会用些胶片感的红 黄 蓝等等 还有字体颜色也是的多样性 当然要站在设计师角度看 导演角度看怎么好怎么做 不能硬做 要变通",
+ "measured": "style-lab/research-gawx-20261027/palette-arc.jsonl（style-lab/tools/palette-arc.py）：Gawx 四部片 78–85% 的画面是暗底，但 56–88% 的画面有一族主色，整片轮换 3–5 族（橙、琥珀、黄最多，配靛蓝、蓝、红、青），12–30% 的画面底本身是彩色的（琥珀、黄、橙、红、靛蓝），主色 2–8 秒一换。苏伊士白膜：有主色的画面 6%，1 族，彩色底 0%。",
+ "harmony": [
+  "一个画面：一套配色——底、主色、点缀、字色都从这一套里取；中性（黑、米白、灰）不限，有颜色的至多两族",
+  "两族之间：相近（色相差 45° 以内，如琥珀配橙、红配橙）或冷暖相对（琥珀/橙配靛蓝/青）；不三色乱撞",
+  "颜色要干净：要么接近中性（OKLCH C < 0.012），要么是明确的颜色（C ≥ 0.04）；暖色相（20–100°）在暗处又低彩度（0.012–0.04）读成脏棕，不用",
+  "暗底为主（Gawx 八成），颜色在光里、在东西上、在彩色卡片底上；彩色的底给转折、证据卡、数字卡、高潮",
+  "相邻两拍换配色时有关系：共用一族，或冷暖翻过来；一章一镜到底里换配色靠光和底的变形，不硬切",
+  "字色跟配色走：米白、近黑、芥黄、红、浅蓝都可以，对底的对比度 4.5:1 以上；不描边不加阴影"
+ ],
+ "neverAgain": [
+  "脏棕色的底（暖色相、暗、低彩度）",
+  "米色纸加钴蓝印刷（cobalt-print）",
+  "暖光把整张海图或整个画面染黄",
+  "红底板上放字（红只做字色和点）"
+ ],
+ "palettes": [
+  {
+   "id": "noir",
+   "name": "中性暗底一点红",
+   "ground": "#1c1c1c",
+   "key": "#d7d7d7",
+   "accent": "#c8501e",
+   "inks": ["#ece6da", "#c8501e"],
+   "light": "neutral",
+   "tone": "dark",
+   "for": "安静的讲述、过渡；全片的基调，不独占（至多一半的拍）"
+  },
+  {
+   "id": "amber-lamp",
+   "name": "暗里的琥珀灯",
+   "ground": "#141210",
+   "key": "#e3a13b",
+   "accent": "#f0b54a",
+   "inks": ["#f1e6cf", "#e3a13b"],
+   "light": "warm practical",
+   "tone": "dark",
+   "for": "室内、桌面、人做的事、物件特写：琥珀只在光源和被照到的东西上，四周是深黑；不铺满海图"
+  },
+  {
+   "id": "film-red",
+   "name": "胶片红",
+   "ground": "#7e1b16",
+   "key": "#b52a20",
+   "accent": "#f0e4d0",
+   "inks": ["#f3ead9", "#151313"],
+   "light": "neutral",
+   "tone": "mid",
+   "for": "数字卡、警示、转折、高潮：整幅红底，米白或近黑的字；红底上的字不再加红"
+  },
+  {
+   "id": "mustard",
+   "name": "芥黄",
+   "ground": "#d6a121",
+   "key": "#d6a121",
+   "accent": "#171512",
+   "inks": ["#171512", "#7e1b16"],
+   "light": "neutral",
+   "tone": "light",
+   "for": "一句话的大字卡、证据卡、强调：芥黄底配近黑大字，至多一处深红"
+  },
+  {
+   "id": "indigo-night",
+   "name": "靛蓝夜",
+   "ground": "#121730",
+   "key": "#4a63b0",
+   "accent": "#e07a2e",
+   "inks": ["#e3e8f4", "#e07a2e"],
+   "light": "cool",
+   "tone": "dark",
+   "for": "夜、海、远方、等待、压抑：冷的底，暖橙只在一处（冷暖相对）"
+  },
+  {
+   "id": "teal-chart",
+   "name": "青海图",
+   "ground": "#0c3b38",
+   "key": "#2f6e68",
+   "accent": "#e2632b",
+   "inks": ["#eef0ea", "#e2632b"],
+   "light": "neutral",
+   "tone": "dark",
+   "for": "地图、航线、地理：海是深青，陆是浅灰米，航线和焦点用橙红"
+  },
+  {
+   "id": "cream-print",
+   "name": "米白印刷",
+   "ground": "#ebe3d2",
+   "key": "#1a1816",
+   "accent": "#b8321f",
+   "inks": ["#1a1816", "#b8321f"],
+   "light": "neutral",
+   "tone": "light",
+   "for": "高潮、证据、文件、报纸：米白纸、近黑字、一处红；不用钴蓝"
+  },
+  {
+   "id": "cobalt-card",
+   "name": "钴蓝卡",
+   "ground": "#1f3f9a",
+   "key": "#1f3f9a",
+   "accent": "#f2c94c",
+   "inks": ["#f4f1ea", "#f2c94c"],
+   "light": "neutral",
+   "tone": "mid",
+   "for": "数字卡、清单、引用：整幅钴蓝底，白字，黄做重点（Nerdwriter 的钴蓝底白字）；不放在米白纸上"
+  }
+ ],
+ "film": {
+  "palettesMin": 3,
+  "noirMaxShare": 0.5,
+  "sameRunMax": 4,
+  "colouredGroundMin": 0.15,
+  "measured": {
+   "leadFramesMin": 0.35,
+   "familiesMin": 3
+  }
+ }
+}

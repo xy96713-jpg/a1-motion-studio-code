@@ -1,0 +1,103 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "beats"
+  ],
+  "properties": {
+    "beats": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "text",
+          "intent",
+          "why",
+          "onScreen",
+          "entities"
+        ],
+        "properties": {
+          "text": {
+            "type": "string"
+          },
+          "intent": {
+            "type": "string",
+            "enum": [
+              "title",
+              "evidence-article",
+              "data",
+              "table",
+              "person",
+              "quote",
+              "chat",
+              "concept",
+              "product",
+              "software-demo",
+              "presenter-overlay",
+              "atmosphere",
+              "summary",
+              "presenter-plain"
+            ]
+          },
+          "why": {
+            "type": "string"
+          },
+          "onScreen": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "headline",
+              "keywords"
+            ],
+            "properties": {
+              "headline": {
+                "type": "string"
+              },
+              "keywords": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "entities": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "name",
+                "needsSource"
+              ],
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "person",
+                    "org",
+                    "product",
+                    "number",
+                    "article",
+                    "quote",
+                    "software",
+                    "place",
+                    "event"
+                  ]
+                },
+                "name": {
+                  "type": "string"
+                },
+                "needsSource": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

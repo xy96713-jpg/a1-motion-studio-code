@@ -1,0 +1,106 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>table</title>
+<style>
+html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: #0d0b09; }
+#cam { position: absolute; inset: 0; transform-origin: 50% 50%; }
+#tbl { position: absolute; left: 230px; top: 330px; }
+.cell { position: absolute; white-space: nowrap; transform-origin: 0 50%; }
+.head { font-family: "SourceHanSerif Heavy"; font-size: 44px; color: #ddd5c4; }   /* (lighter: a table set larger reaches the vignette, opensrc-S9 header contrast 54) */
+.body { font-family: "SourceHanSans Regular"; font-size: 74px; color: #d9d4ca; }
+.body span, .gold span { display: inline-block; transform: scaleX(.86); transform-origin: 0 50%; }
+.gold { font-family: "SourceHanSans Regular"; font-size: 88px; color: #f0bd52; text-shadow: 0 0 22px rgba(240,180,70,.55), 0 0 2px rgba(255,220,150,.6); }   /* the column the table lands on: larger and lit (h800-S13 review: the results the same size as the rest, a flat table) */
+.gold b { font-weight: normal; font-size: 1.32em; line-height: 0; vertical-align: baseline; }   /* (the figures larger on the same baseline: they sank half a row onto the rule, opensrc-S8) */
+.line { position: absolute; background: rgba(150,140,125,.42); }
+#vig { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse 70% 65% at 50% 50%, transparent 35%, rgba(0,0,0,.75)); }
+/* ground grid: white squared paper with black type, as the reference's opensrc R08 (ours a warm black stage, read dull) */
+body.grid { background: #f3f2ee; }
+body.grid #cam { background-color: #f3f2ee; background-image: linear-gradient(rgba(0,0,0,.07) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,.07) 1px, transparent 1px); background-size: 48px 48px; }
+body.grid .head { color: #3a3631; } body.grid .body { color: #141210; } body.grid .line { background: rgba(20,18,16,.38); }
+body.grid .gold { color: #b3271c; text-shadow: none; } body.grid #vig { background: radial-gradient(ellipse 80% 75% at 50% 50%, transparent 55%, rgba(0,0,0,.18)); }
+#sub { position: absolute; left: 0; right: 0; top: 930px; text-align: center; font-family: 'SourceHanSans Regular', 'PingFang SC'; font-size: 58px; color: #fff; text-shadow: 0 0 6px rgba(0,0,0,.55), 0 2px 3px rgba(0,0,0,.6); transform: scaleX(.86); z-index: 50; }
+</style></head>
+<body>
+<div id="cam"><div id="tbl"></div></div><div id="vig"></div><div id="sub"></div>
+<script>
+// 数据表逐行打出 (reference P27; measured at 5 fps): a warm black stage, a header in small grey Song, cells that come up
+// left to right each out of a blur, the last column in gold with its figures set larger and glowing, thin grey rules,
+// a red sweep across rows on a later word, and a slow push the whole time. Every figure on it is a fact of the shot.
+const S = window.__spec, $ = (q) => document.querySelector(q);
+if (S.ground === 'grid') document.body.classList.add('grid');
+const LIGHT = S.ground === 'grid' || /^(paper|light)/.test(S.ground || '');
+const E = { out: (k) => 1 - Math.pow(1 - k, 3) };
+const seg = (t, a, b) => Math.min(1, Math.max(0, (t - a) / (b - a)));
+const esc = (x) => String(x).replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+const cols = S.columns || [], rows = S.rows || [], gold = S.gold ?? cols.length - 1;
+const tbl = $('#tbl'), cells = [], HL = [], VL = []; let RULE = null;
+// the gold column's figures (digits, %, +) set larger, as the reference sets its gains
+const goldHtml = (x) => esc(x).replace(/([≤≥]?[\d.]+%?\+?)/g, '<b>$1</b>');
+const put = (text, cls, r, c) => { const el = document.createElement('div'); el.className = `cell ${cls}`; el.innerHTML = cls === 'gold' ? `<span>${goldHtml(text)}</span>` : `<span>${esc(text)}</span>`; tbl.appendChild(el); cells.push({ el, r, c }); return el; };
+cols.forEach((h, c) => put(h, 'head', -1, c));
+// (better: 'high' | 'low' — a row the emphasised column does not win is not set as a win: R1's 71.5 against o1's 75.7 on
+// GPQA stood in large red like the rows it won, opensrc-S8 review)
+const num = (x) => { const m = String(x).match(/-?[\d.]+/); return m ? +m[0] : null; };
+const wins = (row) => { if (!S.better) return true; const g = num(row[gold]), o = row.map((x, c) => (c === gold || c === 0 ? null : num(x))).filter((v) => v != null);
+  return g == null || !o.length || (S.better === 'low' ? g <= Math.min(...o) : g >= Math.max(...o)); };
+rows.forEach((row, r) => row.forEach((x, c) => put(x, c === gold && wins(row) ? 'gold' : 'body', r, c)));
+document.fonts.ready.then(() => {
+  // column widths from the widest cell, row heights fixed; rules between columns and under the header and rows
+  const W = cols.map((_, c) => Math.max(...cells.filter((x) => x.c === c).map((x) => x.el.getBoundingClientRect().width)) + 56);
+  const X = W.reduce((a, w, i) => (a.push((a[i - 1] ?? 0) + (i ? W[i - 1] : 0)), a), []);
+  // (a short table spreads its rows: three rows of a wide table at 124 px stood a strip across the top half with the
+  // lower half empty, film review 3:10 h800-S13)
+  const H0 = 80, H = rows.length <= 3 ? 168 : 124;
+  for (const x of cells) { x.el.style.left = `${X[x.c]}px`; x.el.style.top = `${x.r < 0 ? 0 : H0 + x.r * H}px`; }
+  // centred on the frame as the reference sets it (P27), a little above the middle to clear the subtitles
+  { const tw = X.at(-1) + W.at(-1), th = H0 + rows.length * H; tbl.style.left = `${Math.max(60, (1920 - tw) / 2)}px`; tbl.style.top = `${Math.max(120, 500 - th / 2)}px`; }
+  const total = X.at(-1) + W.at(-1), height = H0 + rows.length * H;
+  for (let c = 1; c < cols.length; c++) { const l = document.createElement('div'); l.className = 'line'; l.style.cssText = `left:${X[c] - 30}px;top:-20px;width:1.5px;height:${height + 40}px`; l.dataset.full = height + 40; tbl.appendChild(l); VL.push(l); }
+  for (let r = 0; r < rows.length; r++) { const l = document.createElement('div'); l.className = 'line'; l.style.cssText = `left:0;top:${H0 + r * H - 12}px;width:${total - 60}px;height:1.5px`; tbl.appendChild(l); HL.push(l); }
+  RULE = { H0, H };
+  // the table fills the frame as the reference's does (about 1460 px wide; 1340 under its own drift), smaller ones set larger too (opensrc-S9: a
+  // three-column table 1000 px wide carried 14 % of the frame, the reference's 34 %), never taller than 700 px above the
+  // subtitle band; centred a little above the middle
+  // (1340 px at most: the table's own drift, 170 px aside and a push of 1.14, took a 1460 px table's edge off the frame,
+  // the module bench)
+  const k = Math.min(1.45, ((S.camera || []).length ? 1460 : 1340) / total, 700 / height); tbl.style.transformOrigin = '0 0'; tbl.style.transform = `scale(${k})`;
+  // (centred on 470, the middle of the frame above the subtitle band: at (1000 - h) / 2 its own drift up left the lower
+  // third empty, h800-S13)
+  tbl.style.left = `${(1920 - total * k) / 2}px`; tbl.style.top = `${Math.max(60, 580 - height * k / 2)}px`;   /* (a tall table centred on 580 reached the subtitle band under a push, talent-S2) */   // (centred a little under the middle, as the reference's tables: at 500 the table sat in the top half, h800-S13, opensrc-S8)
+  // one column pressed (sweep.col): a dark bar down it, header to last row, its words white (the reference's 教育背景, talent-S2)
+  if (S.sweep?.col != null) { const c = S.sweep.col, bar = document.createElement('div'); bar.id = 'colbar';
+    bar.style.cssText = `position:absolute;left:${X[c] - 30}px;top:-20px;width:${W[c]}px;height:${height + 40}px;background:#26221e;transform-origin:50% 0;transform:scaleY(0);z-index:0`; tbl.insertBefore(bar, tbl.firstChild); }
+  window.__ready = true; render(S.at);
+});
+window.render = (t) => {
+  // (sweep.dur: the bar goes down the column evenly over that many seconds, the rows lit one after another as the
+  // reference's 教育背景 is read down over 3.7 s; talent-S2 lit them all in 0.1 s)
+  // the pressed column's words turn white as the bar's edge passes their middle, never dark on the dark bar (a stagger of
+  // their own lagged the eased bar: four rows grey on it, talent-S2 review)
+  const barEdge = (() => { const bar = document.getElementById('colbar'); if (!bar) return null; const k = (S.sweep.dur ? seg(t, S.sweep.at - .1, S.sweep.at + S.sweep.dur) : E.out(seg(t, S.sweep.at - .1, S.sweep.at + .5))); bar.style.transform = `scaleY(${k})`; return -20 + k * (bar.offsetHeight); })();
+  const under = (el) => barEdge != null && barEdge >= el.offsetTop + el.offsetHeight / 2;
+  { const sb = (S.subs || []).find((x) => t >= x.at && t < x.end); $('#sub').textContent = sb ? sb.text : ''; }
+  // the rules come with the rows: a row's rule with the row, the column rules down to the last row in (the whole grid
+  // drawn ahead of its rows stood a second as faint lines on the dark ground, film review 3:09)
+  if (RULE) { let reach = 0; HL.forEach((l, r) => { const at = S.rowsAt?.[r] ?? S.at + .5 + r * .6, k = seg(t, at, at + .15); l.style.opacity = E.out(k); if (k > 0) reach = r + k; });
+    VL.forEach((l) => { l.style.height = `${Math.min(+l.dataset.full, 20 + RULE.H0 + reach * RULE.H + (reach >= HL.length ? 20 : 0))}px`; }); }
+  // header first — already in at the cut (it came in after it: the table's first frame stood empty dark ground, film
+  // review 3:09) — then each row on its word, cell after cell left to right (0.12 s apart), each out of a blur
+  for (const x of cells) {
+    // (a row cued at the cut is already in at it, as the header is: the cut lands on a table with its first row, not on a
+    // header over empty ground that fills a beat later — film review 16, 3:09)
+    const cue = x.r < 0 ? S.at - .4 : (S.rowsAt?.[x.r] ?? S.at + .5 + x.r * .6), at = (cue <= S.at + .2 ? S.at - .4 : cue) + x.c * (x.r < 0 || cue <= S.at + .2 ? .06 : .12), k = seg(t, at, at + .15);   /* (a row arrives, as the reference's do: over 0.3 s, blurred and staggered, it measured as nothing appearing, talent-S2) */
+    x.el.style.opacity = E.out(k); x.el.style.filter = `blur(${(1 - k) * 8}px)`; x.el.style.transform = `translateY(${(1 - E.out(k)) * 12}px)`;
+    // the red sweep: down the rows of the first columns, a cell at a time, then back
+    if (S.sweep && x.r >= 0 && (S.sweep.col != null ? x.c === S.sweep.col : x.c < (S.sweep.cols ?? 2))) {   /* (col: one column only, the reference's dark bar down 教育背景, talent-S2) */ const sa = S.sweep.at + x.r * .14 + x.c * .07, h = seg(t, sa, sa + .1) * (S.sweep.col != null ? 1 : 1 - seg(t, sa + .45, sa + .6));   /* (one column stays pressed, as the reference's 教育背景) */
+      if (S.sweep.col != null) { x.el.style.color = under(x.el) ? '#f4f1ea' : ''; x.el.style.position = 'absolute'; x.el.style.zIndex = 1; }
+      // (on a light page the red goes deep, from the ink: the dark ground's red swept to 66 contrast on white paper, opensrc-S8)
+      else x.el.style.color = h > 0 ? (LIGHT ? `rgb(${20 + 176 * h},${18 + 18 * h},${16 + 14 * h})` : `rgb(${217 + 20 * h},${212 - 160 * h},${202 - 170 * h})`) : ''; }
+    if (S.sweep?.col != null && x.r < 0 && x.c === S.sweep.col) { x.el.style.color = under(x.el) ? '#f4f1ea' : ''; x.el.style.zIndex = 1; }
+  }
+  // the camera: a slow push and drift the whole time (the reference never holds still), about the table's middle (a
+  // drift of 170 px to the left and up carried it to the top left corner: h800-S13, three reviews)
+// (under the director's camera, spec.camera, this page holds still and the camera moves it: modules/camera.js)
+  const a = seg(t, S.at, S.end); $('#cam').style.transform = (S.camera || []).length ? 'none' : `translate(${-30 * a}px, ${-8 * a}px) scale(${1.02 + .06 * a})`;
+};
+</script>
+</body></html>

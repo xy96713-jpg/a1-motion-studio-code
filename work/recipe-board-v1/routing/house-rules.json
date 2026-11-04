@@ -1,0 +1,203 @@
+{
+ "contract": "A1HouseRules/v1",
+ "note": "用户 2026-10-21 定：系统只用下面这些字体（2026-10-25 用户定加一款粗黑体：思源黑体 Heavy，给章节的大号中文；共 7 款）；系统不加字幕（字幕由用户后期自己加）；画面上由代码排的字一律繁体（script: traditional，用系统自带的 ICU Hans-Hant 转换；网页原文、文件路径、要遮的网站名不转）。旧代码里的字体名都映射到这里的字体（alias），画面上每个字都要在映射到的那款字体里，一段字在它的字体里缺字时，整段换成 fallback 里第一款全都有的房内字体（只在这 7 款之间换），7 款都缺才报错，从不落到系统字体。 设计（2026-10-21 用户：系统挑着用挑着设计包装）：每个镜头的 spec 可写 type: { display, text, accent }（房内字体的 family 或中日文名），把这一镜的大字、正文、点缀分别换成选定的字体；不写就用 alias 的默认。",
+ "subtitles": false,
+ "script": "traditional",
+ "fonts": {
+  "dir": "work/recipe-board-v1/fonts/house",
+  "allowed": [
+   {
+    "family": "House Kikai",
+    "name": "f.k 機械彫刻（機械彫刻用標準書体）",
+    "file": "fk-kikaichokoku.otf",
+    "role": "text",
+    "source": "https://font.kim/",
+    "license": "商用・非商用とも無償",
+    "fallback": [
+     "House Kokka"
+    ],
+    "character": "工业雕刻体：等粗单线、几何、像铭牌和机床刻字；冷静精确。适合英文、数字、型号、参数、标签小字、界面说明；中文收字少（JIS），中文多会换成黒華明朝。"
+   },
+   {
+    "family": "House Sumikaku",
+    "name": "スミカク",
+    "file": "sumikaku.otf",
+    "role": "display",
+    "source": "https://845-fonts.booth.pm/items/8183402",
+    "license": "個人・商用とも無償（独自ライセンス）",
+    "fallback": [
+     "House Kaiso",
+     "House Kinkaku",
+     "House Kokka"
+    ],
+    "character": "方块展示体：字挤满正方形、点画像【】括号；强烈、海报感、有态度。适合短的大标题（2–6 字）、口号、撕纸标签；只收常用汉字，生僻字会换字。"
+   },
+   {
+    "family": "House Kokka",
+    "name": "黒華明朝",
+    "file": "kokka-mincho.ttf",
+    "role": "serif",
+    "source": "https://lavsic.booth.pm/items/8271642",
+    "license": "SIL OFL 1.1",
+    "fallback": [],
+    "character": "华丽长体明朝：横细竖粗、纵向修长、锋利优雅，带点妖艶。适合报道标题、人物姓名、引语、文艺和叙事的大字；收字最全，任何文字都能排。"
+   },
+   {
+    "family": "House Soukou",
+    "name": "装甲明朝",
+    "file": "soukou-mincho.ttf",
+    "role": "serif-display",
+    "source": "https://flopdesign.booth.pm/items/1028555",
+    "license": "SIL OFL 1.1",
+    "fallback": [
+     "House Kokka"
+    ],
+    "character": "装甲明朝（镂空明朝）：明朝体切出镂空断口、横线极细、略带磨损；军工、机密、硬核。适合硬件、军事、对抗、\"禁止/限制\"类标题和标签。"
+   },
+   {
+    "family": "House Kinkaku",
+    "name": "金畫字（キンカクジ）",
+    "file": "kinkaku.ttf",
+    "role": "condensed",
+    "source": "https://moji-waku.com/kinkaku/",
+    "license": "フリーフォント（商用可）https://moji-waku.com/mj_work_license/",
+    "fallback": [
+     "House Kaiso",
+     "House Sumikaku",
+     "House Kokka"
+    ],
+    "character": "金畫字：只用横、竖、45° 斜线构成的直线字；机械、复古未来、像电路和机甲铭文。适合科技概念、数字和数据标题、章节名、表头。",
+    "note": "原文件 Chromium 拒绝加载（vhea 无 vmtx；cmap format 14 异体字表有坏映射 9038->0）；用 fontTools 去掉 vhea、DSIG 和 format 14 表后保存，字形未动"
+   },
+   {
+    "family": "House Kaiso",
+    "name": "廻想体 ネクスト",
+    "file": "kaiso-next-up.ttf",
+    "role": "heavy",
+    "source": "https://moji-waku.com/kaiso/",
+    "license": "フリーフォント（商用可）https://moji-waku.com/mj_work_license/",
+    "fallback": [
+     "House Kinkaku",
+     "House Sumikaku",
+     "House Kokka"
+    ],
+    "character": "廻想体 ネクスト：极粗、纵长、全直线、无曲线；压迫感最强、像昭和机械海报。适合最重的冲击性大字（一两个词）、数字冲击、章节题眼。",
+    "version": "ネクスト ユーピー B（作者新版，和用户给的字体图一致）"
+   },
+   {
+    "family": "House Gothic",
+    "name": "思源黑体 Heavy（Source Han Sans CN Heavy）",
+    "file": "source-han-sans-heavy.otf",
+    "role": "gothic",
+    "source": "https://github.com/adobe-fonts/source-han-sans",
+    "license": "SIL OFL 1.1",
+    "fallback": [
+     "House Kokka"
+    ],
+    "character": "朴素的粗黑体：字形端正、笔画匀称，每个字都像字。适合章节里的大号中文（标题、名词、结论），对得上原片的粗黑体；2026-10-25 用户定加入（家用字体里没有字形干净的粗黑体）。"
+   }
+  ],
+  "alias": {
+   "SourceHanSerif Heavy": "House Kokka",
+   "A1 Serif Heavy": "House Kokka",
+   "Serif": "House Kokka",
+   "Songti SC": "House Kokka",
+   "STSong": "House Kokka",
+   "Noto Serif CJK SC": "House Kokka",
+   "Jinshu Wide": "House Kokka",
+   "ZCOOL XiaoWei": "House Kokka",
+   "Times New Roman": "House Kokka",
+   "Georgia": "House Kokka",
+   "Unifraktur": "House Soukou",
+   "SourceHanSans Regular": "House Kikai",
+   "PingFang SC": "House Kikai",
+   "Hiragino Sans GB": "House Kikai",
+   "Avenir Next": "House Kikai",
+   "SF Mono": "House Kikai",
+   "Menlo": "House Kikai",
+   "Plex Mono": "House Kikai",
+   "Departure Mono": "House Kikai",
+   "A1 Pixel": "House Kikai",
+   "Pixel": "House Kikai",
+   "Fusion Pixel": "House Kikai",
+   "MaShanZheng": "House Kikai",
+   "LongCang": "House Kikai",
+   "SourceHanSans Heavy": "House Sumikaku",
+   "A1 Sans Heavy": "House Sumikaku",
+   "Sans": "House Sumikaku",
+   "Archivo Black": "House Sumikaku",
+   "DIN Condensed": "House Kinkaku",
+   "Harmony Cond": "House Kinkaku",
+   "Bebas": "House Kinkaku",
+   "Anton": "House Kinkaku",
+   "Smiley": "House Kinkaku",
+   "PuHuiTi Heavy": "House Kaiso",
+   "Douyin Sans": "House Kaiso",
+   "A1Serif": "House Kokka",
+   "A1Sans": "House Sumikaku",
+   "A1Mono": "House Kikai",
+   "Didot": "House Kokka",
+   "Source Han Serif Heavy": "House Kokka",
+   "Source Han Sans Heavy": "House Sumikaku"
+  },
+  "groups": {
+   "display": [
+    "SourceHanSerif Heavy",
+    "A1 Serif Heavy",
+    "Serif",
+    "Songti SC",
+    "STSong",
+    "Noto Serif CJK SC",
+    "Jinshu Wide",
+    "ZCOOL XiaoWei",
+    "SourceHanSans Heavy",
+    "A1 Sans Heavy",
+    "Sans",
+    "Harmony Cond",
+    "Bebas",
+    "Anton",
+    "Smiley",
+    "PuHuiTi Heavy",
+    "Douyin Sans",
+    "Unifraktur",
+    "DIN Condensed",
+    "A1Serif",
+    "A1Sans",
+    "Source Han Serif Heavy",
+    "Source Han Sans Heavy"
+   ],
+   "text": [
+    "SourceHanSans Regular",
+    "PingFang SC",
+    "Hiragino Sans GB",
+    "Avenir Next",
+    "MaShanZheng",
+    "LongCang"
+   ],
+   "accent": [
+    "Times New Roman",
+    "Georgia",
+    "Archivo Black",
+    "SF Mono",
+    "Menlo",
+    "Plex Mono",
+    "Departure Mono",
+    "A1 Pixel",
+    "Pixel",
+    "Fusion Pixel",
+    "A1Mono",
+    "Didot"
+   ]
+  }
+ },
+ "lettering": {
+  "about": "A lettered project's faces, one a role for the whole film (project.json lettering; the user 2026-10-26: 思源黑体是兜底 主要用之前安装的 6 个). 'eva': big Chinese (90 px and up on screen) in the display face of the film's style, any of the six (project.json style, routing/styles.json fonts.display; 黒華明朝 drawn tall, x.72, when it is the display), small Chinese in 黒華明朝, Latin and figures in the style's accent face when it is one that sets Latin (latinFrom: f.k 機械彫刻), else 廻想体; a line the display face cannot set (it lacks a character or reads as another word) goes whole to 黒華明朝; 思源黑体 only where none of the six has a character (house.mjs letterRoles).",
+  "eva": { "small": "House Kokka", "latin": "House Kaiso", "latinFrom": ["House Kikai", "House Kaiso"], "cjkDisplay": ["House Kikai", "House Sumikaku", "House Kokka", "House Soukou", "House Kinkaku", "House Kaiso"], "cjkDisplayWhy": "the six are the house's faces for big Chinese, the style choosing one (the user 2026-10-26, with the six set big: 我需要的是那 6 个字体); a word a face does not draw as itself goes whole to the next (legible.mjs, broken), and a character none of the six has to 思源黑体", "broken": { "House Kinkaku": "糸系紅約級紀納紙純素索累細終組結絕絡給統絲經綁綜綠緊網綿緒線緣編緩練縣縮總績繁織繞繪繼續纖纜" }, "brokenWhy": "金畫字 draws 糸 as two blocks (終 in 終身監禁, blind review 2026-10-25): a big line holding one is set in 黒華明朝 (morph.js KINKAKU_ODD, cards: evaLacks)", "tall": ["House Kokka"], "shape": { "x": [0.55, 1], "default": { "House Kokka": 0.72 }, "why": "any of the six may be drawn narrow and so tall, by design (the user 2026-10-26: 可以变形 变高 窄 根据设计来): a style names it as fonts.displayX, else the default here; tallface.py redraws the face scaled across, kept under fonts/house/derived" }, "last": "House Gothic", "defaultStyle": "editorial-grey" }
+ },
+ "labels": {
+  "note": "user decision 2026-10-21 (不要总有那个小标签了): labels are an accent, not on every shot; since 2026-10-25 (之后也不要这种纸条撕纸设计什么的了) no torn paper, paper strip or ragged brush edge anywhere: a label is clean heavy white type on an accent underline",
+  "maxShare": 0.34,
+  "consecutive": false,
+  "perShot": 2
+ }
+}

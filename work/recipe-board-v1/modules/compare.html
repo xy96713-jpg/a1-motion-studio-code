@@ -1,0 +1,104 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>compare</title>
+<style>
+html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: #0c0a08; }
+#cam { position: absolute; left: 0; top: 0; width: 2600px; height: 1080px; transform-origin: 0 0; }
+.hw { position: absolute; left: 660px; top: 150px; width: 880px; height: 813px; background-size: contain; background-repeat: no-repeat; }
+#photo { filter: brightness(.72) contrast(1.05); }
+#lines { -webkit-mask-repeat: no-repeat; }
+#glint { position: absolute; left: 640px; top: 160px; width: 160px; height: 760px; background: linear-gradient(90deg, transparent, rgba(255,255,255,.9), transparent); transform: skewX(-30deg); filter: blur(6px); mix-blend-mode: screen; }
+.block { position: absolute; }
+.block h2 { margin: 0 0 22px; font-family: "SourceHanSerif Heavy"; font-size: 118px; font-weight: normal; transform: scaleX(.86); transform-origin: 0 50%; white-space: nowrap; }
+.row { display: flex; gap: 18px; margin: 10px 0; align-items: center; transform-origin: 0 50%; }
+.row .k { font-family: "SourceHanSans Regular"; font-size: 58px; color: #b9b2a6; width: 300px; white-space: nowrap; }   /* a size up: read at two thirds of the reference's (h800-S10 review) */
+.row .v { font-family: "SourceHanSans Regular"; font-size: 58px; padding: 8px 22px; white-space: nowrap; }
+#L h2 { color: #e9cfa0; text-shadow: 0 0 24px rgba(232,180,90,.35); } #L .v { background: rgba(200,150,60,.55); color: #fff3df; }
+#L .row.mark .v { background: none; color: #ff5d4f; }   /* (no words on a red plate and nothing dressed on them, the user 2026-10-26: 不要红底的文字; 不要加字描边阴影 下面或者侧面的红线 — the red is the words alone) */ #L .row.mark .k { color: #f0e6d6; }   /* (the left block's key row on the way back: the reference colours it, h800 3:06) */
+#R h2 { color: #e8e6f6; text-shadow: 0 0 24px rgba(140,150,255,.35); } #R .v { background: rgba(90,100,220,.55); color: #f0f0ff; }
+#vig { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse 70% 70% at 50% 50%, transparent 35%, rgba(0,0,0,.8)); }
+#sub { position: absolute; left: 0; right: 0; top: 930px; text-align: center; font-family: 'SourceHanSans Regular', 'PingFang SC'; font-size: 58px; color: #fff; text-shadow: 0 0 6px rgba(0,0,0,.55), 0 2px 3px rgba(0,0,0,.6); transform: scaleX(.86); z-index: 50; }
+</style></head>
+<body>
+<div id="cam">
+  <div class="hw" id="lines"></div><div class="hw" id="photo"></div><div id="glint"></div>
+  <div class="block" id="L" style="left:60px;top:340px"></div><div class="block" id="R" style="left:1640px;top:480px"></div>
+</div>
+<div id="vig"></div><div id="sub"></div>
+<script>
+// 暗场硬件对比图解 (reference P26; measured at 3 fps): a dark stage; the hardware first draws on as a line drawing, a
+// glint sweeps it into the real photograph; the left block (gold) types in row by row, the camera pans right as the
+// talk turns to the right block (blue), which then types in. The hardware is the real product photo.
+const S = window.__spec, $ = (q) => document.querySelector(q);
+const E = { out: (k) => 1 - Math.pow(1 - k, 3), inout: (k) => (k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2) };
+const seg = (t, a, b) => Math.min(1, Math.max(0, (t - a) / (b - a)));
+const esc = (x) => String(x).replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+$('#photo').style.backgroundImage = `url("${S.photo}")`; $('#lines').style.backgroundImage = `url("${S.lines}")`;
+const block = (el, b) => { el.innerHTML = `<h2>${esc(b.title)}</h2>` + b.rows.map(([k, v]) => `<div class="row"><span class="k">${esc(k)}</span><span class="v">${esc(v)}</span></div>`).join(''); return [...el.querySelectorAll('.row')]; };
+const LR = block($('#L'), { ...S.left, rows: [...S.left.rows, ...((S.left.back || {}).rows || [])] }), RR = block($('#R'), S.right);
+// the two headings take the reference's treatment and face at the moment (treat.js; shotplan withRefTreat)
+for (const h of document.querySelectorAll('#L h2, #R h2')) { if (S.face && window.__FACE[S.face]) h.style.fontFamily = `'${window.__FACE[S.face]}', 'House Kokka'`; if (S.treat) window.__treat(h, S.treat); }
+// coming back to the left block it gains something — its rows for the way back, and its key row set in the accent (by
+// default its last): the same block again as it was read as the clip played twice (fifteenth whole-film review, 3:06)
+const NB = (S.left.back || {}).rows?.length || 0, LR0 = LR.slice(0, LR.length - NB), LRB = LR.slice(LR.length - NB), MARK = (S.left.back || {}).mark ?? LR.length - 1;
+document.fonts.ready.then(() => { window.__ready = true; render(S.at); });
+const show = (el, rows, at, step) => {
+  const h = el.querySelector('h2'), k = seg(window.__t, at, at + .35); h.style.opacity = E.out(k); h.style.filter = `blur(${(1 - k) * 10}px)`;
+  rows.forEach((r, i) => { const q = seg(window.__t, at + .4 + i * step, at + .4 + i * step + .25); r.style.opacity = E.out(q); r.style.transform = `translateX(${(1 - E.out(q)) * -30}px)`; });
+};
+window.render = (t) => {
+  window.__t = t;
+  { const sb = (S.subs || []).find((x) => t >= x.at && t < x.end); $('#sub').textContent = sb ? sb.text : ''; }
+  // line drawing draws on (a wipe), the glint turns it into the photograph
+  const ld = seg(t, S.at, S.at + .7), gl = seg(t, S.at + .6, S.at + 1.2);
+  $('#lines').style.webkitMaskImage = `linear-gradient(90deg, #000 ${ld * 100}%, transparent ${ld * 100 + 8}%)`;
+  $('#lines').style.opacity = 1 - seg(t, S.at + 1.1, S.at + 1.4);
+  $('#photo').style.webkitMaskImage = `linear-gradient(105deg, #000 ${gl * 110 - 10}%, transparent ${gl * 110}%)`;
+  $('#glint').style.left = `${640 + gl * 1000}px`; $('#glint').style.opacity = gl > 0 && gl < 1 ? 1 : 0;
+  show($('#L'), LR0, S.left.at, .3); show($('#R'), RR, S.right.at, .3);
+  { const ba = S.backAt ?? S.right.at + (S.end - S.right.at) * .55; LRB.forEach((r, i) => { const q = seg(t, ba + .2 + i * .3, ba + .45 + i * .3); r.style.opacity = E.out(q); r.style.transform = `translateX(${(1 - E.out(q)) * -30}px)`; });
+    LR.forEach((r, i) => r.classList.toggle('mark', i === MARK && t >= ba + .5 + NB * .3)); }
+  // camera (reference P26, measured: moving 98% of the time, fast): the whole stage first, a pan to the right block on
+  // its word, then back to the left block (`backAt`, default two thirds in) and a push on it; it drifts all the while
+  // the pans are measured on the blocks (their type is large now): to the right, the right block's right edge comes to
+  // 1860 px; back, the left block's left edge to 60 px; the scale at each pose is known, so neither leaves the frame
+  const backAt = S.backAt ?? S.right.at + (S.end - S.right.at) * .55;
+  // the pans fill the time between beats (the camera is always on its way somewhere: the reference moves 98 % of the
+  // time, ours 43 % with one-second pans and rests; motion check, h800-S10): across to the right block from the
+  // start, arriving as it is said; it stays on the right block (drifting) until backAt, as planned, then back left
+  // (leaving after a second lost the right block while it was still being talked about)
+  // (the pan starts 0.6 s before the right block is said, so the left one leaves as the right one comes: a pan from the
+  // start emptied the frame for a second, a card's corner on dark ground, before the right block, film review 3:01)
+  const goEnd = S.right.at + .5, backStart = Math.max(goEnd + .3, backAt - .5);
+  const a = seg(t, S.at, S.end), go = E.inout(seg(t, Math.min(Math.max(S.at + .6, S.right.at - .6), goEnd - 1), goEnd)), back = E.inout(seg(t, backStart, backAt + .6));
+  // each block's foot clear of the subtitle band whatever its rows (a size up put the right block's last rows under it:
+  // h800-S10, framecheck)
+  for (const b of [$('#L'), $('#R')]) if (b.offsetTop + b.offsetHeight > 860) b.style.top = `${Math.max(60, 860 - b.offsetHeight)}px`;
+  // (the block's edge where its widest row ends, not its title's: a two-character title put a six-character row 92 % off
+  // the frame, found by the module bench)
+  const R = $('#R'), Lb = $('#L'), rEdge = R.offsetLeft + Math.max(R.offsetWidth, R.scrollWidth), rTop = R.offsetTop + R.offsetHeight, lEdge = Lb.offsetLeft;
+  // (going back to the left block it comes a size closer, another framing of it: the same framing again read as the
+  // first second rewound, film review 3:06 h800-S10)
+  const z = 1 + .06 * a + .06 * go + .2 * back;
+  const xWide = -60 * a, xRight = Math.min(xWide, 1860 - rEdge * z), xLeft = Math.min(60 - lEdge * z, 0) - 40 * a;
+  // the blocks stay above the subtitles (their line is at 930 px)
+  const yRight = Math.min(0, 880 - rTop * z);
+  R.style.opacity = 1 - back;   // going back left, the right block leaves (no sliver of it at the edge)
+  // and while the camera is on the right block the left one leaves the same way (a short right title made a short pan,
+  // and a sliver of the left block's rows stood cut at the edge: the module bench)
+  Lb.style.opacity = Math.min(1, 1 - go + back);
+  // at each rest the camera drifts on, away from the edge the block is held to (content to the left while on the right
+  // block, to the right once back on the left one), so it never stands still; the block in view stays whole (its
+  // outer edge 60 px in: an unbounded drift slid the left title off the edge, framecheck)
+  const restR = seg(t, goEnd, backStart) * (backStart - goEnd), restL = Math.max(0, t - (backAt + .6));
+  let x = xWide + (xRight - xWide) * go + (xLeft - xRight) * back - 40 * restR * (1 - back) + 40 * restL; let y = -20 * a + yRight * go - yRight * back - 8 * (t - S.at);
+  // the upward drift stops before the blocks' titles reach the top edge (70 px clear, as the reference leaves)
+  // (back on the left block, its foot — with the rows it gained — stays above the subtitle band)
+  if (back > .5) y = Math.min(y, 900 - (Lb.offsetTop + Lb.offsetHeight) * z);
+  y = Math.max(y, 70 - Math.min(Lb.offsetTop, R.offsetTop) * z);
+  if (back > .5 || go <= .5) x = Math.max(x, 60 - lEdge * z); else x = Math.min(x, 1860 - rEdge * z);
+// (under the director's camera, spec.camera, this page holds still and the camera moves it: modules/camera.js)
+  if ((S.camera || []).length) { R.style.opacity = 1; $('#cam').style.transform = 'none'; return; }
+  $('#cam').style.transform = `translate(${x}px, ${y}px) scale(${z})`;
+};
+</script>
+</body></html>

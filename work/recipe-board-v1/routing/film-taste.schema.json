@@ -1,0 +1,77 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "title": "A1FilmTaste/v1 (agent answer)",
+ "type": "object",
+ "additionalProperties": false,
+ "required": [
+  "scores",
+  "issues",
+  "overall"
+ ],
+ "properties": {
+  "scores": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "rhythm",
+    "arc",
+    "variety",
+    "heroes",
+    "cohesion"
+   ],
+   "properties": {
+    "rhythm": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 5
+    },
+    "arc": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 5
+    },
+    "variety": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 5
+    },
+    "heroes": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 5
+    },
+    "cohesion": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 5
+    }
+   }
+  },
+  "issues": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "at",
+     "issue",
+     "fix"
+    ],
+    "properties": {
+     "at": {
+      "type": "string"
+     },
+     "issue": {
+      "type": "string"
+     },
+     "fix": {
+      "type": "string"
+     }
+    }
+   }
+  },
+  "overall": {
+   "type": "string"
+  }
+ }
+}

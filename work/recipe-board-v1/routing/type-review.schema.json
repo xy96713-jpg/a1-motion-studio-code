@@ -1,0 +1,100 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "A1TypeReview/v1",
+  "title": "Blind type review verdict",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "frames",
+    "scores",
+    "mustFix",
+    "verdict",
+    "reviewerNote"
+  ],
+  "properties": {
+    "contract": {
+      "const": "A1TypeReview/v1"
+    },
+    "frames": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "scores": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reason",
+        "anchor",
+        "subject",
+        "hierarchy",
+        "light",
+        "composition"
+      ],
+      "properties": {
+        "reason": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "anchor": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "subject": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "hierarchy": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "light": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "composition": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 5
+        }
+      }
+    },
+    "mustFix": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "severity",
+          "say"
+        ],
+        "properties": {
+          "severity": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 3
+          },
+          "say": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "verdict": {
+      "enum": [
+        "pass",
+        "fail"
+      ]
+    },
+    "reviewerNote": {
+      "type": "string"
+    }
+  }
+}

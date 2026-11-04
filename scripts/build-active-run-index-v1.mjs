@@ -1,0 +1,22 @@
+import {createHash} from "node:crypto";
+import fs from "node:fs";
+import path from "node:path";
+import {assertActiveRunIndex} from "../apps/studio-next/src/lib/a1-active-run-index-v1.mjs";
+
+const root = process.cwd();
+const relative = "apps/studio-next/public/generated/system-line/editorial-asset-workbench-v1";
+const publicDir = path.join(root, relative);
+const artifactDir = path.join(root, ".codex-artifacts/system-progress-system-line/editorial-asset-workbench-v1");
+const workspacePath = path.join(publicDir, "workspace.json");
+const bytes = fs.readFileSync(workspacePath);
+const workspace = JSON.parse(bytes);
+const workspaceFileSha256 = createHash("sha256").update(bytes).digest("hex");
+const receipt = JSON.parse(fs.readFileSync(path.join(publicDir, "transition-receipt.json"), "utf8"));
+if (receipt.contract !== "A1ProductionTransitionReceipt/v1" || receipt.workspaceSha256 !== workspace.workspaceSha256 || receipt.workspaceFileSha256 !== workspaceFileSha256) throw new Error("active-run-receipt-binding-invalid");
+const artifactReceipt = fs.readFileSync(path.join(artifactDir, "transition-receipt.json"));
+if (!artifactReceipt.equals(fs.readFileSync(path.join(publicDir, "transition-receipt.json")))) throw new Error("active-run-receipt-mirror-drift");
+const index = assertActiveRunIndex(JSON.parse(fs.readFileSync(path.join(publicDir, "active-run.json"), "utf8")), {workspaceFileSha256});
+if (index.transitionSha256 !== receipt.transitionSha256) throw new Error("active-run-transition-mismatch");
+const artifactIndex = fs.readFileSync(path.join(artifactDir, "active-run.json"));
+if (!artifactIndex.equals(fs.readFileSync(path.join(publicDir, "active-run.json")))) throw new Error("active-run-mirror-drift");
+console.log(JSON.stringify({status: "PASS", bytes: fs.statSync(path.join(publicDir, "active-run.json")).size, workspaceSha256: index.workspaceSha256, output: `${relative}/active-run.json`}));

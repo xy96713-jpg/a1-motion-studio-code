@@ -1,0 +1,81 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "shots"
+  ],
+  "properties": {
+    "shots": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "beatId",
+          "slotsJson",
+          "scenesJson",
+          "needs"
+        ],
+        "properties": {
+          "beatId": {
+            "type": "string"
+          },
+          "slotsJson": {
+            "type": "string"
+          },
+          "scenesJson": {
+            "type": "string"
+          },
+          "needs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "slot",
+                "scene",
+                "kind",
+                "original",
+                "entity",
+                "queryEn",
+                "cutout"
+              ],
+              "properties": {
+                "slot": {
+                  "type": "string"
+                },
+                "scene": {
+                  "type": "integer"
+                },
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "person",
+                    "org",
+                    "product",
+                    "event",
+                    "place",
+                    "stock",
+                    "software"
+                  ]
+                },
+                "original": {
+                  "type": "string"
+                },
+                "entity": {
+                  "type": "string"
+                },
+                "queryEn": {
+                  "type": "string"
+                },
+                "cutout": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

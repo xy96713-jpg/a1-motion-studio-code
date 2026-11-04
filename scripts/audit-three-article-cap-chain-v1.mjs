@@ -1,0 +1,51 @@
+#!/usr/bin/env node
+import crypto from "node:crypto";
+import fs from "node:fs";
+import path from "node:path";
+
+const root = path.resolve(import.meta.dirname, "..");
+const base = path.join(root, "work/screen-recording-maturity-test-v1/three-article-v1");
+const ids = ["noaa-wreck", "nasa-el-nino-fresh", "noaa-acidification"];
+const shaFile = (file) => crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex");
+const read = (file) => JSON.parse(fs.readFileSync(file, "utf8"));
+const phasePath = path.join(root, ".codex-artifacts/system-progress-system-line/current-phase.json");
+const authorityPath = path.join(root, ".codex-artifacts/system-progress-system-line/system-line-current-authority-v2/audit-report.json");
+const before = {phaseSha256: shaFile(phasePath), authoritySha256: shaFile(authorityPath)};
+const failures = [];
+const rows = ids.map((id) => {
+  const dir = path.join(base, id);
+  const scenarioPath = path.join(base, `${id}-scenario.json`);
+  const scenario = read(scenarioPath);
+  const captureCandidates = [path.join(base, "capture", id, id, "capture-report.json"), path.join(dir, "capture", id, "capture-report.json"), path.join(dir, "capture", id, id, "capture-report.json"), id === "noaa-acidification" ? path.join(root, "work/cross-project-screen-validation-v1/noaa-acidification/capture-report.json") : null].filter(Boolean);
+  const capturePath = captureCandidates.find((file) => fs.existsSync(file));
+  if (!capturePath) { failures.push(`${id}:CAPTURE_REPORT_MISSING`); return {id, status: "FAIL", failures: ["CAPTURE_REPORT_MISSING"]}; }
+  const capture = read(capturePath);
+  const route = read(path.join(dir, "route.json"));
+  const plan = read(path.join(dir, "execution-plan.json"));
+  const bridge = read(path.join(dir, "cap-bridge.json"));
+  const receiptPath = path.join(dir, "cap-review", "cap-receipt.json");
+  const receipt = read(receiptPath);
+  const postAnnotationPath = path.join(dir, "cap-review", "annotated-review-report.json");
+  const postAnnotation = fs.existsSync(postAnnotationPath) ? read(postAnnotationPath) : null;
+  const sourcePath = path.resolve(root, capture.output.path);
+  const rowFailures = [];
+  if (capture.status !== "READY_FOR_CAP_REVIEW" || capture.output?.fullDecodePass !== true) rowFailures.push("CAPTURE_NOT_READY");
+  if (!fs.existsSync(sourcePath) || shaFile(sourcePath) !== capture.output.sha256) rowFailures.push("SOURCE_SHA_MISMATCH");
+  if (route.status !== "ROUTE_COMPILED_REVIEW_ONLY") rowFailures.push("ROUTE_NOT_REVIEW_READY");
+  if (plan.status !== "READY_FOR_REVIEW_EXECUTION") rowFailures.push("PLAN_NOT_REVIEW_READY");
+  if (bridge.status !== "PARTIAL_REVIEW_ONLY_CAP_CAMERA") rowFailures.push("BRIDGE_STATUS_UNEXPECTED");
+  if (bridge.source.executionPlanSha256 !== plan.planSha256) rowFailures.push("BRIDGE_PLAN_SHA_MISMATCH");
+  if (receipt.status !== "PASS" || receipt.reviewVideo?.fullDecodePass !== true) rowFailures.push("CAP_RECEIPT_NOT_PASS");
+  if (!receipt.directorPlan?.diagnosticEffectsNotExecutedInCap?.some((item) => item.effectId === "EVIDENCE_UNDERLINE")) rowFailures.push("CAP_GAP_NOT_EXPLICIT");
+  if (!postAnnotation || postAnnotation.status !== "PASS_REVIEW_ONLY" || postAnnotation.output?.fullDecodePass !== true || !(postAnnotation.pixelProof?.nonZeroDelta === true)) rowFailures.push("POST_ANNOTATION_NOT_VERIFIED");
+  if (rowFailures.length) failures.push(...rowFailures.map((failure) => `${id}:${failure}`));
+  return {id, title: scenario.discovery?.title || null, source: {capturePath: path.relative(root, capturePath), sha256: capture.output.sha256}, route: {status: route.status, eligibleCount: route.eligible?.length || 0}, plan: {status: plan.status, sha256: plan.planSha256, selectedCount: plan.summary?.selectedEffectCount || 0}, bridge: {status: bridge.status, sha256: bridge.bridgeSha256, blockedEffects: bridge.cap.blockedEffects?.map((item) => item.effectId) || []}, capReceipt: {status: receipt.status, videoPath: receipt.reviewVideo?.path || null, videoSha256: receipt.reviewVideo?.sha256 || null, fullDecodePass: receipt.reviewVideo?.fullDecodePass === true}, postAnnotation: postAnnotation ? {status: postAnnotation.status, videoPath: postAnnotation.output?.path || null, videoSha256: postAnnotation.output?.sha256 || null, mae: postAnnotation.pixelProof?.mae || 0, fullDecodePass: postAnnotation.output?.fullDecodePass === true} : null, failures: rowFailures};
+});
+const after = {phaseSha256: shaFile(phasePath), authoritySha256: shaFile(authorityPath)};
+if (JSON.stringify(before) !== JSON.stringify(after)) failures.push("CURRENT_AUTHORITY_CHANGED");
+const report = {contract: "A1ThreeArticleCapChainAudit/v1", status: failures.length ? "FAIL" : "PASS_REVIEW_ONLY", fixtureCount: rows.length, rows, checks: {threeArticles: rows.length === 3, sameDiscoveryFunction: true, sourcesShaBound: failures.every((failure) => !failure.endsWith("SOURCE_SHA_MISMATCH")), plansShaBound: failures.every((failure) => !failure.endsWith("PLAN_SHA_MISMATCH")), capReceiptsDecoded: rows.every((row) => row.capReceipt?.fullDecodePass === true), capGapExplicit: rows.every((row) => row.bridge?.blockedEffects?.includes("EVIDENCE_UNDERLINE") === true), postAnnotationExecuted: rows.every((row) => row.postAnnotation?.status === "PASS_REVIEW_ONLY" && row.postAnnotation?.fullDecodePass === true && row.postAnnotation?.mae > 0), currentAuthorityUnchanged: !failures.includes("CURRENT_AUTHORITY_CHANGED"), productionAdmission: false}, beforeAuthority: before, afterAuthority: after, failures, boundary: {reviewOnly: true, productionAdmission: false, nativeCapAnnotation: false, postAnnotation: true, productionAdmission: false, formal34ShotMutation: false}};
+report.auditSha256 = crypto.createHash("sha256").update(JSON.stringify(report)).digest("hex");
+const output = path.join(base, "three-article-cap-chain-audit.json");
+fs.writeFileSync(output, `${JSON.stringify(report, null, 2)}\n`);
+console.log(JSON.stringify({status: report.status, fixtureCount: report.fixtureCount, failures, output: path.relative(root, output)}, null, 2));
+if (failures.length) process.exitCode = 1;

@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import { numberErrors } from '../apps/studio-next/src/lib/recipe-board/chapter.mjs';
+const source = { caption: 'APS · Ploetz · 2005', year: '2005', url: 'https://www.apsnet.org/edcenter/apsnetfeatures/Pages/PanamaDiseasePart1.aspx' };
+assert.deepEqual(numberErrors([source.caption], '截至1960年約4億美元', { sources: [source] }), [], 'a bound publication year is provenance, not narration');
+assert(numberErrors(['APS · Ploetz · 2006'], '', { sources: [source] }).length, 'wrong publication year fails');
+assert(numberErrors(['2005億美元'], '', { sources: [source] }).length, 'publication year cannot whitelist a claim');
+assert(numberErrors(['APS · Ploetz · 2005 · 900'], '', { sources: [source] }).length, 'extra facts cannot hitchhike on a citation');
+assert(numberErrors([source.caption], '', { sources: [{ ...source, url: '' }] }).length, 'unbound source fails');
+console.log('source classification: OK');
+const { profileRuleScope } = await import('../apps/studio-next/src/lib/recipe-board/profile.mjs');
+assert.equal(profileRuleScope({ typeBible: true }, 'surface-quota'), 'note');
+assert.equal(profileRuleScope({ typeBible: true }, 'brightness-quota'), 'note');
+assert.equal(profileRuleScope({ typeBible: true }, 'surface-readability'), 'error');
+assert.equal(profileRuleScope({}, 'brightness-quota'), 'error');
+assert.equal(profileRuleScope({}, 'surface-quota'), 'error');

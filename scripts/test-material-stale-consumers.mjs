@@ -1,0 +1,42 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import {changedNeeds, needPrint, recheckPicks, proposeBatch, autoApproveTrusted, fetchApproved} from '../apps/studio-next/src/lib/recipe-board/materials.mjs';
+
+const root = fs.mkdtempSync(path.join(process.env.TMPDIR, 'material-consumers-'));
+const id = 'fixture', cfg = {dataDir:root, sourceRoot:root, repoRoot:root};
+const project = path.join(root,'projects',id), dir = path.join(project,'materials');
+fs.mkdirSync(dir,{recursive:true}); fs.mkdirSync(path.join(root,'routing'));
+const put = (name, value) => fs.writeFileSync(path.join(dir,name),JSON.stringify(value));
+const get = name => JSON.parse(fs.readFileSync(path.join(dir,name)));
+try {
+ fs.writeFileSync(path.join(project,'project.json'),JSON.stringify({id}));
+ fs.writeFileSync(path.join(root,'routing','news-outlets.json'),JSON.stringify({outlets:[],notSources:{patterns:['bad.example']}}));
+ const old={shotId:'B01',scene:1,kind:'news',original:'old'}, stale={...old,original:'new'};
+ const valid={shotId:'B02',kind:'news',original:'valid'}, scene={shotId:'B01',scene:2,kind:'news',original:'other scene'};
+ const old3={shotId:'B03',kind:'news',original:'old three'}, stale3={...old3,original:'new three'};
+ const candidate = id => ({id,source:'library',title:id,publisher:'fixture',url:'https://example.invalid/'+id,rights:'public'});
+ const historical={need:old,candidates:[candidate('old')],note:'preserve'};
+ const item={shotId:'B01~1',candidateId:'old',status:'approved',url:'https://bad.example/page',rights:'news',needPrint:needPrint(old)};
+ const binding={file:path.join(root,'old-image'),needPrint:needPrint(old),note:'preserve'};
+ fs.writeFileSync(binding.file,'historical bytes');
+ put('needs.json',{needs:[stale,valid,scene,stale3]});
+ put('candidates.json',{shots:{'B01~1':historical,B02:{need:valid,candidates:[candidate('valid')]},'B01~2':{need:scene,candidates:[candidate('scene')]},B03:{need:old3,candidates:[candidate('old3')]}}});
+ put('approvals.json',{batches:[{id:'old-batch',items:[item]}]}); put('bindings.json',{shots:{'B01~1':binding}});
+ const prior={shotId:'B01~1',candidateId:'old',weak:false,url:item.url,extra:'keep'};
+ const undecided={shotId:'B03',candidateId:'old3',weak:false,url:'https://example.invalid/old3'};
+ put('proposed-batch.json',{picks:[prior,undecided],skipped:[],weakPicks:[]});
+ assert.deepEqual(new Set(changedNeeds(cfg,id)),new Set(['B01~1','B03']));
+ assert.deepEqual(await recheckPicks(cfg,id),[]); assert.deepEqual(get('approvals.json').batches[0].items[0],item); assert.deepEqual(get('bindings.json').shots['B01~1'],binding);
+ const r=proposeBatch(cfg,id); assert.deepEqual(r.picks.find(p=>p.shotId==='B01~1'),prior); assert.ok(r.picks.some(p=>p.shotId==='B02')); assert.ok(r.picks.some(p=>p.shotId==='B01~2'));
+ assert.deepEqual(r.picks.find(p=>p.shotId==='B03'),undecided);
+ const batch=autoApproveTrusted(cfg,id); assert.deepEqual(new Set(batch.items.map(i=>i.shotId)),new Set(['B02','B01~2']));
+ assert.equal(autoApproveTrusted(cfg,id),null);
+ const again=proposeBatch(cfg,id); assert.deepEqual(again.picks.find(p=>p.shotId==='B01~1'),prior); assert.ok(again.picks.some(p=>p.shotId==='B02')); assert.ok(again.picks.some(p=>p.shotId==='B01~2'));
+ assert.deepEqual(again.picks, r.picks); assert.deepEqual(await recheckPicks(cfg,id),[]);
+ const partial=proposeBatch(cfg,id,{only:['B01']}); assert.deepEqual(partial.picks.find(p=>p.shotId==='B01~1'),prior); assert.ok(partial.picks.some(p=>p.shotId==='B01~2')); assert.ok(partial.picks.some(p=>p.shotId==='B02')); assert.equal(autoApproveTrusted(cfg,id),null);
+ assert.deepEqual(get('approvals.json').batches[0].items[0],item); assert.deepEqual(get('candidates.json').shots['B01~1'],historical); assert.deepEqual(get('bindings.json').shots['B01~1'],binding); assert.equal(fs.readFileSync(binding.file,'utf8'),'historical bytes');
+ await fetchApproved(cfg,id);
+ assert.deepEqual(get('approvals.json').batches[0].items[0],item); assert.deepEqual(get('bindings.json').shots['B01~1'],binding);
+ console.log('recheck/propose/autoapprove/fetch stale isolation and repeat');
+} finally {fs.rmSync(root,{recursive:true,force:true});}

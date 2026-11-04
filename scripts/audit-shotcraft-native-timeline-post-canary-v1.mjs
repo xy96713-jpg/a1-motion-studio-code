@@ -1,0 +1,12 @@
+#!/usr/bin/env node
+import assert from "node:assert/strict";
+import crypto from "node:crypto";
+import fs from "node:fs";
+import path from "node:path";
+import {spawnSync} from "node:child_process";
+
+const root=path.resolve(import.meta.dirname,".."),reportPath=path.join(root,"work/video-shotcraft-behavior-manifest-v1/canary/audit-report.json"),report=JSON.parse(fs.readFileSync(reportPath,"utf8")),sha=(file)=>crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex");
+assert.equal(report.contract,"A1ShotcraftNativeTimelinePostCanaryAudit/v1");assert.equal(report.status,"PASS");assert.deepEqual(report.failures,[]);assert.equal(report.behavior.fidelityStatus,"PASS");assert.equal(report.shotcraft.executionRecipeId,"tension-camera-moves");assert.equal(report.shotcraft.executionStyleKey,"slow-push-in");assert.equal(report.shotcraft.scope,"SCREEN_POST_SAFE");assert.equal(report.checks.exactFirstFrameFallback,true);assert.equal(report.checks.preResultABPixelParity,true);assert.equal(report.checks.nativeEventOrderPreserved,true);assert.equal(report.checks.fullFrameFinalHoldOnly,true);assert.equal(report.checks.extendedResultHoldStable,true);assert.equal(report.checks.syntheticUiStateCount,0);assert.equal(report.checks.finalFrameSliceCount,0);assert.equal(report.checks.syntheticCursor,false);assert.equal(report.checks.clickRing,false);assert.ok(report.checks.maximumScale<=report.checks.scaleCeiling);assert.equal(report.boundary.productionAdmission,false);assert.equal(report.boundary.currentStoryboardMutationPerformed,false);
+for(const item of [report.source,report.source.firstFrameImage,report.behavior.manifest,report.behavior.editReceipt,report.shotcraft.card,report.shotcraft.demo,report.props,report.postMedia,report.media,report.contactSheet,...report.proofFrames]){const file=path.join(root,item.path);assert.ok(fs.existsSync(file),`${item.path}:missing`);assert.equal(sha(file),item.sha256,`${item.path}:sha`);}
+const decode=spawnSync(path.join(root,".tools/bin/ffmpeg"),["-v","error","-i",path.join(root,report.media.path),"-f","null","-"],{encoding:"utf8"});assert.equal(decode.status,0,decode.stderr);
+console.log(JSON.stringify({contract:"A1ShotcraftNativeTimelinePostCanaryTest/v1",status:"PASS",shotId:report.shotId,executionRecipe:`${report.shotcraft.executionRecipeId}/${report.shotcraft.executionStyleKey}`,nativeTimelineFrames:report.checks.nativeTimelineFramesPreserved,maximumScale:report.checks.maximumScale,fullDecode:true,productionAdmission:false},null,2));

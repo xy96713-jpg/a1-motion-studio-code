@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "A1RecipeBoardLookDev/v1 (agent answer)",
+  "description": "The three anchor shots of a film as text-free target frames: 2–3 directions each, one chosen, its reference and how the chapter can achieve it. Rules: work/recipe-board-v1/prompts/lookdev.md. Checked by lookdev.mjs.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "sourceTaskInputHash",
+    "anchors"
+  ],
+  "properties": {
+    "contract": {
+      "type": "string",
+      "enum": [
+        "A1RecipeBoardLookDev/v1"
+      ]
+    },
+    "sourceTaskInputHash": {
+      "type": "string"
+    },
+    "anchors": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "beat",
+          "kind",
+          "reference",
+          "directions",
+          "chosen",
+          "chosenWhy",
+          "achievable"
+        ],
+        "properties": {
+          "beat": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "object",
+              "evidence",
+              "map"
+            ]
+          },
+          "reference": {
+            "type": "string",
+            "description": "the reference frame this anchor answers, a project/repo-relative path or an absolute path"
+          },
+          "directions": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 3,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "file",
+                "why",
+                "textFree",
+                "source"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "enum": [
+                    "A",
+                    "B",
+                    "C"
+                  ]
+                },
+                "file": {
+                  "type": "string",
+                  "description": "project-relative path of the text-free target frame (png/jpg/webp)"
+                },
+                "why": {
+                  "type": "string",
+                  "description": "what this direction changes in subject, composition, material or light, and why"
+                },
+                "textFree": {
+                  "type": "boolean",
+                  "enum": [
+                    true
+                  ]
+                },
+                "source": {
+                  "type": "string",
+                  "enum": [
+                    "imagegen",
+                    "blender",
+                    "engine"
+                  ]
+                }
+              }
+            }
+          },
+          "chosen": {
+            "type": "string",
+            "enum": [
+              "A",
+              "B",
+              "C"
+            ]
+          },
+          "chosenWhy": {
+            "type": "string",
+            "description": "why this direction is the one the chapter must reproduce"
+          },
+          "achievable": {
+            "type": "string",
+            "description": "how the chapter reaches it with the engine, models and materials in hand (or what is built first)"
+          }
+        }
+      }
+    }
+  }
+}

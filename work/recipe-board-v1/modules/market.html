@@ -1,0 +1,100 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>market</title>
+<style>
+html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: var(--paper, #eef1f6); }
+#board, #kline { position: absolute; inset: 0; display: none; }
+/* board: a TV finance channel's board of closes (the reference R02): a deep blue bar over white rows, the change in red
+   or green, a wine-red band at the foot */
+#bar { position: absolute; left: 0; right: 0; top: 0; height: 150px; background: var(--bar, #1b2f8f); }
+#bar .h { position: absolute; left: 80px; top: 36px; font-family: 'House Kokka'; font-size: 78px; color: #fff; letter-spacing: .04em; }
+#bar .d { position: absolute; right: 80px; top: 44px; padding: 8px 26px 6px; background: var(--block, #f6c400); color: #101010; font-family: 'House Kikai'; font-size: 52px; border-radius: 6px; }
+:root[data-ground=dark] #bar .d { color: var(--ink, #fff); border: 2px solid var(--accent, #ffb000); }
+#rows { position: absolute; left: 0; right: 0; top: 150px; }
+.row { position: absolute; left: 0; right: 0; height: 168px; border-bottom: 2px solid color-mix(in srgb, var(--ink, #121212) 18%, transparent); background: color-mix(in srgb, var(--paper, #fbfcfe) 92%, white); }
+/* (the reference's rows are heavy: deep zebra, bold names; light rows under the solid bar left the board top-heavy, open-S2) */
+.row:nth-child(even) { background: color-mix(in srgb, var(--paper, #eef1f6) 82%, var(--bar, #1b2f8f)); }
+.row > div { position: absolute; top: 0; height: 168px; line-height: 168px; white-space: nowrap; font-family: 'House Kikai'; }
+.row .n { left: 80px; font-size: 80px; color: var(--brand, #14205c); font-weight: 900; -webkit-text-stroke: 1.5px currentColor; }
+.row .n small { font-size: 50px !important; color: color-mix(in srgb, var(--ink, #121212) 60%, transparent); margin-left: 22px; font-weight: normal; }
+.row .p { right: 820px; font-size: 84px; color: var(--ink, #121212); -webkit-text-stroke: 1px currentColor; }
+.row .c { right: 480px; font-size: 80px; }
+.row .q { right: 80px; font-size: 80px; }
+.row .dn { color: var(--down, #d0202e); } .row .up { color: var(--up, #0b8a3a); }
+#foot { position: absolute; left: 0; right: 0; bottom: 0; height: 110px; background: linear-gradient(90deg, color-mix(in srgb, var(--foot, #b0124a) 55%, black), var(--foot, #b0124a) 60%, color-mix(in srgb, var(--foot, #b0124a) 60%, black)); }
+/* candles: a white chart with a dashed grid, hollow red rises, filled green falls, three moving averages (R18) */
+#kline svg { position: absolute; inset: 0; }
+#sub { position: absolute; left: 0; right: 0; top: 930px; text-align: center; font-family: 'House Kokka'; font-size: 58px; color: #fff; z-index: 50; }
+</style></head>
+<body data-ui><!-- data-ui: a trading board drawn from archived prices (market.mjs): its chips are the board's, not plates (cardgeometry flatPlateErrors) -->
+<div id="board"><div id="bar"><div class="h"></div><div class="d"></div></div><div id="rows"></div><div id="foot"></div></div>
+<div id="kline"><svg width="1920" height="1080"></svg></div><div id="scale" style="position:absolute;inset:0;pointer-events:none"><svg width="1920" height="1080" style="position:absolute;inset:0"></svg></div>
+<div id="sub"></div>
+<script>
+// 行情画面 (market): the reference's TV board of share prices (R02) and its K-line chart (R18), drawn from the
+// archived daily prices of a public source (modules.mjs prepares S.rows / S.candles from materials/sources/market-*):
+// no figure here is typed by anyone. board: rows of name, ticker, close, change, percentage, coming up one by one
+// (rowsAt) out of a white flash; candles: the days drawn left to right, the last falling hard, a price scale at the right.
+const S = window.__spec, $ = (q) => document.querySelector(q);
+const E = { out: (k) => 1 - Math.pow(1 - k, 3), inout: (k) => (k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2) };
+const seg = (t, a, b) => Math.min(1, Math.max(0, (t - a) / (b - a)));
+const esc = (x) => String(x).replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+const NS = 'http://www.w3.org/2000/svg', el = (n, a) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); return e; };
+let draw = () => {};
+// what the director's camera shows of the frame at every moment (spec.camera; modules/camera.js): the board keeps its
+// words inside the narrowest of it (zoomed 1.12 and panned, the names at 80 px were cut by the edge: open-S2); the
+// same reckoning as common.js M.view (this page does not load common.js)
+const view = (() => { const ms = S.camera || []; let L = 0, R = 1920, T = 0; for (const m of ms) for (const q of [m.from, m.to]) { const z = Math.max(1, q.zoom || 1), lim = (z - 1) / 2, x = Math.max(-lim, Math.min(lim, q.x || 0)), y = Math.max(-lim * 9 / 16, Math.min(lim * 9 / 16, q.y || 0));
+  L = Math.max(L, 960 + x * 1920 - 960 / z); R = Math.min(R, 960 + x * 1920 + 960 / z); T = Math.max(T, 540 + y * 1920 - 540 / z); } return { L, R, T }; })();
+if (S.mode === 'board') {
+  $('#board').style.display = 'block';
+  // the margins from the camera's view: the names, the date and the last column 60 px inside it
+  const mL = Math.round(view.L + 60), mR = Math.round(1920 - view.R + 60);
+  const top = Math.max(0, Math.round(view.T)), barH = top + 150;
+  document.head.insertAdjacentHTML('beforeend', `<style>#bar .h, .row .n { left: ${mL}px !important; } #bar .d, .row .q { right: ${mR}px !important; } .row .c { right: ${mR + 410}px !important; } .row .p { right: ${mR + 700}px !important; } #bar { height: ${barH}px; } #bar .h, #bar .d { top: ${top + 36}px; } #rows { top: ${barH}px; }</style>`);
+  $('#bar .h').textContent = S.headline || '';
+  const [y, m, d] = S.day.split('-'); $('#bar .d').textContent = `${+m}/${+d}/${y}`;
+  const rows = (S.rows || []).map((r, i) => { const e = document.createElement('div'); e.className = 'row'; e.style.top = `${i * 168}px`;
+    const cls = r.up ? 'up' : 'dn';
+    e.innerHTML = `<div class="n">${esc(r.label || r.name)}${(r.label || r.name) === r.symbol ? '' : `<small>${esc(r.symbol)}</small>`}</div><div class="p">${esc(r.price)}</div><div class="c ${cls}">${esc(r.change)}</div><div class="q ${cls}">${esc(r.pct)}</div>`;
+    $('#rows').appendChild(e); return e; });
+  // (the cut lands on a board already coming in, as the reference's is full at its cut: rows sliding in over the first
+  // 0.6 s read as one row ghosting over an empty board at 0:03, film review)
+  const at = S.rowsAt || rows.map((_, i) => S.at - .2 + i * .06);
+  draw = (t) => rows.forEach((e, i) => { const k = seg(t, at[i], at[i] + .25); e.style.opacity = k > 0 ? 1 : 0; e.style.transform = `translateX(${((1 - E.out(k)) * 220).toFixed(1)}px)`; e.style.filter = k < 1 ? `brightness(${(1 + (1 - k) * .8).toFixed(2)})` : ''; });
+} else {
+  $('#kline').style.display = 'block';
+  const C = S.candles, D = C.days, svg = $('#kline svg'), sc = $('#scale svg');   // (the price scale on a layer of its own, over the lens: its figures stay sharp)
+  const L = 90, R = 1650, T = 70, B = 900, lo = Math.min(...D.map((x) => x.l)), hi = Math.max(...D.map((x) => x.h)), pad = (hi - lo) * .06;
+  const X = (i) => L + (i + .5) * (R - L) / D.length, Y = (v) => T + (hi + pad - v) / (hi - lo + 2 * pad) * (B - T), w = Math.max(6, (R - L) / D.length * .62);
+  const css = (k, d) => S.theme?.[k] || d,   // (from the spec: the page's style variables are set only once it has loaded)
+    UP = css('up', '#d42b2b'), DN = css('down', '#11873a'), PAPER = css('paper', '#fdfdfd'), INK = css('ink', '#6b6b6b');
+  svg.appendChild(el('rect', { x: 0, y: 0, width: 1920, height: 1080, fill: PAPER }));
+  // the grid and the price scale (round steps over the range: the archive's own highs and lows)
+  const step = [1, 2, 5, 10, 20, 25, 50].find((s) => (hi - lo) / s <= 7) || 100;
+  for (let v = Math.ceil((lo - pad) / step) * step; v <= hi + pad; v += step) { svg.appendChild(el('line', { x1: L, x2: R, y1: Y(v), y2: Y(v), stroke: INK, 'stroke-opacity': .22, 'stroke-width': 2, 'stroke-dasharray': '10 10' })); sc.appendChild(el('rect', { x: R + 18, y: Y(v) - 26, width: 120, height: 52, rx: 6, fill: PAPER }));   /* (the scale's figures on a plate of their own: read over the grid they failed the frame check, open-S17) */ const tx = el('text', { x: R + 30, y: Y(v) + 14, fill: 'currentColor', opacity: .6, 'font-size': 40, 'font-family': 'House Kikai' }); tx.style.color = INK; tx.textContent = v.toFixed(0); sc.appendChild(tx); }   /* (fill follows color: the checks clear words by their colour, and a fill left the figures read as the picture under them) */
+  for (let i = 0; i < D.length; i += 5) svg.appendChild(el('line', { x1: X(i), x2: X(i), y1: T, y2: B, stroke: INK, 'stroke-opacity': .15, 'stroke-width': 2, 'stroke-dasharray': '10 10' }));
+  const lines = { 5: '#e86fb0', 10: '#f0a23a', 20: '#4a7fe0' }, mas = Object.entries(C.ma).map(([n, a]) => { const p = el('path', { fill: 'none', stroke: lines[n], 'stroke-width': 4, 'stroke-linejoin': 'round' }); svg.appendChild(p); return { a, p }; });
+  const cs = D.map((x, i) => { const g = el('g', {}), up = x.c >= x.o, col = up ? UP : DN;
+    g.appendChild(el('line', { x1: X(i), x2: X(i), y1: Y(x.h), y2: Y(x.l), stroke: col, 'stroke-width': 3 }));
+    g.appendChild(el('rect', { x: X(i) - w / 2, y: Y(Math.max(x.o, x.c)), width: w, height: Math.max(3, Math.abs(Y(x.o) - Y(x.c))), fill: up ? PAPER : col, stroke: col, 'stroke-width': 3 }));
+    svg.appendChild(g); return g; });
+  // the days come in left to right over the first 60 % of the shot, the last one (the day told of) on its own beat
+  const fall = S.fallAt ?? S.at + (S.end - S.at) * .55, n = D.length;
+  draw = (t) => { const k = E.out(seg(t, S.at, fall - .1)), shown = Math.floor(k * (n - 1));
+    cs.forEach((g, i) => { g.style.opacity = i < n - 1 ? (i <= shown ? 1 : 0) : (t >= fall ? 1 : 0); });
+    const last = cs[n - 1]; if (t >= fall) { const q = E.out(seg(t, fall, fall + .3)); last.setAttribute('transform', `translate(0 ${((1 - q) * -60).toFixed(1)})`); }
+    for (const { a, p } of mas) { const pts = a.map((v, i) => (v != null && (i <= shown || (i === n - 1 && t >= fall)) ? `${X(i).toFixed(1)},${Y(v).toFixed(1)}` : null)).filter(Boolean); p.setAttribute('d', pts.length ? `M${pts.join('L')}` : ''); } };
+  // the lens (camera.js) on the newest days: the candle being drawn and the ones just before it sharp, the older days and
+  // the far grid soft, as the reference's K-line is shot (open S17: drawn sharp edge to edge it read as a chart on a slide)
+  $('#kline').dataset.lens = ''; window.__lensBlur = 4;   // (thin strokes: at 9 the old days washed out and the frame read emptier than the reference's)
+  window.__lensFocus = (t) => { const i = t >= fall ? n - 1 : Math.floor(E.out(seg(t, S.at, fall - .1)) * (n - 1)), d = D[i]; return { x: X(i) - 220, y: Y((d.h + d.l) / 2) }; };
+}
+// a long name is set smaller to stay clear of the close (ADVANCED MICRO DEVICES ran over 115.01)
+document.fonts.ready.then(() => { for (const n of document.querySelectorAll('.row .n')) { const max = 1920 - (parseFloat(getComputedStyle(n.parentNode.querySelector('.p')).right) || 820) - 330 - n.getBoundingClientRect().left - 50; for (let k = 0; k < 12 && n.getBoundingClientRect().width > max; k++) n.style.fontSize = `${parseFloat(getComputedStyle(n).fontSize) * .92}px`; /* the ticker keeps its size (small em) */ }
+  window.__ready = true; render(S.at); });
+// (a price label the camera's push carries into the subtitle band is let go, as the chart's lines are: looking up to bring
+// the candles to the middle of the frame set 120 there, open S17)
+window.__afterCam = () => { for (const e of document.querySelectorAll('#scale svg rect, #scale svg text')) { e.style.visibility = ''; const r = e.getBoundingClientRect(); if (r.bottom > 925 || r.top < 24 || r.right > 1896) e.style.visibility = 'hidden'; } };   // (and one carried off the frame's edge: 150 cut at the top looking down, open S17)
+window.render = (t) => { draw(t); const sb = (S.subs || []).find((x) => t >= x.at && t < x.end); $('#sub').textContent = sb ? sb.text : ''; };
+</script>
+</body></html>

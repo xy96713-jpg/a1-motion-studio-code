@@ -1,0 +1,327 @@
+{
+  "contract": "A1RecipeBoardActions/v1",
+  "about": "Action vocabulary for the storyboard: the hero and secondary moves a shot may use. `impl` maps an action onto the cues of the card's motion preset (motion-runtime.browser.js): \"at\" = the action time in seconds, \"[at]\" = a one-item time list, a number or object = that literal. `any` works with every preset. Actions without impl are planned (step 3, motion vocabulary): the storyboard may choose them, the shot renders with its preset's default until they are built, and the check lists them.",
+  "camera": {
+    "presetsMovingCam": [
+      "chat",
+      "steps",
+      "article",
+      "chart",
+      "table",
+      "trials",
+      "titleword",
+      "plate",
+      "enter",
+      "posters",
+      "screen"
+    ],
+    "pushCue": "push",
+    "note": "CAMERA.md: locked = push 1; push amount a (0.02-0.04) = push 1+a. One camera owner per shot."
+  },
+  "actions": [
+    {
+      "id": "hold",
+      "label": "停住",
+      "kind": "hold",
+      "meaning": "不加动作：让观众看、听；留白镜头和高光后的停留",
+      "impl": {
+        "any": {}
+      }
+    },
+    {
+      "id": "type-on",
+      "label": "逐字打出",
+      "kind": "text",
+      "meaning": "主标题或引语一个字一个字出现",
+      "impl": {
+        "titleword": {
+          "title": "at"
+        },
+        "article": {
+          "title": "at"
+        },
+        "steps": {
+          "title": "at"
+        },
+        "quote": {
+          "lines": "[at]"
+        },
+        "posters": {
+          "titles": "[at]"
+        }
+      }
+    },
+    {
+      "id": "highlight",
+      "label": "高亮刷出",
+      "kind": "text",
+      "meaning": "关键句黄条 / 黑条从左到右刷出",
+      "impl": {
+        "article": {
+          "marks": "[at]"
+        }
+      }
+    },
+    {
+      "id": "punch-in",
+      "label": "冲击推近",
+      "kind": "camera",
+      "meaning": "从全貌冲到一处细节（数字、句子、气泡），然后停住",
+      "impl": {
+        "article": {
+          "cut": "at"
+        },
+        "chat": {
+          "punch": {
+            "at": "at",
+            "target": "last"
+          }
+        }
+      }
+    },
+    {
+      "id": "bars-grow",
+      "label": "柱子生长",
+      "kind": "data",
+      "meaning": "柱状图依次长出，重点柱最后",
+      "impl": {
+        "chart": {
+          "bars": "at"
+        }
+      }
+    },
+    {
+      "id": "rows-reveal",
+      "label": "逐行出现",
+      "kind": "data",
+      "meaning": "表格或步骤一行一行出现",
+      "impl": {
+        "table": {
+          "rows": "[at]"
+        },
+        "steps": {
+          "steps": "[at]"
+        },
+        "trials": {
+          "tries": "[at]"
+        }
+      }
+    },
+    {
+      "id": "cell-highlight",
+      "label": "格子亮起",
+      "kind": "data",
+      "meaning": "表格里的关键列 / 格子用强调色亮起",
+      "impl": {
+        "table": {
+          "highlight": {
+            "at": "at",
+            "col": 1
+          }
+        }
+      }
+    },
+    {
+      "id": "bubble-stack",
+      "label": "气泡逐条",
+      "kind": "chat",
+      "meaning": "聊天气泡一条条冒出来",
+      "impl": {
+        "chat": {
+          "bubbles": "[at]"
+        }
+      }
+    },
+    {
+      "id": "nameplate",
+      "label": "名牌入场",
+      "kind": "person",
+      "meaning": "人物名字和身份从左到右揭开",
+      "impl": {
+        "person": {
+          "name": "at"
+        }
+      }
+    },
+    {
+      "id": "card-flip",
+      "label": "翻牌换面",
+      "kind": "reveal",
+      "meaning": "侧卡翻到另一面（A100 → H800 这种对照）",
+      "impl": {
+        "sidecard": {
+          "flip": "at"
+        }
+      }
+    },
+    {
+      "id": "card-in",
+      "label": "侧卡入场",
+      "kind": "reveal",
+      "meaning": "主讲人旁的信息卡滑入",
+      "impl": {
+        "sidecard": {
+          "in": "at"
+        }
+      }
+    },
+    {
+      "id": "tag-pop",
+      "label": "标签弹出",
+      "kind": "reveal",
+      "meaning": "主讲人两侧的词条依次弹出",
+      "impl": {
+        "tags": {
+          "tags": "[at]"
+        }
+      }
+    },
+    {
+      "id": "quote-lines",
+      "label": "引语逐行",
+      "kind": "text",
+      "meaning": "引语一行一行打出",
+      "impl": {
+        "quote": {
+          "lines": "[at]"
+        }
+      }
+    },
+    {
+      "id": "focus-dim",
+      "label": "聚焦压暗",
+      "kind": "reveal",
+      "meaning": "其他元素压暗，只留主角亮着",
+      "impl": {
+        "any": {
+          "focus": "at"
+        }
+      }
+    },
+    {
+      "id": "diagram-build",
+      "label": "原理图搭建",
+      "kind": "diagram",
+      "meaning": "流程 / 原理图一步步搭起来",
+      "impl": {
+        "steps": {
+          "steps": "[at]"
+        }
+      }
+    },
+    {
+      "id": "stack-in",
+      "label": "卡片叠入",
+      "kind": "reveal",
+      "meaning": "一叠卡片依次落下",
+      "impl": {
+        "stack": {
+          "enter": "at"
+        }
+      }
+    },
+    {
+      "id": "enter",
+      "label": "元素入场",
+      "kind": "reveal",
+      "meaning": "版面元素按顺序进入",
+      "impl": {
+        "enter": {
+          "in": "at"
+        }
+      }
+    },
+    {
+      "id": "flash",
+      "label": "一帧闪白",
+      "kind": "accent",
+      "meaning": "冲击点上一帧闪白（全片最多两次）",
+      "impl": {
+        "plate": {
+          "flash": "at"
+        }
+      }
+    },
+    {
+      "id": "count-up",
+      "label": "数字滚动",
+      "kind": "data",
+      "meaning": "大数字从 0 滚到目标值，最后几帧锁定"
+    },
+    {
+      "id": "circle-mark",
+      "label": "红笔圈注",
+      "kind": "annotation",
+      "meaning": "红笔圈住一个词或一个数字"
+    },
+    {
+      "id": "strike",
+      "label": "划掉",
+      "kind": "annotation",
+      "meaning": "一道线划掉一个数字或说法"
+    },
+    {
+      "id": "check-mark",
+      "label": "打勾",
+      "kind": "annotation",
+      "meaning": "问题卡上的一条打勾"
+    },
+    {
+      "id": "grid-fill",
+      "label": "方阵填满",
+      "kind": "data",
+      "meaning": "成百上千个小格子按行填满，用量感说话"
+    },
+    {
+      "id": "swap-words",
+      "label": "两词换位",
+      "kind": "text",
+      "meaning": "两个词交换位置（厉害观 / 是非观）"
+    },
+    {
+      "id": "retype",
+      "label": "打字回退重打",
+      "kind": "text",
+      "meaning": "打到一半停住、光标回退、再重打"
+    },
+    {
+      "id": "stamp",
+      "label": "盖章",
+      "kind": "accent",
+      "meaning": "印章盖在证据上"
+    },
+    {
+      "id": "erase",
+      "label": "信号抹掉",
+      "kind": "reveal",
+      "meaning": "雪花、扫描线把画面上的东西撕碎抹掉（原片\"如果他没出现过\"：身高墙前的剪影被信号抹去）",
+      "impl": {
+        "any": {
+          "erase": "at"
+        }
+      }
+    },
+    {
+      "id": "pull-back",
+      "label": "拉远",
+      "kind": "camera",
+      "meaning": "镜头往后拉，看到更大的场景（原片\"这只是理想情况\"：同一张家谱缩小、变暗）。只用在章节的 3D 场景里，镜头真的后退；一张平面的回看画面不许用：缩小只会露出空背景",
+      "impl": {
+        "any": {
+          "pullback": "at"
+        }
+      }
+    },
+    {
+      "id": "push-in",
+      "label": "推近",
+      "kind": "camera",
+      "meaning": "镜头推近画面里要看的那一处，画面始终是满的（原片\"只看其中一小段\"）：平面回看画面上代替拉远",
+      "impl": {
+        "any": {
+          "pushin": "at"
+        }
+      }
+    }
+  ]
+}
